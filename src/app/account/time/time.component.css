@@ -1,0 +1,107 @@
+.day {
+    display: flex;
+    align-items: center;
+    padding: 12px 24px;
+    margin: 12px;
+    border-radius: 12px;
+    background: #ffffff;
+}
+
+.box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100px;
+}
+
+.hours {
+    align-items: center !important;
+    font-size: 24px;
+}
+
+.date {
+    font-size: 32px;
+    color: #212121;
+}
+
+.dow {
+    font-size: 15px;
+    color: #666666;
+}
+
+.heads {
+    display: flex;
+    align-items: center;
+    margin: 0 12px;
+}
+
+.head {
+    height: 55px;
+    overflow: hidden;
+    width: 55px;
+    border-radius: 50%;
+    margin: 0 8px;
+}
+
+img.head-img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.month {
+    margin: 24px;
+    font-size: 24px;
+    color: #666666;
+}
+
+.details {
+    margin: 12px;
+    background-color: #ffffff;
+    margin-top: -18px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.logs {
+    margin: 24px 0 64px 0;
+}
+
+.log {
+    margin: 8px 0;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+}
+
+.log-profile-img-cont {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+img.log-profile-img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.user-name {
+    font-size: 17px;
+    margin: 0 24px;
+    display: flex;
+}
+
+.log-box {
+    align-items: center !important;
+    flex: 1;
+}
+
+.log-info {
+    color: #666666;
+    font-size: 15px;
+}

@@ -1,0 +1,16 @@
+<div class="window">
+  <div class="card">
+    <div id="header">minute</div>
+    <div id="form">
+      <div id="google">Sign in with <img src="/assets/google.png"></div>
+      <div id="or">or</div>
+      <mat-form-field>
+        <input matInput type="email" placeholder="email" [(ngModel)]="login.email">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="password" placeholder="password" [(ngModel)]="login.password">
+      </mat-form-field>
+    </div>
+    <button mat-raised-button color="accent" style="color: white" (click)="signInEmail()">SIGN IN</button>
+  </div>
+</div>

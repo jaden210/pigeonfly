@@ -1,0 +1,39 @@
+<mat-sidenav-container>
+  <mat-sidenav mode="side" opened>
+    <div id="header" routerLink="account">
+      <img id="logo" src={{accountService.aTeam?.logoUrl}} onerror="src = 'assets/face.png'">
+      <div id="name">{{accountService.aTeam?.name}}</div>
+    </div>
+    <div id="content">
+      <mat-nav-list>
+        <a mat-list-item routerLink="dashboard" routerLinkActive="active">Dashboard</a>
+        <a mat-list-item routerLink="time" routerLinkActive="active">Time</a>
+        <a mat-list-item routerLink="log" routerLinkActive="active">Log</a>
+        <a mat-list-item routerLink="survey" routerLinkActive="active">Surveys</a>
+        <a mat-list-item routerLink="assesment" routerLinkActive="active">OSHA Safety Assesment</a>
+        <a mat-list-item routerLink="account" routerLinkActive="active">Account</a>
+      </mat-nav-list>
+    </div>
+    <div id="footer">
+      minute
+      <div class="flex"></div>
+      <mat-icon class="fi" (click)="accountService.showHelper = false; accountService.showFeedback = true">feedback</mat-icon>
+      <mat-icon color="accent" class="fi" (click)="accountService.showFeedback = false; accountService.showHelper = true">help_outline</mat-icon>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <!-- ***** HELPER ***** -->
+    <div class="helper" *ngIf="accountService.showHelper" [@helper]>
+      <button mat-icon-button class="helper-close" (click)="closeHelper()"><mat-icon>cancel</mat-icon></button>
+      <div class="helper-name">{{accountService.helper?.name}}</div>
+      <div class="helper-description">{{accountService.helper?.description}}</div>
+    </div>
+    <div class="helper" *ngIf="accountService.showFeedback" [@helper]>
+      <button mat-icon-button class="helper-close" (click)="accountService.showFeedback = false"><mat-icon>cancel</mat-icon></button>
+      <div class="helper-name">{{accountService.feedback?.name}}</div>
+      <mat-form-field class="helper-input" color="warn"><textarea matInput placeholder="help minute work harder for you" [(ngModel)]="accountService.feedback.description"></textarea></mat-form-field>
+      <button mat-stroked-button class="helper-button" color="warn" (click)="submit()">SUBMIT</button>
+    </div>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

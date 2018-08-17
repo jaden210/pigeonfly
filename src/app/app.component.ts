@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { AppService } from './app.service';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +8,11 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'minute-web';
+
+  constructor(
+    public router: Router,
+    public appService: AppService
+  ) { 
+    this.appService.isUser = localStorage.getItem("minute-user") !== null;
+  }
 }
