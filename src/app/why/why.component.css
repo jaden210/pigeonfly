@@ -1,0 +1,31 @@
+.s {
+    height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+#s1 {
+    background-color: #2196f3;
+}
+
+.title {
+    font-size: 32px;
+    font-weight: 500;
+}
+
+.white {
+    color: #ffffff;
+}
+
+.info {
+    max-width: 90%;
+    width: 550px;
+    font-size: 17px;
+    margin-top: 12px;
+    opacity: .87;
+}
+
+.center {
+    text-align: center;
+}
