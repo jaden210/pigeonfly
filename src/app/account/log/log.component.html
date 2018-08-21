@@ -30,7 +30,7 @@
             <div class="log" *ngFor="let log of day.logs">
               <div class="log-row">
                 <div class="log-profile-img-cont"><img class="log-profile-img" src={{log.user.profileUrl}} onerror="src = '/assets/face.png'"></div>
-                <div class="user-name">{{log.user.name}}&nbsp;&nbsp;<mat-icon class="icon">launch</mat-icon></div>
+                <div class="user-name">{{log.user.name}}</div>
                 <div class="flex"></div>
                 <div class="box log-box"><div class="log-data">{{log.createdAt | amParse:'HH:mm' | amDateFormat:'HH:mmA'}}</div><div class="log-info">Time Logged</div></div>
                 <div class="map-icon"><mat-icon class="map">location_on</mat-icon></div>

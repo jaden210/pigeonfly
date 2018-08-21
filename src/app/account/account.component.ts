@@ -91,7 +91,7 @@ export class AccountComponent implements OnInit {
   }
 
   submit() {
-    this.accountService.feedback.name = "Thanks for your opinion!"
+    this.accountService.feedback.name = "Thanks for your feedback!"
     setTimeout(() => {
       this.accountService.showFeedback = false;
       this.accountService.db.collection("feedback").add({
@@ -107,5 +107,4 @@ export class AccountComponent implements OnInit {
       });
     }, 2000);
   }
-
 }

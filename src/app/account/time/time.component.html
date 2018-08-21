@@ -9,7 +9,7 @@
     <button class="toolbar-button" (click)="export()" mat-button>EXPORT</button>
   </mat-toolbar>
 <div class="window">
-  <ng-container *ngFor="let day of days">
+  <ng-container *ngFor="let day of days | search: searchStr : filterUsers">
     <div class="day-box">
 
       <div class="day" (click)="aDay ? aDay = null : aDay = day.id">
@@ -30,7 +30,7 @@
         <div class="logs">
           <div class="log" *ngFor="let log of day.timeLogs">
             <div class="log-profile-img-cont"><img class="log-profile-img" src={{log.user.profileUrl}} onerror="src = '/assets/face.png'"></div>
-            <div class="user-name">{{log.user.name}}&nbsp;&nbsp;<mat-icon class="icon">launch</mat-icon></div>
+            <div class="user-name">{{log.user.name}}</div>
             <div class="box log-box"><div class="log-data">{{log.clockIn | amParse:'HH:mm' | amDateFormat:'HH:mmA'}}</div><div class="log-info">Clocked In</div></div>
             <div class="box log-box"><div class="log-data">{{log.clockOut | amParse:'HH:mm' | amDateFormat:'HH:mmA'}}</div><div class="log-info">Clocked Out</div></div>
             <div class="flex"></div>
