@@ -1,0 +1,38 @@
+#crew {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width: 80%;
+    margin: 80px auto;
+    min-width: 250px;
+}
+
+.member {
+    width: 23%;
+    min-width: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 8px;
+}
+
+#image {
+    height: 250px;
+    width: 100%;
+    object-fit: cover;
+    object-position: top;
+}
+
+.name {
+    font-size: 24px;
+}
+
+.role {
+    font-size: 15px;
+    opacity: .6;
+}
+
+#history {
+    margin: auto;
+    max-width: 90%;
+}
