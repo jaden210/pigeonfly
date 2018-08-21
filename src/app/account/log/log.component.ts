@@ -82,7 +82,7 @@ export class LogComponent {
       let date = moment().subtract(i, 'days');
       let month = date.format('MMM');
       let day = date.format('DD');
-      let dOW = date.format('dddd');
+      let dOW = date.format('ddd');
       let logs = this.getLogsByDate(date); 
       this.days.push({id: i, date, month, day, dOW, logs: logs.logs, loggers: logs.loggers});
     }

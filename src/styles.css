@@ -1,5 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 
+* {
+    font-family: "Roboto", "Helvetica Neue", sans-serif;
+  }
+
 .flex {
     flex: 1;
 }
@@ -58,4 +62,12 @@
 
 agm-map {
     height: 40vh;
+}
+
+#mat-search-icon {
+    padding: 9px;
+    background: #41535B;
+    margin-right: -10px;
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
 }

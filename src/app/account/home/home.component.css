@@ -1,32 +1,7 @@
 .window {
     height: calc(100vh - 76px) !important;
     overflow: scroll;
-}
-
-#search {
-    flex: 1;
-    font-size: 15px;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: #ffffff;
-}
-
-::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-    color: #ffffff;
-  }
-  ::-moz-placeholder { /* Firefox 19+ */
-    color: #ffffff;
-  }
-  :-ms-input-placeholder { /* IE 10+ */
-    color: #ffffff;
-  }
-  :-moz-placeholder { /* Firefox 18- */
-    color: #ffffff;
-  }
-
-.filter {
-    margin: 0 24px;
+    padding-top: 56px;
 }
 
 .day {
@@ -36,29 +11,17 @@
     margin: 12px;
     border-radius: 12px;
     background: #ffffff;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.16), 0 1px 6px rgba(0,0,0,0.23);
 }
 
 .box {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    width: 100px;
 }
 
-.hours {
-    align-items: center !important;
-    font-size: 24px;
-}
-
-.date {
-    font-size: 32px;
-    color: #212121;
-}
-
-.dow {
-    font-size: 15px;
-    color: #666666;
+.row {
+    display: flex;
+    align-items: center;
 }
 
 .heads {
@@ -81,63 +44,13 @@ img.head-img {
     object-fit: cover;
 }
 
-.month {
-    margin: 24px;
-    font-size: 24px;
-    color: #666666;
-}
-
-.details {
-    margin: 12px;
-    background-color: #ffffff;
-    margin-top: -18px;
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-.logs {
-    margin: 24px 0 64px 0;
-}
-
-.log {
-    margin: 8px 0;
-    padding: 12px 24px;
-}
-
-.log-row {
-    display: flex;
-    align-items: center;
-}
-
-.log-profile-img-cont {
-    height: 50px;
-    width: 50px;
-    border-radius: 50%;
-    overflow: hidden;
-}
-
-img.log-profile-img {
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
-}
 
 .user-name {
     font-size: 17px;
-    margin: 0 24px;
     display: flex;
 }
 
-.log-box {
-    align-items: center !important;
-}
 
-.log-info {
-    color: #666666;
-    font-size: 15px;
-}
 
 .map-icon {
     margin: 0px 12px;
@@ -151,35 +64,12 @@ img.log-profile-img {
     color: #666666;
 }
 
-.image-row {
-    white-space: nowrap;
-    overflow: scroll;
-}
-
-.log-image-box {
-    height: 120px;
-    overflow: hidden;
-    margin: 8px;
-    display: inline-block;
-}
-
-.log-image {
-    height: 100%;
-}
-
-.info-log {
-    padding: 8px;
-}
-
-.survey {
-    color: #666666;
-    padding: 8px 0 0 8px;
-}
 
 .active-dot {
     height: 12px;
     width: 12px;
     border-radius: 50%;
+    margin-right: 10px;
 }
 
 .uactive {
@@ -195,6 +85,6 @@ img.log-profile-img {
 }
 
 .active-text {
-    margin-left: 12px;
+    margin-left: 22px;
     color: #666666;
 }

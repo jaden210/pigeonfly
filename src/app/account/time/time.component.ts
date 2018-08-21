@@ -24,6 +24,10 @@ import * as moment from 'moment';
 })
 export class TimeComponent {
 
+  searchStr; // template variable
+  filterUsers; // template variable
+
+
   timeClocks: any;
   oldestLog: any = new Date();
   days = [];
@@ -80,7 +84,7 @@ export class TimeComponent {
       let date = moment().subtract(i, 'days');
       let month = date.format('MMM');
       let day = date.format('DD');
-      let dOW = date.format('dddd');
+      let dOW = date.format('ddd');
       let timeClocks = this.getClocksByDate(date); 
       this.days.push({id: i, date, month, day, dOW, loggedHours: timeClocks.loggedHours, loggedMinutes: timeClocks.loggedMinutes, timeLogs: timeClocks.logs, loggers: timeClocks.loggers});
     }
@@ -103,6 +107,10 @@ export class TimeComponent {
       }
     });
     return {loggedHours, loggedMinutes, logs:timeClocksOnDate, loggers: users};
+  }
+
+  export() {
+    
   }
 
 }

@@ -13,7 +13,7 @@
           <button mat-icon-button id="delete" (click)="deleteInvite(user)"><mat-icon>delete</mat-icon></button>
         </mat-list-item>
         <mat-list-item *ngFor="let user of accountService.teamUsers">
-          <img matListAvatar src={{user.profileUrl}} onerror="src = '/assets/face.png'">
+          <img matListAvatar style="object-fit: cover;" src={{user.profileUrl}} onerror="src = '/assets/face.png'">
           <h3 matLine> {{user.name}} </h3>
           <p matLine>
             <span>{{user.id == accountService.aTeam.ownerId ? 'company owner' : user.accountType}}</span>

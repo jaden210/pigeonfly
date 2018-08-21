@@ -1,47 +1,61 @@
+<mat-toolbar style="font-size: 15px" color="primary">
+    <mat-icon id="mat-search-icon">search</mat-icon>
+    <input id="search" placeholder="search" type="text" [(ngModel)]="searchStr">
+    <mat-form-field class="filter">
+        <mat-select placeholder="Filter by people" [(ngModel)]="filterUsers" multiple>
+          <mat-option *ngFor="let user of accountService.teamUsers" [value]="user.id">{{user.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    <button class="toolbar-button" (click)="export()" mat-button>EXPORT</button>
+  </mat-toolbar>
 <div class="window">
   <ng-container *ngFor="let day of days">
-    <div class="day" (click)="aDay ? aDay = null : aDay = day.id">
-      <div class="date box">
-        <div class="date">{{day.day}}</div>
-        <div class="dow">{{day.dOW}}</div>
-      </div>
-      <div class="heads">
-        <div class="head" *ngFor="let logger of day.loggers"><img class="head-img" src={{logger.profileUrl}} onerror="src = 'assets/face.png'"></div>
-      </div>
-      <div class="flex"></div>
-      <div class="hours box">
-        <div class="hours">{{day.loggedHours | number:'2.0-0'}}:{{day.loggedMinutes | number:'2.0-0'}}</div>
-        <div class="dow">Time Logged</div>
-      </div>
-    </div>
-    <div class="details" [@expand] *ngIf="day.id == aDay">
-      <div class="logs">
-        <div class="log" *ngFor="let log of day.timeLogs">
-          <div class="log-profile-img-cont"><img class="log-profile-img" src={{log.user.profileUrl}} onerror="src = '/assets/face.png'"></div>
-          <div class="user-name">{{log.user.name}}&nbsp;&nbsp;<mat-icon class="icon">launch</mat-icon></div>
-          <div class="box log-box"><div class="log-data">{{log.clockIn | amParse:'HH:mm' | amDateFormat:'HH:mmA'}}</div><div class="log-info">Clocked In</div></div>
-          <div class="box log-box"><div class="log-data">{{log.clockOut | amParse:'HH:mm' | amDateFormat:'HH:mmA'}}</div><div class="log-info">Clocked Out</div></div>
-          <div class="flex"></div>
-          <div class="box log-box"><div class="log-data">{{log.loggedHours | number:'2.0-0'}}:{{log.loggedMinutes | number:'2.0-0'}}</div><div class="log-info">Time Logged</div></div>
+    <div class="day-box">
+
+      <div class="day" (click)="aDay ? aDay = null : aDay = day.id">
+        <div class="date box">
+          <div class="date">{{day.day}}</div>
+          <div class="dow">{{day.dOW}}</div>
+        </div>
+        <div class="heads">
+          <div class="head" *ngFor="let logger of day.loggers"><img class="head-img" src={{logger.profileUrl}} onerror="src = 'assets/face.png'"></div>
+        </div>
+        <div class="flex"></div>
+        <div class="hours box">
+          <div class="hours">{{day.loggedHours | number:'2.0-0'}}:{{day.loggedMinutes | number:'2.0-0'}}</div>
+          <div class="dow">Time Logged</div>
         </div>
       </div>
-      <agm-map [latitude]="lat" [longitude]="long">
-        <agm-marker *ngFor="let log of day.timeLogs" [iconUrl]="{
-          url: log.user.profileUrl,
-          scaledSize: {
-            height: 40,
-            width: 40
-          }
-        }" [latitude]="log.inLatPos" [longitude]="log.inLongPos"></agm-marker>
-        <agm-marker *ngFor="let log of day.timeLogs" [iconUrl]="{
-          url: log.user.profileUrl,
-          scaledSize: {
-            height: 40,
-            width: 40
-          }
-        }" [latitude]="log.outLatPos" [longitude]="log.outLongPos" label="clocked out"></agm-marker>
-      </agm-map>
+      <div class="details" [@expand] *ngIf="day.id == aDay">
+        <div class="logs">
+          <div class="log" *ngFor="let log of day.timeLogs">
+            <div class="log-profile-img-cont"><img class="log-profile-img" src={{log.user.profileUrl}} onerror="src = '/assets/face.png'"></div>
+            <div class="user-name">{{log.user.name}}&nbsp;&nbsp;<mat-icon class="icon">launch</mat-icon></div>
+            <div class="box log-box"><div class="log-data">{{log.clockIn | amParse:'HH:mm' | amDateFormat:'HH:mmA'}}</div><div class="log-info">Clocked In</div></div>
+            <div class="box log-box"><div class="log-data">{{log.clockOut | amParse:'HH:mm' | amDateFormat:'HH:mmA'}}</div><div class="log-info">Clocked Out</div></div>
+            <div class="flex"></div>
+            <div class="box log-box"><div class="log-data">{{log.loggedHours | number:'2.0-0'}}:{{log.loggedMinutes | number:'2.0-0'}}</div><div class="log-info">Time Logged</div></div>
+          </div>
+        </div>
+        <agm-map [latitude]="lat" [longitude]="long">
+          <agm-marker *ngFor="let log of day.timeLogs" [iconUrl]="{
+            url: log.user.profileUrl,
+            scaledSize: {
+              height: 40,
+              width: 40
+            }
+          }" [latitude]="log.inLatPos" [longitude]="log.inLongPos"></agm-marker>
+          <agm-marker *ngFor="let log of day.timeLogs" [iconUrl]="{
+            url: log.user.profileUrl,
+            scaledSize: {
+              height: 40,
+              width: 40
+            }
+          }" [latitude]="log.outLatPos" [longitude]="log.outLongPos" label="clocked out"></agm-marker>
+        </agm-map>
+      </div>
     </div>
-    <div class="month" *ngIf="day.day == 1">{{day.month}}</div>
-  </ng-container>
+      <div class="month" *ngIf="day.day == 1">{{day.month}}</div>
+    </ng-container>
   </div>
+  

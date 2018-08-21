@@ -53,6 +53,10 @@ mat-sidenav {
     display: flex;
 }
 
+#mlogo {
+    height: 24px;
+}
+
 .fi {
     height: 32px;
     width: 32px;

@@ -12,6 +12,7 @@ export class SurveyComponent implements OnInit {
 
   surveys: Survey[];
   aSurvey: Survey = new Survey();
+  create: boolean = false; // template variable
 
   week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
@@ -47,14 +48,23 @@ export class SurveyComponent implements OnInit {
     return Array(n);
   }
 
-  createSurvey() {
-    let survey = new Survey();
-    survey.teamId = this.accountService.aTeam.id;
-    survey.createdAt = new Date();
-    this.accountService.db.collection("survey").add({...survey}).then(snapshot => {
-      survey.id = snapshot.id;
-      this.selectSurvey(survey);
-    });
+  startNewSurvey() {
+    this.aSurvey = new Survey();
+    this.create = true;
+  }
+
+  createSurvey(d) {
+    if (d) {
+      this.aSurvey.teamId = this.accountService.aTeam.id;
+      this.aSurvey.createdAt = new Date();
+      this.accountService.db.collection("survey").add({...this.aSurvey}).then(snapshot => {
+        this.aSurvey = new Survey();
+      });
+      this.create = false;
+    } else {
+      this.aSurvey = new Survey();
+      this.create = false;
+    }
   }
 
   selectSurvey(survey) {

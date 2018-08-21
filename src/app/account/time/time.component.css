@@ -1,9 +1,48 @@
+.window {
+    height: calc(100vh - 88px) !important;
+    overflow: scroll;
+    padding-top: 24px;
+}
+
+#search {
+    flex: 1;
+    font-size: 15px;
+    background: #41535B;
+    border: none;
+    outline: none;
+    color: #ffffff;
+    padding: 12px;
+    border-radius: 12px;
+}
+
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: #ffffff;
+  }
+  ::-moz-placeholder { /* Firefox 19+ */
+    color: #ffffff;
+  }
+  :-ms-input-placeholder { /* IE 10+ */
+    color: #ffffff;
+  }
+  :-moz-placeholder { /* Firefox 18- */
+    color: #ffffff;
+  }
+
+.filter {
+    margin: 0 24px;
+}
+
+.day-box {
+    border-radius: 12px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.16), 0 1px 6px rgba(0,0,0,0.23);
+    margin: 12px;
+}
+
 .day {
+    border-radius: 12px;
     display: flex;
     align-items: center;
     padding: 12px 24px;
-    margin: 12px;
-    border-radius: 12px;
     background: #ffffff;
 }
 
@@ -28,6 +67,7 @@
 .dow {
     font-size: 15px;
     color: #666666;
+    margin-top: -8px;
 }
 
 .heads {
@@ -57,13 +97,14 @@ img.head-img {
 }
 
 .details {
-    margin: 12px;
     background-color: #ffffff;
     margin-top: -18px;
     padding: 24px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
 }
 
 .logs {
