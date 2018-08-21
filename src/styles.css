@@ -10,7 +10,9 @@
 
 .active {
     transition: all 250ms;
-    border-bottom: 2px solid #ff9100 !important;
+    /*border-bottom: 2px solid #ff9100 !important;*/
+    color: #ff9100 !important;
+    background-color: rgba(0,0,0,.17) !important;
 }
 
 .helper {

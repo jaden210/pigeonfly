@@ -1,3 +1,15 @@
-<p>
-  home works!
-</p>
+
+<div class="window">
+  <ng-container *ngFor="let user of users">
+    <div class="day">
+      <div class="heads">
+       <div class="head"><img class="head-img" src={{user.user.profileUrl}} onerror="src = 'assets/face.png'"></div>
+      </div>
+      <div class="active-dot" [ngClass]="{'uactive': user.statusColor == 'active', 'busy': user.statusColor == 'busy', 'inactive': user.statusColor == 'inactive'}"></div>
+      <div class="active-text">{{user.status}}</div>
+      <div class="flex"></div>
+      <div class="map-icon" matTooltip="View last logged location" matTooltipShowDelay="300" (click)="showMap(user)"><mat-icon class="map">location_on</mat-icon></div>
+    </div>
+  </ng-container>
+</div>
+    

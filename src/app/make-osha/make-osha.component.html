@@ -1,35 +1,34 @@
-<div id="top">
-  <mat-form-field>
-    <input matInput type="text" placeholder="collection name" [(ngModel)]="collection" (blur)="get()">
-  </mat-form-field>
-  <div class="row">
-    <span>ATTACH A PARENT</span>
+<div class="full">
+  
+  <div id="top">
     <mat-form-field>
-        <mat-select placeholder="parent">
-          <mat-option *ngFor="let item of parentList" [value]="item.id">
-            {{item.name}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+      <input matInput type="text" placeholder="collection name" [(ngModel)]="collection" (blur)="get()">
+    </mat-form-field>
   </div>
-</div>
-<div id="bottom">
-  <div class="side">
-    <div class="list">
-      <div class="list-item" *ngFor="let item of list">{{item.name}}</div>
+  <div id="bottom">
+    <div class="side">
+      <div class="list">
+        <div class="list-item" *ngFor="let item of list" (click)="listId = item.id">
+          {{item.subject}}
+          <div *ngIf="item.id == listId">
+            <div class="content" [innerHTML]="item?.content | safeHtml"></div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="side">
-    <div class="row">
-      <mat-label>NAME</mat-label>
-      <mat-form-field>
-        <input matInput type="text" placeholder="field name" [(ngModel)]="fieldName1">
-      </mat-form-field>
+    <div class="side" style="flex:2">
+      <div class="row">
+        <mat-label style="margin-right:24px">Subject</mat-label>
+        <mat-form-field>
+          <input matInput type="text" placeholder="name" [(ngModel)]="newDoc.subject">
+        </mat-form-field>
+      </div>
+      <angular-editor [(ngModel)]="newDoc.content"></angular-editor>
+      <div class="row end">
+        <button mat-raised-button color="primary" (click)="push()">PUSH TO {{collection}}</button>
+      </div>
+      
+      
     </div>
-    <div class="row">
-      <button mat-raised-button color="primary" (click)="push()">PUSH TO {{collection}}</button>
-    </div>
-    
-    
   </div>
 </div>

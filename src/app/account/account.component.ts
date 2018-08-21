@@ -45,7 +45,7 @@ export class AccountComponent implements OnInit {
           if (Object.keys(user.teams).length == 0) { // create a team
             let newTeam = new Team();
             newTeam.createdAt = new Date();
-            newTeam.userId = user.id;
+            newTeam.ownerId = user.id;
             this.accountService.db.collection("team").add({...newTeam}).then(() => {
               this.accountService.helper = this.accountService.helperProfiles.newTeam;
               this.accountService.showHelper = true;
@@ -71,6 +71,7 @@ export class AccountComponent implements OnInit {
                 }))
               ).subscribe(users => {
                 this.accountService.teamUsers = users;
+                this.accountService.teamUsersObservable.next(users);
               })
             });
            

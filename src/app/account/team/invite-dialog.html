@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>Invite a new Member to your team</h2>
+<mat-dialog-content>
+  <div id="content">fill out the form below and we will add them to your team and send them an email to start using Minute</div>
+  <mat-form-field>
+    <input matInput placeholder="name" [(ngModel)]="data.inviteName">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="email" [(ngModel)]="data.inviteEmail">
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button color="accent" (click)="close()">CANCEL</button>
+  <button mat-raised-button style="color: #ffffff" color="accent" [mat-dialog-close]="data">INVITE</button>
+</mat-dialog-actions>

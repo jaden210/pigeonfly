@@ -10,6 +10,7 @@ mat-sidenav {
     width: 280px;
     display: flex;
    flex-direction: column;
+   box-shadow: -6px 0px 24px;
 }
 
 #header {
@@ -26,6 +27,11 @@ mat-sidenav {
 #content {
     flex: 1;
     margin-top: 12px;
+    background-color: #455a64;
+}
+
+.mat-list-item {
+    color: #ffffff;
 }
 
 #name {
@@ -41,8 +47,8 @@ mat-sidenav {
 #footer {
     padding: 12px;
     font-size: 24px;
-    border-top: 1px solid rgba(0,0,0,.14);
     background-color: #455a64;
+    /*border-top: 1px solid rgba(0,0,0,.14);*/
     color: white;
     display: flex;
 }
@@ -53,8 +59,4 @@ mat-sidenav {
     font-size: 32px;
     margin: 0 8px;
     cursor: pointer;
-}
-
-.mat-list-item {
-    border-bottom: 2px transparent;
 }

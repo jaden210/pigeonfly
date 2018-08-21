@@ -7,7 +7,7 @@ import { AssesmentComponent } from './assesment/assesment.component';
 import { LogComponent } from './log/log.component';
 import { SurveyComponent } from './survey/survey.component';
 import { TimeComponent } from './time/time.component';
-import { CreateTeamComponent } from './create-team/create-team.component';
+import { TeamComponent } from './team/team.component';
 
 const routes: Routes = [
   { path: '',   component: AccountComponent, children: [
@@ -18,7 +18,7 @@ const routes: Routes = [
     { path: 'log', component: LogComponent },
     { path: 'survey', component: SurveyComponent },
     { path: 'time', component: TimeComponent },
-    { path: 'create-team', component: CreateTeamComponent },
+    { path: 'team', component: TeamComponent },
   ] },
   
 ]

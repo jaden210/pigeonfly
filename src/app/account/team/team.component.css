@@ -1,0 +1,17 @@
+#actions {
+    display: flex;
+}
+
+#delete {
+    color: #666666;
+}
+
+.mat-dialog-content {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+}
+
+#content {
+    padding-bottom: 24px;
+}

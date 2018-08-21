@@ -13,6 +13,7 @@ export class AccountService {
   aTeamObservable: BehaviorSubject<any> = new BehaviorSubject(null);
   aTeam: Team = new Team();
   teamUsers: User[];
+  teamUsersObservable: BehaviorSubject<any> = new BehaviorSubject(null);
   showHelper: boolean = false;
   showFeedback: boolean = false;
   helperProfiles = {
@@ -49,7 +50,7 @@ export class Team {
   id: string;
   name: string;
   createdAt: Date;
-  userId: string;
+  ownerId: string;
   logoUrl?: string;
   phone?: string;
 }
@@ -61,18 +62,26 @@ export class Log {
   userId: string;
   description: string;
   images: any[];
-  surveyId: string;
+  surveySubject?: string;
+  surveyQuestion?: string;
+  LatPos: number;
+  LongPos: number;
 }
 
 export class Survey {
   id: string;
   teamId: string;
   createdAt: Date;
-  expiresAt: Date;
   title: string;
-  description: string;
-  type: string; // response, options
-  logDescription?: string;
+  category: string;
+  active: boolean;
+  runType: string;
+  types: any =  {
+    daily: true,
+    dow: [],
+    dom: [],
+    date: new Date()
+  }
 }
 
 export class Timeclock {
@@ -94,4 +103,12 @@ export class Timeclock {
 export class Helper {
   name: string;
   description: string;
+}
+
+export class InviteToTeam {
+  inviteName: string;
+  inviteEmail: string;
+  companyName: string;
+  teamId: string;
+  status: string = 'invited';
 }

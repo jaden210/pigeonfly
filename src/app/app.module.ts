@@ -17,8 +17,11 @@ import { PricingComponent } from './pricing/pricing.component';
 import { AboutComponent } from './about/about.component';
 import { ContactComponent } from './contact/contact.component';
 import { LoginComponent } from './login/login.component';
-import { FormsModule } from '../../node_modules/@angular/forms';
-import { MakeOSHAComponent } from './make-osha/make-osha.component';
+import { FormsModule } from '@angular/forms';
+import { MakeOSHAComponent, Safe } from './make-osha/make-osha.component';
+import { AngularEditorModule } from '@kolkov/angular-editor';
+import { HttpClientModule } from '@angular/common/http';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +33,8 @@ import { MakeOSHAComponent } from './make-osha/make-osha.component';
     ContactComponent,
     LoginComponent,
     MakeOSHAComponent,
+    Safe,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
@@ -40,7 +45,9 @@ import { MakeOSHAComponent } from './make-osha/make-osha.component';
     AngularFireAuthModule,
     AngularFireStorageModule,
     AngularFirestoreModule,
-    FormsModule
+    FormsModule,
+    AngularEditorModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,5 +1,5 @@
-<mat-toolbar color="primary" *ngIf="!router.isActive('/account', false)">
-  <span id="title">minute</span>
+<mat-toolbar id="toolbar" color="primary" *ngIf="!router.isActive('/account', false)">
+  <img src="/assets/minuteLogoWhite.png" id="title"  routerLink="home">
   <div style="width: 50px"></div>
   <button mat-button routerLink="why" routerLinkActive="active">Why minute?</button>
   <button mat-button routerLink="pricing" routerLinkActive="active">Pricing</button>
@@ -7,4 +7,8 @@
   <div class="flex"></div>
   <button mat-stroked-button  routerLink="login">START FOR FREE</button>
 </mat-toolbar>
+<div id="spacer"></div>
 <router-outlet></router-outlet>
+<footer id="footer" *ngIf="!router.isActive('/account', false)">
+  
+</footer>

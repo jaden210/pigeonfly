@@ -3,7 +3,7 @@ import { AccountService, User, Team } from '../account.service';
 import { AngularFireStorage } from 'angularfire2/storage';
 import { map, finalize } from 'rxjs/operators';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { Router } from '../../../../node_modules/@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-account',
@@ -22,7 +22,7 @@ export class ProfileComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if (this.accountService.aTeam.userId == this.accountService.user.id) {
+    if (this.accountService.aTeam.ownerId == this.accountService.user.id) {
       this.showCompany = true;
     }
   }

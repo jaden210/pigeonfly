@@ -1,3 +1,55 @@
-<p>
-  survey works!
-</p>
+<div class="window">
+  <div class="surveys">
+    <div class="survey">
+      <div class="header">
+        <div class="category">Survey</div>
+        <div class="title">New Survey</div>
+      </div>
+      <div class="new-body" (click)="createSurvey()">
+        <mat-icon color="accent">add</mat-icon> Click here to create
+      </div>
+    </div>
+    <ng-container *ngFor="let survey of surveys">
+      <div class="survey" [ngClass]="{'wide': aSurvey?.id == survey.id}">
+        <div class="header" (click)="selectSurvey(survey)">
+          <div class="category" *ngIf="aSurvey?.id !== survey.id">{{survey.category}}</div>
+          <mat-form-field (click)="$event.stopPropagation()" color="warn" *ngIf="aSurvey?.id == survey.id"><input matInput placeholder="category" [(ngModel)]="aSurvey.category"></mat-form-field>
+          <div class="title" *ngIf="aSurvey?.id !== survey.id">{{survey.title}}</div>
+          <mat-form-field (click)="$event.stopPropagation()" color="warn" *ngIf="aSurvey?.id == survey.id"><input matInput placeholder="title" [(ngModel)]="aSurvey.title"></mat-form-field>
+        </div>
+        <div class="body">
+          stats go here
+        </div>
+        <div class="details" *ngIf="aSurvey?.id == survey.id">
+          <div class="half">
+            <mat-slide-toggle color="accent" [(ngModel)]="aSurvey.active">Active</mat-slide-toggle>
+            <mat-radio-group [(ngModel)]="aSurvey.runType">
+              <mat-radio-button [value]="'daily'">Daily</mat-radio-button>
+              <mat-radio-button [value]="'dow'">Weekly</mat-radio-button>
+              <mat-radio-button [value]="'dom'">Monthly</mat-radio-button>
+              <mat-radio-button [value]="'date'">On a Date</mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <div class="half" style="align-items: center; justify-content: center; padding-bottom: 40px;">
+            <mat-form-field *ngIf="aSurvey.runType == 'date'">
+                <input matInput [matDatepicker]="picker" placeholder="Choose a date" (dateChange)="aSurvey.types.date = $event.value">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+              <mat-button-toggle-group multiple vertical *ngIf="aSurvey.runType == 'dow'">
+                <mat-button-toggle *ngFor="let day of week" (change)="addTo(day)" [checked]="checkIfChecked(day)">{{day}}</mat-button-toggle>
+              </mat-button-toggle-group>
+              <div class="calendar" *ngIf="aSurvey.runType == 'dom'">
+                <div class="cd" *ngFor="let item of array(31); let i = index;" (click)="addTo(i+1)" [ngClass]="{'cactive': checkIfChecked(i+1)}">{{i+1}}</div>
+              </div>
+              <div class="buttons">
+                <button mat-icon-button id="delete" (click)="deleteSurvey()"><mat-icon>delete</mat-icon></button>
+                <button mat-button color="accent" (click)="saveSurvey(false)">CANCEL</button>
+                <button mat-raised-button style="color: white" color="accent" (click)="saveSurvey(true)">SAVE</button>
+              </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

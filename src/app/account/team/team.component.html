@@ -1,0 +1,29 @@
+<div class="window">
+    <mat-list>
+        <mat-list-item style="cursor: pointer;" (click)="inviteToTeam()">
+            <mat-icon matListIcon>add</mat-icon>
+          <h3 matLine> Add a new Team Member </h3>
+        </mat-list-item>
+        <mat-list-item *ngFor="let user of invitedUsers">
+            <mat-icon matListIcon>person</mat-icon>
+          <h3 matLine>{{user.inviteName}} - {{user.status}}</h3>
+          <p matLine>has been invited to join your team!</p>
+          <div class="flex"></div>
+          <button mat-button color="primary" (click)="resendEmail(user)">RESEND EMAIL</button>
+          <button mat-icon-button id="delete" (click)="deleteInvite(user)"><mat-icon>delete</mat-icon></button>
+        </mat-list-item>
+        <mat-list-item *ngFor="let user of accountService.teamUsers">
+          <img matListAvatar src={{user.profileUrl}} onerror="src = '/assets/face.png'">
+          <h3 matLine> {{user.name}} </h3>
+          <p matLine>
+            <span>{{user.id == accountService.aTeam.ownerId ? 'company owner' : user.accountType}}</span>
+            <span> -- {{user.email}}</span>
+          </p>
+          <div class="flex"></div>
+          <div id="actions" *ngIf="user.id !== accountService.aTeam.ownerId">
+            <button mat-button color="primary" (click)="changeUserStatus(user)">{{user.accountType == 'user' ? 'CHANGE TO OWNER' : 'CHANGE TO USER'}}</button>
+            <button mat-icon-button id="delete" (click)="deleteUser(user)"><mat-icon>delete</mat-icon></button>
+          </div>
+        </mat-list-item>
+      </mat-list>
+</div>
