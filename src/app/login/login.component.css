@@ -5,22 +5,37 @@
     justify-content: center;
 }
 
+.p {
+    padding: 100px 24px 24px 24px;
+    text-align: center;
+}
+
+.title {
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.info {
+    max-width: 95%;
+    width: 550px;
+    margin: auto;
+    font-size: 17px;
+    margin-top: 12px;
+    opacity: .6;
+}
+
 .card {
     box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
     border-radius: 12px;
     padding: 24px;
+    width: 300px;
+    margin: auto;
 }
 
 #header {
     height: 60px;
     width: 300px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: 32px;
-    color: #212121;
-    font-weight: 500;
+    object-fit: contain;
 }
 
 #form {
@@ -49,4 +64,25 @@ img {
     text-align: center;
     color: #666666;
     margin: 4px 0;
+}
+
+.row {
+    display: flex;
+    align-items: baseline;
+}
+
+#account {
+    font-size: 12px;
+    opacity: .6;
+}
+
+#sign-in {
+    cursor: pointer;
+    font-size: 14px;
+    color: #ff9100;
+    margin: 0 24px 0 4px;
+}
+
+#spacer {
+    height: 54px;
 }

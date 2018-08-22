@@ -37,6 +37,7 @@ export class LogComponent {
   constructor(
     public accountService: AccountService
   ) {
+    this.accountService.helper = this.accountService.helperProfiles.log;
     this.accountService.aTeamObservable.subscribe(aTeam => {
       if (aTeam) {
         let logCollection = this.accountService.db.collection("log", ref => ref.where("teamId", "==", this.accountService.aTeam.id))
@@ -57,6 +58,7 @@ export class LogComponent {
             });
           })
         ).subscribe(logs => {
+          if (logs.length == 0) this.accountService.showHelper = true;
           this.logs = logs;
           this.logs.forEach(log => {
             if (this.oldestLog > log.createdAt) {

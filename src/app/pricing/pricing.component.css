@@ -1,7 +1,7 @@
 #card {
     width: 500px;
     max-width: 95%;
-    margin: 48px auto;
+    margin: 120px auto;
 }
 
 #box {
@@ -9,7 +9,7 @@
     text-align: center;
     background-color: #455a64;
     color: #ffffff;
-    border-top: 3px solid #ff9100 !important;
+    border-top: 3px solid #00e676 !important;
     height: 60px;
     line-height: 60px;
     margin-bottom: 40px;
@@ -26,7 +26,7 @@ mat-icon.mat-icon.material-icons {
     width: 45px;
     font-size: 45px;
     margin-right: 24px;
-    color: #ff9100;
+    color: #00e676;
 }
 
 .info {
@@ -38,7 +38,7 @@ mat-icon.mat-icon.material-icons {
     text-align: center;
     font-size: 19px;
     opacity: .6;
-    margin: 80px 0 30px 0;
+    margin: 60px 0 30px 0;
 }
 
 #button-box {

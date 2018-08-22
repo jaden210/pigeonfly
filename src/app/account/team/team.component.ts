@@ -16,6 +16,7 @@ export class TeamComponent implements OnInit {
     public accountService: AccountService,
     public dialog: MatDialog
   ) {
+    this.accountService.helper = this.accountService.helperProfiles.newTeam;
     let invitedCollection = this.accountService.db.collection<InviteToTeam[]>("invitation", ref => ref.where("status", "==", "invited"));
     invitedCollection.snapshotChanges().pipe(
       map(actions => {

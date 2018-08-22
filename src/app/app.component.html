@@ -5,7 +5,7 @@
   <button mat-button routerLink="pricing" routerLinkActive="active">Pricing</button>
   <button mat-button routerLink="about" routerLinkActive="active">About us</button>
   <div class="flex"></div>
-  <button mat-stroked-button  routerLink="login">START FOR FREE</button>
+  <button mat-stroked-button routerLink="login">{{appService.isUser ? 'GO TO ACCOUNT' : 'START FOR FREE'}}</button>
 </mat-toolbar>
 <div id="spacer"></div>
 <router-outlet></router-outlet>

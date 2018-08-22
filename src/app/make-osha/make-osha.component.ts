@@ -50,17 +50,35 @@ export class MakeOSHAComponent implements OnInit {
   }
 
   push() {
-    this.appService.db.collection(this.collection).add({...this.newDoc}).then(() => {
+    if (this.newDoc.id) {
+      this.appService.db.collection(this.collection).doc(this.newDoc.id).update({...this.newDoc}).then(() => {
+        this.newDoc = new NewDoc();
+      });
+    } else {
+      this.appService.db.collection(this.collection).add({...this.newDoc}).then(() => {
+        this.newDoc = new NewDoc();
+      });
+    }
+  }
+  
+  deleteDoc() {
+    this.appService.db.collection(this.collection).doc(this.newDoc.id).delete().then(() => {
       this.newDoc = new NewDoc();
     })
+  }
+
+  createDoc() {
+    this.newDoc = new NewDoc();
   }
 
 }
 
 
 export class NewDoc {
+  id?: string;
   subject: string;
   content: any;
+  order: number;
 }
 
 @Pipe({name: 'safeHtml'})

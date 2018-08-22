@@ -1,6 +1,9 @@
 #title {
     height: 37px;
+    outline: none;
+    cursor: pointer;
 }
+
 
 #toolbar {
     position: fixed;

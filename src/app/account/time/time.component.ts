@@ -39,6 +39,7 @@ export class TimeComponent {
   constructor(
     public accountService: AccountService
   ) {
+    this.accountService.helper = this.accountService.helperProfiles.time;
     this.accountService.aTeamObservable.subscribe(aTeam => {
       if (aTeam) {
         let timeCollection = this.accountService.db.collection("timeclock", ref => ref.where("teamId", "==", this.accountService.aTeam.id).where("clockOut", "<=", new Date()))
@@ -60,6 +61,7 @@ export class TimeComponent {
             });
           })
         ).subscribe(timeClocks => {
+          if (timeClocks.length == 0) this.accountService.showHelper = true;
           this.timeClocks = timeClocks;
           this.timeClocks.forEach(timeClock => {
             if (this.oldestLog > timeClock.clockIn) {

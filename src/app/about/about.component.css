@@ -1,3 +1,28 @@
+.p {
+    padding: 100px 24px 24px 24px;
+    text-align: center;
+}
+
+.title {
+    font-size: 32px;
+    font-weight: 700;
+    width: 720px;
+    max-width: 90vw;
+    text-align: center;
+    margin: auto;
+}
+
+
+
+.info {
+    max-width: 95%;
+    width: 550px;
+    margin: auto;
+    font-size: 17px;
+    margin-top: 12px;
+    opacity: .6;
+}
+
 #crew {
     display: flex;
     flex-wrap: wrap;
@@ -34,5 +59,12 @@
 
 #history {
     margin: auto;
-    max-width: 90%;
+    max-width: 80%;
+    opacity: .6;
+}
+
+
+#start-button {
+    color: #ffffff;
+    margin: 56px;
 }

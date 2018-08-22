@@ -7,6 +7,7 @@ import { AngularFirestore } from 'angularfire2/firestore';
 export class AppService {
 
   isUser: boolean = false; // decides if a user has logged in before
+  isLoggedIn: boolean = false; // decides if a user is logged in
 
   constructor(
     public db: AngularFirestore

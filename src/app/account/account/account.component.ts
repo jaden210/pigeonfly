@@ -22,6 +22,7 @@ export class ProfileComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.accountService.helper = this.accountService.helperProfiles.account;
     if (this.accountService.aTeam.ownerId == this.accountService.user.id) {
       this.showCompany = true;
     }

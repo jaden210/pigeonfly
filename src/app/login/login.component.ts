@@ -16,8 +16,10 @@ export class LoginComponent implements OnInit {
   constructor(
     private auth: AngularFireAuth,
     public router: Router,
-    private appService: AppService
-  ) { }
+    public appService: AppService
+  ) {
+    if (this.appService.isLoggedIn) this.sendToAccount(); // this will cause a loop if trying to go back to this page from account
+  }
 
   ngOnInit() {
   }
@@ -36,6 +38,7 @@ export class LoginComponent implements OnInit {
           accountType: 'owner',
           teams: {}
         }).then(() => {
+          this.isUser();
           this.sendToAccount(); // less efficient but more uniform
         });
       },
@@ -56,6 +59,11 @@ export class LoginComponent implements OnInit {
 
   sendToAccount() {
     this.router.navigate(['account']);
+  }
+
+  isUser() {
+    localStorage.setItem('minute-user', 'true');
+    this.appService.isUser = true;
   }
 
 }

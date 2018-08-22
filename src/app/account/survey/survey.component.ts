@@ -20,6 +20,7 @@ export class SurveyComponent implements OnInit {
     public accountService: AccountService,
     public snackbar: MatSnackBar
   ) {
+    this.accountService.helper = this.accountService.helperProfiles.survey;
     this.accountService.aTeamObservable.subscribe(team => {
       if (team) {
         let surveyCollection = this.accountService.db.collection<Survey[]>("survey", ref => ref.where("teamId", "==", this.accountService.aTeam.id).orderBy("createdAt", "desc"));
@@ -35,6 +36,7 @@ export class SurveyComponent implements OnInit {
             });
           })
         ).subscribe(surveys => {
+          if (surveys.length == 0) this.accountService.showHelper = true;
           this.surveys = surveys;
         });
       }
