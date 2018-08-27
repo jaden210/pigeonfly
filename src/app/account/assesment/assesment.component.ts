@@ -223,7 +223,7 @@ export class AssesmentComponent implements OnInit {
       });
       snackbar.afterDismissed().subscribe(action => {
         if (!action.dismissedByAction) {
-          this.accountService.db.collection("assesment").doc(this.aAssesment.id).delete().then(() => this.aAssesment == null);
+          this.accountService.db.collection("assesment").doc(this.aAssesment.id).delete().then(() => this.aAssesment = null);
         } else {
           this.aAssesment = null;
         }
