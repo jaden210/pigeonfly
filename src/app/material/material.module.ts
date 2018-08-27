@@ -20,7 +20,8 @@ import {
   MatButtonToggleModule,
   MatSnackBarModule,
   MatDialogModule,
-  MatTooltipModule
+  MatTooltipModule,
+  MatExpansionModule
 } from '@angular/material';
 
 
@@ -45,7 +46,9 @@ import {
     MatButtonToggleModule,
     MatSnackBarModule,
     MatDialogModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatExpansionModule,
+    MatCheckboxModule
   ],
   exports: [
     MatButtonModule,
@@ -66,7 +69,9 @@ import {
     MatButtonToggleModule,
     MatSnackBarModule,
     MatDialogModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatExpansionModule,
+    MatCheckboxModule
   ],
   declarations: []
 })

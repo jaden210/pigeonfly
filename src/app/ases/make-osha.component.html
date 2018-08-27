@@ -1,0 +1,52 @@
+<div class="full">
+  
+  <div id="top">
+    <mat-form-field style="width: 500px">
+      <input matInput type="text" placeholder="collection name" [(ngModel)]="collection" (blur)="get()">
+    </mat-form-field>
+  </div>
+  <div id="bottom">
+    <div class="side">
+      <div class="list">
+        <div class="list-item" *ngFor="let item of list" (click)="selectDoc(item)">
+          {{item.subject}} - {{item.order}}
+        </div>
+      </div>
+    </div>
+    <div class="side" style="flex:2">
+      <div class="row">
+        <button mat-raised-button color="primary" (click)="createDoc()">CREATE NEW</button>
+        <mat-label style="margin-right:24px">Subject</mat-label>
+        <mat-form-field>
+          <input matInput type="text" placeholder="name" [(ngModel)]="newDoc.subject">
+        </mat-form-field>
+        <mat-label style="margin-right:24px">Order</mat-label>
+        <mat-form-field>
+          <input matInput type="number" step="1" placeholder="order" [(ngModel)]="newDoc.order">
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <div class="list" style="width: 100%">
+          <div class="question" *ngFor="let question of newDoc.questions" style="display: flex">
+            <mat-form-field class="fill">
+              <input matInput type="text" placeholder="name" [(ngModel)]="question.name" (blur)="updateQ(question)">
+            </mat-form-field>
+            <button mat-button color="accent" (click)="deleteQ(question)">DELETE</button>
+          </div>
+          <div class="row">
+            <mat-form-field class="fill">
+              <input matInput type="text" placeholder="name" [(ngModel)]="newQuestion.name">
+            </mat-form-field>
+            <button mat-raised-button color="primary" (click)="addQuestion()">ADD</button>
+          </div>
+        </div>
+      </div>
+      <div class="row end">
+        <button mat-button *ngIf="newDoc.id" (click)="deleteDoc()" color="accent">DELETE</button>
+        <button mat-raised-button color="primary" (click)="push()">{{!newDoc.id ? 'PUSH TO ' + collection : 'MODIFY ' + newDoc.subject }}</button>
+      </div>
+      
+      
+    </div>
+  </div>
+</div>

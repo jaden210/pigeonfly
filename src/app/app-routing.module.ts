@@ -7,6 +7,7 @@ import { ContactComponent } from './contact/contact.component';
 import { WhyComponent } from './why/why.component';
 import { LoginComponent } from './login/login.component';
 import { MakeOSHAComponent } from './make-osha/make-osha.component';
+import { AssesComponent } from './ases/make-osha.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -17,6 +18,7 @@ const routes: Routes = [
   { path: 'why', component: WhyComponent },
   { path: 'login', component: LoginComponent },
   { path: 'ken-page', component: MakeOSHAComponent },
+  { path: 'osha-assesment', component: AssesComponent },
   { path: 'account', loadChildren: './account/account.module#AccountModule' }
 ]
 

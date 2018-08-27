@@ -88,7 +88,7 @@ export class TimeComponent {
       let day = date.format('DD');
       let dOW = date.format('ddd');
       let timeClocks = this.getClocksByDate(date); 
-      this.days.push({id: i, date, month, day, dOW, loggedHours: timeClocks.loggedHours, loggedMinutes: timeClocks.loggedMinutes, timeLogs: timeClocks.logs, loggers: timeClocks.loggers});
+      this.days.push({id: i + 1, date, month, day, dOW, loggedHours: timeClocks.loggedHours, loggedMinutes: timeClocks.loggedMinutes, timeLogs: timeClocks.logs, loggers: timeClocks.loggers});
     }
   }
 

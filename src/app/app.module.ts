@@ -22,6 +22,7 @@ import { MakeOSHAComponent, Safe } from './make-osha/make-osha.component';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 import { HttpClientModule } from '@angular/common/http';
 import { FooterComponent } from './footer/footer.component';
+import { AssesComponent } from './ases/make-osha.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { FooterComponent } from './footer/footer.component';
     ContactComponent,
     LoginComponent,
     MakeOSHAComponent,
+    AssesComponent,
     Safe,
     FooterComponent
   ],
