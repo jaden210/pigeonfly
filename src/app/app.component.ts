@@ -10,6 +10,9 @@ import { AngularFireAuth } from 'angularfire2/auth';
 })
 export class AppComponent {
 
+
+  body: HTMLElement;
+
   constructor(
     public router: Router,
     public appService: AppService,

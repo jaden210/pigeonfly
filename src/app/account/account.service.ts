@@ -48,6 +48,10 @@ export class AccountService {
     account: {
       name: "Your Account",
       description: "For the sake of your team, please complete all available information on this page."
+    },
+    team: {
+      name: "Your Account",
+      description: "For the sake of your team, please complete all available information on this page."
     }
   }
   helper: Helper = this.helperProfiles.newTeam;

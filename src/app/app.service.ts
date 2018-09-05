@@ -9,9 +9,13 @@ export class AppService {
   isUser: boolean = false; // decides if a user has logged in before
   isLoggedIn: boolean = false; // decides if a user is logged in
 
+
+  toolbarShadow: boolean = true;
+
   constructor(
     public db: AngularFirestore
   ) { }
+  
 }
 
 export class User { // also in account service

@@ -1,13 +1,22 @@
 
-  <div class="p">
-    <span class="title">The App That's Got Your Back</span>
-    <div class="info">For teams in the construction and services industry, Minute harnesses the power of mobile to
-       seamlessly capture worksite logs, safety training, OSHA safety compliance, and time and location tracking in
-        one place. This historical record strengthens your position in the event of OSHA audits or client litigation.
-         Your business is valuable. Protect it with Minute.
+  <div id="p1">
+    <div class="side">
+      <span class="title">The App That's Got Your Back</span>
+      <div class="info">For teams in the construction and services industry, there are fundamentals that can’t be overlooked: 
+        safety training, daily worksite logs, OSHA self-inspection and compliance, incident forms, and the risk of paralyzing audits, 
+        fines, claims or litigation if not done right. The bright side? <b>Minute makes this easy, and you can start now, for free.</b>
+      </div>
+      <div id="sign-up">
+        <mat-form-field appearance="outline">
+          <input matInput #email placeholder="enter your email address">
+        </mat-form-field>
+        <button mat-raised-button style="color:white;" color="accent" (click)="signUp()">START A FREE 30 DAY TRIAL</button>
+      </div>
+    </div>
+    <div class="side">
+      <div id="home-head"><img id="home-head-img" src="/assets/home/work.png"></div>
     </div>
   </div>
-  <div id="home-head"><img id="home-head-img" src="/assets/home/work.png"></div>
   <div class="p" id="p2">
     <span class="title">Less noise. Less risk.</span>
     <div class="info">By capturing and delivering important daily information, Minute enables compliance, mitigates litigation risk, 

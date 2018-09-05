@@ -8,8 +8,19 @@
 #toolbar {
     position: fixed;
     z-index: 1;
+    background-color: #ffffff;
 }
 
 #spacer {
     height: 64px;
+}
+
+
+.shadow {
+    box-shadow: 0 2px 4px 0px #9e9e9e;
+}
+
+.tactive {
+    transition: all 250ms;
+    border-bottom: 2px solid #ff9100 !important;
 }

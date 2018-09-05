@@ -34,6 +34,7 @@ export class TeamComponent implements OnInit {
    }
 
   ngOnInit() {
+    this.accountService.helper = this.accountService.helperProfiles.team;
   }
 
   inviteToTeam() {
