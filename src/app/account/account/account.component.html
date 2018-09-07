@@ -30,5 +30,13 @@
     <mat-form-field>
       <input matInput color="primary" placeholder="phone" type="tel" [(ngModel)]="accountService.aTeam.phone" (change)="saveTeam()">
     </mat-form-field>
+    <div id="ctype">
+      <div id="cti">Company Type<mat-icon style="color: #666666; cursor: pointer;" (click)="helper('companyType')">help</mat-icon></div>
+      <mat-radio-group class="radio-group" [(ngModel)]="accountService.aTeam.type" (change)="saveTeam()">
+          <mat-radio-button class="radio-button" *ngFor="let type of accountTypes" [value]="type.industryName">
+            {{type.industryName}}
+          </mat-radio-button>
+        </mat-radio-group>
+    </div>
   </div>
 </div>

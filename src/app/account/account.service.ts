@@ -50,8 +50,12 @@ export class AccountService {
       description: "For the sake of your team, please complete all available information on this page."
     },
     team: {
-      name: "Your Account",
-      description: "For the sake of your team, please complete all available information on this page."
+      name: "Team",
+      description: "On this page you’ll build your team by entering names and email addresses, and sending invitations. Invite as many members as you’d like. Once a member accepts the invitation, they’ll download the Minute app onto their phone and show up here. A green dot indicates someone who is currently clocked in. An orange dot indicates someone who has been clocked in today, but is not currently clocked in. A gray dot is someone who has not clocked in at any point today. Location is also recorded with each clock in or out and can be accessed by clicking on the map pin. Return to this page often to see who’s actively on the clock, and to invite more members to join."
+    },
+    companyType: {
+      name: "Company Type",
+      description: "Selecting a company type will help us show the right infomation to your users in the app. put better stuff here."
     }
   }
   helper: Helper = this.helperProfiles.newTeam;

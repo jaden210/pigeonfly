@@ -15,6 +15,7 @@ import { AgmCoreModule } from '@agm/core';
 import { MomentModule } from 'angular2-moment';
 import { SearchPipe } from './log/search.pipe';
 import { MapDialogComponent } from './map-dialog/map-dialog.component';
+import { IncidentReportsComponent } from './incident-reports/incident-reports.component';
 
 @NgModule({
   imports: [
@@ -39,7 +40,8 @@ import { MapDialogComponent } from './map-dialog/map-dialog.component';
     TeamComponent,
     InviteDialog,
     SearchPipe,
-    MapDialogComponent
+    MapDialogComponent,
+    IncidentReportsComponent
   ],
   exports: [
     MaterialModule

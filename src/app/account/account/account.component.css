@@ -54,3 +54,24 @@ mat-form-field {
     padding: 24px;
     box-sizing: border-box;
 }
+
+#ctype {
+    width: 100%;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+#cti {
+    display: flex;
+    justify-content: space-between;
+}
+
+.radio-group {
+    display: inline-flex;
+    flex-direction: column;
+    padding: 12px;
+}
+  
+.radio-button {
+    margin: 5px;
+}
