@@ -29,8 +29,8 @@ export class MakeOSHAComponent implements OnInit {
   public editorConfig: AngularEditorConfig = {
     editable: true,
     spellcheck: true,
-    height: "80%",
-    minHeight: "300px",
+    height: "calc(100vh - 380px)",
+    minHeight: "100px",
     placeholder: "Content *",
     translate: "yes"
   };
@@ -76,7 +76,7 @@ export class MakeOSHAComponent implements OnInit {
     this.industry = industry;
     this.articles = this.appService.db
       .doc(`${this.oshaManual}/${industry.id}`)
-      .collection("articles", ref => ref.orderBy("name", "asc"))
+      .collection("articles")
       .snapshotChanges()
       .pipe(
         map((actions: any[]) =>
@@ -86,6 +86,17 @@ export class MakeOSHAComponent implements OnInit {
             return { id, ...data };
           })
         ),
+        map(articles => {
+          const orderedArticles = articles
+            .filter(article => article.order || article.order == 0)
+            .sort((a, b) => (a.order < b.order ? -1 : 1));
+          const alphabetizedArticles = articles
+            .filter(article => !article.order && article.order != 0)
+            .sort(
+              (a, b) => (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1)
+            );
+          return [...orderedArticles, ...alphabetizedArticles];
+        }),
         catchError(error => {
           console.error(`Error loading articles collection. ${error}`);
           alert(
