@@ -35,8 +35,9 @@
         <button mat-raised-button color="primary" *ngIf="activeArticle?.id" (click)="updateArticle()" [disabled]="!activeArticle.name || !activeArticle.content">UPDATE
           ARTICLE
         </button>
-        <button mat-button (click)="resetForm()" style="margin-left: 12px;">RESET FORM</button>
-        <button mat-button *ngIf="activeArticle?.id" (click)="newArticle()">CLOSE</button>
+        <button mat-button (click)="previewArticle()" style="margin-left: 12px;" [disabled]="!activeArticle.name || !activeArticle.content">PREVIEW</button>
+        <button mat-button (click)="resetForm()">RESET FORM</button>
+        <button mat-button *ngIf="activeArticle?.id" (click)="startANewArticle()">START A NEW ARTICLE</button>
         <button mat-icon-button (click)="deleteArticle()" *ngIf="activeArticle?.id" style="margin-left: auto"><mat-icon>delete</mat-icon></button>
       </div>
     </div>

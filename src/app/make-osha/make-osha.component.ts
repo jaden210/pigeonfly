@@ -2,8 +2,9 @@ import { Component, OnInit, Pipe } from "@angular/core";
 import { AppService } from "../app.service";
 import { map, tap, catchError, finalize } from "rxjs/operators";
 import { AngularEditorConfig } from "@kolkov/angular-editor";
-import { MatSnackBar } from "@angular/material";
+import { MatSnackBar, MatDialog } from "@angular/material";
 import { Location } from "@angular/common";
+import { PreviewDialogComponent } from "./preview-dialog/preview-dialog.component";
 import {
   DomSanitizer,
   SafeHtml,
@@ -23,6 +24,7 @@ export class MakeOSHAComponent implements OnInit {
   private oshaManual: string = "osha-manual-en";
   public articles: Observable<any[]>;
   public activeArticle = new Article();
+  private originalActiveArticle: Article;
   public industries: Observable<any[]>;
   public industry;
 
@@ -38,7 +40,8 @@ export class MakeOSHAComponent implements OnInit {
   constructor(
     private appService: AppService,
     private snackbar: MatSnackBar,
-    private location: Location
+    private location: Location,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -46,7 +49,9 @@ export class MakeOSHAComponent implements OnInit {
   }
 
   public goBack(): void {
-    this.location.back();
+    if (this.confirmNavigation()) {
+      this.location.back();
+    }
   }
 
   private getIndustries(): void {
@@ -73,8 +78,10 @@ export class MakeOSHAComponent implements OnInit {
   }
 
   public setIndustry(industry): void {
-    this.newArticle();
-    this.getArticles(industry);
+    if (this.confirmNavigation()) {
+      this.newArticle();
+      this.getArticles(industry);
+    }
   }
 
   private getArticles(industry): void {
@@ -115,7 +122,33 @@ export class MakeOSHAComponent implements OnInit {
   }
 
   public setActiveArticle(article = new Article()): void {
-    this.activeArticle = { ...article };
+    if (this.confirmNavigation()) {
+      this.activeArticle = { ...article };
+      this.originalActiveArticle = { ...article };
+    }
+  }
+
+  private confirmNavigation(): boolean {
+    if (
+      !this.activeArticle.id &&
+      (this.activeArticle.name || this.activeArticle.content)
+    ) {
+      return window.confirm(
+        "You have unsaved changes, are you sure you want to exit?"
+      );
+    } else if (this.activeArticle.id) {
+      if (
+        this.activeArticle.name.localeCompare(this.originalActiveArticle.name) >
+          0 ||
+        this.activeArticle.content.localeCompare(
+          this.originalActiveArticle.content
+        ) > 0
+      )
+        return window.confirm(
+          "You have unsaved changes, are you sure you want to exit?"
+        );
+      else return true;
+    } else return true;
   }
 
   public createArticle(): void {
@@ -170,30 +203,31 @@ export class MakeOSHAComponent implements OnInit {
       );
   }
 
-  public resetForm(): void {
-    if (this.activeArticle.id) {
-      this.appService.db
-        .doc(
-          `${this.oshaManual}/${this.industry.id}/articles/${
-            this.activeArticle.id
-          }`
-        )
-        .snapshotChanges()
-        .pipe(
-          map(a => {
-            const data = a.payload.data();
-            const id = a.payload.id;
-            return <Article>{ id, ...data };
-          })
-        )
-        .subscribe(article => (this.activeArticle = article));
-    } else {
+  public previewArticle(): void {
+    this.dialog.open(PreviewDialogComponent, {
+      data: { ...this.activeArticle }
+    });
+  }
+
+  public startANewArticle(): void {
+    if (this.confirmNavigation()) {
       this.newArticle();
     }
   }
 
-  public newArticle(): void {
-    setTimeout(() => (this.activeArticle = new Article()), 100);
+  public resetForm(): void {
+    if (this.confirmNavigation()) {
+      if (this.activeArticle.id) {
+        this.activeArticle = { ...this.originalActiveArticle };
+      } else this.newArticle();
+    }
+  }
+
+  private newArticle(): void {
+    setTimeout(() => {
+      this.activeArticle = new Article();
+      this.originalActiveArticle = new Article();
+    }, 100);
   }
 
   public deleteArticle(): void {
