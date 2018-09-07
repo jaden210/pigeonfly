@@ -1,17 +1,17 @@
 #actions {
-    display: flex;
+  display: flex;
 }
 
 #delete {
-    color: #666666;
+  color: #666666;
 }
 
 .mat-dialog-content {
-    display: flex;
-    flex-direction: column;
-    padding: 24px;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
 }
 
 #content {
-    padding-bottom: 24px;
+  padding-bottom: 24px;
 }

@@ -1,90 +1,87 @@
 .window {
-    height: calc(100vh - 76px) !important;
-    overflow: scroll;
-    padding-top: 56px;
+  height: calc(100vh - 76px) !important;
+  overflow: scroll;
+  padding-top: 56px;
 }
 
 .day {
-    display: flex;
-    align-items: center;
-    padding: 12px 24px;
-    margin: 12px;
-    border-radius: 12px;
-    background: #ffffff;
-    box-shadow: 0 1px 6px rgba(0,0,0,0.16), 0 1px 6px rgba(0,0,0,0.23);
+  display: flex;
+  align-items: center;
+  padding: 12px 24px;
+  margin: 12px;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.16), 0 1px 6px rgba(0, 0, 0, 0.23);
 }
 
 .box {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .row {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .heads {
-    display: flex;
-    align-items: center;
-    margin: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 0 12px 0 0;
 }
 
 .head {
-    height: 55px;
-    overflow: hidden;
-    width: 55px;
-    border-radius: 50%;
-    margin: 0 8px;
+  height: 55px;
+  overflow: hidden;
+  width: 55px;
+  border-radius: 8px;
+  margin: 0 8px;
 }
 
 img.head-img {
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
 }
-
 
 .user-name {
-    font-size: 17px;
-    display: flex;
+  font-size: 17px;
+  display: flex;
 }
 
-
-
 .map-icon {
-    margin: 0px 12px;
-    cursor: pointer;
+  margin: 0px 12px;
+  cursor: pointer;
 }
 
 .map {
-    height: 32px;
-    width: 32px;
-    font-size: 32px;
-    color: #666666;
+  height: 32px;
+  width: 32px;
+  font-size: 32px;
+  color: #666666;
 }
 
-
 .active-dot {
-    height: 12px;
-    width: 12px;
-    border-radius: 50%;
-    margin-right: 10px;
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  margin-right: 10px;
 }
 
 .uactive {
-    background-color: #4caf50;
+  background-color: #4caf50;
 }
 
 .busy {
-    background-color: #ff9800;
+  background-color: #ff9800;
 }
 
 .inactive {
-    background-color: #9e9e9e;
+  background-color: #9e9e9e;
 }
 
 .active-text {
-    margin-left: 22px;
-    color: #666666;
+  margin-left: 22px;
+  color: #666666;
 }

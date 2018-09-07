@@ -1,118 +1,206 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { trigger, style, transition, animate } from "@angular/animations";
-import { Timeclock, AccountService } from '../account.service';
-import { map, tap } from 'rxjs/operators';
-import * as moment from 'moment';
-
+import { Timeclock, AccountService } from "../account.service";
+import * as moment from "moment";
+import { TimeService } from "./time.service";
+import { DatePipe } from "@angular/common";
 
 @Component({
-  selector: 'app-time',
-  templateUrl: './time.component.html',
-  styleUrls: ['./time.component.css'],
+  selector: "app-time",
+  templateUrl: "./time.component.html",
+  styleUrls: ["./time.component.css"],
   animations: [
     trigger("expand", [
       transition("void => *", [
-        style({ height: 0}),
-        animate("400ms ease-in-out", style({ }))
+        style({ height: 0 }),
+        animate("400ms ease-in-out", style({}))
       ]),
       transition("* => void", [
-        style({ }),
+        style({}),
         animate("400ms ease-in-out", style({ height: 0 }))
       ])
     ])
-  ]
+  ],
+  providers: [TimeService]
 })
-export class TimeComponent {
-
+export class TimeComponent implements OnInit {
   searchStr; // template variable
   filterUsers; // template variable
 
-
-  timeClocks: any;
-  oldestLog: any = new Date();
+  timeClocks: any = [];
   days = [];
 
-  
   lat: number;
   long: number;
 
   constructor(
-    public accountService: AccountService
-  ) {
+    public accountService: AccountService,
+    private datePipe: DatePipe,
+    private timeService: TimeService
+  ) {}
+
+  ngOnInit() {
     this.accountService.helper = this.accountService.helperProfiles.time;
+    const fortnightAgo = new Date(Date.now() + 12096e5);
     this.accountService.aTeamObservable.subscribe(aTeam => {
-      if (aTeam) {
-        let timeCollection = this.accountService.db.collection("timeclock", ref => ref.where("teamId", "==", this.accountService.aTeam.id).where("clockOut", "<=", new Date()))
-        timeCollection.snapshotChanges().pipe(
-          map(actions => {
-            return actions.map(a => {
-              let data:any = a.payload.doc.data();
-              return <Timeclock>{
-                ...data,
-                id: a.payload.doc.id,
-                clockIn: data["clockIn"].toDate(),
-                clockOut: data["clockOut"].toDate()
-              };
-            });
-          }),
-          tap(results => {
-            results.sort((a, b) => {
-              return a.clockIn < b.clockIn ? -1 : 1;
-            });
-          })
-        ).subscribe(timeClocks => {
-          if (timeClocks.length == 0) this.accountService.showHelper = true;
-          this.timeClocks = timeClocks;
-          this.timeClocks.forEach(timeClock => {
-            if (this.oldestLog > timeClock.clockIn) {
-              this.oldestLog = timeClock.clockIn;
-            }
-            timeClock.user = this.accountService.teamUsers.find(user => user.id == timeClock.userId);
-            if (!this.lat && timeClock.inLatPos) { // gives scope to the google map plugin
-              this.lat = timeClock.inLatPos;
-              this.long = timeClock.inLongPos;
-            }
-          });
-          this.buildCalendar();
-        }); 
-      }
+      if (aTeam) this.getLogs(fortnightAgo, new Date());
     });
   }
 
-  buildCalendar() {
+  private getLogs(startDate: Date, endDate: Date): void {
+    console.log(startDate, endDate);
+    this.timeService
+      .getTimeLogs(this.accountService.aTeam.id, startDate, endDate)
+      .subscribe(logs => {
+        console.log(logs);
+        // if (logs.length == 0) this.accountService.showHelper = true;
+        // this.timeClocks.push(logs);
+        // this.buildCalendar(logs);
+      });
+  }
+
+  private buildCalendar(logs: any[]): void {
     let now: any = new Date();
-    let total_days = Math.round((now - this.oldestLog) / (1000 * 60 * 60 * 24)); //moment equilivant?
+    let total_days = Math.round(
+      (now - logs[logs.length - 1].clockIn) / (1000 * 60 * 60 * 24)
+    ); //moment equilivant?
     for (let i = 0; i <= total_days; i++) {
-      let date = moment().subtract(i, 'days');
-      let month = date.format('MMM');
-      let day = date.format('DD');
-      let dOW = date.format('ddd');
-      let timeClocks = this.getClocksByDate(date); 
-      this.days.push({id: i + 1, date, month, day, dOW, loggedHours: timeClocks.loggedHours, loggedMinutes: timeClocks.loggedMinutes, timeLogs: timeClocks.logs, loggers: timeClocks.loggers});
+      let date = moment().subtract(i, "days");
+      let month = date.format("MMM");
+      let day = date.format("DD");
+      let dOW = date.format("ddd");
+      let timeClocks = this.getClocksByDate(date, logs);
+      this.days.push({
+        id: i + 1,
+        date,
+        month,
+        day,
+        dOW,
+        loggedHours: timeClocks.loggedHours,
+        loggedMinutes: timeClocks.loggedMinutes,
+        timeLogs: timeClocks.logs,
+        loggers: timeClocks.loggers
+      });
     }
   }
 
-  getClocksByDate(date) {
+  getClocksByDate(date, logs) {
     let loggedHours = 0;
     let loggedMinutes = 0;
     let users = [];
-    let timeClocksOnDate: Timeclock[] = this.timeClocks.filter(day => moment(day.clockIn).isSame(date, 'day'));
+    let timeClocksOnDate: Timeclock[] = logs.filter(day =>
+      moment(day.clockIn).isSame(date, "day")
+    );
     timeClocksOnDate.forEach((day: Timeclock) => {
       loggedHours = loggedHours + day.loggedHours;
       loggedMinutes = loggedMinutes + day.loggedMinutes;
-      if(loggedMinutes > 60) {
+      if (loggedMinutes > 60) {
         loggedMinutes = loggedMinutes - 60;
         loggedHours = loggedHours + 1;
       }
       if (!users.find(user => user.id == day.userId)) {
-        users.push(this.accountService.teamUsers.find(user => user.id == day.userId));
+        users.push(
+          this.accountService.teamUsers.find(user => user.id == day.userId)
+        );
       }
     });
-    return {loggedHours, loggedMinutes, logs:timeClocksOnDate, loggers: users};
+    return {
+      loggedHours,
+      loggedMinutes,
+      logs: timeClocksOnDate,
+      loggers: users
+    };
   }
 
-  export() {
-    
+  public exportCSV(): void {
+    this.downloadCSV(
+      { filename: `timelog- ${this.Date} + .csv` },
+      this.timeClocks[0]
+    );
   }
 
+  private get Date(): string {
+    const date = new Date();
+    let mm = date.getMonth() + 1;
+    let dd = date.getDate();
+    let yyyy = date.getFullYear();
+    return `${mm}-${dd}-${yyyy}`;
+  }
+
+  convertOrderHeaderToCSV(args) {
+    let keys = [
+      { columnName: "Company Name Here", value: null },
+      { columnName: "Date Range", value: "07/27/2018 - 08/04/2018" },
+      { columnName: "Payroll Export", value: null }
+    ];
+    let result, columnDelimiter, lineDelimiter;
+    columnDelimiter = args.columnDelimiter || ",";
+    lineDelimiter = args.lineDelimiter || "\n";
+    result = "";
+    keys.forEach(key => {
+      result += key.columnName;
+      result += columnDelimiter;
+      result += key.value;
+      result += lineDelimiter;
+    });
+    result += lineDelimiter;
+    return result;
+  }
+
+  convertOrderLinesToCSV(args, logs) {
+    let map = [
+      { key: "userName", columnName: "Employee" },
+      { key: "date", columnName: "Date" },
+      { key: "clockIn", columnName: "Clock-In" },
+      { key: "clockOut", columnName: "Clock-Out" },
+      { key: "hours", columnName: "Hours" }
+    ];
+    logs = logs.map(log => {
+      return {
+        ...log,
+        userName: log.user.name,
+        date: this.datePipe.transform(log.clockIn, "MM/dd/yyyy"),
+        clockIn: this.datePipe.transform(log.clockIn, "h:mm a"),
+        clockOut: this.datePipe.transform(log.clockOut, "h:mm a"),
+        hours: log.loggedHours + "." + log.loggedMinutes
+      };
+    });
+    let result, headers, columnDelimiter, lineDelimiter;
+    if (!logs) return null;
+    columnDelimiter = args.columnDelimiter || ",";
+    lineDelimiter = args.lineDelimiter || "\n";
+    headers = "";
+    map.forEach(col => {
+      headers += col.columnName;
+      headers += columnDelimiter;
+    });
+    result = "";
+    result += headers;
+    result += lineDelimiter;
+    logs.forEach(log => {
+      map.forEach(col => {
+        result +=
+          '"' + (log[col.key] || log[col.key] == 0 ? log[col.key] : "") + '"';
+        result += columnDelimiter;
+      });
+      result += lineDelimiter;
+    });
+    return result;
+  }
+
+  downloadCSV(args, logs) {
+    let data, filename, link;
+    let csv = this.convertOrderHeaderToCSV({});
+    csv += this.convertOrderLinesToCSV({}, logs);
+    if (csv === null) return;
+    filename = args.filename || "timelog.csv";
+    if (!csv.match(/^data:text\/csv/i)) {
+      csv = "data:text/csv;charset=utf-8," + csv;
+    }
+    data = encodeURI(csv);
+    link = document.createElement("a");
+    link.setAttribute("href", data);
+    link.setAttribute("download", filename);
+    link.click();
+  }
 }

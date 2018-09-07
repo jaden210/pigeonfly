@@ -1,145 +1,158 @@
 .window {
-    height: calc(100vh - 88px) !important;
-    overflow: scroll;
-    padding-top: 24px;
+  overflow: scroll;
 }
 
 #search {
-    flex: 1;
-    font-size: 15px;
-    background: #41535B;
-    border: none;
-    outline: none;
-    color: #ffffff;
-    padding: 12px;
-    border-radius: 12px;
+  flex: 1;
+  font-size: 15px;
+  background: #41535b;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  padding: 12px;
+  border-radius: 12px;
 }
 
-::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-    color: #ffffff;
-  }
-  ::-moz-placeholder { /* Firefox 19+ */
-    color: #ffffff;
-  }
-  :-ms-input-placeholder { /* IE 10+ */
-    color: #ffffff;
-  }
-  :-moz-placeholder { /* Firefox 18- */
-    color: #ffffff;
-  }
+::-webkit-input-placeholder {
+  /* Chrome/Opera/Safari */
+  color: #ffffff;
+}
+::-moz-placeholder {
+  /* Firefox 19+ */
+  color: #ffffff;
+}
+:-ms-input-placeholder {
+  /* IE 10+ */
+  color: #ffffff;
+}
+:-moz-placeholder {
+  /* Firefox 18- */
+  color: #ffffff;
+}
 
 .filter {
-    margin: 0 24px;
+  margin: 0 24px;
 }
 
 .day-box {
-    margin: 0 12px;
-    border-bottom: 1px solid rgba(0,0,0,.14);
+  margin: 0 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.14);
 }
 
 .day {
-    display: flex;
-    align-items: center;
-    padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  padding: 12px 24px;
 }
 
 .box {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    width: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100px;
 }
 
 .hours {
-    align-items: center !important;
-    font-size: 24px;
+  font-size: 24px;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
 }
 
 .date {
-    font-size: 32px;
-    color: #212121;
+  font-size: 32px;
+  color: #212121;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 0 12px;
 }
 
 .dow {
-    font-size: 15px;
-    color: #666666;
-    margin-top: -8px;
+  font-size: 15px;
+  color: #666666;
+  margin-top: -8px;
 }
 
 .heads {
-    display: flex;
-    align-items: center;
-    margin: 0 12px;
+  display: flex;
+  align-items: center;
+  margin: 0 12px;
 }
 
 .head {
-    height: 55px;
-    overflow: hidden;
-    width: 55px;
-    border-radius: 50%;
-    margin: 0 8px;
+  height: 55px;
+  overflow: hidden;
+  width: 55px;
+  border-radius: 8px;
+  margin: 0 8px;
 }
 
 img.head-img {
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
 }
 
 .month {
-    margin: 24px;
-    font-size: 24px;
-    color: #666666;
+  padding: 24px;
+  font-size: 24px;
+  color: #666666;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0px;
+  background: #fafafa;
+  z-index: 99;
 }
 
 .details {
-    background-color: #ffffff;
-    margin-top: -18px;
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    border-bottom-left-radius: 12px;
-    border-bottom-right-radius: 12px;
+  background-color: #ffffff;
+  margin-top: -18px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
 }
 
 .logs {
-    margin: 24px 0 64px 0;
+  margin: 24px 0 64px 0;
 }
 
 .log {
-    margin: 8px 0;
-    padding: 12px 24px;
-    display: flex;
-    align-items: center;
+  margin: 8px 0;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
 }
 
 .log-profile-img-cont {
-    height: 50px;
-    width: 50px;
-    border-radius: 50%;
-    overflow: hidden;
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  overflow: hidden;
 }
 
 img.log-profile-img {
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
 }
 
 .user-name {
-    font-size: 17px;
-    margin: 0 24px;
-    display: flex;
+  font-size: 17px;
+  margin: 0 24px;
+  display: flex;
 }
 
 .log-box {
-    align-items: center !important;
-    flex: 1;
+  align-items: center !important;
+  flex: 1;
 }
 
 .log-info {
-    color: #666666;
-    font-size: 15px;
+  color: #666666;
+  font-size: 15px;
 }

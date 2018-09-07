@@ -1,37 +1,44 @@
-<div class="full">
-  
-  <div id="top">
-    <mat-form-field>
-      <input matInput type="text" placeholder="collection name" [(ngModel)]="collection" (blur)="get()">
-    </mat-form-field>
-  </div>
-  <div id="bottom">
-    <div class="side">
-      <div class="list">
-        <div class="list-item" *ngFor="let item of list" (click)="newDoc = item">
-          {{item.subject}} - {{item.order}}
-        </div>
-      </div>
-    </div>
-    <div class="side" style="flex:2">
-      <div class="row">
-        <button mat-raised-button color="primary" (click)="createDoc()">CREATE NEW</button>
-        <mat-label style="margin-right:24px">Subject</mat-label>
-        <mat-form-field>
-          <input matInput type="text" placeholder="name" [(ngModel)]="newDoc.subject">
+<div id="page">
+  <mat-toolbar>
+    <button mat-icon-button (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <span style="margin-left: 8px">Edit OSHA Manual</span>
+    <button mat-button [matMenuTriggerFor]="menu" style="margin-left: auto;">{{industry?.industryName}}</button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item *ngFor="let industry of industries | async" (click)="getArticles(industry)">{{industry.industryName}}</button>
+    </mat-menu>
+  </mat-toolbar>
+  <div id="content">
+    <mat-nav-list>
+      <mat-list-item *ngFor="let article of articles | async" (click)="setActiveArticle(article)" [class.active-li]="article.id == activeArticle.id">
+        <h3 matLine> {{article.name}} </h3>
+      </mat-list-item>
+    </mat-nav-list>
+    <div id="editor">
+      <div style="display: flex">
+        <mat-form-field appearance="outline" style="flex: 1; margin-right: 24px;">
+          <mat-label>Article Title</mat-label>
+          <input matInput placeholder="Enter Article Name" [(ngModel)]="activeArticle.name" required>
         </mat-form-field>
-        <mat-label style="margin-right:24px">Order</mat-label>
-        <mat-form-field>
-          <input matInput type="text" placeholder="name" [(ngModel)]="newDoc.order">
+        <mat-form-field appearance="outline" style="width: 100px;">
+          <mat-label>Ordering</mat-label>
+          <input matInput type="number" [(ngModel)]="activeArticle.order">
+          <mat-hint></mat-hint>
         </mat-form-field>
       </div>
-      <angular-editor [(ngModel)]="newDoc.content"></angular-editor>
-      <div class="row end">
-        <button mat-button *ngIf="newDoc.id" (click)="deleteDoc()" color="accent">DELETE</button>
-        <button mat-raised-button color="primary" (click)="push()">{{!newDoc.id ? 'PUSH TO ' + collection : 'MODIFY ' + newDoc.subject }}</button>
+      <angular-editor [(ngModel)]="activeArticle.content" [config]="editorConfig"></angular-editor>
+      <div style="display: flex; margin-top: 24px;">
+        <button mat-raised-button color="primary" *ngIf="!activeArticle?.id" (click)="createArticle()" [disabled]="!activeArticle.name || !activeArticle.content">CREATE
+          ARTICLE
+        </button>
+        <button mat-raised-button color="primary" *ngIf="activeArticle?.id" (click)="updateArticle()" [disabled]="!activeArticle.name || !activeArticle.content">UPDATE
+          ARTICLE
+        </button>
+        <button mat-button (click)="resetForm()" style="margin-left: 12px;">RESET FORM</button>
+        <button mat-button *ngIf="activeArticle?.id" (click)="newArticle()">CLOSE</button>
+        <button mat-icon-button (click)="deleteArticle()" *ngIf="activeArticle?.id" style="margin-left: auto"><mat-icon>delete</mat-icon></button>
       </div>
-      
-      
     </div>
   </div>
 </div>
