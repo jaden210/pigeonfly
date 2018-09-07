@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 export class ProfileComponent implements OnInit {
 
   showCompany: boolean = false;
+  accountTypes;
 
   constructor(
     public accountService: AccountService,
@@ -25,6 +26,12 @@ export class ProfileComponent implements OnInit {
     this.accountService.helper = this.accountService.helperProfiles.account;
     if (this.accountService.aTeam.ownerId == this.accountService.user.id) {
       this.showCompany = true;
+      let accountTypesCollection = this.accountService.db.collection("osha-manual-en");
+      accountTypesCollection.valueChanges().subscribe(accountTypes => {
+        console.log(accountTypes);
+        
+        this.accountTypes = accountTypes;
+      });
     }
   }
 
@@ -76,4 +83,9 @@ export class ProfileComponent implements OnInit {
     })
   }
 
+  helper(profile) {
+    this.accountService.helper = this.accountService.helperProfiles[profile];
+    this.accountService.showHelper = true;
+  }
+  
 }

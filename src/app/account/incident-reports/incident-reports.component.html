@@ -1,0 +1,34 @@
+<div class="window">
+    <div class="assesments">
+      <ng-container *ngFor="let report of incidentReports">
+        <div class="assesment">
+          <div class="header" (click)="selectReport(report)">
+            <div class="title" >{{report.type}}</div>
+            </div>
+          <div class="body">
+              {{report.reportName}}
+          </div>
+        </div>
+      </ng-container>
+    </div>
+    <div id="assesment-window" *ngIf="aReport && !takeInspection" [@report]>
+      <mat-toolbar color="primary">
+        <div id="title">{{aReport.reportName}}</div>
+        <div class="flex"></div>
+        <button mat-button class="ml" color="warn" (click)="cancel()">CLOSE</button>
+      </mat-toolbar>
+      <div class="panel">
+        <mat-accordion>
+          <mat-expansion-panel *ngFor="let q of aReport.questions; let i = index">
+            <mat-expansion-panel-header>
+              <mat-panel-title style="flex:20">
+                {{q.description}}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div id="answer">{{q.value}}</div>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </div>
+  </div>
+  

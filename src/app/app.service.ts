@@ -29,3 +29,17 @@ export class User { // also in account service
   accountType?: string;
   teams?: any[]; 
 }
+
+
+
+/*
+to push a tag:
+
+declare var gtag: Function;
+
+
+gtag("event", "video_watched", {
+      event_category: "video",
+      event_label: "video"
+    });
+*/

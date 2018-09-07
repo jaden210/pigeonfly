@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from "@angular/router";
 import { AppService } from './app.service';
 import { AngularFireAuth } from 'angularfire2/auth';
+declare var gtag: Function;
 
 @Component({
   selector: 'app-root',
@@ -18,6 +19,11 @@ export class AppComponent {
     public appService: AppService,
     public auth: AngularFireAuth
   ) { 
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        gtag('config', 'UA-125391496-1', {'page_path': event.url});      
+      }
+    });
     if(localStorage.getItem("minute-user")) { //they have been here before
       this.appService.isUser = true;
       this.auth.auth.onAuthStateChanged(user => {

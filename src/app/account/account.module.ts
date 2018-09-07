@@ -16,6 +16,7 @@ import { MomentModule } from "angular2-moment";
 import { SearchPipe } from "./log/search.pipe";
 import { MapDialogComponent } from "./map-dialog/map-dialog.component";
 import { DatePipe } from "@angular/common";
+import { IncidentReportsComponent } from "./incident-reports/incident-reports.component";
 
 @NgModule({
   imports: [
@@ -40,7 +41,8 @@ import { DatePipe } from "@angular/common";
     TeamComponent,
     InviteDialog,
     SearchPipe,
-    MapDialogComponent
+    MapDialogComponent,
+    IncidentReportsComponent
   ],
   exports: [MaterialModule],
   entryComponents: [InviteDialog, MapDialogComponent],
