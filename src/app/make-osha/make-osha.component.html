@@ -6,7 +6,7 @@
     <span style="margin-left: 8px">Edit OSHA Manual</span>
     <button mat-button [matMenuTriggerFor]="menu" style="margin-left: auto;">{{industry?.industryName}}</button>
     <mat-menu #menu="matMenu">
-      <button mat-menu-item *ngFor="let industry of industries | async" (click)="getArticles(industry)">{{industry.industryName}}</button>
+      <button mat-menu-item *ngFor="let industry of industries | async" (click)="setIndustry(industry)">{{industry.industryName}}</button>
     </mat-menu>
   </mat-toolbar>
   <div id="content">

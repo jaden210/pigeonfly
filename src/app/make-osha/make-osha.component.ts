@@ -1,6 +1,6 @@
 import { Component, OnInit, Pipe } from "@angular/core";
 import { AppService } from "../app.service";
-import { map, tap, catchError } from "rxjs/operators";
+import { map, tap, catchError, finalize } from "rxjs/operators";
 import { AngularEditorConfig } from "@kolkov/angular-editor";
 import { MatSnackBar } from "@angular/material";
 import { Location } from "@angular/common";
@@ -70,6 +70,11 @@ export class MakeOSHAComponent implements OnInit {
           return of([]);
         })
       );
+  }
+
+  public setIndustry(industry): void {
+    this.newArticle();
+    this.getArticles(industry);
   }
 
   private getArticles(industry): void {
