@@ -1,17 +1,31 @@
 import { Component, OnInit } from '@angular/core';
-import { AccountService, Survey } from '../account.service';
+import { trigger, style, transition, animate } from "@angular/animations";
+import { AccountService, Survey, User } from '../account.service';
 import { map } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-survey',
   templateUrl: './survey.component.html',
-  styleUrls: ['./survey.component.css']
+  styleUrls: ['./survey.component.css'],
+  animations: [
+    trigger("survey", [
+      transition(":enter", [
+        style({ transform: "translateY(100%)", opacity: 0 }),
+        animate("250ms ease-out", style({ transform: "translateY(0)", opacity: 1 }))
+      ]),
+      transition(":leave", [
+        style({ transform: "translateY(0)", opacity: 1 }),
+        animate("250ms ease-in", style({ transform: "translateY(100%)", opacity: 0 }))
+      ])
+    ])
+  ]
 })
 export class SurveyComponent implements OnInit {
 
   surveys: Survey[];
-  aSurvey: Survey = new Survey();
+  aSurvey: Survey = null;
+  surveyUsers;
   create: boolean = false; // template variable
 
   week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -71,6 +85,23 @@ export class SurveyComponent implements OnInit {
 
   selectSurvey(survey) {
     this.aSurvey = survey;
+    this.surveyUsers = [];
+    Object.keys(survey.userSurvey).forEach(key => {
+      let user: any = this.accountService.teamUsers.find(user => user.id == key);
+      if (survey.userSurvey[key] != 0) {
+        let userSurveyDoc = this.accountService.db.collection("survey-response").doc(survey.userSurvey[key]);
+        userSurveyDoc.valueChanges()
+        .subscribe((surveyResponse: any) => {
+          surveyResponse.createdAt = surveyResponse.createdAt.toDate();
+          user.hasResponse = true;
+          user.surveyResponse = surveyResponse;
+          this.surveyUsers.push(user);
+        });
+      } else {
+        user.hasResponse = false;
+        this.surveyUsers.push(user);
+      }
+    })
   }
 
   checkIfChecked(d) { // terribly inefficient
@@ -89,7 +120,7 @@ export class SurveyComponent implements OnInit {
     if (save) {
       this.accountService.db.collection("survey").doc(this.aSurvey.id).update({...this.aSurvey}).then(() => this.aSurvey = new Survey());
     } else {
-      this.aSurvey = new Survey();
+      this.aSurvey = null;
     }
   }
 

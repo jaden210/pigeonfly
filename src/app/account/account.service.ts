@@ -112,8 +112,11 @@ export class Survey {
     daily: true,
     dow: [],
     dom: [],
-    date: new Date()
-  }
+    date: new Date(),
+    once: true
+  };
+  OSHAArticleId?: string;
+  userSurvey: any; // map of {userId: (survey id || 0)}
 }
 
 export class Timeclock {

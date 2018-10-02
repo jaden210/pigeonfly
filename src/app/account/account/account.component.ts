@@ -26,10 +26,8 @@ export class ProfileComponent implements OnInit {
     this.accountService.helper = this.accountService.helperProfiles.account;
     if (this.accountService.aTeam.ownerId == this.accountService.user.id) {
       this.showCompany = true;
-      let accountTypesCollection = this.accountService.db.collection("osha-manual-en");
+      let accountTypesCollection = this.accountService.db.collection("osha-manual-en"); //thinking this will never be a large call, but check with nested collections to see later.
       accountTypesCollection.valueChanges().subscribe(accountTypes => {
-        console.log(accountTypes);
-        
         this.accountTypes = accountTypes;
       });
     }
