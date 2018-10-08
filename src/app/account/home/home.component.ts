@@ -29,22 +29,22 @@ export class HomeComponent {
     public accountService: AccountService,
     public dialog: MatDialog
   ) {
-    let invitedCollection = this.accountService.db.collection<InviteToTeam[]>("invitation", ref => ref.where("status", "==", "invited").where("teamId", "==", this.accountService.aTeam.id));
-    invitedCollection.snapshotChanges().pipe(
-      map(actions => {
-        return actions.map(a => {
-          let data:any = a.payload.doc.data();
-          return <InviteToTeam>{
-            ...data,
-            id: a.payload.doc.id,
-          };
-        });
-      })
-    ).subscribe(invitedUsers => {
-      this.invitedUsers = invitedUsers;
-    });
     this.accountService.teamUsersObservable.subscribe(teamUsers => {
       if (teamUsers) {
+        let invitedCollection = this.accountService.db.collection<InviteToTeam[]>("invitation", ref => ref.where("status", "==", "invited").where("teamId", "==", this.accountService.aTeam.id));
+        invitedCollection.snapshotChanges().pipe(
+          map(actions => {
+            return actions.map(a => {
+              let data:any = a.payload.doc.data();
+              return <InviteToTeam>{
+                ...data,
+                id: a.payload.doc.id,
+              };
+            });
+          })
+        ).subscribe(invitedUsers => {
+          this.invitedUsers = invitedUsers;
+        });
         this.accountService.teamUsers.forEach((user: User) => {
           let userClocks = this.accountService.db.collection("timeclock", ref => ref.where("userId", "==", user.id).orderBy("clockIn", "desc").limit(1));
           userClocks.snapshotChanges().pipe(
