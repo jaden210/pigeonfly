@@ -1,9 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { trigger, style, transition, animate } from "@angular/animations";
-import { Timeclock, AccountService, Log, User } from '../account.service';
+import { Timeclock, AccountService, Log, User, InviteToTeam } from '../account.service';
 import { map, tap } from 'rxjs/operators';
 import * as moment from 'moment';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { MapDialogComponent } from '../map-dialog/map-dialog.component';
 
 @Component({
@@ -13,6 +13,8 @@ import { MapDialogComponent } from '../map-dialog/map-dialog.component';
 })
 export class HomeComponent {
 
+
+  invitedUsers: InviteToTeam[];
   logs: any;
   oldestLog: any = new Date();
   days = [];
@@ -27,6 +29,20 @@ export class HomeComponent {
     public accountService: AccountService,
     public dialog: MatDialog
   ) {
+    let invitedCollection = this.accountService.db.collection<InviteToTeam[]>("invitation", ref => ref.where("status", "==", "invited"));
+    invitedCollection.snapshotChanges().pipe(
+      map(actions => {
+        return actions.map(a => {
+          let data:any = a.payload.doc.data();
+          return <InviteToTeam>{
+            ...data,
+            id: a.payload.doc.id,
+          };
+        });
+      })
+    ).subscribe(invitedUsers => {
+      this.invitedUsers = invitedUsers;
+    });
     this.accountService.teamUsersObservable.subscribe(teamUsers => {
       if (teamUsers) {
         this.accountService.teamUsers.forEach((user: User) => {
@@ -83,5 +99,75 @@ export class HomeComponent {
     })
   }
 
+  inviteToTeam() {
+    let dialog = this.dialog.open(InviteDialog, {
+      data: new InviteToTeam(),
+      disableClose: true
+    });
+    dialog.afterClosed().subscribe((data: InviteToTeam) => {
+      if (data) {
+        data.companyName = this.accountService.aTeam.name;
+        data.teamId = this.accountService.aTeam.id;
+        this.accountService.db.collection("invitation").add({... data})
+      }
+    });
+  }
+
+  editUser(user) {
+    let dialog = this.dialog.open(EditUserDialog, {
+      data: user,
+      disableClose: true
+    });
+    dialog.afterClosed().subscribe((data: User) => {
+      if (data) {
+        this.accountService.db.collection("user").doc(data.id).update({... data}).then(() => {
+          // throw a toast or something maybe?
+        });
+      }
+    });
+  }
+
+  resendEmail() {
+
+  }
+
+  deleteInvite(user) {
+    this.accountService.db.collection("invitation").doc(user.id).delete();
+  }
+
+
+}
+
+@Component({
+  selector: 'invite-dialog',
+  templateUrl: 'invite-dialog.html',
+  styleUrls: ['./home.component.css']
+})
+export class InviteDialog {
+
+  constructor(
+    public dialogRef: MatDialogRef<InviteDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: InviteToTeam) {}
+
+  close(): void {
+    this.dialogRef.close();
+  }
+
+}
+
+@Component({
+  selector: 'edit-user-dialog',
+  templateUrl: 'user-dialog.html',
+  styleUrls: ['./home.component.css']
+})
+export class EditUserDialog {
+
+  constructor(
+    public dialogRef: MatDialogRef<EditUserDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: User) {}
+
+  close(): void {
+    this.dialogRef.close();
+  }
 
 }

@@ -1,0 +1,8 @@
+<h2 mat-dialog-title>Choose a team to work on</h2>
+<mat-dialog-content>
+  <div id="d-content">Looks like you are working for more than one team. Choose which one you would like to view.</div>
+  <div class="team" *ngFor="let team of data" (click)="close(team.id)">{{team.name}}</div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button color="accent" (click)="close()">CANCEL</button>
+</mat-dialog-actions>

@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { trigger, style, transition, animate } from "@angular/animations";
 import { AccountService, User, Team } from './account.service';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { map } from "rxjs/operators";
 import { Router } from '@angular/router';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-account',
@@ -27,7 +28,8 @@ export class AccountComponent implements OnInit {
   constructor(
     public accountService: AccountService,
     private auth: AngularFireAuth,
-    public router: Router
+    public router: Router,
+    public dialog: MatDialog
   ) { 
     this.auth.auth.onAuthStateChanged(user => {
       if (user.uid) {
@@ -41,49 +43,100 @@ export class AccountComponent implements OnInit {
         ).subscribe((user: User) => {
           this.accountService.userObservable.next(user);
           this.accountService.user = user;
-          // there is a potential bug here if a user tries to become a customer. needs some additional thought.
-          if (Object.keys(user.teams).length == 0) { // create a team
-            let newTeam = new Team();
-            newTeam.createdAt = new Date();
-            newTeam.ownerId = user.id;
-            this.accountService.db.collection("team").add({...newTeam}).then(() => {
-              this.accountService.helper = this.accountService.helperProfiles.newTeam;
-              this.accountService.showHelper = true;
-              this.router.navigate(['team']);
+          let invitedCollection = this.accountService.db.collection("invitation", ref => ref.where("inviteEmail", "==", user.email));
+            invitedCollection.valueChanges().subscribe(invitations => {
+              if (invitations.length > 0) { // add them to their teams
+                invitations.forEach((team: any) => {
+                  user.teams[team.teamId] = team.isAdmin ? 1 : 0; // should probably document this so it isn't confusing
+                });
+                this.selectTeam();
+              }
+              if (Object.keys(user.teams).length == 0) { // no teams, no invitations
+                let dialog = this.dialog.open(NewHereDialog, {
+                  disableClose: true
+                });
+                dialog.afterClosed().subscribe((createTeam: boolean) => {
+                  createTeam ? this.createTeam() : this.router.navigate(['/login']);
+                });
+              } else this.selectTeam();
             });
-          } else { // get team and team members
-            let teamDoc = this.accountService.db.collection<Team>("team").doc(Object.keys(this.accountService.user.teams)[0]);
-            teamDoc.snapshotChanges().pipe(
-              map((actions:any) => {
-                let data = actions.payload.data();
-                data['id'] = actions.payload.id;
-                return data;
-              })
-            ).subscribe(team => {
-              this.accountService.aTeam = team;
-              this.accountService.aTeamObservable.next(team);
-              let membersCollection = this.accountService.db.collection<User>("user", ref => ref.where("teams." + team.id, ">=", 0));
-              membersCollection.snapshotChanges().pipe(
-                map(actions => actions.map(a => { //better way
-                  const data = a.payload.doc.data() as User;
-                  const id = a.payload.doc.id;
-                  return { id, ...data };
-                }))
-              ).subscribe(users => {
-                this.accountService.teamUsers = users;
-                this.accountService.teamUsersObservable.next(users);
-              })
-            });
-           
-          }
         });
-      } else {
-        this.router.navigate(['/login']);
-      }
+      } else this.logout();
+    });
+  }
+  
+  selectTeam() {
+    if (Object.keys(this.accountService.user.teams).length == 1) { // set the team and go home
+      this.setActiveTeam(Object.keys(this.accountService.user.teams)[0]);
+    } else { // pop the dialog asking which team to look at
+      let teams = [];
+      Object.keys(this.accountService.user.teams).forEach(key => {
+        let teamDoc = this.accountService.db.collection("team").doc(key)
+        teamDoc.valueChanges().subscribe(team => {
+          team['id'] = key;
+          teams.push(team);
+        });
+      })
+      let dialog = this.dialog.open(TeamSelectDialog, {
+        data: teams,
+        disableClose: true
+      });
+      dialog.afterClosed().subscribe((teamId: any) => {
+        if (teamId) {
+          this.setActiveTeam(teamId);
+        } else this.logout();
+      });
+    }
+  }
+  
+  createTeam() {
+    let newTeam = new Team();
+    newTeam.createdAt = new Date();
+    newTeam.ownerId = this.accountService.user.id;
+    this.accountService.db.collection("team").add({...newTeam}).then(() => {
+      this.accountService.helper = this.accountService.helperProfiles.newTeam;
+      this.accountService.showHelper = true;
+      this.router.navigate(['team']);
+    });
+  }
+  
+  setActiveTeam(teamId) {
+    localStorage.setItem("teamId", teamId); // so we only ask once.
+    let teamDoc = this.accountService.db.collection<Team>("team").doc(teamId);
+    teamDoc.snapshotChanges().pipe(
+      map((actions:any) => {
+        let data = actions.payload.data();
+        data['id'] = actions.payload.id;
+        return data;
+      })
+      ).subscribe(team => {
+        if (this.accountService.user.teams[team.id] == 0) { // they cant be here
+          let dialog = this.dialog.open(NoAccessDialog, {
+            disableClose: true
+          });
+          dialog.afterClosed().subscribe(() => this.logout());
+        } else {
+          this.accountService.aTeam = team;
+          this.accountService.aTeamObservable.next(team);
+          let membersCollection = this.accountService.db.collection<User>("user", ref => ref.where("teams." + team.id, ">=", 0));
+          membersCollection.snapshotChanges().pipe(
+            map(actions => actions.map(a => { //better way
+              const data = a.payload.doc.data() as User;
+              const id = a.payload.doc.id;
+              return { id, ...data };
+            }))
+            ).subscribe(users => {
+              this.accountService.teamUsers = users;
+              this.accountService.teamUsersObservable.next(users);
+          });
+        }
     });
   }
 
   ngOnInit() {
+    if (localStorage.getItem('teamId')) {
+      this.setActiveTeam(localStorage.getItem('teamId'));
+    }
   }
 
   closeHelper() {
@@ -107,4 +160,58 @@ export class AccountComponent implements OnInit {
       });
     }, 2000);
   }
+
+  logout() {
+    localStorage.removeItem('teamId');
+    this.auth.auth.signOut().then(() => this.router.navigate(['/login']));
+  }
+}
+
+@Component({
+  selector: 'new-here-dialog',
+  templateUrl: 'new-here-dialog.html',
+  styleUrls: ['./account.component.css']
+})
+export class NewHereDialog {
+
+  constructor(
+    public dialogRef: MatDialogRef<NewHereDialog>
+  ) {}
+  close(): void {
+    this.dialogRef.close();
+  }
+
+}
+
+@Component({
+  selector: 'team-select-dialog',
+  templateUrl: 'team-select-dialog.html',
+  styleUrls: ['./account.component.css']
+})
+export class TeamSelectDialog {
+
+  constructor(
+    public dialogRef: MatDialogRef<TeamSelectDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any) {}
+
+  close(teamId?): void {
+    this.dialogRef.close(teamId);
+  }
+
+}
+
+@Component({
+  selector: 'no-access-dialog',
+  templateUrl: 'no-access-dialog.html',
+  styleUrls: ['./account.component.css']
+})
+export class NoAccessDialog {
+
+  constructor(
+    public dialogRef: MatDialogRef<TeamSelectDialog>) {}
+
+  close(): void {
+    this.dialogRef.close();
+  }
+
 }

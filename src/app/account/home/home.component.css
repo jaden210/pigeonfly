@@ -62,6 +62,18 @@ img.head-img {
   color: #666666;
 }
 
+#delete {
+  margin-right: 8px;
+  color: #666666;
+}
+
+#fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  color: white;
+}
+
 .active-dot {
   height: 12px;
   width: 12px;
@@ -84,4 +96,14 @@ img.head-img {
 .active-text {
   margin-left: 22px;
   color: #666666;
+}
+
+.mat-dialog-content {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+}
+
+#content {
+  padding-bottom: 24px;
 }

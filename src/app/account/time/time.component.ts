@@ -53,9 +53,9 @@ export class TimeComponent implements OnInit {
       .getTimeLogs(this.accountService.aTeam.id, startDate, endDate)
       .subscribe(logs => {
         console.log(logs);
-        // if (logs.length == 0) this.accountService.showHelper = true;
-        // this.timeClocks.push(logs);
-        // this.buildCalendar(logs);
+         if (logs.length == 0) this.accountService.showHelper = true;
+         this.timeClocks.push(logs);
+         this.buildCalendar(logs);
       });
   }
 

@@ -146,4 +146,15 @@ export class InviteToTeam {
   companyName: string;
   teamId: string;
   status: string = 'invited';
+  isAdmin: boolean = false;
+}
+
+export class Event {
+  id?: string;
+  type: string; // survey, survey response, timeclock, log, injury report, supervisor report, self assesment
+  documentId: string;
+  userId: string;
+  title: string;
+  createdAt: any;
+  teamId: string;
 }

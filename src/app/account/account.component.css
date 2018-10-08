@@ -64,3 +64,19 @@ mat-sidenav {
     margin: 0 8px;
     cursor: pointer;
 }
+
+
+.mat-dialog-content {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+  }
+  
+  #d-content {
+    padding-bottom: 24px;
+  }
+
+  .team {
+      cursor: pointer;
+      padding: 12px;
+  }

@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>{{data.name}}</h2>
+<mat-dialog-content>
+  <div id="content">Changing anything here will directly reflect on the users app for their own profile.</div>
+  <mat-form-field>
+    <input matInput placeholder="name" [(ngModel)]="data.name">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="email" [(ngModel)]="data.email">
+  </mat-form-field>
+  <mat-slide-toggle [(ngModel)]="data.isAdmin">Allow admin access?</mat-slide-toggle>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button color="accent" (click)="close()">CANCEL</button>
+  <button mat-raised-button style="color: #ffffff" color="accent" [mat-dialog-close]="data">SAVE</button>
+</mat-dialog-actions>

@@ -192,7 +192,14 @@ export class AssesmentComponent implements OnInit {
   finishTake() {
     this.aSelfInspection.completed = true;
     this.aSelfInspection.completedAt = new Date();
-    this.saveLeaveTake;
+    this.accountService.db.collection("event").add({
+      type: "self-inspection",
+      documentId: this.aSelfInspection.id,
+      userId: this.accountService.user.id,
+      title: this.aSelfInspection.title,
+      createdAt: new Date(),
+      teamId: this.accountService.aTeam.id
+    }).then(() => this.saveLeaveTake());
   }
   
   saveLeaveTake() {

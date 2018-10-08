@@ -1,15 +1,14 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { ProfileComponent } from "./account/account.component";
-import { HomeComponent } from "./home/home.component";
+import { HomeComponent, InviteDialog, EditUserDialog } from "./home/home.component";
 import { SurveyComponent } from "./survey/survey.component";
 import { TimeComponent } from "./time/time.component";
 import { LogComponent } from "./log/log.component";
 import { AssesmentComponent } from "./assesment/assesment.component";
 import { AccountRoutingModule } from "./account-routing.module";
 import { MaterialModule } from "../material/material.module";
-import { AccountComponent } from "./account.component";
-import { TeamComponent, InviteDialog } from "./team/team.component";
+import { AccountComponent, NewHereDialog, TeamSelectDialog, NoAccessDialog } from "./account.component";
 import { FormsModule } from "@angular/forms";
 import { AgmCoreModule } from "@agm/core";
 import { MomentModule } from "angular2-moment";
@@ -17,6 +16,8 @@ import { SearchPipe } from "./log/search.pipe";
 import { MapDialogComponent } from "./map-dialog/map-dialog.component";
 import { DatePipe } from "@angular/common";
 import { IncidentReportsComponent } from "./incident-reports/incident-reports.component";
+import { EventComponent } from "./event/event.component";
+import { EventSearchPipe } from "./event/search.pipe";
 
 @NgModule({
   imports: [
@@ -32,20 +33,25 @@ import { IncidentReportsComponent } from "./incident-reports/incident-reports.co
   ],
   declarations: [
     AccountComponent,
+    NewHereDialog,
+    TeamSelectDialog,
     ProfileComponent,
     HomeComponent,
     SurveyComponent,
     TimeComponent,
     LogComponent,
+    EventComponent,
     AssesmentComponent,
-    TeamComponent,
     InviteDialog,
+    EditUserDialog,
+    NoAccessDialog,
     SearchPipe,
+    EventSearchPipe,
     MapDialogComponent,
     IncidentReportsComponent
   ],
   exports: [MaterialModule],
-  entryComponents: [InviteDialog, MapDialogComponent],
+  entryComponents: [InviteDialog, MapDialogComponent, EditUserDialog, NewHereDialog, TeamSelectDialog, NoAccessDialog],
   providers: [DatePipe]
 })
 export class AccountModule {}
