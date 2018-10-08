@@ -29,7 +29,7 @@ export class HomeComponent {
     public accountService: AccountService,
     public dialog: MatDialog
   ) {
-    let invitedCollection = this.accountService.db.collection<InviteToTeam[]>("invitation", ref => ref.where("status", "==", "invited"));
+    let invitedCollection = this.accountService.db.collection<InviteToTeam[]>("invitation", ref => ref.where("status", "==", "invited").where("teamId", "==", this.accountService.aTeam.id));
     invitedCollection.snapshotChanges().pipe(
       map(actions => {
         return actions.map(a => {
