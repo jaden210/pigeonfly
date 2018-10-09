@@ -46,7 +46,7 @@ export class HomeComponent {
           this.invitedUsers = invitedUsers;
         });
         this.accountService.teamUsers.forEach((user: User) => {
-          let userClocks = this.accountService.db.collection("timeclock", ref => ref.where("userId", "==", user.id).orderBy("clockIn", "desc").limit(1));
+          let userClocks = this.accountService.db.collection("timeclock", ref => ref.where("userId", "==", user.id).where("teamId", "==", this.accountService.aTeam.id).orderBy("clockIn", "desc").limit(1));
           userClocks.snapshotChanges().pipe(
             map(actions => {
               return actions.map(a => {
@@ -61,35 +61,37 @@ export class HomeComponent {
               });
             })
           ).subscribe(timeclocks => {
-            let status;
-            let statusColor;
-            if (moment(timeclocks[0].clockIn).diff(moment(), 'days') == 0) {
-              if (timeclocks[0].clockOut) {
-                status = 'clocked out at: ' + moment(timeclocks[0].clockOut).format('hh:mm a');
-                statusColor = "busy";
+            if (timeclocks.length > 0) {
+              let status;
+              let statusColor;
+              if (moment(timeclocks[0].clockIn).diff(moment(), 'days') == 0) {
+                if (timeclocks[0].clockOut) {
+                  status = 'clocked out at: ' + moment(timeclocks[0].clockOut).format('hh:mm a');
+                  statusColor = "busy";
+                } else {
+                  status = 'active for: ' + 
+                  moment().diff(moment(timeclocks[0].clockIn), 'hours') + 'h ' +
+                  moment().diff(moment(timeclocks[0].clockIn), 'minutes') + 'm '; // live timer would happen if this was in HTML
+                  statusColor = "active";
+                }
               } else {
-                status = 'active for: ' + 
-                moment().diff(moment(timeclocks[0].clockIn), 'hours') + 'h ' +
-                moment().diff(moment(timeclocks[0].clockIn), 'minutes') + 'm '; // live timer would happen if this was in HTML
-                statusColor = "active";
+                status = 'last active: ' + moment(timeclocks[0].clockOut).format('MMMM Do YYYY, h:mm:ss a');
+                statusColor = "inactive";
               }
-            } else {
-              status = 'last active: ' + moment(timeclocks[0].clockOut).format('MMMM Do YYYY, h:mm:ss a');
-              statusColor = "inactive";
+              let pushItem = {user, timeclock: timeclocks[0], status, statusColor};
+              var foundIndex = this.users.findIndex(x => x.user.id == pushItem.user.id);
+              if (foundIndex >= 0) {
+                this.users[foundIndex] = pushItem;
+              } else {
+                this.users.push(pushItem);
+              }
             }
-            let pushItem = {user, timeclock: timeclocks[0], status, statusColor};
-            var foundIndex = this.users.findIndex(x => x.user.id == pushItem.user.id);
-            if (foundIndex >= 0) {
-              this.users[foundIndex] = pushItem;
-            } else {
-              this.users.push(pushItem);
-            }
-          });
-        })
-      }
-    });
-  }
-
+            });
+          })
+        }
+      });
+    }
+    
   showMap(user) {
     let dialog = this.dialog.open(MapDialogComponent, {
       data: {
@@ -122,6 +124,7 @@ export class HomeComponent {
     });
     dialog.afterClosed().subscribe((data: any) => {
       if (data) {
+        data.inviteEmail = data.inviteEmail.toLowerCase();
         data.isAdmin ? data.teams[this.accountService.aTeam.id] = 1 : data.teams[this.accountService.aTeam.id] = 0;
         this.accountService.db.collection("user").doc(data.id).update({... data}).then(() => {
           // throw a toast or something maybe?

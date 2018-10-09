@@ -27,7 +27,7 @@ export class AppComponent {
     if(localStorage.getItem("minute-user")) { //they have been here before
       this.appService.isUser = true;
       this.auth.auth.onAuthStateChanged(user => {
-        if (user.uid) {
+        if (user && user.uid) {
           console.log(this.appService.isUser);
           this.appService.isLoggedIn = true;
         } 

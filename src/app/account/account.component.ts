@@ -32,7 +32,7 @@ export class AccountComponent implements OnInit {
     public dialog: MatDialog
   ) { 
     this.auth.auth.onAuthStateChanged(user => {
-      if (user.uid) {
+      if (user && user.uid) {
         let userDoc = this.accountService.db.collection("user").doc(user.uid)
         userDoc.snapshotChanges().pipe(
           map((actions:any) => {
@@ -43,7 +43,7 @@ export class AccountComponent implements OnInit {
         ).subscribe((user: User) => {
           this.accountService.userObservable.next(user);
           this.accountService.user = user;
-          let invitedCollection = this.accountService.db.collection("invitation", ref => ref.where("status", "==", "invited").where("inviteEmail", "==", user.email));
+          let invitedCollection = this.accountService.db.collection("invitation", ref => ref.where("status", "==", "invited").where("inviteEmail", "==", user.email.toLowerCase()));
             invitedCollection.snapshotChanges().pipe(
               map(actions => actions.map(a => {
                 const data = a.payload.doc.data() as InviteToTeam;
@@ -110,7 +110,7 @@ export class AccountComponent implements OnInit {
       this.accountService.db.collection('user').doc(this.accountService.user.id).update({...this.accountService.user});
       this.accountService.helper = this.accountService.helperProfiles.newTeam;
       this.accountService.showHelper = true;
-      this.router.navigate(['team']);
+      this.router.navigate(['account']);
     });
   }
   

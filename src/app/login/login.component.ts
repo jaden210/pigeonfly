@@ -18,10 +18,11 @@ export class LoginComponent implements OnInit {
     public router: Router,
     public appService: AppService
   ) {
-    if (this.appService.isLoggedIn) this.sendToAccount(); // this will cause a loop if trying to go back to this page from account
+    //if (this.appService.isLoggedIn) this.sendToAccount(); // this will cause a loop if trying to go back to this page from account
   }
 
   ngOnInit() {
+    localStorage.removeItem('teamId');
   }
 
   signInEmail() {
