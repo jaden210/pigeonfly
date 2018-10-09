@@ -71,6 +71,7 @@ export class User {
   uid: string;
   name?: string;
   email: string;
+  jobTitle?: string;
   profileUrl?: string;
   username?: string;
   phone?: string;

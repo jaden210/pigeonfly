@@ -7,7 +7,13 @@
   <mat-form-field>
     <input matInput placeholder="email" [(ngModel)]="data.email">
   </mat-form-field>
-  <mat-slide-toggle [(ngModel)]="data.isAdmin">Allow admin access?</mat-slide-toggle>
+  <mat-form-field>
+    <input matInput placeholder="job title" [(ngModel)]="data.jobTitle">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="phone" [(ngModel)]="data.phone">
+  </mat-form-field>
+  <mat-slide-toggle *ngIf="accountService.aTeam.ownerId !== accountService.user.id" [(ngModel)]="data.isAdmin">Allow admin access?</mat-slide-toggle>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button color="accent" (click)="close()">CANCEL</button>

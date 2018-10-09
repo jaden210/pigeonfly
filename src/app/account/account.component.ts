@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { trigger, style, transition, animate } from "@angular/animations";
-import { AccountService, User, Team } from './account.service';
+import { AccountService, User, Team, InviteToTeam } from './account.service';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { map } from "rxjs/operators";
 import { Router } from '@angular/router';
@@ -43,13 +43,21 @@ export class AccountComponent implements OnInit {
         ).subscribe((user: User) => {
           this.accountService.userObservable.next(user);
           this.accountService.user = user;
-          let invitedCollection = this.accountService.db.collection("invitation", ref => ref.where("inviteEmail", "==", user.email));
-            invitedCollection.valueChanges().subscribe(invitations => {
+          let invitedCollection = this.accountService.db.collection("invitation", ref => ref.where("status", "==", "invited").where("inviteEmail", "==", user.email));
+            invitedCollection.snapshotChanges().pipe(
+              map(actions => actions.map(a => {
+                const data = a.payload.doc.data() as InviteToTeam;
+                const id = a.payload.doc.id;
+                return { id, ...data };
+              }))
+              ).subscribe(invitations => {
               if (invitations.length > 0) { // add them to their teams
                 invitations.forEach((team: any) => {
                   user.teams[team.teamId] = team.isAdmin ? 1 : 0; // should probably document this so it isn't confusing
+                  team.status = 'joined';
+                  this.accountService.db.collection("invitation").doc(team.id).update({...team});
                 });
-                this.selectTeam();
+                this.accountService.db.collection("user").doc(user.id).update({...user}).then(() => this.selectTeam());
               }
               if (Object.keys(user.teams).length == 0) { // no teams, no invitations
                 let dialog = this.dialog.open(NewHereDialog, {
@@ -69,6 +77,10 @@ export class AccountComponent implements OnInit {
     if (Object.keys(this.accountService.user.teams).length == 1) { // set the team and go home
       this.setActiveTeam(Object.keys(this.accountService.user.teams)[0]);
     } else { // pop the dialog asking which team to look at
+      if (localStorage.getItem('teamId')) {
+        this.setActiveTeam(localStorage.getItem('teamId'));
+        return;
+      }
       let teams = [];
       Object.keys(this.accountService.user.teams).forEach(key => {
         let teamDoc = this.accountService.db.collection("team").doc(key)
@@ -93,7 +105,9 @@ export class AccountComponent implements OnInit {
     let newTeam = new Team();
     newTeam.createdAt = new Date();
     newTeam.ownerId = this.accountService.user.id;
-    this.accountService.db.collection("team").add({...newTeam}).then(() => {
+    this.accountService.db.collection("team").add({...newTeam}).then(snapshot => {
+      this.accountService.user.teams[snapshot.id] = 1;
+      this.accountService.db.collection('user').doc(this.accountService.user.id).update({...this.accountService.user});
       this.accountService.helper = this.accountService.helperProfiles.newTeam;
       this.accountService.showHelper = true;
       this.router.navigate(['team']);
@@ -134,9 +148,7 @@ export class AccountComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (localStorage.getItem('teamId')) {
-      this.setActiveTeam(localStorage.getItem('teamId'));
-    }
+    
   }
 
   closeHelper() {

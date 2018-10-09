@@ -114,12 +114,15 @@ export class HomeComponent {
   }
 
   editUser(user) {
+    let dUser = user.user;
+    dUser.isAdmin = user.user.teams[this.accountService.aTeam.id] == 1 ? true : false;
     let dialog = this.dialog.open(EditUserDialog, {
-      data: user,
+      data: user.user,
       disableClose: true
     });
-    dialog.afterClosed().subscribe((data: User) => {
+    dialog.afterClosed().subscribe((data: any) => {
       if (data) {
+        data.isAdmin ? data.teams[this.accountService.aTeam.id] = 1 : data.teams[this.accountService.aTeam.id] = 0;
         this.accountService.db.collection("user").doc(data.id).update({... data}).then(() => {
           // throw a toast or something maybe?
         });
@@ -164,6 +167,7 @@ export class EditUserDialog {
 
   constructor(
     public dialogRef: MatDialogRef<EditUserDialog>,
+    public accountService: AccountService,
     @Inject(MAT_DIALOG_DATA) public data: User) {}
 
   close(): void {
