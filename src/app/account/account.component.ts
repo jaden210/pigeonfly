@@ -79,25 +79,25 @@ export class AccountComponent implements OnInit {
     } else { // pop the dialog asking which team to look at
       if (localStorage.getItem('teamId')) {
         this.setActiveTeam(localStorage.getItem('teamId'));
-        return;
-      }
-      let teams = [];
-      Object.keys(this.accountService.user.teams).forEach(key => {
-        let teamDoc = this.accountService.db.collection("team").doc(key)
-        teamDoc.valueChanges().subscribe(team => {
-          team['id'] = key;
-          teams.push(team);
+      } else {
+        let teams = [];
+        Object.keys(this.accountService.user.teams).forEach(key => {
+          let teamDoc = this.accountService.db.collection("team").doc(key)
+          teamDoc.valueChanges().subscribe(team => {
+            team['id'] = key;
+            teams.push(team);
+          });
+        })
+        let dialog = this.dialog.open(TeamSelectDialog, {
+          data: teams,
+          disableClose: true
         });
-      })
-      let dialog = this.dialog.open(TeamSelectDialog, {
-        data: teams,
-        disableClose: true
-      });
-      dialog.afterClosed().subscribe((teamId: any) => {
-        if (teamId) {
-          this.setActiveTeam(teamId);
-        } else this.logout();
-      });
+        dialog.afterClosed().subscribe((teamId: any) => {
+          if (teamId) {
+            this.setActiveTeam(teamId);
+          } else this.logout();
+        });
+      }
     }
   }
   
@@ -139,7 +139,7 @@ export class AccountComponent implements OnInit {
               const id = a.payload.doc.id;
               return { id, ...data };
             }))
-            ).subscribe(users => {
+            ).subscribe(users => { // why is this being hit twice???????
               this.accountService.teamUsers = users;
               this.accountService.teamUsersObservable.next(users);
           });

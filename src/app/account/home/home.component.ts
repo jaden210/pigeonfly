@@ -19,7 +19,7 @@ export class HomeComponent {
   oldestLog: any = new Date();
   days = [];
 
-  users = [];
+  users;
 
   
   lat: number;
@@ -45,6 +45,7 @@ export class HomeComponent {
         ).subscribe(invitedUsers => {
           this.invitedUsers = invitedUsers;
         });
+        this.users = [];
         this.accountService.teamUsers.forEach((user: User) => {
           let userClocks = this.accountService.db.collection("timeclock", ref => ref.where("userId", "==", user.id).where("teamId", "==", this.accountService.aTeam.id).orderBy("clockIn", "desc").limit(1));
           userClocks.snapshotChanges().pipe(
@@ -79,6 +80,14 @@ export class HomeComponent {
                 statusColor = "inactive";
               }
               let pushItem = {user, timeclock: timeclocks[0], status, statusColor};
+              var foundIndex = this.users.findIndex(x => x.user.id == pushItem.user.id);
+              if (foundIndex >= 0) {
+                this.users[foundIndex] = pushItem;
+              } else {
+                this.users.push(pushItem);
+              }
+            } else {
+              let pushItem = {user, timeclock: null, status:"new member", statusColor:"inactive"};
               var foundIndex = this.users.findIndex(x => x.user.id == pushItem.user.id);
               if (foundIndex >= 0) {
                 this.users[foundIndex] = pushItem;
