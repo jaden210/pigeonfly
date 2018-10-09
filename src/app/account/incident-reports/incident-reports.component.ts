@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { trigger, style, transition, animate } from "@angular/animations";
 import { AccountService } from '../account.service';
 import { map } from 'rxjs/operators';
+import * as jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-incident-reports',
@@ -61,6 +62,35 @@ export class IncidentReportsComponent implements OnInit {
 
   cancel() {
     this.aReport = null;
+  }
+
+  export() {
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'in',
+      format: [8.5, 11]
+    });
+
+    doc.setFontSize(10);
+
+    const type = this.aReport.type;
+    const reportName = this.aReport.reportName;
+    const createdAt = this.aReport.createdAt.toString();
+    const x = 0.5;
+    let y = 2;
+
+    doc.text(type, x, 1);
+    doc.text(reportName, x, 1.25);
+    doc.text(createdAt, x, 1.5);
+
+    this.aReport.questions.forEach(function(item, index) {
+      doc.text((index + 1) + '. ' + item.description, x, y);
+      y += 0.25;
+      doc.text(item.value, x, y);
+      y += 0.25;
+    });
+
+    doc.save('incident.pdf');
   }
 
 }

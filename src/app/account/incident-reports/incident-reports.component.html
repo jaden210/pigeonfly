@@ -15,6 +15,7 @@
       <mat-toolbar color="primary">
         <div id="title">{{aReport.reportName}}</div>
         <div class="flex"></div>
+         <button mat-button class="ml" color="warn" (click)="export()">EXPORT PDF</button>
         <button mat-button class="ml" color="warn" (click)="cancel()">CLOSE</button>
       </mat-toolbar>
       <div class="panel">
@@ -31,4 +32,3 @@
       </div>
     </div>
   </div>
-  
