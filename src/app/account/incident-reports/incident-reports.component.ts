@@ -71,26 +71,83 @@ export class IncidentReportsComponent implements OnInit {
       format: [8.5, 11]
     });
 
-    doc.setFontSize(10);
+    doc.setFont('courier');
+    doc.setFontSize(9);
 
     const type = this.aReport.type;
     const reportName = this.aReport.reportName;
     const createdAt = this.aReport.createdAt.toString();
-    const x = 0.5;
-    let y = 2;
 
-    doc.text(type, x, 1);
-    doc.text(reportName, x, 1.25);
-    doc.text(createdAt, x, 1.5);
+    const startOfPage = 0.75;
+    const endOfPage = 10.25;
+    const lineSpace = 0.2;
+    const sectionGap = 0.05;
+    const maxChars = 95;
+
+    const x = 0.5;
+    let y = startOfPage;
+
+    doc.text(type, x, y);
+    y += lineSpace;
+    doc.text(reportName, x, y);
+    y += lineSpace;
+    doc.text(createdAt, x, y);
+    y += (lineSpace + lineSpace + sectionGap);
 
     this.aReport.questions.forEach(function(item, index) {
-      doc.text((index + 1) + '. ' + item.description, x, y);
-      y += 0.25;
-      doc.text(item.value, x, y);
-      y += 0.25;
+      let buffer = item.description;
+      let prefix = (index + 1 <= 9 ? ' ' : '') + (index + 1) + '. ';
+      while (buffer.length > 0) {
+        if (buffer.length <= maxChars) {
+          doc.text(prefix + buffer, x, y);
+          y += lineSpace;
+          if (y > endOfPage) {
+            doc.addPage();
+            y = startOfPage;
+          }
+          buffer = '';
+          prefix = '    ';
+        } else {
+          const lastChar = buffer.substring(0, maxChars).lastIndexOf(' ');
+          doc.text(prefix + buffer.substring(0, lastChar), x, y);
+          y += lineSpace;
+          if (y > endOfPage) {
+            doc.addPage();
+            y = startOfPage;
+          }
+          buffer = buffer.substring(lastChar + 1);
+          prefix = '    ';
+        }
+      }
+
+      buffer = item.value;
+      while (buffer.length > 0) {
+        if (buffer.length <= maxChars) {
+          doc.text(prefix + buffer, x, y);
+          y += lineSpace;
+          if (y > endOfPage) {
+            doc.addPage();
+            y = startOfPage;
+          }
+          buffer = '';
+        } else {
+          const lastChar = buffer.substring(0, maxChars).lastIndexOf(' ');
+          doc.text(prefix + buffer.substring(0, lastChar), x, y);
+          y += lineSpace;
+          if (y > endOfPage) {
+            doc.addPage();
+            y = startOfPage;
+          }
+          buffer = buffer.substring(lastChar + 1);
+        }
+      }
+      y += sectionGap;
+      if (y > endOfPage) {
+            doc.addPage();
+            y = startOfPage;
+      }
     });
 
     doc.save('incident.pdf');
   }
-
 }
