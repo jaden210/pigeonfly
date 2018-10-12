@@ -23,14 +23,18 @@ export class ProfileComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.accountService.helper = this.accountService.helperProfiles.account;
-    if (this.accountService.aTeam.ownerId == this.accountService.user.id) {
-      this.showCompany = true;
-      let accountTypesCollection = this.accountService.db.collection("osha-manual-en"); //thinking this will never be a large call, but check with nested collections to see later.
-      accountTypesCollection.valueChanges().subscribe(accountTypes => {
-        this.accountTypes = accountTypes;
-      });
-    }
+    this.accountService.aTeamObservable.subscribe(team => {
+      if (team) {
+        this.accountService.helper = this.accountService.helperProfiles.account;
+        if (this.accountService.aTeam.ownerId == this.accountService.user.id) {
+          this.showCompany = true;
+          let accountTypesCollection = this.accountService.db.collection("osha-manual-en"); //thinking this will never be a large call, but check with nested collections to see later.
+          accountTypesCollection.valueChanges().subscribe(accountTypes => {
+            this.accountTypes = accountTypes;
+          });
+        }
+      }
+    })
   }
 
   upload(profile): void { // this will call the file input from our custom button

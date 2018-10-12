@@ -8,7 +8,7 @@ import { LogComponent } from "./log/log.component";
 import { AssesmentComponent } from "./assesment/assesment.component";
 import { AccountRoutingModule } from "./account-routing.module";
 import { MaterialModule } from "../material/material.module";
-import { AccountComponent, NewHereDialog, TeamSelectDialog, NoAccessDialog } from "./account.component";
+import { AccountComponent, TeamSelectDialog, NoAccessDialog } from "./account.component";
 import { FormsModule } from "@angular/forms";
 import { AgmCoreModule } from "@agm/core";
 import { MomentModule } from "angular2-moment";
@@ -33,7 +33,6 @@ import { EventSearchPipe } from "./event/search.pipe";
   ],
   declarations: [
     AccountComponent,
-    NewHereDialog,
     TeamSelectDialog,
     ProfileComponent,
     HomeComponent,
@@ -51,7 +50,7 @@ import { EventSearchPipe } from "./event/search.pipe";
     IncidentReportsComponent
   ],
   exports: [MaterialModule],
-  entryComponents: [InviteDialog, MapDialogComponent, EditUserDialog, NewHereDialog, TeamSelectDialog, NoAccessDialog],
+  entryComponents: [InviteDialog, MapDialogComponent, EditUserDialog, TeamSelectDialog, NoAccessDialog],
   providers: [DatePipe]
 })
 export class AccountModule {}

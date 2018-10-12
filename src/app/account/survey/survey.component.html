@@ -48,7 +48,7 @@
             </div>
             <div class="half" style="align-items: center; justify-content: center; padding-bottom: 40px;">
                 <mat-form-field *ngIf="aSurvey.runType == 'date'">
-                  <input matInput [matDatepicker]="picker" placeholder="Choose a date" (dateChange)="aSurvey.types.date = $event.value">
+                  <input matInput [matDatepicker]="picker" [value]="aSurvey.types.date.toDate()" placeholder="Choose a date" (dateChange)="aSurvey.types.date = $event.value">
                   <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                   <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>

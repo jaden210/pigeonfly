@@ -7,21 +7,51 @@
     </div>
   </div>
   <div *ngIf="appService.isUser" id="spacer"></div>
-  <div class="card">
+  <div class="card"  *ngIf="bSignUp">
     <img id="header" src="/assets/minuteLogoBold.png">
+    <div class="error">{{loginErrorStr}}</div>
     <div id="form">
-      <!--<div id="google">Sign in with <img src="/assets/google.png"></div>-->
-      <!--<div id="or">or</div>-->
       <mat-form-field>
-        <input matInput type="email" placeholder="email" [(ngModel)]="login.email">
+        <input matInput type="text" required placeholder="company name" [(ngModel)]="login.companyName">
       </mat-form-field>
       <mat-form-field>
+        <input matInput type="email" required placeholder="email" [(ngModel)]="login.email">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="password" required placeholder="password" [(ngModel)]="login.password">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput type="password" required placeholder="verify password" [(ngModel)]="login.password2">
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <span id="account">Already have an account?</span><span (click)="isUser()" id="sign-in">Log in</span>
+      <button mat-raised-button *ngIf="!appService.isUser" color="accent" style="color: white" (click)="createAccount(true)">CREATE ACCOUNT</button>
+    </div>
+  </div>
+  <div class="card"  *ngIf="!bSignUp">
+    <img id="header" src="/assets/minuteLogoBold.png">
+    <div class="error">{{loginErrorStr}}</div>
+    <div id="form">
+      <div class="helper-text" *ngIf="!isVerified && bSetPassword">Hey {{login.name}}. Welcome to minute! set a password and you'll be on your way.</div>
+      <div class="helper-text" *ngIf="isVerified">Welcome back! Enter your password and login</div>
+      <mat-form-field *ngIf="!isVerified && !bSetPassword">
+        <input matInput type="email" placeholder="email" [(ngModel)]="login.email">
+      </mat-form-field>
+      <mat-form-field *ngIf="!isVerified && bSetPassword">
+        <input matInput type="password" placeholder="password" [(ngModel)]="login.password">
+      </mat-form-field>
+      <mat-form-field *ngIf="!isVerified && bSetPassword">
+        <input matInput type="password" placeholder="password" [(ngModel)]="login.password2">
+      </mat-form-field>
+      <mat-form-field *ngIf="isVerified">
         <input matInput type="password" placeholder="password" [(ngModel)]="login.password">
       </mat-form-field>
     </div>
     <div class="row">
-      <span id="account">Already have an account?</span><span (click)="isUser()" id="sign-in">Sign In</span>
-      <button mat-raised-button *ngIf="!appService.isUser" color="accent" style="color: white" (click)="signInEmail()">SIGN UP</button>
-      <button mat-raised-button *ngIf="appService.isUser" color="accent" style="color: white" (click)="signInEmail()">LOG IN</button>
+      <span id="account">Here to start a new team?</span><span (click)="setSignUp()" id="sign-in">Sign up</span>
+      <button mat-raised-button *ngIf="!isVerified && !bSetPassword" color="accent" style="color: white" (click)="checkEmail()">NEXT</button>
+      <button mat-raised-button *ngIf="isVerified" color="accent" style="color: white" (click)="signInEmail()">LOG IN</button>
+      <button mat-raised-button *ngIf="!isVerified && bSetPassword" color="accent" style="color: white" (click)="joinTeam()">JOIN TEAM</button>
     </div>
   </div>

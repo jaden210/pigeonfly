@@ -1,12 +1,12 @@
 <mat-sidenav-container>
   <mat-sidenav mode="side" opened>
     <div id="header" routerLink="account">
-      <img id="logo" src={{accountService.aTeam?.logoUrl}} onerror="src = 'assets/face.png'">
+      <img id="logo" src={{accountService.aTeam?.logoUrl}} onerror="src = 'assets/minuteLogoBold.png'">
       <div id="name">{{accountService.aTeam?.name}}</div>
     </div>
     <div id="content">
       <mat-nav-list>
-        <a mat-list-item routerLink="dashboard" routerLinkActive="active">Who's Working</a>
+        <a mat-list-item routerLink="dashboard" routerLinkActive="active">Team</a>
         <a mat-list-item routerLink="time" routerLinkActive="active">Time</a>
         <a mat-list-item routerLink="log" routerLinkActive="active">Log</a>
         <a mat-list-item routerLink="survey" routerLinkActive="active">Surveys</a>

@@ -69,45 +69,20 @@ export class SurveyComponent implements OnInit {
     this.create = true;
   }
 
-  createSurvey(d) {
-    if (d) {
-      this.aSurvey.teamId = this.accountService.aTeam.id;
-      this.aSurvey.createdAt = new Date();
-      this.accountService.db.collection("survey").add({...this.aSurvey}).then(snapshot => {
-        this.aSurvey = new Survey();
-      });
-      this.create = false;
-    } else {
-      this.aSurvey = new Survey();
-      this.create = false;
-    }
-  }
-
+  
   selectSurvey(survey) {
     this.aSurvey = survey;
     this.surveyUsers = [];
-    Object.keys(survey.userSurvey).forEach(key => {
-      let user: any = this.accountService.teamUsers.find(user => user.id == key);
-      if (survey.userSurvey[key] != 0) {
-        let userSurveyDoc = this.accountService.db.collection("survey-response").doc(survey.userSurvey[key]);
-        userSurveyDoc.valueChanges()
-        .subscribe((surveyResponse: any) => {
-          surveyResponse.createdAt = surveyResponse.createdAt.toDate();
-          user.hasResponse = true;
-          user.surveyResponse = surveyResponse;
-          this.surveyUsers.push(user);
-        });
-      } else {
-        user.hasResponse = false;
-        this.surveyUsers.push(user);
-      }
+    let surveyResponses  = this.accountService.db.collection("survey-response", ref => ref.where("surveyId", "==", survey.id));
+    surveyResponses.valueChanges().subscribe(responses => {
+      this.surveyUsers = responses;
     })
   }
-
+  
   checkIfChecked(d) { // terribly inefficient
     return d ? this.aSurvey.types[this.aSurvey.runType].indexOf(d) > -1 : null;
   }
-
+  
   addTo(d) {
     if (this.aSurvey.types[this.aSurvey.runType].find(day => day == d)) {
       this.aSurvey.types[this.aSurvey.runType].splice(this.aSurvey.types[this.aSurvey.runType].indexOf(d), 1);
@@ -115,15 +90,28 @@ export class SurveyComponent implements OnInit {
       this.aSurvey.types[this.aSurvey.runType].push(d);
     }
   }
-
+  
   saveSurvey(save) {
     if (save) {
-      this.accountService.db.collection("survey").doc(this.aSurvey.id).update({...this.aSurvey}).then(() => this.aSurvey = new Survey());
+      !this.aSurvey.id ? this.createSurvey() :
+      this.accountService.db.collection("survey").doc(this.aSurvey.id).update({...this.aSurvey}).then(() => this.aSurvey = null);
     } else {
       this.aSurvey = null;
     }
   }
 
+  createSurvey() {
+      this.aSurvey.teamId = this.accountService.aTeam.id;
+      this.aSurvey.createdAt = new Date();
+      this.accountService.teamUsers.forEach(user => {
+        this.aSurvey.userSurvey[user.id] = 0; 
+      })
+      this.accountService.db.collection("survey").add({...this.aSurvey}).then(snapshot => {
+        this.aSurvey = null;
+      });
+      this.create = false;
+  }
+  
   deleteSurvey() {
     this.accountService.db.collection("survey").doc(this.aSurvey.id).delete().then(() => {
       this.aSurvey = new Survey();

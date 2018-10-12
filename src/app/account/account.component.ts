@@ -5,6 +5,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { map } from "rxjs/operators";
 import { Router } from '@angular/router';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material';
+import { AppService } from '../app.service';
 
 @Component({
   selector: 'app-account',
@@ -27,6 +28,7 @@ export class AccountComponent implements OnInit {
 
   constructor(
     public accountService: AccountService,
+    public appService: AppService,
     private auth: AngularFireAuth,
     public router: Router,
     public dialog: MatDialog
@@ -54,21 +56,27 @@ export class AccountComponent implements OnInit {
               if (invitations.length > 0) { // add them to their teams
                 invitations.forEach((team: any) => {
                   user.teams[team.teamId] = team.isAdmin ? 1 : 0; // should probably document this so it isn't confusing
-                  team.status = 'joined';
-                  this.accountService.db.collection("invitation").doc(team.id).update({...team});
+                  this.accountService.db.collection("invitation").doc(team.id).delete();
                 });
                 this.accountService.db.collection("user").doc(user.id).update({...user}).then(() => this.selectTeam());
-              }
-              if (Object.keys(user.teams).length == 0) { // no teams, no invitations
-                let dialog = this.dialog.open(NewHereDialog, {
-                  disableClose: true
-                });
-                dialog.afterClosed().subscribe((createTeam: boolean) => {
-                  createTeam ? this.createTeam() : this.router.navigate(['/login']);
-                });
               } else this.selectTeam();
             });
         });
+        if (this.appService.removeFromInvite) {
+          this.appService.removeFromInvite = false;
+          let inviteCollection = this.accountService.db.collection("invitation", ref => ref.where("inviteEmail", "==", this.accountService.user.email.toLowerCase()));
+          inviteCollection.snapshotChanges().pipe(
+            map((actions:any) => {
+              let data = actions.payload.data();
+              data['id'] = actions.payload.id;
+              return data;
+            })
+            ).subscribe(invitations => {
+              invitations.forEach(invitation => {
+                this.accountService.db.collection("invitation").doc(invitation.id).delete();
+              });
+            })
+        }
       } else this.logout();
     });
   }
@@ -99,19 +107,6 @@ export class AccountComponent implements OnInit {
         });
       }
     }
-  }
-  
-  createTeam() {
-    let newTeam = new Team();
-    newTeam.createdAt = new Date();
-    newTeam.ownerId = this.accountService.user.id;
-    this.accountService.db.collection("team").add({...newTeam}).then(snapshot => {
-      this.accountService.user.teams[snapshot.id] = 1;
-      this.accountService.db.collection('user').doc(this.accountService.user.id).update({...this.accountService.user});
-      this.accountService.helper = this.accountService.helperProfiles.newTeam;
-      this.accountService.showHelper = true;
-      this.router.navigate(['account']);
-    });
   }
   
   setActiveTeam(teamId) {
@@ -177,22 +172,6 @@ export class AccountComponent implements OnInit {
     localStorage.removeItem('teamId');
     this.auth.auth.signOut().then(() => this.router.navigate(['/login']));
   }
-}
-
-@Component({
-  selector: 'new-here-dialog',
-  templateUrl: 'new-here-dialog.html',
-  styleUrls: ['./account.component.css']
-})
-export class NewHereDialog {
-
-  constructor(
-    public dialogRef: MatDialogRef<NewHereDialog>
-  ) {}
-  close(): void {
-    this.dialogRef.close();
-  }
-
 }
 
 @Component({

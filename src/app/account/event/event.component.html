@@ -17,14 +17,19 @@
             <div class="dow">{{day.dOW}}</div>
           </div>
           <div class="row">
-            <div class="event" [ngClass]="{'log': event.type == 'log'}" *ngFor="let event of day.events">
+            <div class="event" [ngClass]="{'log': event.type == 'log', 'timeclock': event.type == 'timeclock'}" *ngFor="let event of day.events">
               <div class="block" (click)="event.bShowDetails == true ? event.bShowDetails = false : getEventDetails(event)">
                 <div class="type">{{event.user.name}} created a {{event.type}} -&nbsp;</div>
                 <div class="title">{{event.title}}</div>
               </div>
-              <div class="details" *ngIf="event.bShowDetails">
+              <div class="details" [@expand] *ngIf="event.bShowDetails">
                 <div class="image-row" *ngIf="event.type == 'log' && event.details.images.length > 0">
                   <div class="log-image-box" *ngFor="let image of event.details.images"><img class="log-image" src={{image.imageUrl}} onerror="src = '/assets/face.png'"></div>
+                </div>
+                <div class="time-detail" *ngIf="event.type == 'timeclock'">
+                  <div class="time-item"><mat-icon>hourglass_empty</mat-icon>{{event.details.clockIn | date: 'h:mm a'}}</div>
+                  <div class="time-item" *ngIf="event.details.clockOut"><mat-icon>hourglass_full</mat-icon>{{event.details.clockOut | date: 'h:mm a'}}</div>
+                  <div class="time-item" *ngIf="event.details.clockOut"><mat-icon>access_time</mat-icon>{{getDiff(event.details)}}</div>
                 </div>
               </div>
             </div>

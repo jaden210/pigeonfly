@@ -133,7 +133,7 @@ export class HomeComponent {
     });
     dialog.afterClosed().subscribe((data: any) => {
       if (data) {
-        data.inviteEmail = data.inviteEmail.toLowerCase();
+        data.email = data.email.toLowerCase();
         data.isAdmin ? data.teams[this.accountService.aTeam.id] = 1 : data.teams[this.accountService.aTeam.id] = 0;
         this.accountService.db.collection("user").doc(data.id).update({... data}).then(() => {
           // throw a toast or something maybe?

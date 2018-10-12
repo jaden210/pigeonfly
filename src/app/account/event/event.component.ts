@@ -54,7 +54,7 @@ export class EventComponent {
           }),
           tap(results => {
             results.sort((a, b) => {
-              return a.createdAt < b.createdAt ? -1 : 1;
+              return a.createdAt < b.createdAt ? 1 : -1;
             });
           })
         ).subscribe(events => {
@@ -96,11 +96,22 @@ export class EventComponent {
       event.bShowDetails = true;
     } else {
       let doc = this.accountService.db.collection(event.type).doc(event.documentId);
-      doc.valueChanges().subscribe(details => {
+      doc.valueChanges().subscribe((details: any) => {
+        details.clockIn ? details.clockIn = details.clockIn.toDate() : null;
+        details.clockOut ? details.clockOut = details.clockOut.toDate() : null;
         event.details = details;
         event.bShowDetails = true;
       });
     }
+  }
+
+  getDiff(time) {
+    let ci = moment(time.clockIn);
+    let co = moment(time.clockOut);
+    let duration: any = moment.duration(co.diff(ci));
+    let lh = parseInt(duration.asHours());
+    let lm = parseInt(duration.asMinutes())%60;
+    return lh + 'h ' + lm + 'm';
   }
 
   export() {
