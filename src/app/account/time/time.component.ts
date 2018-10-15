@@ -41,18 +41,16 @@ export class TimeComponent implements OnInit {
 
   ngOnInit() {
     this.accountService.helper = this.accountService.helperProfiles.time;
-    const fortnightAgo = new Date(Date.now() + 12096e5);
+    const fortnightAgo = new Date(Date.now() - 12096e5);
     this.accountService.aTeamObservable.subscribe(aTeam => {
       if (aTeam) this.getLogs(fortnightAgo, new Date());
     });
   }
 
   private getLogs(startDate: Date, endDate: Date): void {
-    console.log(startDate, endDate);
     this.timeService
       .getTimeLogs(this.accountService.aTeam.id, startDate, endDate)
       .subscribe(logs => {
-        console.log(logs);
          if (logs.length == 0) this.accountService.showHelper = true;
          this.timeClocks.push(logs);
          this.buildCalendar(logs);
@@ -92,8 +90,13 @@ export class TimeComponent implements OnInit {
       moment(day.clockIn).isSame(date, "day")
     );
     timeClocksOnDate.forEach((day: Timeclock) => {
-      loggedHours = loggedHours + day.loggedHours;
-      loggedMinutes = loggedMinutes + day.loggedMinutes;
+      let ci = moment(day.clockIn);
+      let co = moment(day.clockOut);
+      let duration: any = moment.duration(co.diff(ci));
+      day.loggedHours = parseInt(duration.asHours());
+      day.loggedMinutes = (parseInt(duration.asMinutes()) % 60);
+      loggedHours = loggedHours + parseInt(duration.asHours());
+      loggedMinutes = loggedMinutes + (parseInt(duration.asMinutes()) % 60);
       if (loggedMinutes > 60) {
         loggedMinutes = loggedMinutes - 60;
         loggedHours = loggedHours + 1;

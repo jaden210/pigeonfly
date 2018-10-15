@@ -18,6 +18,7 @@ import { DatePipe } from "@angular/common";
 import { IncidentReportsComponent } from "./incident-reports/incident-reports.component";
 import { EventComponent } from "./event/event.component";
 import { EventSearchPipe } from "./event/search.pipe";
+import { ToolbarHelperComponent } from "./toolbar-helper/toolbar-helper.component";
 
 @NgModule({
   imports: [
@@ -47,7 +48,8 @@ import { EventSearchPipe } from "./event/search.pipe";
     SearchPipe,
     EventSearchPipe,
     MapDialogComponent,
-    IncidentReportsComponent
+    IncidentReportsComponent,
+    ToolbarHelperComponent
   ],
   exports: [MaterialModule],
   entryComponents: [InviteDialog, MapDialogComponent, EditUserDialog, TeamSelectDialog, NoAccessDialog],

@@ -116,6 +116,7 @@ export class AccountComponent implements OnInit {
       map((actions:any) => {
         let data = actions.payload.data();
         data['id'] = actions.payload.id;
+        data['createdAt'] = data.createdAt.toDate();
         return data;
       })
       ).subscribe(team => {

@@ -31,7 +31,7 @@ export class SearchPipe implements PipeTransform {
                   continue cardLoop; // if block true, run filters loop again
               }
           }
-          if (day.logs.length > 0) {
+          if (day.logs && day.logs.length > 0) {
             let push = false;
             logLoop:
             for (let log of day.logs) {

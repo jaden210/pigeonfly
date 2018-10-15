@@ -1,0 +1,10 @@
+.box {
+  display: flex;
+  align-items: center;
+}
+
+#sia {
+  margin: 0 12px;
+  font-size: 14px;
+  font-weight: 300;
+}

@@ -1,4 +1,4 @@
-<mat-toolbar style="font-size: 15px" color="primary">
+<mat-toolbar style="font-size: 15px">
   <mat-icon id="mat-search-icon">search</mat-icon>
   <input id="search" placeholder="search" type="text" [(ngModel)]="searchStr">
   <mat-form-field class="filter">
@@ -7,6 +7,8 @@
     </mat-select>
   </mat-form-field>
   <button class="toolbar-button" (click)="exportCSV()" mat-button>EXPORT</button>
+  <div class="flex"></div>
+  <toolbar-helper></toolbar-helper>
 </mat-toolbar>
 
 <div class="window">

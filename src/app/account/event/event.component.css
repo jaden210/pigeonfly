@@ -1,31 +1,27 @@
-.window {
-    height: calc(100vh - 88px) !important;
-    overflow: scroll;
-    padding-top: 24px;
-}
-
 #search {
     flex: 1;
     font-size: 15px;
-    background: #41535B;
+    background: #ffffff;
     border: none;
     outline: none;
-    color: #ffffff;
+    color: #212121;
     padding: 12px;
     border-radius: 12px;
+    border: .5px solid #41535B;
+    box-sizing: border-box;
 }
 
 ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-    color: #ffffff;
+    color: #666666;
   }
   ::-moz-placeholder { /* Firefox 19+ */
-    color: #ffffff;
+    color: #666666;
   }
   :-ms-input-placeholder { /* IE 10+ */
-    color: #ffffff;
+    color: #666666;
   }
   :-moz-placeholder { /* Firefox 18- */
-    color: #ffffff;
+    color: #666666;
   }
 
 .filter {

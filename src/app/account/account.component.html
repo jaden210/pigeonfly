@@ -1,11 +1,11 @@
 <mat-sidenav-container>
   <mat-sidenav mode="side" opened>
-    <div id="header" routerLink="account">
-      <img id="logo" src={{accountService.aTeam?.logoUrl}} onerror="src = 'assets/minuteLogoBold.png'">
+    <div id="header" (click)="bShowAccount = true">
       <div id="name">{{accountService.aTeam?.name}}</div>
+      <mat-icon>expand_more</mat-icon>
     </div>
     <div id="content">
-      <mat-nav-list>
+      <mat-list>
         <a mat-list-item routerLink="dashboard" routerLinkActive="active">Team</a>
         <a mat-list-item routerLink="time" routerLinkActive="active">Time</a>
         <a mat-list-item routerLink="log" routerLinkActive="active">Log</a>
@@ -14,7 +14,7 @@
         <a mat-list-item routerLink="incident-reports" routerLinkActive="active">Incident Reports</a>
         <a mat-list-item routerLink="assesment" routerLinkActive="active">OSHA Safety Assesment</a>
         <a mat-list-item routerLink="account" routerLinkActive="active">Account</a>
-      </mat-nav-list>
+      </mat-list>
     </div>
     <div id="footer">
       <img id="mlogo" src="/assets/minuteLogoWhiteBold.png">
@@ -39,3 +39,12 @@
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>
+<div class="account-popup-overlay" *ngIf="bShowAccount" (click)="bShowAccount = false"></div>
+<div class="account-popup" *ngIf="bShowAccount">
+  <div class="row">
+    <img id="popimage" src={{accountService.aTeam.logoUrl}} onError="src = '/assets/minuteLogoBold.png'">
+    <div id="popteamname">{{accountService.aTeam.name}}</div>
+  </div>
+  <div id="popteam">{{accountService.teamUsers.length}} team members</div>
+  <div id="popteam">member since {{accountService.aTeam.createdAt | date:'shortDate'}}</div>
+</div>
