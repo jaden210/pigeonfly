@@ -34,6 +34,7 @@ export class AccountComponent implements OnInit {
     public dialog: MatDialog
   ) { 
     this.auth.auth.onAuthStateChanged(user => {
+      let invitations;
       if (user && user.uid) {
         let userDoc = this.accountService.db.collection("user").doc(user.uid)
         userDoc.snapshotChanges().pipe(
@@ -43,9 +44,10 @@ export class AccountComponent implements OnInit {
             return data;
           })
         ).subscribe((user: User) => {
-          this.accountService.userObservable.next(user);
-          this.accountService.user = user;
-          let invitedCollection = this.accountService.db.collection("invitation", ref => ref.where("status", "==", "invited").where("inviteEmail", "==", user.email.toLowerCase()));
+          if (user.id) {
+            this.accountService.userObservable.next(user);
+            this.accountService.user = user;
+            let invitedCollection = this.accountService.db.collection("invitation", ref => ref.where("status", "==", "invited").where("inviteEmail", "==", user.email.toLowerCase()));
             invitedCollection.snapshotChanges().pipe(
               map(actions => actions.map(a => {
                 const data = a.payload.doc.data() as InviteToTeam;
@@ -53,94 +55,54 @@ export class AccountComponent implements OnInit {
                 return { id, ...data };
               }))
               ).subscribe(invitations => {
-              if (invitations.length > 0) { // add them to their teams
-                invitations.forEach((team: any) => {
-                  user.teams[team.teamId] = team.isAdmin ? 1 : 0; // should probably document this so it isn't confusing
-                  this.accountService.db.collection("invitation").doc(team.id).delete();
-                });
-                this.accountService.db.collection("user").doc(user.id).update({...user}).then(() => this.selectTeam());
-              } else this.selectTeam();
-            });
+                invitations = invitations;
+                if (invitations.length > 0) { // add them to their teams
+                  invitations.forEach((team: any) => {
+                    user.teams[team.teamId] = team.isAdmin ? 1 : 0; // should probably document this so it isn't confusing
+                    this.accountService.db.collection("invitation").doc(team.id).delete();
+                  });
+                  
+                  this.accountService.db.collection("user").doc(user.id).update({...user}).then(() => this.selectTeam());
+                } else this.selectTeam();
+              });
+            }
         });
         if (this.appService.removeFromInvite) {
           this.appService.removeFromInvite = false;
-          let inviteCollection = this.accountService.db.collection("invitation", ref => ref.where("inviteEmail", "==", this.accountService.user.email.toLowerCase()));
-          inviteCollection.snapshotChanges().pipe(
-            map((actions:any) => {
-              let data = actions.payload.data();
-              data['id'] = actions.payload.id;
-              return data;
-            })
-            ).subscribe(invitations => {
-              invitations.forEach(invitation => {
-                this.accountService.db.collection("invitation").doc(invitation.id).delete();
-              });
-            })
+          invitations.forEach(invitation => {
+            this.accountService.db.collection("invitation").doc(invitation.id).delete();
+          });
         }
-      } else this.logout();
+      } else this.accountService.logout();
     });
   }
   
   selectTeam() {
     if (Object.keys(this.accountService.user.teams).length == 1) { // set the team and go home
-      this.setActiveTeam(Object.keys(this.accountService.user.teams)[0]);
+      this.accountService.setActiveTeam(Object.keys(this.accountService.user.teams)[0]);
     } else { // pop the dialog asking which team to look at
+      this.accountService.userTeams = [];
+      Object.keys(this.accountService.user.teams).forEach(key => {
+        let teamDoc = this.accountService.db.collection("team").doc(key)
+        teamDoc.valueChanges().subscribe((team: Team) => {
+          team.id = key;
+          this.accountService.userTeams.push(team);
+        });
+      })
       if (localStorage.getItem('teamId')) {
-        this.setActiveTeam(localStorage.getItem('teamId'));
+        this.accountService.setActiveTeam(localStorage.getItem('teamId'));
       } else {
-        let teams = [];
-        Object.keys(this.accountService.user.teams).forEach(key => {
-          let teamDoc = this.accountService.db.collection("team").doc(key)
-          teamDoc.valueChanges().subscribe(team => {
-            team['id'] = key;
-            teams.push(team);
-          });
-        })
-        let dialog = this.dialog.open(TeamSelectDialog, {
-          data: teams,
+      let dialog = this.dialog.open(TeamSelectDialog, {
+          data: this.accountService.userTeams,
           disableClose: true
         });
         dialog.afterClosed().subscribe((teamId: any) => {
           if (teamId) {
-            this.setActiveTeam(teamId);
-          } else this.logout();
+            this.accountService.setActiveTeam(teamId);
+          } else this.accountService.logout();
         });
       }
     }
-  }
-  
-  setActiveTeam(teamId) {
-    localStorage.setItem("teamId", teamId); // so we only ask once.
-    let teamDoc = this.accountService.db.collection<Team>("team").doc(teamId);
-    teamDoc.snapshotChanges().pipe(
-      map((actions:any) => {
-        let data = actions.payload.data();
-        data['id'] = actions.payload.id;
-        data['createdAt'] = data.createdAt.toDate();
-        return data;
-      })
-      ).subscribe(team => {
-        if (this.accountService.user.teams[team.id] == 0) { // they cant be here
-          let dialog = this.dialog.open(NoAccessDialog, {
-            disableClose: true
-          });
-          dialog.afterClosed().subscribe(() => this.logout());
-        } else {
-          this.accountService.aTeam = team;
-          this.accountService.aTeamObservable.next(team);
-          let membersCollection = this.accountService.db.collection<User>("user", ref => ref.where("teams." + team.id, ">=", 0));
-          membersCollection.snapshotChanges().pipe(
-            map(actions => actions.map(a => { //better way
-              const data = a.payload.doc.data() as User;
-              const id = a.payload.doc.id;
-              return { id, ...data };
-            }))
-            ).subscribe(users => { // why is this being hit twice???????
-              this.accountService.teamUsers = users;
-              this.accountService.teamUsersObservable.next(users);
-          });
-        }
-    });
   }
 
   ngOnInit() {
@@ -168,11 +130,6 @@ export class AccountComponent implements OnInit {
       });
     }, 2000);
   }
-
-  logout() {
-    localStorage.removeItem('teamId');
-    this.auth.auth.signOut().then(() => this.router.navigate(['/login']));
-  }
 }
 
 @Component({
@@ -188,22 +145,6 @@ export class TeamSelectDialog {
 
   close(teamId?): void {
     this.dialogRef.close(teamId);
-  }
-
-}
-
-@Component({
-  selector: 'no-access-dialog',
-  templateUrl: 'no-access-dialog.html',
-  styleUrls: ['./account.component.css']
-})
-export class NoAccessDialog {
-
-  constructor(
-    public dialogRef: MatDialogRef<TeamSelectDialog>) {}
-
-  close(): void {
-    this.dialogRef.close();
   }
 
 }

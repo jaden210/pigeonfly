@@ -75,3 +75,18 @@ mat-form-field {
 .radio-button {
   margin: 5px;
 }
+
+.label {
+  font-size: 17px;
+  align-self: flex-start;
+  margin: 0 24px;
+}
+
+.free {
+  margin: 24px;
+  font-size: 15px;
+  background-color: #ff9800;
+  color: #ffffff;
+  padding: 12px;
+  border-radius: 12px;
+}

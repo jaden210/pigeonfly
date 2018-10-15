@@ -115,7 +115,7 @@ a:hover {
     top: 62px;
     background-color: #ffffff;
     left: 12px;
-    width: 260px;
+    min-width: 260px;
     height: 350px;
     z-index: 21;
     border-radius: 12px;
@@ -145,4 +145,15 @@ a:hover {
     font-size: 15px;
     opacity: .67;
     font-weight: 500;
+}
+
+.teams {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-end;
+}
+
+.otherteams {
+    height: 24px;
+    margin: 4px;
 }

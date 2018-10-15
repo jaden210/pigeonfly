@@ -43,6 +43,8 @@
           </mat-radio-button>
         </mat-radio-group>
       </div>
+      <div class="label">Billing</div>
+      <div class="free" *ngIf="trialDaysLeft > 0">You have {{trialDaysLeft}} days left until your free trial is up. No billing info is required until then.</div>
     </div>
   </div>
 </div>

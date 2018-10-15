@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
   
   checkEmail() {
     this.loginErrorStr = '';
-    this.auth.auth.fetchProvidersForEmail(this.login.email).then(data => {
+    this.auth.auth.fetchSignInMethodsForEmail(this.login.email).then(data => {
       if (data.length > 0) { // they exist
         this.isVerified = true;
       } else { // no account, they are looking to join a team.

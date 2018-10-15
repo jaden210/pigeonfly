@@ -4,6 +4,7 @@ import { AngularFireStorage } from 'angularfire2/storage';
 import { map, finalize } from 'rxjs/operators';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Router } from '@angular/router';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-account',
@@ -14,6 +15,7 @@ export class ProfileComponent implements OnInit {
 
   showCompany: boolean = false;
   accountTypes;
+  trialDaysLeft;
 
   constructor(
     public accountService: AccountService,
@@ -32,6 +34,8 @@ export class ProfileComponent implements OnInit {
           accountTypesCollection.valueChanges().subscribe(accountTypes => {
             this.accountTypes = accountTypes;
           });
+          this.trialDaysLeft = 30 - moment().diff(this.accountService.aTeam.createdAt, 'days');
+          
         }
       }
     })

@@ -1,6 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Component } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { AngularFirestore } from 'angularfire2/firestore';
+import { map } from 'rxjs/operators';
+import { MatDialog, MatDialogRef } from '@angular/material';
+import { AngularFireAuth } from 'angularfire2/auth';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +17,7 @@ export class AccountService {
   aTeamObservable: BehaviorSubject<any> = new BehaviorSubject(null);
   aTeam: Team = new Team();
   teamUsers: User[];
+  userTeams: Team[]; // all the teams the user has access to
   teamUsersObservable: BehaviorSubject<any> = new BehaviorSubject(null);
   showHelper: boolean = false;
   showFeedback: boolean = false;
@@ -62,8 +67,66 @@ export class AccountService {
   feedback: Helper = this.helperProfiles.feedback;
 
   constructor(
-    public db: AngularFirestore
+    public db: AngularFirestore,
+    private auth: AngularFireAuth,
+    public dialog: MatDialog,
+    public router: Router
   ) { }
+
+  setActiveTeam(teamId) {
+    localStorage.setItem("teamId", teamId); // so we only ask once.
+    let teamDoc = this.db.collection<Team>("team").doc(teamId);
+    teamDoc.snapshotChanges().pipe(
+      map((actions:any) => {
+        let data = actions.payload.data();
+        data['id'] = actions.payload.id;
+        data['createdAt'] = data.createdAt.toDate();
+        return data;
+      })
+      ).subscribe(team => {
+        if (this.user.teams[team.id] == 0) { // they cant be here
+          let dialog = this.dialog.open(NoAccessDialog, {
+            disableClose: true
+          });
+          dialog.afterClosed().subscribe(() => this.logout());
+        } else {
+          this.aTeam = team;
+          this.aTeamObservable.next(team);
+          let membersCollection = this.db.collection<User>("user", ref => ref.where("teams." + team.id, ">=", 0));
+          membersCollection.snapshotChanges().pipe(
+            map(actions => actions.map(a => { //better way
+              const data = a.payload.doc.data() as User;
+              const id = a.payload.doc.id;
+              return { id, ...data };
+            }))
+            ).subscribe(users => { // why is this being hit twice???????
+              this.teamUsers = users;
+              this.teamUsersObservable.next(users);
+          });
+        }
+    });
+  }
+
+  logout() {
+    localStorage.removeItem('teamId');
+    this.auth.auth.signOut().then(() => this.router.navigate(['/login']));
+  }
+}
+
+@Component({
+  selector: 'no-access-dialog',
+  templateUrl: 'no-access-dialog.html',
+  styleUrls: ['./account.component.css']
+})
+export class NoAccessDialog {
+
+  constructor(
+    public dialogRef: MatDialogRef<NoAccessDialog>) {}
+
+  close(): void {
+    this.dialogRef.close();
+  }
+
 }
 
 export class User {

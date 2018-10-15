@@ -8,7 +8,7 @@ import { LogComponent } from "./log/log.component";
 import { AssesmentComponent } from "./assesment/assesment.component";
 import { AccountRoutingModule } from "./account-routing.module";
 import { MaterialModule } from "../material/material.module";
-import { AccountComponent, TeamSelectDialog, NoAccessDialog } from "./account.component";
+import { AccountComponent, TeamSelectDialog } from "./account.component";
 import { FormsModule } from "@angular/forms";
 import { AgmCoreModule } from "@agm/core";
 import { MomentModule } from "angular2-moment";
@@ -19,6 +19,7 @@ import { IncidentReportsComponent } from "./incident-reports/incident-reports.co
 import { EventComponent } from "./event/event.component";
 import { EventSearchPipe } from "./event/search.pipe";
 import { ToolbarHelperComponent } from "./toolbar-helper/toolbar-helper.component";
+import { NoAccessDialog } from "./account.service";
 
 @NgModule({
   imports: [

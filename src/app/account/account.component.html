@@ -42,7 +42,13 @@
 <div class="account-popup-overlay" *ngIf="bShowAccount" (click)="bShowAccount = false"></div>
 <div class="account-popup" *ngIf="bShowAccount">
   <div class="row">
-    <img id="popimage" src={{accountService.aTeam.logoUrl}} onError="src = '/assets/minuteLogoBold.png'">
+    <div class="teams">
+      <img id="popimage" src={{accountService.aTeam.logoUrl}} onError="src = '/assets/minuteLogoBold.png'">
+      <div class="flex"></div>
+      <ng-container *ngFor="let team of accountService.userTeams">
+        <img *ngIf="team.id !== accountService.aTeam.id"  [matTooltip]="team.name" (click)="bShowAccount = false; accountService.setActiveTeam(team.id)" class="otherteams" src={{team.logoUrl}} onerror="src = '/assets/minuteLogoBold'">
+      </ng-container>
+    </div>
     <div id="popteamname">{{accountService.aTeam.name}}</div>
   </div>
   <div id="popteam">{{accountService.teamUsers.length}} team members</div>

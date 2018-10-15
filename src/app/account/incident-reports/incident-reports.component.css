@@ -1,5 +1,4 @@
 .window {
-    height: 100vh !important;
     position: relative;
 }
 
@@ -7,7 +6,7 @@
     position: absolute;
     height: 100vh;
     z-index: 100;
-    background-color: #ffffff;
+    background-color: #fafafa;
     top: 0;
     right: 0;
     left: 0;
@@ -74,7 +73,10 @@
 }
 
 .panel {
-    margin: 24px;
+    padding: 24px;
+    height: calc(100vh - 64px);
+    overflow: scroll;
+    box-sizing: border-box;
 }
 
 .i-item {
@@ -92,4 +94,9 @@
 
 .ml {
     margin-left: 8px;
+}
+
+.images {
+    height: 250px;
+    object-fit: contain;
 }
