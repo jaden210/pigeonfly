@@ -98,5 +98,6 @@
 
 .images {
     height: 250px;
+    margin: 4px;
     object-fit: contain;
 }
