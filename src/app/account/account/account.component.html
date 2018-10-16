@@ -25,27 +25,29 @@
     </div>
   </mat-tab>
   <mat-tab label="Company" *ngIf="showCompany">
-    <div class="image-cont">
-      <div class="image"><img src={{accountService.aTeam?.logoUrl}} style="object-fit: contain !important;" onerror="src = '/assets/minuteLogoBold.png'"></div>
-      <div style="height: 0px; width: 0px; overflow:hidden"><input type="file" id="upLogoUrl" accept=".png,.jpg,.mp4" #uploadT (change)="uploadLogoImage($event)"></div>
-      <button mat-stroked-button class="image-button" color="primary" (click)="upload(false)">CHANGE COMPANY LOGO</button>
+  <div class="column">
+      <div class="image-cont">
+        <div class="image"><img src={{accountService.aTeam?.logoUrl}} style="object-fit: contain !important;" onerror="src = '/assets/minuteLogoBold.png'"></div>
+        <div style="height: 0px; width: 0px; overflow:hidden"><input type="file" id="upLogoUrl" accept=".png,.jpg,.mp4" #uploadT (change)="uploadLogoImage($event)"></div>
+        <button mat-stroked-button class="image-button" color="primary" (click)="upload(false)">CHANGE COMPANY LOGO</button>
+      </div>
+      <mat-form-field>
+        <input matInput color="primary" placeholder="company name" type="text" [(ngModel)]="accountService.aTeam.name" (change)="saveTeam()">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput color="primary" placeholder="phone" type="tel" [(ngModel)]="accountService.aTeam.phone" (change)="saveTeam()">
+      </mat-form-field>
+      <div id="ctype">
+        <div id="cti">Company Type<mat-icon style="color: #666666; cursor: pointer; margin:0 8px" (click)="helper('companyType')">help</mat-icon></div>
+        <mat-radio-group class="radio-group" [(ngModel)]="accountService.aTeam.type" (change)="saveTeam()">
+          <mat-radio-button class="radio-button" *ngFor="let type of accountTypes" [value]="type.industryName">
+            {{type.industryName}}
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
     </div>
-    <mat-form-field>
-      <input matInput color="primary" placeholder="company name" type="text" [(ngModel)]="accountService.aTeam.name" (change)="saveTeam()">
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput color="primary" placeholder="phone" type="tel" [(ngModel)]="accountService.aTeam.phone" (change)="saveTeam()">
-    </mat-form-field>
-    <div id="ctype">
-      <div id="cti">Company Type<mat-icon style="color: #666666; cursor: pointer;" (click)="helper('companyType')">help</mat-icon></div>
-      <mat-radio-group class="radio-group" [(ngModel)]="accountService.aTeam.type" (change)="saveTeam()">
-        <mat-radio-button class="radio-button" *ngFor="let type of accountTypes" [value]="type.industryName">
-          {{type.industryName}}
-        </mat-radio-button>
-      </mat-radio-group>
-    </div>
-  </mat-tab>
-  <mat-tab label="Billing" *ngIf="showCompany">
-    <div class="free" *ngIf="trialDaysLeft > 0">You have {{trialDaysLeft}} days left until your free trial is up. No billing info is required until then.</div>
-  </mat-tab>
+    </mat-tab>
+    <mat-tab label="Billing" *ngIf="showCompany">
+      <div class="free" *ngIf="trialDaysLeft > 0">You have {{trialDaysLeft}} days left until your free trial is up. No billing info is required until then.</div>
+    </mat-tab>
   </mat-tab-group>
