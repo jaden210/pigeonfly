@@ -33,6 +33,9 @@ export class TimeComponent implements OnInit {
   lat: number;
   long: number;
 
+
+  now: any = moment().format('MMM');
+
   constructor(
     public accountService: AccountService,
     private datePipe: DatePipe,
@@ -40,6 +43,7 @@ export class TimeComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    /// NOTE: MAYBE CHANGE SO A USER ONLY SHOWS ONCE FOR A DAY AND EXPANDING SHOWS ALL INS AND OUTS
     this.accountService.helper = this.accountService.helperProfiles.time;
     const fortnightAgo = new Date(Date.now() - 12096e5);
     this.accountService.aTeamObservable.subscribe(aTeam => {
@@ -113,6 +117,15 @@ export class TimeComponent implements OnInit {
       logs: timeClocksOnDate,
       loggers: users
     };
+  }
+
+  getDiff(time) {
+    let ci = moment(time.clockIn);
+    let co = moment(time.clockOut);
+    let duration: any = moment.duration(co.diff(ci));
+    let lh = parseInt(duration.asHours());
+    let lm = parseInt(duration.asMinutes())%60;
+    return lh + 'h ' + lm + 'm';
   }
 
   public exportCSV(): void {

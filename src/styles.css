@@ -8,6 +8,13 @@
     flex: 1;
 }
 
+.fab {
+    position: fixed !important;
+    bottom: 24px;
+    right: 24px;
+    color: white !important;
+}
+
 mat-toolbar {
     background-color: #fafafa !important;
     box-shadow: 0 3px 2px -2px rgba(0,0,0,.1);

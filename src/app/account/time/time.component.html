@@ -1,5 +1,4 @@
 <mat-toolbar style="font-size: 15px">
-  <mat-icon id="mat-search-icon">search</mat-icon>
   <input id="search" placeholder="search" type="text" [(ngModel)]="searchStr">
   <mat-form-field class="filter">
     <mat-select placeholder="Filter by people" [(ngModel)]="filterUsers" multiple>
@@ -10,68 +9,33 @@
   <div class="flex"></div>
   <toolbar-helper></toolbar-helper>
 </mat-toolbar>
-
-<div class="window">
-
-  <mat-accordion>
+  <div class="window">
+    <div class="month">{{now}}</div>
     <ng-container *ngFor="let day of days | search: searchStr : filterUsers; index as i">
-      <div class="month header" *ngIf="i == 0">{{day.month}}</div>
-      <mat-expansion-panel>
-        <mat-expansion-panel-header collapsedHeight="88px">
-          <mat-panel-title>
-            <div class="date">
-              <div class="date">{{day.day}}</div>
-              <div class="dow">{{day.dOW}}</div>
-            </div>
-          </mat-panel-title>
-          <mat-panel-description>
-            <div class="heads">
-              <div class="head" *ngFor="let logger of day.loggers"><img class="head-img" src={{logger.profileUrl}} onerror="src = 'assets/face.png'"></div>
-            </div>
-            <div class="hours">
-              {{day.loggedHours | number:'1.0-0'}}h&nbsp;{{day.loggedMinutes | number:'1.0-0'}}m
-            </div>
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-
-        <div class="logs">
-          <div class="log" *ngFor="let log of day.timeLogs">
-            <div class="log-profile-img-cont"><img class="log-profile-img" src={{log.user.profileUrl}} onerror="src = '/assets/face.png'"></div>
-            <div class="user-name">{{log.user.name}}</div>
-            <div class="box log-box">
-              <div class="log-data">{{log.clockIn | amParse:'HH:mm' | amDateFormat:'HH:mmA'}}</div>
-              <div class="log-info">Clocked In</div>
-            </div>
-            <div class="box log-box">
-              <div class="log-data">{{log.clockOut | amParse:'HH:mm' | amDateFormat:'HH:mmA'}}</div>
-              <div class="log-info">Clocked Out</div>
-            </div>
-            <div class="flex"></div>
-            <div class="box log-box">
-              <div class="log-data">{{log.loggedHours | number:'2.0-0'}}:{{log.loggedMinutes | number:'2.0-0'}}</div>
-              <div class="log-info">Time Logged</div>
+      <div class="day-box">
+        <div class="day" (click)="aDay ? aDay = null : aDay = day.id">
+          <div class="date box">
+            <div class="date" [ngClass]="{'small': day.timeLogs.length == 0}">{{day.day}}</div>
+            <div class="dow" [ngClass]="{'hide': day.timeLogs.length == 0}">{{day.dOW}}</div>
+          </div>
+          <div class="row">
+            <div class="event" *ngFor="let log of day.timeLogs">
+              <div class="block" (click)="log.bShowDetails == true ? log.bShowDetails = false : log.bShowDetails = true">
+                <div class="type">{{log.user.name}} -&nbsp;</div>
+                <div class="title">{{getDiff(log)}}</div>
+              </div>
+              <div class="details" [@expand] *ngIf="log.bShowDetails">
+                <div class="time-detail">
+                  <div class="time-item"><mat-icon>hourglass_empty</mat-icon>{{log.clockIn | date: 'h:mm a'}}</div>
+                  <div class="time-item" *ngIf="log.clockOut"><mat-icon>hourglass_full</mat-icon>{{log.clockOut | date: 'h:mm a'}}</div>
+                  <div class="time-item" *ngIf="log.clockOut"><mat-icon>access_time</mat-icon>{{getDiff(log)}}</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <agm-map [latitude]="lat" [longitude]="long">
-          <agm-marker *ngFor="let log of day.timeLogs" [iconUrl]="{
-                    url: log.user.profileUrl,
-                    scaledSize: {
-                      height: 40,
-                      width: 40
-                    }
-                  }" [latitude]="log.inLatPos" [longitude]="log.inLongPos"></agm-marker>
-          <agm-marker *ngFor="let log of day.timeLogs" [iconUrl]="{
-                    url: log.user.profileUrl,
-                    scaledSize: {
-                      height: 40,
-                      width: 40
-                    }
-                  }" [latitude]="log.outLatPos" [longitude]="log.outLongPos" label="clocked out"></agm-marker>
-        </agm-map>
-      </mat-expansion-panel>
-      <div class="month header" *ngIf="day.day == 1">{{days[i + 1].month}}</div>
+      </div>
+      <div class="month" *ngIf="day.day == 1">{{days[i + 1]?.month}}</div>
     </ng-container>
-  </mat-accordion>
-
-</div>
+  </div>
+    

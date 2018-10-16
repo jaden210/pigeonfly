@@ -2,16 +2,14 @@
   <div class="flex"></div>
   <toolbar-helper></toolbar-helper>
 </mat-toolbar>
-<div class="window">
-  <div class="halfs">
+<mat-tab-group color="accent">
+  <mat-tab label="Personal"> 
     <div class="column">
       <div class="image-cont">
         <div class="image-circle"><img src={{accountService.user?.profileUrl}} onerror="src = '/assets/face.png'"></div>
         <div style="height: 0px; width: 0px; overflow:hidden"><input type="file" id="upProfileUrl" accept=".png,.jpg,.mp4" #uploadT (change)="uploadProfileImage($event)"></div>
-        <button mat-stroked-button class="image-button" color="accent" (click)="upload(true)">CHANGE PICTURE</button>
-        <button mat-button class="image-button" color="accent" (click)="logout()">LOGOUT</button>
+        <button mat-stroked-button class="image-button" color="primary" (click)="upload(true)">CHANGE PICTURE</button>
       </div>
-      <div class="title">{{accountService.user?.name}}</div>
       <mat-form-field>
         <input matInput color="primary" placeholder="profile name" [(ngModel)]="accountService.user.name" (change)="saveProfile()">
       </mat-form-field>
@@ -21,30 +19,33 @@
       <mat-form-field>
         <input matInput color="primary" placeholder="phone" type="tel" [(ngModel)]="accountService.user.phone" (change)="saveProfile()">
       </mat-form-field>
-    </div>
-    <div class="column" *ngIf="showCompany">
-      <div class="image-cont">
-        <div class="image"><img src={{accountService.aTeam?.logoUrl}} style="object-fit: contain !important;" onerror="src = '/assets/minuteLogoBold.png'"></div>
-        <div style="height: 0px; width: 0px; overflow:hidden"><input type="file" id="upLogoUrl" accept=".png,.jpg,.mp4" #uploadT (change)="uploadLogoImage($event)"></div>
-        <button mat-stroked-button class="image-button" color="accent" (click)="upload(false)">CHANGE COMPANY LOGO</button>
-      </div>
-      <div class="title">{{accountService.aTeam?.name}}</div>
       <mat-form-field>
-        <input matInput color="primary" placeholder="company name" type="text" [(ngModel)]="accountService.aTeam.name" (change)="saveTeam()">
+        <input matInput color="primary" placeholder="job title" type="text" [(ngModel)]="accountService.user.jobTitle" (change)="saveProfile()">
       </mat-form-field>
-      <mat-form-field>
-        <input matInput color="primary" placeholder="phone" type="tel" [(ngModel)]="accountService.aTeam.phone" (change)="saveTeam()">
-      </mat-form-field>
-      <div id="ctype">
-        <div id="cti">Company Type<mat-icon style="color: #666666; cursor: pointer;" (click)="helper('companyType')">help</mat-icon></div>
-        <mat-radio-group class="radio-group" [(ngModel)]="accountService.aTeam.type" (change)="saveTeam()">
-          <mat-radio-button class="radio-button" *ngFor="let type of accountTypes" [value]="type.industryName">
-            {{type.industryName}}
-          </mat-radio-button>
-        </mat-radio-group>
-      </div>
-      <div class="label">Billing</div>
-      <div class="free" *ngIf="trialDaysLeft > 0">You have {{trialDaysLeft}} days left until your free trial is up. No billing info is required until then.</div>
     </div>
-  </div>
-</div>
+  </mat-tab>
+  <mat-tab label="Company" *ngIf="showCompany">
+    <div class="image-cont">
+      <div class="image"><img src={{accountService.aTeam?.logoUrl}} style="object-fit: contain !important;" onerror="src = '/assets/minuteLogoBold.png'"></div>
+      <div style="height: 0px; width: 0px; overflow:hidden"><input type="file" id="upLogoUrl" accept=".png,.jpg,.mp4" #uploadT (change)="uploadLogoImage($event)"></div>
+      <button mat-stroked-button class="image-button" color="primary" (click)="upload(false)">CHANGE COMPANY LOGO</button>
+    </div>
+    <mat-form-field>
+      <input matInput color="primary" placeholder="company name" type="text" [(ngModel)]="accountService.aTeam.name" (change)="saveTeam()">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput color="primary" placeholder="phone" type="tel" [(ngModel)]="accountService.aTeam.phone" (change)="saveTeam()">
+    </mat-form-field>
+    <div id="ctype">
+      <div id="cti">Company Type<mat-icon style="color: #666666; cursor: pointer;" (click)="helper('companyType')">help</mat-icon></div>
+      <mat-radio-group class="radio-group" [(ngModel)]="accountService.aTeam.type" (change)="saveTeam()">
+        <mat-radio-button class="radio-button" *ngFor="let type of accountTypes" [value]="type.industryName">
+          {{type.industryName}}
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+  </mat-tab>
+  <mat-tab label="Billing" *ngIf="showCompany">
+    <div class="free" *ngIf="trialDaysLeft > 0">You have {{trialDaysLeft}} days left until your free trial is up. No billing info is required until then.</div>
+  </mat-tab>
+  </mat-tab-group>

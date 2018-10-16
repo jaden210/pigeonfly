@@ -30,13 +30,13 @@
 
 .day-box {
     margin: 0 12px;
-    border-bottom: 1px solid rgba(0,0,0,.14);
+    /*border-bottom: 1px solid rgba(0,0,0,.14);*/
 }
 
 .day {
     display: flex;
-    align-items: center;
-    padding: 12px 24px;
+    align-items: flex-start;
+    padding: 4px 24px;
 }
 
 .box {
@@ -47,9 +47,33 @@
     width: 100px;
 }
 
-.hours {
-    align-items: center !important;
-    font-size: 24px;
+.row {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.event {
+    margin: 4px 0;
+    background-color: #ffcdd2;
+    border-radius: 8px;
+    padding: 8px;
+    transition: all 250ms;
+}
+
+.block {
+    display: flex;
+    cursor: pointer;
+}
+
+.type {
+    font-weight: 600;
+    opacity: .87;
+    white-space: nowrap;
+}
+
+.title {
+    opacity: .78;
 }
 
 .date {
@@ -63,94 +87,15 @@
     margin-top: -8px;
 }
 
-.heads {
-    display: flex;
-    align-items: center;
-    margin: 0 12px;
-}
-
-.head {
-    height: 55px;
-    overflow: hidden;
-    width: 55px;
-    border-radius: 50%;
-    margin: 0 8px;
-}
-
-img.head-img {
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
-}
-
 .month {
     margin: 24px;
     font-size: 24px;
     color: #666666;
+    font-weight: 500;
 }
 
 .details {
-    margin-top: -18px;
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
     overflow: hidden;
-    border-bottom-left-radius: 12px;
-    border-bottom-right-radius: 12px;
-}
-
-.logs {
-    margin: 24px 0 64px 0;
-}
-
-.log {
-    margin: 8px 0;
-    padding: 12px 24px;
-}
-
-.log-row {
-    display: flex;
-    align-items: center;
-}
-
-.log-profile-img-cont {
-    height: 50px;
-    width: 50px;
-    border-radius: 50%;
-    overflow: hidden;
-}
-
-img.log-profile-img {
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
-}
-
-.user-name {
-    font-size: 17px;
-    margin: 0 24px;
-    display: flex;
-}
-
-.log-box {
-    align-items: center !important;
-}
-
-.log-info {
-    color: #666666;
-    font-size: 15px;
-}
-
-.map-icon {
-    margin: 0px 12px;
-    cursor: pointer;
-}
-
-.map {
-    height: 32px;
-    width: 32px;
-    font-size: 32px;
-    color: #666666;
 }
 
 .image-row {
@@ -169,11 +114,21 @@ img.log-profile-img {
     height: 100%;
 }
 
-.info-log {
-    padding: 8px;
+.small {
+    font-size: 17px !important;
+    opacity: .54;
 }
 
-.survey {
-    color: #666666;
-    padding: 8px 0 0 8px;
+.hide {
+    display: none;
+}
+
+.info {
+    text-align: end;
+}
+
+.createdAt {
+    font-size: 13px;
+    font-weight: 700;
+    opacity: .67;
 }

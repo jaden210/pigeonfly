@@ -1,5 +1,4 @@
 <mat-toolbar style="font-size: 15px">
-  <mat-icon id="mat-search-icon">search</mat-icon>
   <input id="search" placeholder="search" type="text" [(ngModel)]="searchStr">
   <mat-form-field class="filter">
       <mat-select placeholder="Filter by people" [(ngModel)]="filterUsers" multiple>
@@ -10,45 +9,33 @@
   <div class="flex"></div>
   <toolbar-helper></toolbar-helper>
 </mat-toolbar>
-<div class="window">
-    <ng-container *ngFor="let day of days | search: searchStr : filterUsers">
-      <div class="day-box">
-        <div class="day" (click)="aDay ? aDay = null : aDay = day.id">
-          <div class="date box">
-            <div class="date">{{day.day}}</div>
-            <div class="dow">{{day.dOW}}</div>
-          </div>
-          <div class="heads" *ngIf="day.id !== aDay">
-            <div class="head" *ngFor="let logger of day.loggers"><img class="head-img" src={{logger.profileUrl}} onerror="src = 'assets/face.png'"></div>
-          </div>
-          <div class="flex"></div>
-          <div class="hours box">
-            <div class="hours">{{day.logs.length}}</div>
-            <div class="dow">Logs</div>
-          </div>
-        </div>
-        <div class="details" [@expand] *ngIf="day.id == aDay">
-          <div class="logs">
-            <div class="log" *ngFor="let log of day.logs">
-              <div class="log-row">
-                <div class="log-profile-img-cont"><img class="log-profile-img" src={{log.user.profileUrl}} onerror="src = '/assets/face.png'"></div>
-                <div class="user-name">{{log.user.name}}</div>
-                <div class="flex"></div>
-                <div class="box log-box"><div class="log-data">{{log.createdAt | amParse:'HH:mm' | amDateFormat:'HH:mmA'}}</div><div class="log-info">Time Logged</div></div>
-                <div class="map-icon"><mat-icon class="map">location_on</mat-icon></div>
+   <div class="window">
+        <div class="month">{{now}}</div>
+        <ng-container *ngFor="let day of days | search: searchStr : filterUsers">
+          <div class="day-box">
+            <div class="day" (click)="aDay ? aDay = null : aDay = day.id">
+              <div class="date box">
+                <div class="date" [ngClass]="{'small': day.logs.length == 0}">{{day.day}}</div>
+                <div class="dow" [ngClass]="{'hide': day.logs.length == 0}">{{day.dOW}}</div>
               </div>
-              <div class="info-row">
-                <div class="survey" *ngIf="log.surveyQuestion">{{log.surveySubject}} - {{log.surveyQuestion}}</div>
-                <div class="info-log">{{log.description}}</div>
-              </div>
-              <div class="image-row">
-                <div class="log-image-box" *ngFor="let image of log.images"><img class="log-image" src={{image.imageUrl}} onerror="src = '/assets/face.png'"></div>
+              <div class="row">
+                <div class="event"  *ngFor="let log of day.logs">
+                  <div class="block" (click)="log.bShowDetails == true ? log.bShowDetails = false : log.bShowDetails = true">
+                    <div class="type">{{log.user.name}} -&nbsp;</div>
+                    <div class="title">{{log.description}}</div>
+                  </div>
+                  <div class="details" [@expand] *ngIf="log.bShowDetails">
+                    <div class="image-row">
+                      <div class="log-image-box" *ngFor="let image of log.images"><img class="log-image" src={{image.imageUrl}} onerror="src = '/assets/face.png'"></div>
+                    </div>
+                    <div class="info">
+                      <div class="createdAt">created: {{log.createdAt | date: 'shortTime'}}</div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+          <div class="month" *ngIf="day.day == 1">{{day.displayMonth}}</div>
+        </ng-container>
       </div>
-        <div class="month" *ngIf="day.day == 1">{{day.month}}</div>
-      </ng-container>
-    </div>
-  
