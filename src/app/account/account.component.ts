@@ -26,6 +26,8 @@ import { AppService } from '../app.service';
 })
 export class AccountComponent implements OnInit {
 
+  bShowAccount: boolean; // temp var
+
   constructor(
     public accountService: AccountService,
     public appService: AppService,

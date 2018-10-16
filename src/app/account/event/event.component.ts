@@ -34,6 +34,8 @@ export class EventComponent {
   lat: number;
   long: number;
 
+  now: any = moment().format('MMM');
+
   constructor(
     public accountService: AccountService
   ) {
@@ -79,10 +81,11 @@ export class EventComponent {
     for (let i = 0; i <= total_days; i++) {
       let date = moment().subtract(i, 'days');
       let month = date.format('MMM');
+      let displayMonth = moment().subtract(i, 'days').subtract(1, 'month').format("MMM");
       let day = date.format('DD');
       let dOW = date.format('ddd');
       let events = this.getEventsByDate(date); 
-      this.days.push({id: i + 1, date, month, day, dOW, events: events.events});
+      this.days.push({id: i + 1, date, month, displayMonth, day, dOW, events: events.events});
     }
   }
 
