@@ -35,7 +35,7 @@ export class SurveyComponent implements OnInit {
     public snackbar: MatSnackBar
   ) {
     this.accountService.helper = this.accountService.helperProfiles.survey;
-    this.accountService.aTeamObservable.subscribe(team => {
+    this.accountService.teamUsersObservable.subscribe(team => {
       if (team) {
         let surveyCollection = this.accountService.db.collection<Survey[]>("survey", ref => ref.where("teamId", "==", this.accountService.aTeam.id).orderBy("createdAt", "desc"));
         surveyCollection.snapshotChanges().pipe(
@@ -51,6 +51,13 @@ export class SurveyComponent implements OnInit {
           })
         ).subscribe(surveys => {
           if (surveys.length == 0) this.accountService.showHelper = true;
+          surveys.forEach(survey => {
+            survey['ranNumber'] = 0;
+            Object.keys(survey.userSurvey).forEach(key => {
+              if (survey.userSurvey[key] > 0) survey['ranNumber'] = survey['ranNumber'] + 1;
+            })
+            survey['ranPercent'] = survey['ranNumber'] / this.accountService.teamUsers.length;
+          })
           this.surveys = surveys;
         });
       }
