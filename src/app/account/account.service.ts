@@ -21,6 +21,8 @@ export class AccountService {
   teamUsersObservable: BehaviorSubject<any> = new BehaviorSubject(null);
   showHelper: boolean = false;
   showFeedback: boolean = false;
+  bShowProfile: boolean = false; // template var
+
   helperProfiles = {
     newTeam: {
       name: "welcome to minute!",

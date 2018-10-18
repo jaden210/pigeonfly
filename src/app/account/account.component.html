@@ -54,3 +54,15 @@
   <div id="popteam">{{accountService.teamUsers.length}} team members</div>
   <div id="popteam">member since {{accountService.aTeam.createdAt | date:'shortDate'}}</div>
 </div>
+<div class="account-popup-overlay" *ngIf="accountService.bShowProfile" (click)="accountService.bShowProfile = false"></div>
+<div class="profile-popup" *ngIf="accountService.bShowProfile">
+  <div class="pr">
+    <img id="pi" src={{accountService.user.profileUrl}} onerror="src = '/assets/face.png'" alt="profile">
+    <div class="col">
+      <div id="pn">{{accountService.user.name}}</div>
+      <div id="pe">{{accountService.user.email}}</div>
+      <button mat-button color="accent" (click)="accountService.bShowProfile = false" routerLink="account">ACCOUNT</button>
+      <button mat-stroked-button style="margin-left: 4px" (click)="accountService.logout()" color="accent">SIGN OUT</button>
+    </div>
+  </div>
+</div>
