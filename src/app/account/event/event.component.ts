@@ -3,6 +3,8 @@ import { trigger, style, transition, animate } from "@angular/animations";
 import { Timeclock, AccountService, Log, Event } from '../account.service';
 import { map, tap } from 'rxjs/operators';
 import * as moment from 'moment';
+import { MatDialog } from '@angular/material';
+import { ImagesDialogComponent } from '../images-dialog/images-dialog.component';
 
 @Component({
   selector: 'app-event',
@@ -29,6 +31,7 @@ export class EventComponent {
   events: any;
   oldestEvent: any = new Date();
   days = [];
+  eventTypes;
 
   
   lat: number;
@@ -37,7 +40,8 @@ export class EventComponent {
   now: any = moment().format('MMM');
 
   constructor(
-    public accountService: AccountService
+    public accountService: AccountService,
+    public dialog: MatDialog
   ) {
     this.accountService.helper = this.accountService.helperProfiles.log;
     this.accountService.aTeamObservable.subscribe(aTeam => {
@@ -62,11 +66,13 @@ export class EventComponent {
         ).subscribe(events => {
           if (events.length == 0) this.accountService.showHelper = true;
           this.events = events;
+          this.eventTypes = [];
           this.events.forEach(event => {
             if (this.oldestEvent > event.createdAt) {
               this.oldestEvent = event.createdAt;
             }
             event.user = this.accountService.teamUsers.find(user => user.id == event.userId);
+            if (!this.eventTypes.find(type => type == event.type)) this.eventTypes.push(event.type);
           });
           this.buildCalendar();
         }); 
@@ -115,6 +121,12 @@ export class EventComponent {
     let lh = parseInt(duration.asHours());
     let lm = parseInt(duration.asMinutes())%60;
     return lh + 'h ' + lm + 'm';
+  }
+
+  showImages(images) {
+    let dialog = this.dialog.open(ImagesDialogComponent, {
+      data: images
+    })
   }
 
   export() {

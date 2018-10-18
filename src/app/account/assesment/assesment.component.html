@@ -4,12 +4,12 @@
 </mat-toolbar>
 <div class="window">
     <div class="assesments">
-      <div class="assesment"> <!-- This could be way better -->
-        <div class="header">
-          <div class="title">New Assesment</div>
+      <div class="assesment" style="font-size: 15px;">
+        <div class="header" style="padding: 4px 24px;">
+          Title
         </div>
-        <div class="new-body" (click)="startNewAssesment()">
-          <mat-icon color="accent">add</mat-icon> Click here to create
+        <div class="body" style="padding: 4px">
+          Date
         </div>
       </div>
       <ng-container *ngFor="let assesment of assesments">
@@ -18,7 +18,7 @@
             <div class="title" >{{assesment.title}}</div>
           </div>
           <div class="body">
-            stats go here
+            {{assesment.createdAt| date: 'longDate'}}
           </div>
         </div>
       </ng-container>
@@ -107,3 +107,5 @@
       </mat-accordion>
     </div>
   </div>
+
+  <button class="fab" mat-fab color="accent" (click)="startNewAssesment()"><mat-icon>add</mat-icon></button>

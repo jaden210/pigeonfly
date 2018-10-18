@@ -21,7 +21,7 @@
           <div class="row">
             <div class="event" *ngFor="let log of day.timeLogs">
               <div class="block" (click)="log.bShowDetails == true ? log.bShowDetails = false : log.bShowDetails = true">
-                <div class="type">{{log.user.name}} -&nbsp;</div>
+                <div class="type">{{log.user?.name}} -&nbsp;</div>
                 <div class="title">{{getDiff(log)}}</div>
               </div>
               <div class="details" [@expand] *ngIf="log.bShowDetails">

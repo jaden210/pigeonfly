@@ -3,6 +3,8 @@ import { trigger, style, transition, animate } from "@angular/animations";
 import { Timeclock, AccountService, Log } from '../account.service';
 import { map, tap } from 'rxjs/operators';
 import * as moment from 'moment';
+import { ImagesDialogComponent } from '../images-dialog/images-dialog.component';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-log',
@@ -38,10 +40,11 @@ export class LogComponent {
   now: any = moment().format('MMM');
 
   constructor(
-    public accountService: AccountService
+    public accountService: AccountService,
+    public dialog: MatDialog
   ) {
     this.accountService.helper = this.accountService.helperProfiles.log;
-    this.accountService.aTeamObservable.subscribe(aTeam => {
+    this.accountService.teamUsersObservable.subscribe(aTeam => {
       if (aTeam) {
         let logCollection = this.accountService.db.collection("log", ref => ref.where("teamId", "==", this.accountService.aTeam.id))
         logCollection.snapshotChanges().pipe(
@@ -103,6 +106,12 @@ export class LogComponent {
       }
     });
     return { logs:logsOnDate, loggers: users };
+  }
+
+  showImages(images) { // TODO: Pass index so it opens to the right image when there are a bunch
+    let dialog = this.dialog.open(ImagesDialogComponent, {
+      data: images
+    })
   }
 
   export() {

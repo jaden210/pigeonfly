@@ -4,13 +4,22 @@
 </mat-toolbar>
 <div class="window">
     <div class="assesments">
+      <div class="assesment" style="font-size: 15px;">
+        <div class="header" style="padding: 4px 24px;">
+          Title
+        </div>
+        <div class="body" style="padding: 4px">
+          Date
+        </div>
+      </div>
       <ng-container *ngFor="let report of incidentReports">
         <div class="assesment">
           <div class="header" (click)="selectReport(report)">
-            <div class="title" >{{report.type}}</div>
+            <div class="category" >{{report.type}}</div>
+            <div class="title" >{{report.reportName || 'no name given'}}</div>
             </div>
           <div class="body">
-              {{report.reportName}}
+              {{report.createdAt| date: 'longDate'}}
           </div>
         </div>
       </ng-container>

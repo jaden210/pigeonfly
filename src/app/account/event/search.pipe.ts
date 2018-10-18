@@ -1,12 +1,12 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'event-search'
+  name: 'eventSearch'
 })
 export class EventSearchPipe implements PipeTransform {
 
 
-  transform(days, args?: string, people?) {
+  transform(days, args?: string, people?, types?) { // TODO: this only filters by day, maybe we need to be more granular
     let filter: string[] = args ? args.trim().split(/\s+/) : null;
     let rv: any[] = [];
 
@@ -61,8 +61,22 @@ export class EventSearchPipe implements PipeTransform {
     if (people.length > 0) {
       for (let person of people) {
         for (let day of days) {
-          for (let logger of day.loggers) {
-            if (person == logger.id) {
+          for (let event of day.events) {
+            if (person == event.user.id) {
+              rv.push(day);
+            }
+          }
+        }
+      } return rv;
+    } else {
+      return days; // empty args returns whole stores list
+    }
+  } else if (types) {
+    if (types.length > 0) {
+      for (let type of types) {
+        for (let day of days) {
+          for (let event of day.events) {
+            if (type == event.type) {
               rv.push(day);
             }
           }

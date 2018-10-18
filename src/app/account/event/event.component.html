@@ -1,8 +1,13 @@
 <mat-toolbar style="font-size: 15px">
   <input id="search" placeholder="search" type="text" [(ngModel)]="searchStr">
   <mat-form-field class="filter">
-      <mat-select placeholder="Filter by people" [(ngModel)]="filterUsers" multiple>
+      <mat-select placeholder="People" [(ngModel)]="filterUsers" multiple>
         <mat-option *ngFor="let user of accountService.teamUsers" [value]="user.id">{{user.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  <mat-form-field class="filter">
+      <mat-select placeholder="Event type" [(ngModel)]="filterTypes" multiple>
+        <mat-option *ngFor="let type of eventTypes" [value]="type">{{type}}</mat-option>
       </mat-select>
     </mat-form-field>
   <button class="toolbar-button" (click)="export()" mat-button>EXPORT</button>
@@ -11,7 +16,7 @@
 </mat-toolbar>
 <div class="window">
   <div class="month">{{now}}</div>
-  <ng-container *ngFor="let day of days | search: searchStr : filterUsers">
+  <ng-container *ngFor="let day of days | eventSearch: searchStr : filterUsers: filterTypes">
     <div class="day-box">
       <div class="day" (click)="aDay ? aDay = null : aDay = day.id">
         <div class="date box">
@@ -26,7 +31,7 @@
             </div>
             <div class="details" [@expand] *ngIf="event.bShowDetails">
               <div class="image-row" *ngIf="event.type == 'log' && event.details.images.length > 0">
-                <div class="log-image-box" *ngFor="let image of event.details.images"><img class="log-image" src={{image.imageUrl}} onerror="src = '/assets/face.png'"></div>
+                <div class="log-image-box" *ngFor="let image of event.details.images" (click)="showImages(event.details.images)"><img class="log-image" src={{image.imageUrl}} onerror="src = '/assets/face.png'"></div>
               </div>
               <div class="time-detail" *ngIf="event.type == 'timeclock'">
                 <div class="time-item"><mat-icon>hourglass_empty</mat-icon>{{event.details.clockIn | date: 'h:mm a'}}</div>
@@ -40,5 +45,5 @@
     </div>
     <div class="month" *ngIf="day.day == 1">{{day.displayMonth}}</div>
   </ng-container>
-    </div>
+</div>
   

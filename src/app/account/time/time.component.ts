@@ -46,12 +46,13 @@ export class TimeComponent implements OnInit {
     /// NOTE: MAYBE CHANGE SO A USER ONLY SHOWS ONCE FOR A DAY AND EXPANDING SHOWS ALL INS AND OUTS
     this.accountService.helper = this.accountService.helperProfiles.time;
     const fortnightAgo = new Date(Date.now() - 12096e5);
-    this.accountService.aTeamObservable.subscribe(aTeam => {
+    this.accountService.teamUsersObservable.subscribe(aTeam => {
       if (aTeam) this.getLogs(fortnightAgo, new Date());
     });
   }
 
   private getLogs(startDate: Date, endDate: Date): void {
+    this.days = [];
     this.timeService
       .getTimeLogs(this.accountService.aTeam.id, startDate, endDate)
       .subscribe(logs => {

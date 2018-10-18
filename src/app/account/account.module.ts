@@ -20,6 +20,7 @@ import { EventComponent } from "./event/event.component";
 import { EventSearchPipe } from "./event/search.pipe";
 import { ToolbarHelperComponent } from "./toolbar-helper/toolbar-helper.component";
 import { NoAccessDialog } from "./account.service";
+import { ImagesDialogComponent } from "./images-dialog/images-dialog.component";
 
 @NgModule({
   imports: [
@@ -50,10 +51,18 @@ import { NoAccessDialog } from "./account.service";
     EventSearchPipe,
     MapDialogComponent,
     IncidentReportsComponent,
-    ToolbarHelperComponent
+    ToolbarHelperComponent,
+    ImagesDialogComponent
   ],
   exports: [MaterialModule],
-  entryComponents: [InviteDialog, MapDialogComponent, EditUserDialog, TeamSelectDialog, NoAccessDialog],
+  entryComponents: [
+    InviteDialog, 
+    MapDialogComponent, 
+    EditUserDialog, 
+    TeamSelectDialog, 
+    NoAccessDialog, 
+    ImagesDialogComponent
+  ],
   providers: [DatePipe]
 })
 export class AccountModule {}
