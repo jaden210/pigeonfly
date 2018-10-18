@@ -109,14 +109,19 @@ export class IncidentReportsComponent implements OnInit {
           prefix = '    ';
         } else {
           const lastChar = buffer.substring(0, maxChars).lastIndexOf(' ');
-          doc.text(prefix + buffer.substring(0, lastChar), x, y);
+          if (lastChar === -1) {
+            doc.text(prefix + buffer.substring(0, maxChars), x, y);
+            buffer = buffer.substring(maxChars);
+          } else {
+            doc.text(prefix + buffer.substring(0, lastChar), x, y);
+            buffer = buffer.substring(lastChar + 1);
+          }
+          prefix = '    ';
           y += lineSpace;
           if (y > endOfPage) {
             doc.addPage();
             y = startOfPage;
           }
-          buffer = buffer.substring(lastChar + 1);
-          prefix = '    ';
         }
       }
 
@@ -132,13 +137,23 @@ export class IncidentReportsComponent implements OnInit {
           buffer = '';
         } else {
           const lastChar = buffer.substring(0, maxChars).lastIndexOf(' ');
-          doc.text(prefix + buffer.substring(0, lastChar), x, y);
+          if (item.name === 'signature') {
+            // doc.addImage(buffer, 'PNG', x, y, 300, 150);
+            doc.text(prefix + '[signature image]', x, y);
+            buffer = '';
+          } else if (lastChar === -1) {
+            doc.text(prefix + buffer.substring(0, maxChars), x, y);
+            buffer = buffer.substring(maxChars);
+          } else {
+            doc.text(prefix + buffer.substring(0, lastChar), x, y);
+            buffer = buffer.substring(lastChar + 1);
+          }
+
           y += lineSpace;
           if (y > endOfPage) {
             doc.addPage();
             y = startOfPage;
           }
-          buffer = buffer.substring(lastChar + 1);
         }
       }
       y += sectionGap;
