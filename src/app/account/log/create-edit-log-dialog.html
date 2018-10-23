@@ -1,0 +1,20 @@
+<h2 mat-dialog-title>{{data.id ? 'Edit Log' : 'Create a New Log'}}</h2>
+<mat-dialog-content>
+  <mat-form-field>
+    <textarea matInput [(ngModel)]="data.description"></textarea>
+  </mat-form-field>
+  <div class="images">
+    <img class="image" *ngFor="let image of data.images" src={{image.imageUrl}} onerror="src = '/assets/face.png'">
+    <div class="image new" (click)="upload()">
+      <mat-icon>add_a_photo</mat-icon>
+
+      <div style="height: 0px; width: 0px; overflow:hidden"><input type="file" id="upfile" accept=".png,.jpg,.mp4" #uploadT (change)="uploadImage($event)"></div>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-icon-button  *ngIf="data.id" class="delete" (click)="delete()"><mat-icon>delete</mat-icon></button>
+  <div class="flex"></div>
+  <button mat-button color="accent" (click)="close()">CANCEL</button>
+  <button mat-button color="accent" [mat-dialog-close]="data">SAVE</button>
+</mat-dialog-actions>

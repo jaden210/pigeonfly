@@ -3,8 +3,8 @@ import { CommonModule } from "@angular/common";
 import { ProfileComponent } from "./account/account.component";
 import { HomeComponent, InviteDialog, EditUserDialog } from "./home/home.component";
 import { SurveyComponent } from "./survey/survey.component";
-import { TimeComponent } from "./time/time.component";
-import { LogComponent } from "./log/log.component";
+import { TimeComponent, CreateEditTimeDialog } from "./time/time.component";
+import { LogComponent, CreateEditLogDialog } from "./log/log.component";
 import { AssesmentComponent } from "./assesment/assesment.component";
 import { AccountRoutingModule } from "./account-routing.module";
 import { MaterialModule } from "../material/material.module";
@@ -52,7 +52,9 @@ import { ImagesDialogComponent } from "./images-dialog/images-dialog.component";
     MapDialogComponent,
     IncidentReportsComponent,
     ToolbarHelperComponent,
-    ImagesDialogComponent
+    ImagesDialogComponent,
+    CreateEditLogDialog,
+    CreateEditTimeDialog
   ],
   exports: [MaterialModule],
   entryComponents: [
@@ -61,7 +63,9 @@ import { ImagesDialogComponent } from "./images-dialog/images-dialog.component";
     EditUserDialog, 
     TeamSelectDialog, 
     NoAccessDialog, 
-    ImagesDialogComponent
+    ImagesDialogComponent,
+    CreateEditLogDialog,
+    CreateEditTimeDialog
   ],
   providers: [DatePipe]
 })

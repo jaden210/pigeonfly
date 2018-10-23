@@ -85,3 +85,18 @@
     margin: 4px;
     object-fit: contain;
 }
+
+
+
+
+
+
+
+
+
+
+
+.item {
+  margin: 8px 0;
+  display: flex;
+}

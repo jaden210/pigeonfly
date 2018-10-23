@@ -26,6 +26,7 @@ import { ImagesDialogComponent } from "../images-dialog/images-dialog.component"
 export class EventComponent {
   searchStr; // template variable
   filterUsers; // template variable
+  filterTypes; // template variable
 
   events: any;
   oldestEvent: any = new Date();

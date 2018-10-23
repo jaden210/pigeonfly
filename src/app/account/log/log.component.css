@@ -45,6 +45,7 @@
     justify-content: center;
     align-items: flex-start;
     width: 100px;
+    cursor: pointer;
 }
 
 .row {
@@ -124,7 +125,9 @@
 }
 
 .info {
-    text-align: end;
+    display: flex;
+    align-items: flex-end;
+    padding: 4px;
 }
 
 .createdAt {
@@ -132,3 +135,49 @@
     font-weight: 700;
     opacity: .67;
 }
+
+.last-changed {
+    margin-left: 4px;
+    font-size: 13px;
+    opacity: .67;
+}
+
+.edit {
+    opacity: .67;
+    cursor: pointer;
+}
+
+
+
+mat-form-field {
+    width: 100%;
+}
+
+mat-dialog-content {
+    width: 70vw;
+}
+
+.images {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.image {
+    height: 200px;
+    margin: 8px;
+}
+
+.new {
+    width: 200px;
+    background-color: #fafafa;
+    border: 1px solid rgba(0,0,0,.14);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666666;
+}
+
+.delete {
+    color: #666666;
+    opacity: .5;
+  }

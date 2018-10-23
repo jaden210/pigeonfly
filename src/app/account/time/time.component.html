@@ -14,8 +14,8 @@
     <ng-container *ngFor="let day of days | search: searchStr : filterUsers; index as i">
       <div class="day-box">
         <div class="day" (click)="aDay ? aDay = null : aDay = day.id">
-          <div class="date box">
-            <div class="date" [ngClass]="{'small': day.timeLogs.length == 0}">{{day.day}}</div>
+          <div class="date box" (click)="createEditTime(day)">
+            <div class="date" matTooltip="Add a new log" matTooltipPosition="right" matTooltipShowDelay="600" [ngClass]="{'small': day.timeLogs.length == 0}">{{day.day}}</div>
             <div class="dow" [ngClass]="{'hide': day.timeLogs.length == 0}">{{day.dOW}}</div>
           </div>
           <div class="row">
@@ -30,6 +30,11 @@
                   <div class="time-item" *ngIf="log.clockOut"><mat-icon>hourglass_full</mat-icon>{{log.clockOut | date: 'h:mm a'}}</div>
                   <div class="time-item" *ngIf="log.clockOut"><mat-icon>access_time</mat-icon>{{getDiff(log)}}</div>
                 </div>
+                <div class="info">
+                    <mat-icon (click)="createEditTime(day, log)" class="edit">edit</mat-icon>
+                    <div class="last-changed" *ngIf="log.updatedAt">changed by {{log.updatedBy}} {{log.updatedAt | date: 'short'}}</div>
+                    <div class="flex"></div>
+                  </div>
               </div>
             </div>
           </div>

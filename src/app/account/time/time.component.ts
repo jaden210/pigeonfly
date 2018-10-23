@@ -1,9 +1,11 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild, Inject } from "@angular/core";
 import { trigger, style, transition, animate } from "@angular/animations";
 import { Timeclock, AccountService } from "../account.service";
 import * as moment from "moment";
 import { TimeService } from "./time.service";
-import { DatePipe } from "@angular/common";
+import { DatePipe, Time } from "@angular/common";
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from "@angular/material";
+import { finalize } from "rxjs/operators";
 
 @Component({
   selector: "app-time",
@@ -33,13 +35,16 @@ export class TimeComponent implements OnInit {
   lat: number;
   long: number;
 
+  logs;
+
 
   now: any = moment().format('MMM');
 
   constructor(
     public accountService: AccountService,
     private datePipe: DatePipe,
-    private timeService: TimeService
+    private timeService: TimeService,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -52,17 +57,20 @@ export class TimeComponent implements OnInit {
   }
 
   private getLogs(startDate: Date, endDate: Date): void {
-    this.days = [];
     this.timeService
-      .getTimeLogs(this.accountService.aTeam.id, startDate, endDate)
-      .subscribe(logs => {
-         if (logs.length == 0) this.accountService.showHelper = true;
-         this.timeClocks.push(logs);
-         this.buildCalendar(logs);
-      });
+    .getTimeLogs(this.accountService.aTeam.id, startDate, endDate)
+    .subscribe(logs => {
+      this.logs = logs;
+      if (logs.length == 0) this.accountService.showHelper = true;
+      this.timeClocks.push(logs);
+      this.buildCalendar(logs);
+    });
   }
-
+  
   private buildCalendar(logs: any[]): void {
+    console.log(this.logs);
+    
+    this.days = [];
     let now: any = new Date();
     let total_days = Math.round(
       (now - logs[logs.length - 1].clockIn) / (1000 * 60 * 60 * 24)
@@ -220,4 +228,128 @@ export class TimeComponent implements OnInit {
     link.setAttribute("download", filename);
     link.click();
   }
+
+  createEditTime(day, time?) {
+    if (!time) {
+      time = new Timeclock();
+      time.clockIn = day.date;
+      time.clockOut = day.date;
+    }
+    let dialog = this.dialog.open(CreateEditTimeDialog, {
+      data: time,
+      disableClose: true
+    });
+    dialog.afterClosed().subscribe((time: Timeclock) => {
+      if (time) {
+        let tempUser = time['user'];
+        delete time['bShowDetails'];
+        delete time['querySelectorId'];
+        delete time['user'];
+        delete time['loggedHours'];
+        delete time['loggedMinutes'];
+        time.updatedAt = new Date();
+        time.updatedBy = this.accountService.user.name;
+        time.updatedId = this.accountService.user.id;
+        if (time.id) {
+          this.accountService.db.collection('timeclock').doc(time.id).update({...time}).then(() => {
+            time['user'] = tempUser;
+            this.createEvent(time, "Edited a Timeclock")
+          });
+        } else {
+          time.teamId = this.accountService.aTeam.id;
+          this.accountService.db.collection('timeclock').add({...time}).then(snapshot => {
+            time.id = snapshot.id;
+            this.createEvent(time, "Created a Timeclock");
+            this.buildCalendar(this.logs);
+          });
+        }
+      }
+    })
+  }
+
+  createEvent(time, type) {
+    this.accountService.createEvent(
+      "timeclock",
+      time.id,
+      this.accountService.user.id,
+      type,
+      this.accountService.aTeam.id
+    );
+  }
 }
+
+@Component({
+  selector: 'create-edit-time-dialog',
+  templateUrl: 'create-edit-time-dialog.html',
+  styleUrls: ['./time.component.css']
+})
+export class CreateEditTimeDialog {
+
+  clockInHour;
+  clockInMinute;
+  clockOutHour;
+  clockOutMinute;
+  hours = [
+    {name: '1 AM', value: '1'},
+    {name: '2 AM', value: '2'},
+    {name: '3 AM', value: '3'},
+    {name: '4 AM', value: '4'},
+    {name: '5 AM', value: '5'},
+    {name: '6 AM', value: '6'},
+    {name: '7 AM', value: '7'},
+    {name: '8 AM', value: '8'},
+    {name: '9 AM', value: '9'},
+    {name: '10 AM', value: '10'},
+    {name: '11 AM', value: '11'},
+    {name: '12 PM', value: '12'},
+    {name: '1 PM', value: '13'},
+    {name: '2 PM', value: '14'},
+    {name: '3 PM', value: '15'},
+    {name: '4 PM', value: '16'},
+    {name: '5 PM', value: '17'},
+    {name: '6 PM', value: '18'},
+    {name: '7 PM', value: '19'},
+    {name: '8 PM', value: '20'},
+    {name: '9 PM', value: '21'},
+    {name: '10 PM', value: '22'},
+    {name: '11 PM', value: '23'},
+    {name: '12 AM', value: '24'}
+  ];
+  minutes = [
+    '01', '02', '03', '04', '05', '06', '07', '08', '09',
+    '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+    '20', '21', '22', '23', '24', '25', '26', '27', '28', '29',
+    '30', '31', '32', '33', '34', '35', '36', '37', '38', '39',
+    '40', '41', '42', '43', '44', '45', '46', '47', '48', '49',
+    '50', '51', '52', '53', '54', '55', '56', '57', '58', '59'
+  ]
+  
+  constructor(
+    public dialogRef: MatDialogRef<CreateEditTimeDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any,public accountService: AccountService) {
+      this.clockInHour = moment(this.data.clockIn).format('HH').toString();
+      this.clockInMinute = moment(this.data.clockIn).format('mm').toString();
+      this.clockOutHour = moment(this.data.clockOut).format('HH').toString();
+      this.clockOutMinute = moment(this.data.clockOut).format('mm').toString();
+    }
+    
+    close(time?): void {
+      this.data.clockIn = moment(this.data.clockIn).set('hour',+this.clockInHour).set('minute',+this.clockInMinute).toDate();
+      this.data.clockOut = moment(this.data.clockOut).set('hour',+this.clockOutHour).set('minute',+this.clockOutMinute).toDate();
+      this.dialogRef.close(time);
+    }
+
+    delete() {
+      this.accountService.db.collection("timeclock").doc(this.data.id).delete().then(() => {
+        this.accountService.createEvent(
+          "timeclock",
+          this.data.id,
+          this.accountService.user.id,
+          "Deleted a Timeclock",
+          this.accountService.aTeam.id
+        );
+        this.dialogRef.close();
+      });
+    }
+    
+  }

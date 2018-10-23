@@ -122,3 +122,60 @@ box-sizing: border-box;
 .hide {
   display: none;
 }
+
+.info {
+  display: flex;
+  align-items: flex-end;
+  padding: 4px;
+}
+
+.createdAt {
+  font-size: 13px;
+  font-weight: 700;
+  opacity: .67;
+}
+
+.last-changed {
+  margin-left: 4px;
+  font-size: 13px;
+  opacity: .67;
+}
+
+.edit {
+  opacity: .67;
+  cursor: pointer;
+}
+
+mat-dialog-content {
+  width: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.label {
+  font-size: 13px;
+  opacity: .87;
+  font-weight: 600;
+}
+
+.time-row {
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+}
+
+.hour {
+  width: 100px;
+  margin-right: 8px;
+}
+
+.minute {
+  width: 60px;
+  margin-left: 8px;
+}
+
+.delete {
+  color: #666666;
+  opacity: .5;
+}

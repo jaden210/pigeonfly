@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Router } from '@angular/router';
+import { AngularFireStorage } from 'angularfire2/storage';
 
 @Injectable({
   providedIn: 'root'
@@ -71,6 +72,7 @@ export class AccountService {
   constructor(
     public db: AngularFirestore,
     private auth: AngularFireAuth,
+    public storage: AngularFireStorage,
     public dialog: MatDialog,
     public router: Router
   ) { }
@@ -107,6 +109,17 @@ export class AccountService {
           });
         }
     });
+  }
+
+  createEvent(type, documentId, userId, title, teamId) { //this method also exists in minute project, if changes are made here make them there as well
+    let nd = new Date();
+    this.db
+      .collection("event")
+      .add({ type, documentId, userId, title, createdAt: nd, teamId })
+      .then(() => {})
+      .catch(error => {
+        console.log("error creating event");
+      });
   }
 
   logout() {
@@ -164,6 +177,9 @@ export class Log {
   surveyQuestion?: string;
   LatPos: number;
   LongPos: number;
+  updatedId: string;
+  updatedBy: string;
+  updatedAt: Date; 
 }
 
 export class Survey {
@@ -182,7 +198,7 @@ export class Survey {
     once: true
   };
   OSHAArticleId?: string;
-  userSurvey: any; // map of {userId: (survey id || 0)}
+  userSurvey: any = []; // map of {userId: (survey id || 0)}
 }
 
 export class Timeclock {
@@ -199,6 +215,9 @@ export class Timeclock {
   inLongPos?: any;
   outLatPos?: any;
   outLongPos?: any;
+  updatedId: string;
+  updatedBy: string;
+  updatedAt: Date; 
 }
 
 export class Helper {

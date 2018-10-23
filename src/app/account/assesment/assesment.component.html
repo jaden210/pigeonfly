@@ -4,14 +4,6 @@
 </mat-toolbar>
 <div class="window">
     <div class="assesments">
-      <div class="assesment" style="font-size: 15px;">
-        <div class="header" style="padding: 4px 24px;">
-          Title
-        </div>
-        <div class="body" style="padding: 4px">
-          Date
-        </div>
-      </div>
       <ng-container *ngFor="let assesment of assesments">
         <div class="assesment">
           <div class="header" (click)="selectAssesment(assesment)">

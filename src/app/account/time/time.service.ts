@@ -48,12 +48,14 @@ export class TimeService {
             let user = this.getEmployee(data.userId);
             let clockIn: Date = data.clockIn.toDate();
             let clockOut: Date = data.clockOut.toDate();
+            let updatedAt = data.updatedAt ? data.updatedAt.toDate() : null;
             return <any>{
               ...data,
               querySelectorId: log.payload.doc.id.replace(/[0-9]/g, ""),
               id: log.payload.doc.id,
               clockIn,
               clockOut,
+              updatedAt,
               user
             };
           });

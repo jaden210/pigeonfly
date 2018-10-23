@@ -14,8 +14,8 @@
         <ng-container *ngFor="let day of days | search: searchStr : filterUsers">
           <div class="day-box">
             <div class="day" (click)="aDay ? aDay = null : aDay = day.id">
-              <div class="date box">
-                <div class="date" [ngClass]="{'small': day.logs.length == 0}">{{day.day}}</div>
+              <div class="date box" (click)="createEditLog(day)">
+                <div class="date" matTooltip="Add a new log" matTooltipPosition="right" matTooltipShowDelay="600" [ngClass]="{'small': day.logs.length == 0}">{{day.day}}</div>
                 <div class="dow" [ngClass]="{'hide': day.logs.length == 0}">{{day.dOW}}</div>
               </div>
               <div class="row">
@@ -29,6 +29,9 @@
                       <div class="log-image-box" *ngFor="let image of log.images" (click)="showImages(log.images)"><img class="log-image" src={{image.imageUrl}} onerror="src = '/assets/face.png'"></div>
                     </div>
                     <div class="info">
+                      <mat-icon (click)="createEditLog(day, log)" class="edit">edit</mat-icon>
+                      <div class="last-changed" *ngIf="log.updatedAt">changed by {{log.updatedBy}} {{log.updatedAt | date: 'short'}}</div>
+                      <div class="flex"></div>
                       <div class="createdAt">created: {{log.createdAt | date: 'shortTime'}}</div>
                     </div>
                   </div>

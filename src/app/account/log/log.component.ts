@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { trigger, style, transition, animate } from "@angular/animations";
 import { Timeclock, AccountService, Log } from '../account.service';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, finalize } from 'rxjs/operators';
 import * as moment from 'moment';
 import { ImagesDialogComponent } from '../images-dialog/images-dialog.component';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
   selector: 'app-log',
@@ -54,7 +54,8 @@ export class LogComponent {
               return <Log>{
                 ...data,
                 id: a.payload.doc.id,
-                createdAt: data["createdAt"].toDate()
+                createdAt: data["createdAt"].toDate(),
+                updatedAt: data["updatedAt"] ? data["updatedAt"].toDate() : null
               };
             });
           }),
@@ -118,4 +119,95 @@ export class LogComponent {
     
   }
 
+  createEditLog(day, log?) {
+    if (!log) {
+      log = new Log();
+      log.createdAt = day.date;
+    }
+    let dialog = this.dialog.open(CreateEditLogDialog, {
+      data: log,
+      disableClose: true
+    });
+    dialog.afterClosed().subscribe((log: Log) => {
+      if (log) {
+        delete log['bShowDetails'];
+        delete log['user'];
+        if (log.id) {
+          log.updatedAt = new Date();
+          log.updatedBy = this.accountService.user.name;
+          log.updatedId = this.accountService.user.id;
+          this.accountService.db.collection('log').doc(log.id).update({...log}).then(() => this.createEvent(log));
+        } else {
+          log.createdAt = new Date(log.createdAt);
+          log.teamId = this.accountService.aTeam.id;
+          log.userId = this.accountService.user.id;
+          this.accountService.db.collection('log').add({...log}).then(snapshot => {
+            log.id = snapshot.id;
+            this.createEvent(log);
+          });
+        }
+      }
+    })
+  }
+
+  createEvent(log) {
+    this.accountService.createEvent(
+      "log",
+      log.id,
+      this.accountService.user.id,
+      log.description,
+      this.accountService.aTeam.id
+    );
+  }
+
+  
 }
+
+@Component({
+  selector: 'create-edit-log-dialog',
+  templateUrl: 'create-edit-log-dialog.html',
+  styleUrls: ['./log.component.css']
+})
+export class CreateEditLogDialog {
+  
+  constructor(
+    public dialogRef: MatDialogRef<CreateEditLogDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any,public accountService: AccountService) {
+      
+    }
+    
+    close(log?): void {
+      this.dialogRef.close(log);
+    }
+
+    delete() {
+      this.accountService.db.collection("log").doc(this.data.id).delete().then(() => {
+        this.accountService.createEvent(
+          "log",
+          this.data.id,
+          this.accountService.user.id,
+          "Deleted a Log",
+          this.accountService.aTeam.id
+        );
+        this.dialogRef.close();
+      });
+    }
+    
+    upload(): void { // this will call the file input from our custom button
+      document.getElementById('upfile').click();
+    }
+    
+    uploadImage(event) {
+      let file = event.target.files[0];
+      let filePath = this.accountService.user.id;
+      let ref = this.accountService.storage.ref(filePath);
+      let task = this.accountService.storage.upload(filePath, file);
+      task.snapshotChanges().pipe(
+        finalize(() => {
+          ref.getDownloadURL().subscribe(url => {
+            this.data.images.push({imageUrl:url});  
+          });
+        })
+      ).subscribe();
+    }
+  }
