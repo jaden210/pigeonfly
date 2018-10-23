@@ -1,10 +1,16 @@
 <mat-toolbar style="font-size: 15px">
+  <input id="search" placeholder="search" type="text" [(ngModel)]="searchStr">
+  <mat-form-field class="filter">
+    <mat-select placeholder="Filter by people" [(ngModel)]="filterUsers" multiple>
+      <mat-option *ngFor="let user of accountService.teamUsers" [value]="user.id">{{user.name}}</mat-option>
+    </mat-select>
+  </mat-form-field>
   <div class="flex"></div>
   <toolbar-helper></toolbar-helper>
 </mat-toolbar>
 <div class="window">
   <div class="surveys">
-    <ng-container *ngFor="let survey of surveys">
+    <ng-container *ngFor="let survey of surveys | surveySearch: searchStr : filterUsers">
       <div class="survey">
         <div class="header" (click)="selectSurvey(survey)">
           <div class="category">{{survey.category}}</div>

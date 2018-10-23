@@ -23,6 +23,9 @@ import { MatSnackBar } from '@angular/material';
 })
 export class SurveyComponent implements OnInit {
 
+  searchStr; // template variable
+  filterUsers; // template variable
+
   surveys: Survey[];
   aSurvey: Survey = null;
   surveyUsers;

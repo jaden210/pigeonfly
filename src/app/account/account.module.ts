@@ -21,6 +21,7 @@ import { EventSearchPipe } from "./event/search.pipe";
 import { ToolbarHelperComponent } from "./toolbar-helper/toolbar-helper.component";
 import { NoAccessDialog } from "./account.service";
 import { ImagesDialogComponent } from "./images-dialog/images-dialog.component";
+import { SurveySearchPipe } from "./survey/search.pipe";
 
 @NgModule({
   imports: [
@@ -49,6 +50,7 @@ import { ImagesDialogComponent } from "./images-dialog/images-dialog.component";
     NoAccessDialog,
     SearchPipe,
     EventSearchPipe,
+    SurveySearchPipe,
     MapDialogComponent,
     IncidentReportsComponent,
     ToolbarHelperComponent,
