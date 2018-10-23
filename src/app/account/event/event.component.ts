@@ -33,8 +33,6 @@ export class EventComponent {
   days = [];
   eventTypes;
 
-  filterTypes;
-
   lat: number;
   long: number;
 
