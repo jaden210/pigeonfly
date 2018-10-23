@@ -84,7 +84,7 @@ export class IncidentReportsComponent implements OnInit {
     const sectionGap = 0.05;
     const maxChars = 95;
 
-    const x = 0.5;
+    let x = 0.5;
     let y = startOfPage;
 
     doc.text(type, x, y);
@@ -125,34 +125,60 @@ export class IncidentReportsComponent implements OnInit {
         }
       }
 
-      buffer = item.value;
-      while (buffer.length > 0) {
-        if (buffer.length <= maxChars) {
-          doc.text(prefix + buffer, x, y);
-          y += lineSpace;
-          if (y > endOfPage) {
-            doc.addPage();
-            y = startOfPage;
+      if (item.value.constructor === Array) {
+        if (item.name === 'images') {
+          item.value.forEach(function (value) {
+            doc.addImage(value.imageUrl, 'PNG', x, y, 3, 3);
+            if (x === 0.5) {
+              x = 3.75;
+            } else {
+              x = 0.5;
+              y += (3 + lineSpace);
+              if (y > endOfPage) {
+                doc.addPage();
+                y = startOfPage;
+              }
+            }
+          });
+          if (x === 3.75) {
+            x = 0.5;
+            y += (3 + lineSpace);
+            if (y > endOfPage) {
+              doc.addPage();
+              y = startOfPage;
+            }
           }
-          buffer = '';
-        } else {
-          const lastChar = buffer.substring(0, maxChars).lastIndexOf(' ');
-          if (item.name === 'signature') {
-            // doc.addImage(buffer, 'PNG', x, y, 300, 150);
-            doc.text(prefix + '[signature image]', x, y);
+        }
+      } else {
+        buffer = item.value;
+        while (buffer.length > 0) {
+          if (buffer.length <= maxChars) {
+            doc.text(prefix + buffer, x, y);
+            y += lineSpace;
+            if (y > endOfPage) {
+              doc.addPage();
+              y = startOfPage;
+            }
             buffer = '';
-          } else if (lastChar === -1) {
-            doc.text(prefix + buffer.substring(0, maxChars), x, y);
-            buffer = buffer.substring(maxChars);
           } else {
-            doc.text(prefix + buffer.substring(0, lastChar), x, y);
-            buffer = buffer.substring(lastChar + 1);
-          }
+            const lastChar = buffer.substring(0, maxChars).lastIndexOf(' ');
+            if (item.name === 'signature') {
+              doc.addImage(buffer, 'PNG', x, y, 2, 1);
+              y += 1;
+              buffer = '';
+            } else if (lastChar === -1) {
+              doc.text(prefix + buffer.substring(0, maxChars), x, y);
+              buffer = buffer.substring(maxChars);
+            } else {
+              doc.text(prefix + buffer.substring(0, lastChar), x, y);
+              buffer = buffer.substring(lastChar + 1);
+            }
 
-          y += lineSpace;
-          if (y > endOfPage) {
-            doc.addPage();
-            y = startOfPage;
+            y += lineSpace;
+            if (y > endOfPage) {
+              doc.addPage();
+              y = startOfPage;
+            }
           }
         }
       }
