@@ -24,6 +24,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { FooterComponent } from "./footer/footer.component";
 import { AssesComponent } from "./ases/make-osha.component";
 import { PreviewDialogComponent } from "./make-osha/preview-dialog/preview-dialog.component";
+import { TopicDialogComponent } from "./make-osha/topic-dialog/topic-dialog.component";
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { PreviewDialogComponent } from "./make-osha/preview-dialog/preview-dialo
     AssesComponent,
     Safe,
     FooterComponent,
-    PreviewDialogComponent
+    PreviewDialogComponent,
+    TopicDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -53,7 +55,7 @@ import { PreviewDialogComponent } from "./make-osha/preview-dialog/preview-dialo
     AngularEditorModule,
     HttpClientModule
   ],
-  entryComponents: [PreviewDialogComponent],
+  entryComponents: [PreviewDialogComponent, TopicDialogComponent],
   providers: [],
   bootstrap: [AppComponent]
 })

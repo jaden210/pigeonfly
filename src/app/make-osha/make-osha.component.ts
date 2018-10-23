@@ -1,6 +1,6 @@
 import { Component, OnInit, Pipe } from "@angular/core";
 import { AppService } from "../app.service";
-import { map, tap, catchError, finalize } from "rxjs/operators";
+import { map, tap, catchError, share } from "rxjs/operators";
 import { AngularEditorConfig } from "@kolkov/angular-editor";
 import { MatSnackBar, MatDialog } from "@angular/material";
 import { Location } from "@angular/common";
@@ -14,6 +14,10 @@ import {
   SafeResourceUrl
 } from "@angular/platform-browser";
 import { Observable, of } from "rxjs";
+import {
+  TopicDialogComponent,
+  Topic
+} from "./topic-dialog/topic-dialog.component";
 
 @Component({
   selector: "app-make-osha",
@@ -22,6 +26,7 @@ import { Observable, of } from "rxjs";
 })
 export class MakeOSHAComponent implements OnInit {
   private oshaManual: string = "osha-manual-en";
+  public topics: Observable<any[]>;
   public articles: Observable<any[]>;
   public activeArticle = new Article();
   private originalActiveArticle: Article;
@@ -68,6 +73,7 @@ export class MakeOSHAComponent implements OnInit {
         ),
         tap(industries => {
           this.getArticles(industries[0]);
+          this.getTopics(industries[0]);
         }),
         catchError(error => {
           console.error(`Error loading industries collection. ${error}`);
@@ -81,6 +87,7 @@ export class MakeOSHAComponent implements OnInit {
     if (this.confirmNavigation()) {
       this.newArticle();
       this.getArticles(industry);
+      this.getTopics(industry);
     }
   }
 
@@ -121,6 +128,37 @@ export class MakeOSHAComponent implements OnInit {
       );
   }
 
+  private getTopics(industry): void {
+    this.topics = this.appService.db
+      .doc(`${this.oshaManual}/${industry.id}`)
+      .collection("topics")
+      .snapshotChanges()
+      .pipe(
+        map((actions: any[]) =>
+          actions.map(a => {
+            const data = a.payload.doc.data();
+            const id = a.payload.doc.id;
+            return { id, ...data };
+          })
+        ),
+        map(topics => {
+          return topics.sort(
+            (a, b) => (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1)
+          );
+        }),
+        catchError(error => {
+          console.error(`Error loading topics collection. ${error}`);
+          alert(
+            `Error loading topics collection for ${this.oshaManual}/${
+              industry.id
+            }`
+          );
+          return of([]);
+        }),
+        share()
+      );
+  }
+
   public setActiveArticle(article = new Article()): void {
     if (this.confirmNavigation()) {
       this.activeArticle = { ...article };
@@ -142,7 +180,8 @@ export class MakeOSHAComponent implements OnInit {
           0 ||
         this.activeArticle.content.localeCompare(
           this.originalActiveArticle.content
-        ) > 0
+        ) > 0 ||
+        this.activeArticle.topicId !== this.originalActiveArticle.topicId
       )
         return window.confirm(
           "You have unsaved changes, are you sure you want to exit?"
@@ -151,12 +190,54 @@ export class MakeOSHAComponent implements OnInit {
     } else return true;
   }
 
+  public editTopic(): void {
+    this.appService.db
+      .doc(
+        `${this.oshaManual}/${this.industry.id}/topics/${
+          this.activeArticle.topicId
+        }`
+      )
+      .snapshotChanges()
+      .pipe(
+        map(a => {
+          const data = a.payload.data();
+          const id = a.payload.id;
+          return <Topic>{ id, ...data };
+        })
+      )
+      .subscribe(topic => this.launchTopicDialog(topic));
+  }
+
+  public createTopic(): void {
+    this.launchTopicDialog(new Topic());
+  }
+
+  private launchTopicDialog(topic: Topic): void {
+    this.dialog
+      .open(TopicDialogComponent, {
+        data: {
+          industryId: this.industry.id,
+          oshaManual: this.oshaManual,
+          topic
+        }
+      })
+      .afterClosed()
+      .subscribe(topicId => {
+        console.log(topicId);
+        this.getTopics(this.industry);
+        if (topicId == "deleted") {
+          this.activeArticle.topicId = null;
+        } else if (topicId) this.activeArticle.topicId = topicId; // save it
+      });
+  }
+
   public createArticle(): void {
     this.appService.db
       .collection(`${this.oshaManual}/${this.industry.id}/articles`)
       .add({ ...this.activeArticle })
       .then(
         () => {
+          this.originalActiveArticle = this.activeArticle;
           this.snackbar
             .open(`Created Article ${this.activeArticle.name}`, null, {
               duration: 2000
@@ -166,7 +247,9 @@ export class MakeOSHAComponent implements OnInit {
         },
         error => {
           console.error(
-            `Error creating article. ${this.activeArticle} ${error}`
+            `Error creating article ${this.activeArticle.name}`,
+            this.activeArticle,
+            error
           );
           alert(`Error creating article ${this.activeArticle.name}`);
         }
@@ -183,6 +266,7 @@ export class MakeOSHAComponent implements OnInit {
       .update({ ...this.activeArticle })
       .then(
         () => {
+          this.originalActiveArticle = this.activeArticle;
           this.snackbar
             .open(`Updated Article ${this.activeArticle.name}`, null, {
               duration: 2000
@@ -192,7 +276,9 @@ export class MakeOSHAComponent implements OnInit {
         },
         error => {
           console.error(
-            `Error updating article. ${this.activeArticle} ${error}`
+            `Error updating article ${this.activeArticle.name}`,
+            this.activeArticle,
+            error
           );
           alert(
             `Error updating article ${
@@ -250,14 +336,12 @@ export class MakeOSHAComponent implements OnInit {
           )
           .delete()
           .then(
-            () => {
-              this.newArticle();
-            },
+            () => {},
             error => {
               console.error(
-                `Error deleting article ${
-                  deletedArticle.name
-                }, ${deletedArticle} ${error}`
+                `Error deleting article ${deletedArticle.name}`,
+                deletedArticle,
+                error
               );
               alert(`Error deleting article ${deletedArticle.name}`);
               this.activeArticle = deletedArticle;
@@ -274,6 +358,7 @@ export class Article {
   name: string;
   content: string;
   order: number;
+  topicId: string;
   id?: string;
 }
 

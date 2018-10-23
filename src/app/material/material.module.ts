@@ -22,7 +22,8 @@ import {
   MatDialogModule,
   MatTooltipModule,
   MatExpansionModule,
-  MatMenuModule
+  MatMenuModule,
+  MatProgressBarModule
 } from "@angular/material";
 
 @NgModule({
@@ -49,7 +50,8 @@ import {
     MatTooltipModule,
     MatExpansionModule,
     MatCheckboxModule,
-    MatMenuModule
+    MatMenuModule,
+    MatProgressBarModule
   ],
   exports: [
     MatButtonModule,
@@ -73,7 +75,8 @@ import {
     MatTooltipModule,
     MatExpansionModule,
     MatCheckboxModule,
-    MatMenuModule
+    MatMenuModule,
+    MatProgressBarModule
   ],
   declarations: []
 })
