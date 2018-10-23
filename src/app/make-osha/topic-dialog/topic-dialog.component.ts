@@ -19,10 +19,10 @@ import { UploadTaskSnapshot } from "angularfire2/storage/interfaces";
   styleUrls: ["topic-dialog.component.css"]
 })
 export class TopicDialogComponent implements OnInit {
-  private image: any;
   private industryId: string;
   private oshaManual: string;
   public topic: Topic;
+  public image: any;
   public isEdit: boolean;
   public errorMessage: string;
   public previewImg: any;
