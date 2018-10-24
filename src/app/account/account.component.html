@@ -14,6 +14,7 @@
         <a mat-list-item routerLink="incident-reports" routerLinkActive="active">Incident Reports</a>
         <a mat-list-item routerLink="assesment" routerLinkActive="active">OSHA Safety Assesment</a>
         <a mat-list-item routerLink="account" routerLinkActive="active">Account</a>
+        <a mat-list-item routerLink="training" routerLinkActive="active">Training</a>
       </mat-list>
     </div>
     <div id="footer">
@@ -26,14 +27,19 @@
   <mat-sidenav-content>
     <!-- ***** HELPER ***** -->
     <div class="helper" *ngIf="accountService.showHelper" [@helper]>
-      <button mat-icon-button class="helper-close" (click)="closeHelper()"><mat-icon>cancel</mat-icon></button>
+      <button mat-icon-button class="helper-close" (click)="closeHelper()">
+        <mat-icon>cancel</mat-icon>
+      </button>
       <div class="helper-name">{{accountService.helper?.name}}</div>
       <div class="helper-description">{{accountService.helper?.description}}</div>
     </div>
     <div class="helper" *ngIf="accountService.showFeedback" [@helper]>
-      <button mat-icon-button class="helper-close" (click)="accountService.showFeedback = false"><mat-icon>cancel</mat-icon></button>
+      <button mat-icon-button class="helper-close" (click)="accountService.showFeedback = false">
+        <mat-icon>cancel</mat-icon>
+      </button>
       <div class="helper-name">{{accountService.feedback?.name}}</div>
-      <mat-form-field class="helper-input" color="warn"><textarea matInput placeholder="help minute work harder for you" [(ngModel)]="accountService.feedback.description"></textarea></mat-form-field>
+      <mat-form-field class="helper-input" color="warn"><textarea matInput placeholder="help minute work harder for you"
+          [(ngModel)]="accountService.feedback.description"></textarea></mat-form-field>
       <button mat-stroked-button class="helper-button" color="warn" (click)="submit()">SUBMIT</button>
     </div>
     <router-outlet></router-outlet>
@@ -46,7 +52,8 @@
       <img id="popimage" src={{accountService.aTeam.logoUrl}} onError="src = '/assets/minuteLogoBold.png'">
       <div class="flex"></div>
       <ng-container *ngFor="let team of accountService.userTeams">
-        <img *ngIf="team.id !== accountService.aTeam.id"  [matTooltip]="team.name" (click)="bShowAccount = false; accountService.setActiveTeam(team.id)" class="otherteams" src={{team.logoUrl}} onerror="src = '/assets/minuteLogoBold'">
+        <img *ngIf="team.id !== accountService.aTeam.id" [matTooltip]="team.name" (click)="bShowAccount = false; accountService.setActiveTeam(team.id)"
+          class="otherteams" src={{team.logoUrl}} onerror="src = '/assets/minuteLogoBold'">
       </ng-container>
     </div>
     <div id="popteamname">{{accountService.aTeam.name}}</div>

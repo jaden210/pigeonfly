@@ -8,6 +8,7 @@
     <mat-menu #menu="matMenu">
       <button mat-menu-item *ngFor="let industry of industries | async" (click)="setIndustry(industry)">{{industry.industryName}}</button>
     </mat-menu>
+    <button (click)="migrate()">migrate</button>
   </mat-toolbar>
   <div id="content">
     <mat-nav-list>

@@ -1,7 +1,11 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { ProfileComponent } from "./account/account.component";
-import { HomeComponent, InviteDialog, EditUserDialog } from "./home/home.component";
+import {
+  HomeComponent,
+  InviteDialog,
+  EditUserDialog
+} from "./home/home.component";
 import { SurveyComponent } from "./survey/survey.component";
 import { TimeComponent, CreateEditTimeDialog } from "./time/time.component";
 import { LogComponent, CreateEditLogDialog } from "./log/log.component";
@@ -22,6 +26,7 @@ import { ToolbarHelperComponent } from "./toolbar-helper/toolbar-helper.componen
 import { NoAccessDialog } from "./account.service";
 import { ImagesDialogComponent } from "./images-dialog/images-dialog.component";
 import { SurveySearchPipe } from "./survey/search.pipe";
+import { TrainingComponent } from "./training/training.component";
 
 @NgModule({
   imports: [
@@ -56,15 +61,16 @@ import { SurveySearchPipe } from "./survey/search.pipe";
     ToolbarHelperComponent,
     ImagesDialogComponent,
     CreateEditLogDialog,
-    CreateEditTimeDialog
+    CreateEditTimeDialog,
+    TrainingComponent
   ],
   exports: [MaterialModule],
   entryComponents: [
-    InviteDialog, 
-    MapDialogComponent, 
-    EditUserDialog, 
-    TeamSelectDialog, 
-    NoAccessDialog, 
+    InviteDialog,
+    MapDialogComponent,
+    EditUserDialog,
+    TeamSelectDialog,
+    NoAccessDialog,
     ImagesDialogComponent,
     CreateEditLogDialog,
     CreateEditTimeDialog

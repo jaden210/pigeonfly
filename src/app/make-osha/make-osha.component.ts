@@ -1,10 +1,19 @@
 import { Component, OnInit, Pipe } from "@angular/core";
 import { AppService } from "../app.service";
-import { map, tap, catchError, share } from "rxjs/operators";
+import {
+  map,
+  tap,
+  catchError,
+  share,
+  flatMap,
+  mergeMap,
+  concatMap
+} from "rxjs/operators";
 import { AngularEditorConfig } from "@kolkov/angular-editor";
 import { MatSnackBar, MatDialog } from "@angular/material";
 import { Location } from "@angular/common";
 import { PreviewDialogComponent } from "./preview-dialog/preview-dialog.component";
+import { AngularFirestore } from "angularfire2/firestore";
 import {
   DomSanitizer,
   SafeHtml,
@@ -46,11 +55,13 @@ export class MakeOSHAComponent implements OnInit {
     private appService: AppService,
     private snackbar: MatSnackBar,
     private location: Location,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private db: AngularFirestore
   ) {}
 
   ngOnInit() {
     this.getIndustries();
+    this.getIndustries1();
   }
 
   public goBack(): void {
@@ -256,6 +267,28 @@ export class MakeOSHAComponent implements OnInit {
       );
   }
 
+  migrate() {
+    this.appService.db
+      .doc(`osha-manual-en/8N0B0ZNxGqecJlk7ZX9T`)
+      .collection("topics")
+      .snapshotChanges()
+      .pipe(
+        map((actions: any[]) =>
+          actions.map(a => {
+            const data = a.payload.doc.data();
+            const isGlobal = true;
+            const industryIds = ["8N0B0ZNxGqecJlk7ZX9T"];
+            return { ...data, isGlobal, industryIds };
+          })
+        )
+      )
+      .subscribe(articles => {
+        articles.forEach(article => {
+          this.appService.db.collection(`topics`).add(article);
+        });
+      });
+  }
+
   public updateArticle(): void {
     this.appService.db
       .doc(
@@ -351,6 +384,80 @@ export class MakeOSHAComponent implements OnInit {
         this.activeArticle = deletedArticle;
       }
     });
+  }
+
+  industries1;
+  private getIndustries1(): void {
+    this.industries1 = this.db
+      .collection("industries", ref => ref.orderBy("name", "asc"))
+      .snapshotChanges()
+      .pipe(
+        map(actions =>
+          actions.map(a => {
+            const data = a.payload.doc.data();
+            const id = a.payload.doc.id;
+            const topics = this.getTopics1(id);
+            return { ...data, id, topics };
+          })
+        ),
+        catchError(error => {
+          console.error(`Error loading industries collection. ${error}`);
+          alert(`Error loading industries collection for ${this.oshaManual}`);
+          return of([]);
+        })
+      );
+  }
+
+  private getTopics1(industryId): Observable<any> {
+    return this.db
+      .collection("topics", ref =>
+        ref.where("industryIds", "array-contains", industryId)
+      )
+      .snapshotChanges()
+      .pipe(
+        map((actions: any[]) =>
+          actions.map(a => {
+            const data = a.payload.doc.data();
+            const id = a.payload.doc.id;
+            const articles = this.getArticles1(id);
+            return { ...data, id };
+          })
+        ),
+        // map(topics => {
+        //   return topics.sort(
+        //     (a, b) => (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1)
+        //   );
+        // }),
+        catchError(error => {
+          console.error(`Error loading topics collection. ${error}`);
+          alert(
+            `Error loading topics collection for ${
+              this.oshaManual
+            }/${industryId}`
+          );
+          return of([]);
+        })
+      );
+  }
+
+  private getArticles1(topicId): Observable<any> {
+    return this.db
+      .collection("articles")
+      .snapshotChanges()
+      .pipe(
+        map((actions: any[]) =>
+          actions.map(a => {
+            const data = a.payload.doc.data();
+            const id = a.payload.doc.id;
+            return { id, ...data };
+          })
+        ),
+        catchError(error => {
+          console.error(`Error loading articles collection. ${error}`);
+          alert(`Error loading articles collection for ${topicId}`);
+          return of([]);
+        })
+      );
   }
 }
 
