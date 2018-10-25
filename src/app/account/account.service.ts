@@ -26,7 +26,7 @@ export class AccountService {
 
   helperProfiles = {
     newTeam: {
-      name: "welcome to minute!",
+      name: "welcome to Compliance Chimp!",
       description: "Before you can get started, you need to make a profile and create your company. All changes are saved as you make them, so feel free to leave and come back at will.",
     },
     feedback: {
@@ -43,7 +43,7 @@ export class AccountService {
     },
     log: {
       name: "Log",
-      description: "Using the Minute app, any member of your team can create a worksite log, to include pictures and text. Location is also captured each time a log is created. Worksite logs can and should include everything from periodic progress and work accomplished, to client change orders and project updates, to incidents or other noteworthy happenings. Worksite logs form the critical historical record which is called upon in the event of an OSHA audit, or client dispute or litigation. Aside from that non-fun stuff, worksite logs create a living journal of the work you accomplish over time, which is pretty neat."
+      description: "Using the app, any member of your team can create a worksite log, to include pictures and text. Location is also captured each time a log is created. Worksite logs can and should include everything from periodic progress and work accomplished, to client change orders and project updates, to incidents or other noteworthy happenings. Worksite logs form the critical historical record which is called upon in the event of an OSHA audit, or client dispute or litigation. Aside from that non-fun stuff, worksite logs create a living journal of the work you accomplish over time, which is pretty neat."
     },
     survey: {
       name: "Surveys",
@@ -51,7 +51,7 @@ export class AccountService {
     },
     osha: {
       name: "OSHA Self-Inspection",
-      description: "Minute simplifies self-inspection and enables you to confidently check this incredibly important compliance box. Use the self-inspection wizard to customize OSHA’s list of questions to fit your workspace. Then, take and retake the assessment periodically. Each time you do, a report will be saved in this page where you can refer to it to make improvements, or simply to prove a historical record of performing self-inspections per OSHA’s recommendation. OSHA means business. Self-inspection is key to keeping your workforce safe and your business protected."
+      description: "We simplify self-inspection and enables you to confidently check this incredibly important compliance box. Use the self-inspection wizard to customize OSHA’s list of questions to fit your workspace. Then, take and retake the assessment periodically. Each time you do, a report will be saved in this page where you can refer to it to make improvements, or simply to prove a historical record of performing self-inspections per OSHA’s recommendation. OSHA means business. Self-inspection is key to keeping your workforce safe and your business protected."
     },
     account: {
       name: "Your Account",

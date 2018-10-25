@@ -25,6 +25,7 @@ import { FooterComponent } from "./footer/footer.component";
 import { AssesComponent } from "./ases/make-osha.component";
 import { PreviewDialogComponent } from "./make-osha/preview-dialog/preview-dialog.component";
 import { TopicDialogComponent } from "./make-osha/topic-dialog/topic-dialog.component";
+import { SignUpComponent } from "./sign-up/sign-up.component";
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { TopicDialogComponent } from "./make-osha/topic-dialog/topic-dialog.comp
     AssesComponent,
     Safe,
     FooterComponent,
+    SignUpComponent,
     PreviewDialogComponent,
     TopicDialogComponent
   ],

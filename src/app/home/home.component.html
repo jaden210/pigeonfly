@@ -1,67 +1,76 @@
-
-  <div id="p1">
-    <div class="side">
-      <span class="title">The App That's Got Your Back</span>
-      <div class="info">For teams in the construction and services industry, there are fundamentals that can’t be overlooked: 
-        safety training, daily worksite logs, OSHA self-inspection and compliance, incident forms, and the risk of paralyzing audits, 
-        fines, claims or litigation if not done right. The bright side? <b>Minute makes this easy, and you can start now, for free.</b>
-      </div>
-      <div id="sign-up">
-        <mat-form-field appearance="outline">
-          <input matInput #email placeholder="enter your email address">
-        </mat-form-field>
-        <button mat-raised-button style="color:white;" color="accent" (click)="signUp()">START A FREE 30 DAY TRIAL</button>
-      </div>
+<div class="p v">
+  <div class="pt">Meet the chimp that gets the compliance monkey off your back.</div>
+  <div class="info">A refreshing approach to OSHA compliance, which actually works. Safety training,
+     self-inspection, injury reporting, worksite logs, time clock, record-keeping and events tracking,
+      all in one simple place, forever.
+  </div>
+  <div id="signup">
+    <div id="signupcol">
+      <mat-form-field appearance="fill" color="warn" style="color: #ffffff">
+        <input matInput type="email" placeholder="enter your email address" #signUpEmail>
+      </mat-form-field>
+      <button mat-raised-button color="accent" style="color: #ffffff" (click)="signUp(signUpEmail.value)">START A FREE 30 DAY TRIAL</button>
+      <div id="shhh">We won’t even ask for a credit card :)</div>
     </div>
-    <div class="side">
-      <div id="home-head"><img id="home-head-img" src="/assets/home/work.png"></div>
+    <div style="flex:1"></div>
+    <div id="imgcont">
+      <img id="signupchimp" src="/assets/chimp.png">
     </div>
   </div>
-  <div class="p" id="p2">
-    <span class="title">Less noise. Less risk.</span>
-    <div class="info">By capturing and delivering important daily information, Minute enables compliance, mitigates litigation risk, 
-      and reduces administrative noise so you can focus on growing your business. Employee time and location are also trackable, 
-      making payroll fast and easy along the way. It really is the app that’s got your back, and you can try it for free 
-      (we won’t even ask for a credit card).
+</div>
+<div class="border"></div>
+<div class="p v">
+  <div class="sub">We turn training and compliance into a strength and protection for organizations of every size across any sector.</div>
+  <div id="box">
+    <div class="card">
+      <img class="ci" src="/assets/chimp.png">
+      <div class="ct">Construction</div>
     </div>
-    <div id="p2-row">
-      <div class="row-item">
-        <img class="row-img" src="/assets/home/survey.png">
-        <span class="row-title">Safety Surveys & Self Assessment</span>
-        <div class="row-info">OSHA means business, Minute establishes team participation in safety, and transforms the worry of compliance 
-          into a strength you can be confident in.</div>
-        </div>
-        <div class="row-item">
-          <img class="row-img" src="/assets/home/log.png">
-          <span class="row-title">Worksite Logs</span>
-          <div class="row-info">Worksite logs are foundational to protecting your business in the event of litigation or audits. The Minute app makes
-            logging a breeze so it can be implemented team wide.
-          </div>
-        </div>
-        <div class="row-item">
-          <img class="row-img" src="/assets/home/calendar.png">
-          <span class="row-title">Time Clock</span>
-          <div class="row-info">Clock in and out from your mobile phone. Forget tracking time on paper or attempting to remember hours in the past.
-            Save time every month by using the time feature.
-          </div>
-        </div>
-        <div class="row-item">
-          <img class="row-img" src="/assets/home/map.png">
-          <span class="row-title">Who's Working</span>
-          <div class="row-info">Our real time dashboard shows who is working, along with their location. Minute makes it easier for teams to stay 
-            in the know, stay in touch, and operate more efficiently.
-          </div>
-        </div>
-      </div>
+    <div class="card">
+      <img class="ci" src="/assets/chimp.png">
+      <div class="ct">Healthcare</div>
     </div>
-    <div class="p" id="p3">
-      <span class="title" style="margin-bottom: 40px;">Learn about Minute</span>
-      <iframe frameborder="0" style="margin: auto" width="560" height="315" src="https://biteable.com/watch/embed/minute-1976230/c03ab4814ec5ffcdb0e2a64b10490a9ffb549f62" allowfullscreen="true"></iframe>
+    <div class="card">
+      <img class="ci" src="/assets/chimp.png">
+      <div class="ct">Agriculture</div>
     </div>
-    <div class="p">
-      <span class="title">Start using Minute today -<br>Your happiness is our guarantee.</span>
-      <div class="info">We have your back, and you have our guarantee. If you aren’t delighted with Minute, you can end the service at any time 
-        and we’ll even refund your current month.
-      </div>
-      <button mat-raised-button color="accent" id="start-button" routerLink="login">START FOR FREE</button>
+    <div class="card">
+      <img class="ci" src="/assets/chimp.png">
+      <div class="ct">Oil & Gas</div>
     </div>
+    <div class="card">
+      <img class="ci" src="/assets/chimp.png">
+      <div class="ct">Manufacturing</div>
+    </div>
+    <div class="card">
+      <img class="ci" src="/assets/chimp.png">
+      <div class="ct">General</div>
+    </div>
+  </div>
+</div>
+<div class="border"></div>
+<div class="p v">
+  <div class="sub">The role of safety and compliance in your success: a message to teams in the construction industry, with applicability to every employer.</div>
+  <div class="quote">“All employers in the construction industry must have injury and illness prevention programs. 
+    Contractors and employers who do construction work must comply with standards in 29 CFR 1926. Subpart C, General 
+    Safety and Health Provisions, as well as other specific sections of these standards, include the responsibilities 
+    for each contractor/employer to initiate and maintain injury and illness prevention programs, provide for a competent 
+    person to conduct frequent and regular inspections, and instruct each employee to recognize and avoid unsafe conditions 
+    and know what regulations are applicable to the work environment.” 
+  </div>
+  <div class="sig">- Construction Industry Digest, OSHA</div>
+</div>
+<div class="border"></div>
+<div class="p h">
+  <div class="col">
+    <div class="sub">How does it work? Thanks to mobile devices and a heck of a lot of product design;</div>
+    <div class="info">Compliancechimp puts training content and a rock solid training method, verification surveys, worksite logs, 
+      injury reporting, and even a time clock, right in the hands of every member of your team. It takes the guesswork out of it, 
+      so you can focus on growing your business with a safer, better trained, and more compliant work force. Watch the video here, 
+      and visit our How it Works page to see every feature.
+    </div>
+  </div>
+  <img id="lady" src="/assets/chimp.png">
+</div>
+<div class="border"></div>
+<sign-up></sign-up>

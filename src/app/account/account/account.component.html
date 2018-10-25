@@ -27,7 +27,7 @@
   <mat-tab label="Company" *ngIf="showCompany">
   <div class="column">
       <div class="image-cont">
-        <div class="image"><img src={{accountService.aTeam?.logoUrl}} style="object-fit: contain !important;" onerror="src = '/assets/minuteLogoBold.png'"></div>
+        <div class="image"><img src={{accountService.aTeam?.logoUrl}} style="object-fit: contain !important;" onerror="src = '/assets/ccLogo.png'"></div>
         <div style="height: 0px; width: 0px; overflow:hidden"><input type="file" id="upLogoUrl" accept=".png,.jpg,.mp4" #uploadT (change)="uploadLogoImage($event)"></div>
         <button mat-stroked-button class="image-button" color="primary" (click)="upload(false)">CHANGE COMPANY LOGO</button>
       </div>

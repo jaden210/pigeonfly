@@ -25,6 +25,12 @@ mat-toolbar {
     overflow: scroll;
 }
 
+.hwindow {
+    height: calc(100vh - 64px);
+    overflow: scroll;
+    background-color: #2196f3;
+}
+
 .active {
     transition: all 250ms;
     /*border-bottom: 2px solid #ff9100 !important;*/

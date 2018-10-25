@@ -1,14 +1,16 @@
 <mat-toolbar id="toolbar" *ngIf="!router.isActive('/account', false)"  [class.shadow]="appService.toolbarShadow">
-  <img src="/assets/minuteLogoBold.png" id="title"  routerLink="home">
+  <img src="/assets/ccLogo.png" id="title"  routerLink="home">
   <div style="width: 50px"></div>
-  <button mat-button routerLink="why" routerLinkActive="tactive">Why minute?</button>
-  <button mat-button routerLink="pricing" routerLinkActive="tactive">Pricing</button>
-  <button mat-button routerLink="about" routerLinkActive="tactive">About us</button>
+  <button mat-button class="link" routerLink="how-it-works" routerLinkActive="tactive">How it Works</button>
+  <button mat-button class="link" routerLink="pricing" routerLinkActive="tactive">Pricing</button>
+  <button mat-button class="link" routerLink="support" routerLinkActive="tactive">Support</button>
+  <button mat-button class="link" routerLink="about" routerLinkActive="tactive">About us</button>
   <div class="flex"></div>
   <button mat-stroked-button color="accent" routerLink="login">{{appService.isUser ? 'GO TO ACCOUNT' : 'START FOR FREE'}}</button>
 </mat-toolbar>
 <div id="spacer"></div>
-<router-outlet></router-outlet>
-<footer id="footer" *ngIf="!router.isActive('/account', false)">
-  
-</footer>
+<div class="hwindow">
+  <router-outlet></router-outlet>
+  <footer id="footer" *ngIf="!router.isActive('/account', false)"></footer>
+</div>
+    

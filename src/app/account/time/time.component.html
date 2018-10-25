@@ -15,7 +15,7 @@
       <div class="day-box">
         <div class="day" (click)="aDay ? aDay = null : aDay = day.id">
           <div class="date box" (click)="createEditTime(day)">
-            <div class="date" matTooltip="Add a new log" matTooltipPosition="right" matTooltipShowDelay="600" [ngClass]="{'small': day.timeLogs.length == 0}">{{day.day}}</div>
+            <div class="date" matTooltip="Add time" matTooltipPosition="right" matTooltipShowDelay="600" [ngClass]="{'small': day.timeLogs.length == 0}">{{day.day}}</div>
             <div class="dow" [ngClass]="{'hide': day.timeLogs.length == 0}">{{day.dOW}}</div>
           </div>
           <div class="row">

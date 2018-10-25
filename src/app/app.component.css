@@ -1,5 +1,5 @@
 #title {
-    height: 37px;
+    height: 50px;
     outline: none;
     cursor: pointer;
 }
@@ -8,7 +8,7 @@
 #toolbar {
     position: fixed;
     z-index: 1;
-    background-color: #ffffff;
+    background-color: #2196f3 !important;
 }
 
 #spacer {
@@ -17,7 +17,12 @@
 
 
 .shadow {
-    box-shadow: 0 2px 4px 0px #9e9e9e;
+    box-shadow: 0 1px 4px -3px;
+}
+
+.link {
+    color: #ffffff;
+    margin-right: 8px;
 }
 
 .tactive {

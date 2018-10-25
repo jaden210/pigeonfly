@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "minute-web": {
+    "compliance-chimp-web": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -51,18 +51,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "minute-web:build"
+            "browserTarget": "compliance-chimp-web:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "minute-web:build:production"
+              "browserTarget": "compliance-chimp-web:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "minute-web:build"
+            "browserTarget": "compliance-chimp-web:build"
           }
         },
         "test": {
@@ -96,7 +96,7 @@
         }
       }
     },
-    "minute-web-e2e": {
+    "compliance-chimp-web-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "architect": {
@@ -104,11 +104,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "minute-web:serve"
+            "devServerTarget": "compliance-chimp-web:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "minute-web:serve:production"
+              "devServerTarget": "compliance-chimp-web:serve:production"
             }
           }
         },
@@ -124,5 +124,5 @@
       }
     }
   },
-  "defaultProject": "minute-web"
+  "defaultProject": "compliance-chimp-web"
 }
