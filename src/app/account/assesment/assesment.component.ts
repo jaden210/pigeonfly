@@ -3,6 +3,7 @@ import { trigger, style, transition, animate } from "@angular/animations";
 import { AccountService } from '../account.service';
 import { MatSnackBar } from '@angular/material';
 import { map } from 'rxjs/operators';
+import * as jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-assesment',
@@ -31,6 +32,7 @@ export class AssesmentComponent implements OnInit {
   newQ: string; //tepmplate variable
   takeBtnStr: string = 'TAKE'; //tepmplate variable
   takeInspection: boolean = false; //tepmplate variable
+  exportable: boolean = false;
 
   constructor(
     public accountService: AccountService,
@@ -121,11 +123,13 @@ export class AssesmentComponent implements OnInit {
         if (!inspection.completed) {
           this.takeBtnStr = 'CONTINUE TAKING';
           this.aSelfInspection = inspection;
+          this.exportable = false;
         } else {
           this.takeBtnStr = "TAKE";
-        } 
-      })
-    })
+          this.exportable = true;
+        }
+      });
+    });
   }
   
   getLength(q) { // could be better
@@ -246,6 +250,101 @@ export class AssesmentComponent implements OnInit {
       this.aAssesment.createdAt = new Date();
       this.accountService.db.collection("assesment").add({...this.aAssesment}).then(() => this.aAssesment = null);
     }
+  }
+
+  export() {
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'in',
+      format: [8.5, 11]
+    });
+
+    doc.setFontSize(14);
+
+    const startOfPage = 0.75;
+    const endOfPage = 10.25;
+    const lineSpace = 0.2;
+    const maxChars = 95;
+
+    const x = 0.5;
+    let y = startOfPage;
+
+    this.aAssesment.selfInspections.forEach(si => {
+      if (si.completedAt !== null) {
+        doc.text(si.title, x, y);
+        y += (1.5 * lineSpace);
+        if (y > endOfPage) {
+          doc.addPage();
+          y = startOfPage;
+        }
+
+        doc.text(si.completedAt.toString(), x, y);
+        y += lineSpace;
+        if (y > endOfPage) {
+          doc.addPage();
+          y = startOfPage;
+        }
+
+        doc.setFont('courier');
+        si.assesment.forEach(item => {
+          doc.setFontSize(12);
+          y += (1.5 * lineSpace);
+          if (y > endOfPage) {
+            doc.addPage();
+            y = startOfPage;
+          }
+
+          doc.text(item.subject, x, y);
+          y += (1.5 * lineSpace);
+          if (y > endOfPage) {
+            doc.addPage();
+            y = startOfPage;
+          }
+
+          doc.setFontSize(9);
+          item.questions.forEach(question => {
+            let buffer = question.name;
+            while (buffer.length > 0) {
+              if (buffer.length <= maxChars) {
+                doc.text(buffer, x, y);
+                y += lineSpace;
+                if (y > endOfPage) {
+                  doc.addPage();
+                  y = startOfPage;
+                }
+                buffer = '';
+              } else {
+                const lastChar = buffer.substring(0, maxChars).lastIndexOf(' ');
+                if (lastChar === -1) {
+                  doc.text(buffer.substring(0, maxChars), x, y);
+                  buffer = buffer.substring(maxChars);
+                } else {
+                  doc.text(buffer.substring(0, lastChar), x, y);
+                  buffer = buffer.substring(lastChar + 1);
+                }
+                y += lineSpace;
+                if (y > endOfPage) {
+                  doc.addPage();
+                  y = startOfPage;
+                }
+              }
+            }
+
+            if (question.response === undefined) {
+              doc.text('undefined', x, y);
+            } else {
+              doc.text(question.response, x, y);
+            }
+            y += lineSpace;
+            if (y > endOfPage) {
+              doc.addPage();
+              y = startOfPage;
+            }
+          });
+        });
+        doc.save('assessment.pdf');
+      }
+    });
   }
 
 }
