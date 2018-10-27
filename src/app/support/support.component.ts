@@ -7,6 +7,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SupportComponent implements OnInit {
 
+  body;
+  email;
+
   constructor() { }
 
   ngOnInit() {
