@@ -91,3 +91,9 @@ agm-map {
     border-bottom-left-radius: 12px;
     color: #ffffff;
 }
+
+@media screen and (max-width: 785px) {
+    .hwindow {
+        height: calc(100vh - 56px);
+    }
+}

@@ -1,5 +1,4 @@
 .p {
-  min-height: calc(100vh - 100px);
   padding: 0 64px;
   box-sizing: border-box;
 }
@@ -39,7 +38,7 @@
   display: flex;
   align-items: center;
   width: 900px;
-  margin: auto;
+  margin: 32px auto;
   max-width: calc(100vw - 128px);
 }
 
@@ -80,12 +79,13 @@
   width: 100vw;
   background: url(/assets/border.png) repeat-x;
   height: 22px;
+  margin: 42px 0;
 }
 
 .sub {
   color: #ffffff;
   font-size: 26px;
-  margin: 48px 0;
+  margin: 8px 0 48px 0;
   font-weight: 500;
   max-width: 730px;
 }
@@ -151,6 +151,9 @@
   .info {
     font-size: 15px;
     text-align: center;
+  }
+  .left {
+    text-align: left !important;
   }
   #imgcont {
     display: none;

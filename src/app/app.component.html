@@ -5,14 +5,16 @@
       <div class="flex"></div>
       <button mat-icon-button (click)="sidenav.close()"><mat-icon style="color:#ffffff">close</mat-icon></button>
     </mat-toolbar>
-    <div id="links">
-      <button mat-button class="link" (click)="navRoute('how-it-works')" routerLinkActive="tactive">How it Works</button>
-      <button mat-button class="link" (click)="navRoute('pricing')" routerLinkActive="tactive">Pricing</button>
-      <button mat-button class="link" (click)="navRoute('support')" routerLinkActive="tactive">Support</button>
-      <button mat-button class="link" (click)="navRoute('about')" routerLinkActive="tactive">About us</button>
-      <button mat-stroked-button color="warn" style="border-radius:20px; margin-bottom: 24px" (click)="navRoute('login')">{{appService.isUser ? 'GO TO ACCOUNT' : 'START FOR FREE'}}</button>
-      <div class="border"></div>
-      <sign-up></sign-up>
+    <div class="cwindow">
+      <div id="links">
+        <button mat-button class="link" (click)="navRoute('how-it-works')" routerLinkActive="tactive">How it Works</button>
+        <button mat-button class="link" (click)="navRoute('pricing')" routerLinkActive="tactive">Pricing</button>
+        <button mat-button class="link" (click)="navRoute('support')" routerLinkActive="tactive">Support</button>
+        <button mat-button class="link" (click)="navRoute('about')" routerLinkActive="tactive">About us</button>
+        <button mat-stroked-button color="warn" style="border-radius:20px; margin-bottom: 24px" (click)="navRoute('login')">{{appService.isUser ? 'GO TO ACCOUNT' : 'START FOR FREE'}}</button>
+        <div class="border"></div>
+        <sign-up></sign-up>
+      </div>
     </div>
   </mat-sidenav>
   <mat-sidenav-content>
