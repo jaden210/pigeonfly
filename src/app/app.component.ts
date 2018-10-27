@@ -11,7 +11,7 @@ declare var gtag: Function;
 })
 export class AppComponent {
 
-
+  open: boolean = false;
   body: HTMLElement;
 
   constructor(
@@ -33,6 +33,11 @@ export class AppComponent {
         } 
       });
     }
+  }
+
+  navRoute(link?) {
+    this.open = false;
+    this.router.navigate([link]);
   }
   
 }

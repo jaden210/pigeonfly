@@ -12,7 +12,7 @@ import { AppComponent } from "./app.component";
 import { MaterialModule } from "./material/material.module";
 import { AppRoutingModule } from "./app-routing.module";
 import { HomeComponent } from "./home/home.component";
-import { WhyComponent } from "./why/why.component";
+import { SupportComponent } from "./support/support.component";
 import { PricingComponent } from "./pricing/pricing.component";
 import { AboutComponent } from "./about/about.component";
 import { ContactComponent } from "./contact/contact.component";
@@ -26,14 +26,16 @@ import { AssesComponent } from "./ases/make-osha.component";
 import { PreviewDialogComponent } from "./make-osha/preview-dialog/preview-dialog.component";
 import { TopicDialogComponent } from "./make-osha/topic-dialog/topic-dialog.component";
 import { SignUpComponent } from "./sign-up/sign-up.component";
+import { HowComponent } from "./how/how.component";
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    WhyComponent,
+    SupportComponent,
     PricingComponent,
     AboutComponent,
+    HowComponent,
     ContactComponent,
     LoginComponent,
     MakeOSHAComponent,

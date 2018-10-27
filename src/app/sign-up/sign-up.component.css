@@ -1,6 +1,13 @@
+.cont {
+  width: 765px;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  max-width: 90vw;
+}
+
 #box {
   margin: auto;
-  width: 85vw;
   background-color: #ffffff;
   padding: 24px;
   box-sizing: border-box;
@@ -15,7 +22,7 @@
 }
 
 #info {
-  flex: 2;
+  flex: 4;
   opacity: .65;
   font-weight: 100;
 }
@@ -31,7 +38,6 @@
 #row {
   display: flex;
   align-items: center;
-  width: 75vw;
   margin: 24px auto;
 }
 
@@ -43,4 +49,25 @@
 
 img {
   height: 175px;
+}
+
+@media screen and (max-width: 500px) {
+  #row {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  #title {
+    font-size: 23px;
+    text-align: center;
+  }
+
+  #box {
+    flex-direction: column-reverse;
+  }
+
+  #info {
+    margin-bottom: 24px;
+    font-size: 14px;
+  }
 }

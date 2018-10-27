@@ -29,3 +29,39 @@
     transition: all 250ms;
     border-bottom: 2px solid #ff9100 !important;
 }
+
+#sidenav {
+    width: 100vw;
+}
+
+#links {
+    height: 100vh;
+    overflow: scroll;
+    padding-top: 64px;
+    background-color: #0069c0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.mobile {
+    display: none;
+}
+
+@media screen and (max-width: 785px) {
+    .desktop {
+        display: none;
+    }
+    .mobile {
+        display: inline;
+    }
+    .link {
+        font-size: 28px;
+        margin: 12px;
+    }
+
+    .border {
+        width: 100vw;
+        background: url(/assets/border.png) repeat-x;
+        height: 22px;
+      }
+  }

@@ -17,26 +17,8 @@
     font-size: 42px;
     padding-top: 125px;
     margin-bottom: 24px;
+    max-width: 740px;
   }
-  
-.header {
-    color: #ffffff;
-    font-size: 42px;
-    margin: 24px 0;
-}
-
-.question {
-    color: #ffffff;
-    font-size: 27px;
-    margin: 32px 0 8px 0;
-    font-weight: 500;
-}
-
-.answer {
-    color: #ffffff;
-    opacity: .87;
-    font-size: 17px;
-}
   
   .info {
     color: #ffffff;
@@ -55,8 +37,9 @@
     color: #ffffff;
     display: flex;
     align-items: center;
+    width: 900px;
     margin: auto;
-    flex: 1;
+    max-width: calc(100vw - 128px);
   }
   
   #signupcol {
@@ -195,24 +178,10 @@
     max-width: 500px;
     opacity: .87;
 }
-
-.suinfo {
-    font-size: 15px;
-    color: #ffffff;
-    opacity: .87;
-    text-align: justify;
-    padding: 8px;
-}
   
   @media screen and (max-width: 500px) {
     .p {
       padding: 8px;
-    }
-    .h {
-        flex-direction: column;
-    }
-    .col {
-        margin-bottom: 24px;
     }
     #signup {
       max-width: calc(100vw - 16px);

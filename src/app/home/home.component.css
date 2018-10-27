@@ -38,6 +38,9 @@
   color: #ffffff;
   display: flex;
   align-items: center;
+  width: 900px;
+  margin: auto;
+  max-width: calc(100vw - 128px);
 }
 
 #signupcol {
@@ -131,4 +134,43 @@
   object-fit: contain;
   height: 400px;
   margin-left: 24px;
+}
+
+@media screen and (max-width: 500px) {
+  .p {
+    padding: 8px;
+  }
+  #signup {
+    max-width: calc(100vw - 16px);
+  }
+  .pt {
+    font-size: 28px;
+    text-align: center;
+    padding-top: 24px;
+  }
+  .info {
+    font-size: 15px;
+    text-align: center;
+  }
+  #imgcont {
+    display: none;
+  }
+
+  .hide {
+    display: none;
+  }
+
+  #shhh {
+    font-size: 12px;
+  }
+
+  .sub {
+    font-size: 21px;
+    text-align: center;
+  }
+
+  .quote {
+    font-size: 15px;
+    padding: 12px;
+  }
 }

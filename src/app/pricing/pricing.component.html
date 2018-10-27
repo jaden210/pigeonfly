@@ -1,29 +1,49 @@
-<div id="card">
-  <div id="box">$19<span class="mo">/mo</span> plus $2<span class="mo">/mo</span> per user</div>
-  <div class="point">
-    <mat-icon>check</mat-icon>
-    <div class="info">Real-time worksite logs with pictures, text, and location</div>
+<div class="p pt">$99 per month, all-inclusive, for teams of any size.</div>
+<div class="p h">
+  <div class="col">
+    <div class="check"><mat-icon class="cico">check</mat-icon><div class="ctext">All training content available within the app.</div></div>
+    <div class="check"><mat-icon class="cico">check</mat-icon><div class="ctext">Easy navigation to any topic and see estimated time commitment to train.</div></div>
+    <div class="check"><mat-icon class="cico">check</mat-icon><div class="ctext">Surveys delivered directly to users via the app.</div></div>
+    <div class="check"><mat-icon class="cico">check</mat-icon><div class="ctext">Record of training, including who attended, stored forever in the back office.</div></div>
   </div>
-  <div class="point">
-    <mat-icon>check</mat-icon>
-    <div class="info">Employee surveys to record training and compliance at every level</div>
+  <div style="flex:2">
+    <div id="signup">
+      <div id="signupcol">
+        <mat-form-field appearance="fill" color="warn" style="color: #ffffff">
+          <input matInput type="email" placeholder="enter your email address" #signUpEmail>
+        </mat-form-field>
+        <button mat-raised-button color="accent" style="color: #ffffff; border-radius: 20px;" (click)="signUp(signUpEmail.value)">START A FREE 30 DAY TRIAL</button>
+        <div id="shhh">We won’t even ask for a credit card :)</div>
+      </div>
+    </div>
+    <div class="suinfo">We have your back, and you have our guarantee. If you aren’t delighted with Compliancechimp, you can end the service at any time and we’ll even refund your current month.</div>
   </div>
-  <div class="point">
-    <mat-icon>check</mat-icon>
-    <div class="info">OSHA self-inspection wizard and 24/7 OSHA training content</div>
-  </div>
-  <div class="point">
-    <mat-icon>check</mat-icon>
-    <div class="info">All logs, records, and history searchable and exportable</div>
-  </div>
-  <div class="point">
-    <mat-icon>check</mat-icon>
-    <div class="info">Real-time view into who's working, including location</div>
-  </div>
-  <div class="point">
-    <mat-icon>check</mat-icon>
-    <div class="info">Employee time tracking to simplify payroll or cost out jobs</div>
-  </div>
-  <div id="contracts">No contracts. Pay month to month, as you go. Your happiness is guaranteed.</div>
-  <div id="button-box"><button mat-raised-button style="color:white" color="accent" id="button" routerLink="login">START FOR FREE</button></div>
 </div>
+<div class="border"></div>
+<div class=" p v">
+  <div class="header">Common Questions</div>
+  <div class="question">Is there an annual contract?</div>
+  <div class="answer">No. You pay month to month after your 30 day free trial. We believe you should only pay for the things you actually use and receive value from. We’ll never impose contracts on our clients.</div>
+  <div class="question">How many users can join?</div>
+  <div class="answer">Any number. There’s always a single account owner, who can assign as many admins as they’d like, 
+    and then an unlimited number of users download the Compliancechimp app to gain access to all of the features and tools.
+  </div>
+  <div class="question">Can users login via desktop (web)? Or only Mobile?</div>
+  <div class="answer">User features are all mobile dependent. Capturing worksite logs, accessing training, responding to 
+    simple surveys, reporting or investigating an injury, and all other user features are powered by the app which is 
+    available for free from the iTunes or Google Play store. Owners and admins are the only ones who access the back 
+    office via the web.
+  </div>
+  <div class="question">Is there a limit to the amount of pictures, logs, or self-inspections?</div>
+  <div class="answer">No. $99/month covers the cost of storing and retrieving pictures, worksite logs, self-inspection 
+    and incident reports, plus real-time location tracking and communication...everything.
+  </div>
+  <div class="question">What languages is Minute offered in?</div>
+  <div class="answer">English, and Spanish is becoming more complete every day. If you see translation issues, 
+    or have language requests, please drop us a note at support@compliancechimp.com.
+  </div>
+  <div class="question">Can I cancel at any time?</div>
+  <div class="answer">Of course. And we’ll even refund your current month.</div>
+</div>
+<div class="border"></div>
+<sign-up></sign-up>

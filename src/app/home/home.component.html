@@ -9,10 +9,10 @@
       <mat-form-field appearance="fill" color="warn" style="color: #ffffff">
         <input matInput type="email" placeholder="enter your email address" #signUpEmail>
       </mat-form-field>
-      <button mat-raised-button color="accent" style="color: #ffffff" (click)="signUp(signUpEmail.value)">START A FREE 30 DAY TRIAL</button>
+      <button mat-raised-button color="accent" style="color: #ffffff; border-radius: 20px;" (click)="signUp(signUpEmail.value)">START A FREE 30 DAY TRIAL</button>
       <div id="shhh">We won’t even ask for a credit card :)</div>
     </div>
-    <div style="flex:1"></div>
+    <div class="hide" style="flex:1"></div>
     <div id="imgcont">
       <img id="signupchimp" src="/assets/chimp.png">
     </div>
@@ -23,27 +23,27 @@
   <div class="sub">We turn training and compliance into a strength and protection for organizations of every size across any sector.</div>
   <div id="box">
     <div class="card">
-      <img class="ci" src="/assets/chimp.png">
+      <img class="ci" src="/assets/construction.png">
       <div class="ct">Construction</div>
     </div>
     <div class="card">
-      <img class="ci" src="/assets/chimp.png">
+      <img class="ci" src="/assets/healthcare.png">
       <div class="ct">Healthcare</div>
     </div>
     <div class="card">
-      <img class="ci" src="/assets/chimp.png">
+      <img class="ci" src="/assets/agriculture.png">
       <div class="ct">Agriculture</div>
     </div>
     <div class="card">
-      <img class="ci" src="/assets/chimp.png">
+      <img class="ci" src="/assets/oilGas.png">
       <div class="ct">Oil & Gas</div>
     </div>
     <div class="card">
-      <img class="ci" src="/assets/chimp.png">
+      <img class="ci" src="/assets/manufacturing.png">
       <div class="ct">Manufacturing</div>
     </div>
     <div class="card">
-      <img class="ci" src="/assets/chimp.png">
+      <img class="ci" src="/assets/general.png">
       <div class="ct">General</div>
     </div>
   </div>
@@ -61,6 +61,23 @@
   <div class="sig">- Construction Industry Digest, OSHA</div>
 </div>
 <div class="border"></div>
+<div class="p">
+  <div class="sub">OSHA’s prescription for compliance, in a nutshell.</div>
+  <div class="info">Every employer must:
+    <br>•Provide workers with a workplace that does not have serious hazards. 
+    <br>•Follow all OSHA safety and health standards. •Find and correct all safety and health problems. 
+    <br>•Reduce risks first by making changes in working conditions rather than relying on personal protective equipment (PPE). 
+    <br>•Prominently display the official OSHA job safety and health - it's the law poster. 
+    <br>•Inform workers about chemical hazards through training, labels, alarms, etc. 
+    <br>•Provide safety training to workers in a language and vocabulary they can understand. 
+    <br>•Keep accurate records of work-related injuries and illnesses. 
+    <br>•Perform tests in the workplace (such as air sampling), required by some OSHA standards. 
+    <br>•Provide required PPE to employees. •Provide hearing exams or other tests required by OSHA standards. 
+    <br>•Post OSHA citations and injury and illness data where workers can see them. 
+    <br>•Notify OSHA within 8 hours of a workplace fatality, or 24 hours of any work-related inpatient hospitalization, amputation, or loss of an eye. 
+    <br>•Not retaliate against workers for using their rights under this law. Compliancechimp not only enables compliance with the points above, but records each compliance event, forever (need to be more clear about this entire section).</div>
+  </div>
+<div class="border"></div>
 <div class="p h">
   <div class="col">
     <div class="sub">How does it work? Thanks to mobile devices and a heck of a lot of product design;</div>
@@ -70,7 +87,7 @@
       and visit our How it Works page to see every feature.
     </div>
   </div>
-  <img id="lady" src="/assets/chimp.png">
+  <img id="lady" class="hide" src="/assets/lady.png">
 </div>
 <div class="border"></div>
 <sign-up></sign-up>
