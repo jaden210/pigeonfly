@@ -14,10 +14,12 @@
   
   .pt {
     color: #ffffff;
-    font-size: 42px;
+    font-size: 62px;
     padding-top: 125px;
     margin-bottom: 24px;
     max-width: 740px;
+    font-weight: 500;
+    line-height: 64px;
   }
   
   .info {
@@ -78,8 +80,9 @@
   .border {
     width: 100vw;
     background: url(/assets/border.png) repeat-x;
-    height: 22px;
+    height: 8px;
     margin-top: 48px;
+    background-size: contain;
   }
 
   .spacer {
@@ -164,6 +167,7 @@
     color: #ffffff;
     display: flex;
     align-items: center;
+    min-width: 370px;
 }
 
 .cico {

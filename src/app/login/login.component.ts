@@ -86,7 +86,7 @@ export class LoginComponent implements OnInit {
               uid: data.user.uid,
               email: data.user.email,
               profileUrl: data.user.photoURL || null,
-              name: data.user.displayName || null,
+              name: this.login.name || data.user.displayName,
               username: null,
               phone: data.user.phoneNumber || null,
               accountType: 'owner',
@@ -150,7 +150,8 @@ export class LoginComponent implements OnInit {
 }
 
 export class Login {
-  companyName: string;
+  name: string;
+  companyName: string = "Your new team";
   email: string;
   password: string;
   password2: string;

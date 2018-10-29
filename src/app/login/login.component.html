@@ -1,18 +1,28 @@
 
-<div *ngIf="!appService.isUser" class="p">
+<div class="window">
+
+  <div *ngIf="!appService.isUser" class="p">
     <span class="title">Start for Free</span>
     <div class="info">Use Minute for 30 days on us. If you don't love it, don't keep it. We won't even ask for a credit card
       until your 30 day trial is up. And there's no contract, ever. We're entirely confident you'll love Minute and the value
       it brings to your team.
     </div>
+    <div class="check"><mat-icon class="cico">check</mat-icon><div class="ctext">Safety training</div></div>
+    <div class="check"><mat-icon class="cico">check</mat-icon><div class="ctext">Self-inspection</div></div>
+    <div class="check"><mat-icon class="cico">check</mat-icon><div class="ctext">Injury reporting</div></div>
+    <div class="check"><mat-icon class="cico">check</mat-icon><div class="ctext">Worksite logs</div></div>
+    <div class="check"><mat-icon class="cico">check</mat-icon><div class="ctext">Time clock</div></div>
+    <div class="check"><mat-icon class="cico">check</mat-icon><div class="ctext">Record-keeping and events tracking</div></div>
+    <div class="check"><mat-icon class="cico">check</mat-icon><div class="ctext">Stored in one simple place, forever</div></div>
+ 
   </div>
   <div *ngIf="appService.isUser" id="spacer"></div>
   <div class="card"  *ngIf="bSignUp">
-    <img id="header" src="/assets/minuteLogoBold.png">
+    <img id="header" src="/assets/ccLogoDark.png">
     <div class="error">{{loginErrorStr}}</div>
     <div id="form">
       <mat-form-field>
-        <input matInput type="text" required placeholder="company name" [(ngModel)]="login.companyName">
+        <input matInput type="text" required placeholder="your name" [(ngModel)]="login.name">
       </mat-form-field>
       <mat-form-field>
         <input matInput type="email" required placeholder="email" [(ngModel)]="login.email">
@@ -30,7 +40,7 @@
     </div>
   </div>
   <div class="card"  *ngIf="!bSignUp">
-    <img id="header" src="/assets/minuteLogoBold.png">
+    <img id="header" src="/assets/ccLogoDark.png">
     <div class="error">{{loginErrorStr}}</div>
     <div id="form">
       <div class="helper-text" *ngIf="!isVerified && bSetPassword">Hey {{login.name}}. Welcome to minute! set a password and you'll be on your way.</div>
@@ -55,3 +65,4 @@
       <button mat-raised-button *ngIf="!isVerified && bSetPassword" color="accent" style="color: white" (click)="joinTeam()">JOIN TEAM</button>
     </div>
   </div>
+</div>

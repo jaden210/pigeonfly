@@ -1,12 +1,12 @@
 .footer {
   padding: 24px;
-  background-color: #f3f3f3;
-  color: #333333;
+  background-color: #2b689c;
+  color: #FFFFFF;
   font-size: 11px;
   line-height: 1.36364;
   font-weight: 400;
   overflow: hidden;
-  margin-top: 48px;
+  margin-top: 88px;
 }
 
 .content {
@@ -28,7 +28,6 @@
   max-width: 900px;
   display: flex;
   align-items: center;
-  border-top: 1px solid #bdbdbd;
 }
 
 .title {
@@ -53,13 +52,13 @@ li mat-icon {
   height: 18px;
   width: 18px;
   font-size: 18px;
-  color: #666666;
+  color: #FFFFFF;
   margin-right: 12px;
 }
 
 a {
   text-decoration: none;
-  color: #555555;
+  color: #FFFFFF;
   font-size: 1em;
   cursor: pointer;
 }
@@ -88,7 +87,6 @@ a:hover {
 }
 
 .contact {
-  border-left: 1px solid #bdbdbd;
   padding-left: 24px;
 }
 

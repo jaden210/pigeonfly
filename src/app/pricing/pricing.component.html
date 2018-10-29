@@ -9,9 +9,7 @@
   <div style="flex:2">
     <div id="signup">
       <div id="signupcol">
-        <mat-form-field appearance="fill" color="warn" style="color: #ffffff">
-          <input matInput type="email" placeholder="enter your email address" #signUpEmail>
-        </mat-form-field>
+        <input id="signupE" type="email" placeholder="enter your email address" #signUpEmail>
         <button mat-raised-button color="accent" style="color: #ffffff; border-radius: 20px;" (click)="signUp(signUpEmail.value)">START A FREE 30 DAY TRIAL</button>
         <div id="shhh">We won’t even ask for a credit card :)</div>
       </div>
@@ -34,6 +32,10 @@
     available for free from the iTunes or Google Play store. Owners and admins are the only ones who access the back 
     office via the web.
   </div>
+  <div class="images">
+    <img class="mobile-link" src="/assets/aStore.png">
+    <img class="mobile-link" src="/assets/pStore.png">
+  </div>
   <div class="question">Is there a limit to the amount of pictures, logs, or self-inspections?</div>
   <div class="answer">No. $99/month covers the cost of storing and retrieving pictures, worksite logs, self-inspection 
     and incident reports, plus real-time location tracking and communication...everything.
@@ -44,6 +46,15 @@
   </div>
   <div class="question">Can I cancel at any time?</div>
   <div class="answer">Of course. And we’ll even refund your current month.</div>
+  <div class="question">Can I see a demo or try this for free?</div>
+  <div class="answer">Yes. You’re about 15 seconds away from seeing Compliancechimp for yourself. 
+    We don’t even require a credit card for the 30 day trial. Just click “START FOR FREE”  at the top of this page, 
+    or enter you email and begin below. Zero pressure. Zero hassle. No sales pitch. Just clean access to your own 
+    Compliancechimp account, which we believe you’ll love.</div>
+  <div class="question">What if I have questions?</div>
+  <div class="answer">Ask away! We watch our support channel with zeal. Visit our support page and enter your 
+    question or comment in the box, or email us directly if you prefer at support@compliancechimp.com. 
+    We’ll get back to you right away and gladly hop on a call if you’d like to discuss further in person.</div>
 </div>
-<div class="border"></div>
+<div style="height: 48px" class="hide"></div>
 <sign-up></sign-up>

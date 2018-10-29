@@ -28,7 +28,7 @@ mat-toolbar {
 .hwindow {
     height: calc(100vh - 64px);
     overflow: scroll;
-    background-color: #0069c0;
+    background-color: #3775a9;
 }
 
 .active {

@@ -1,31 +1,60 @@
 .window {
+    min-height: calc(100vh - 400px);
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
 }
 
 .p {
-    padding: 100px 24px 24px 24px;
-    text-align: center;
+    padding: 100px 64px 24px 64px;
 }
 
 .title {
-    font-size: 32px;
-    font-weight: 700;
+    color: #ffffff;
+    font-size: 62px;
+    padding-top: 100px;
+    margin-bottom: 24px;
+    max-width: 740px;
+    font-weight: 500;
+    line-height: 64px;
 }
 
 .info {
+    color: #ffffff;
     max-width: 95%;
-    width: 550px;
-    margin: auto;
-    font-size: 17px;
-    margin-top: 12px;
-    opacity: .6;
+    width: 600px;
+    font-size: 20px;
+    margin-top: 24px;
+    opacity: .87;
+}
+
+button {
+    border-radius: 20px;
+}
+
+.check {
+    margin: 12px 0;
+    font-size: 18px;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    min-width: 370px;
+}
+
+.cico {
+    width: 32px;
+    height: 32px;
+    font-size: 32px;
+    margin-right: 12px;
+    font-weight: bold;
+}
+
+.ctext {
+    max-width: 500px;
+    opacity: .87;
 }
 
 .card {
     box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+    background-color: #ffffff;
     border-radius: 12px;
     padding: 24px;
     width: 400px;

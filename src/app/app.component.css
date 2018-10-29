@@ -4,7 +4,7 @@
 }
 
 #title {
-    height: 50px;
+    height: 64px;
     outline: none;
     cursor: pointer;
 }
@@ -13,7 +13,7 @@
 #toolbar {
     position: fixed;
     z-index: 1;
-    background-color: #2196f3 !important;
+    background-color: #3775a9 !important;
 }
 
 #spacer {
@@ -21,7 +21,8 @@
 }
 
 .shadow {
-    box-shadow: 0 1px 4px -3px;
+    /* box-shadow: 0 1px 4px -3px; */
+    box-shadow: none !important;
 }
 
 .link {
@@ -31,7 +32,8 @@
 
 .tactive {
     transition: all 250ms;
-    border-bottom: 2px solid #ff9100 !important;
+    /* border-bottom: 2px solid #ff9100 !important; */
+    color: #ff9100 !important;
 }
 
 #sidenav {
@@ -40,7 +42,7 @@
 
 #links {
     padding-top: 64px;
-    background-color: #0069c0;
+    background-color: #3775a9;
     display: flex;
     flex-direction: column;
     align-items: center;

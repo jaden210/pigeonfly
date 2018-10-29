@@ -18,11 +18,15 @@ export class AppComponent {
     public router: Router,
     public appService: AppService,
     public auth: AngularFireAuth
-  ) { 
+  ) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         gtag('config', 'UA-125391496-1', {'page_path': event.url});      
       }
+      if (!(event instanceof NavigationEnd)) {
+        return;
+      }
+      document.getElementById('scroll').scrollTop = 0;
     });
     if(localStorage.getItem("minute-user")) { //they have been here before
       this.appService.isUser = true;
