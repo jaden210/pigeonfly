@@ -28,8 +28,8 @@
       <button mat-button class="ml" color="primary" (click)="cancel()">CANCEL</button>
       <button mat-stroked-button class="ml" color="primary" (click)="save()" [disabled]="!aAssesment.title">SAVE</button>
     </mat-toolbar>
-    <div id="instructions">Select the questions that are relevant to your assessment. Questions are grouped by their category.</div>
     <div class="panel">
+      <div id="instructions">Select the questions that are relevant to your assessment. Questions are grouped by their category.</div>
       <mat-accordion>
         <mat-expansion-panel *ngFor="let sub of aAssesment.assesment; let i = index">
           <mat-expansion-panel-header>

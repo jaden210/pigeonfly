@@ -59,7 +59,10 @@
 }
 
 .panel {
-    margin: 24px;
+  padding: 24px;
+  height: calc(100vh - 64px);
+  overflow: scroll;
+  box-sizing: border-box;
 }
 
 .i-item {

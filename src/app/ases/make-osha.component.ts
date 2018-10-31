@@ -29,7 +29,7 @@ export class AssesComponent implements OnInit {
   }
 
   get() {
-    let collection = this.appService.db.collection(this.collection, ref => ref.orderBy("subject", "asc"));
+    let collection = this.appService.db.collection(this.collection, ref => ref.orderBy("order", "asc"));
     collection.snapshotChanges().pipe(
       map(actions => actions.map(a => { //better way
         const data = a.payload.doc.data() as any;
@@ -74,11 +74,11 @@ export class AssesComponent implements OnInit {
   push() {
     if (this.newDoc.id) {
       this.appService.db.collection(this.collection).doc(this.newDoc.id).update({...this.newDoc}).then(() => {
-        this.newDoc = new NewDoc();
       });
     } else {
-      this.appService.db.collection(this.collection).add({...this.newDoc}).then(() => {
-        this.newDoc = new NewDoc();
+      this.appService.db.collection(this.collection).add({...this.newDoc}).then(snapshot => {
+        this.newDoc.id = snapshot.id;
+        this.selectDoc(this.newDoc);
       });
     }
   }

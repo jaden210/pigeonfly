@@ -57,7 +57,7 @@ export class AssesmentComponent implements OnInit {
           if (assesments.length == 0) this.accountService.showHelper = true;
           this.assesments = assesments;
         });
-        let templateDoc = this.accountService.db.collection("osha-assesment-template-en"); // get the template
+        let templateDoc = this.accountService.db.collection("osha-assesment-template-en", ref => ref.orderBy("order", "asc")); // get the template
         templateDoc.snapshotChanges().pipe(
           map(actions => {
             return actions.map(a => {

@@ -17,7 +17,7 @@ padding-top: 125px;
 margin-bottom: 24px;
 width: 740px;
 max-width: 740px;
-font-weight: 500;
+font-weight: 600;
 line-height: 64px;
 text-align: left;
 }
@@ -33,11 +33,9 @@ text-align: left;
 .sub {
     color: #ffffff;
     font-size: 62px;
-    max-width: 740px;
-    font-weight: 500;
+    font-weight: 600;
     line-height: 64px;
     margin: 60px 0 12px 0;
-    font-weight: 500;
     max-width: 740px;
     text-align: left;
     width: 740px;
