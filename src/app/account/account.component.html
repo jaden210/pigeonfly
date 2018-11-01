@@ -45,7 +45,7 @@
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>
-<div class="account-popup-overlay" *ngIf="Info" (click)="bShowAccountInfo = false"></div>
+<div class="account-popup-overlay" *ngIf="bShowAccountInfo" (click)="bShowAccountInfo = false"></div>
 <div class="account-popup" *ngIf="bShowAccountInfo">
   <div class="row">
     <div class="teams">

@@ -35,6 +35,8 @@ export class EventComponent {
 
   lastLog; // for pagination
 
+  now: any = moment().format('MMM');
+
   constructor(public accountService: AccountService, public dialog: MatDialog) {
     this.accountService.helper = this.accountService.helperProfiles.log;
     this.accountService.aTeamObservable.subscribe(aTeam => {
