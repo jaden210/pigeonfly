@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild, HostListener } from "@angular/core";
 import { trigger, style, transition, animate } from "@angular/animations";
 import { Timeclock, AccountService, Log, Event } from "../account.service";
 import { map, tap } from "rxjs/operators";
 import * as moment from "moment";
 import { MatDialog } from "@angular/material";
 import { ImagesDialogComponent } from "../images-dialog/images-dialog.component";
+import { Observable } from "rxjs";
 
 @Component({
   selector: "app-event",
@@ -28,75 +29,91 @@ export class EventComponent {
   filterUsers; // template variable
   filterTypes; // template variable
 
-  events: any;
-  oldestEvent: any = new Date();
-  days = [];
+  events: any = [];
   eventTypes;
+  days = [];
 
-  lat: number;
-  long: number;
-
-  now: any = moment().format("MMM");
+  lastLog; // for pagination
 
   constructor(public accountService: AccountService, public dialog: MatDialog) {
     this.accountService.helper = this.accountService.helperProfiles.log;
     this.accountService.aTeamObservable.subscribe(aTeam => {
       if (aTeam) {
-        let eventCollection = this.accountService.db.collection("event", ref =>
-          ref.where("teamId", "==", this.accountService.aTeam.id)
-        );
-        eventCollection
-          .snapshotChanges()
-          .pipe(
-            map(actions => {
-              return actions.map(a => {
-                let data: any = a.payload.doc.data();
-                return <Event>{
-                  ...data,
-                  id: a.payload.doc.id,
-                  createdAt: data["createdAt"].toDate()
-                };
-              });
-            }),
-            tap(results => {
-              results.sort((a, b) => {
-                return a.createdAt < b.createdAt ? 1 : -1;
-              });
-            })
-          )
-          .subscribe(events => {
-            if (events.length == 0) this.accountService.showHelper = true;
-            this.events = events;
-            this.eventTypes = [];
-            this.events.forEach(event => {
-              if (this.oldestEvent > event.createdAt) {
-                this.oldestEvent = event.createdAt;
-              }
-              event.user = this.accountService.teamUsers.find(
-                user => user.id == event.userId
-              );
-              if (!this.eventTypes.find(type => type == event.type))
-                this.eventTypes.push(event.type);
-            });
-            this.buildCalendar();
-          });
+        this.getLogs();
       }
     });
   }
 
+  getLogs() {
+    this.getEvents().subscribe(events => {
+      if (events.length == 0 && !this.lastLog) {
+        this.accountService.showHelper = true;
+        return;
+      };
+      if (events.length == 0) return;
+      this.events = this.events.concat(events);
+      this.lastLog = events[events.length - 1];
+      this.eventTypes = [];
+      this.events.forEach(event => {
+        event.user = this.accountService.teamUsers.find(user => user.id == event.userId);
+        if (!this.eventTypes.find(type => type == event.type)) this.eventTypes.push(event.type);
+      });
+        this.buildCalendar();
+        this.onScroll();
+      });  
+  }
+
+  public getEvents(): Observable<any> {
+    return this.accountService.db.collection("event", ref => {
+      if (!this.lastLog) {
+        return (
+          ref
+          .where("teamId", "==", this.accountService.aTeam.id)
+          .orderBy("createdAt", "desc")
+          .limit(1)
+          )
+      } else {
+        return (   
+          ref
+          .where("teamId", "==", this.accountService.aTeam.id)
+          .orderBy("createdAt", "desc")
+          .limit(5)
+          .startAfter(this.lastLog.createdAt)
+          );
+        }
+      })
+      .snapshotChanges().pipe(
+        map(actions => {
+          return actions.map(a => {
+            let data:any = a.payload.doc.data();
+            return <Event>{
+              ...data,
+              id: a.payload.doc.id,
+              createdAt: data["createdAt"].toDate()
+            };
+          });
+        })
+      )
+  }
+
+  @HostListener('scroll', ['$event'])
+  onScroll(event?: any) {
+    if (!event) {
+      if (document.getElementById('body').clientHeight < document.getElementById('window').clientHeight) this.getLogs(); // if there isn't enough results to pass the fold, load more
+      return;
+    }
+    if (event.target.offsetHeight + event.target.scrollTop >= event.target.scrollHeight) {
+      this.getLogs();
+    }
+  }
+  
   buildCalendar() {
     this.days = [];
     let now: any = new Date();
-    let total_days = Math.round(
-      (now - this.oldestEvent) / (1000 * 60 * 60 * 24)
-    ); //moment equilivant?
+    let total_days = moment(now).diff(this.events[this.events.length -1].createdAt, 'days');
     for (let i = 0; i <= total_days; i++) {
       let date = moment().subtract(i, "days");
       let month = date.format("MMM");
-      let displayMonth = moment()
-        .subtract(i, "days")
-        .subtract(1, "month")
-        .format("MMM");
       let day = date.format("DD");
       let dOW = date.format("ddd");
       let events = this.getEventsByDate(date);
@@ -104,7 +121,6 @@ export class EventComponent {
         id: i + 1,
         date,
         month,
-        displayMonth,
         day,
         dOW,
         events: events.events

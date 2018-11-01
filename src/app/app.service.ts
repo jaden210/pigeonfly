@@ -8,6 +8,7 @@ export class AppService {
 
   isUser: boolean = false; // decides if a user has logged in before
   isLoggedIn: boolean = false; // decides if a user is logged in
+  firstTimeUser: boolean = false; // lets the system show new member dialog
 
   removeFromInvite: boolean = false;
   toolbarShadow: boolean = true;
@@ -20,7 +21,6 @@ export class AppService {
 
 export class User { // also in account service
   id?: string;
-  uid: string;
   name?: string;
   email: string;
   profileUrl?: string;

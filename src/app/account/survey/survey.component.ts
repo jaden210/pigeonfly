@@ -124,7 +124,7 @@ export class SurveyComponent implements OnInit {
   
   deleteSurvey() {
     this.accountService.db.collection("survey").doc(this.aSurvey.id).delete().then(() => {
-      this.aSurvey = new Survey();
+      this.aSurvey = null;
       let snackbar = this.snackbar.open("survey deleted", null, {
         duration: 3000
       });

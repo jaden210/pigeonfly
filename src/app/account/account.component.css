@@ -10,6 +10,7 @@ mat-sidenav {
     width: 280px;
     display: flex;
     flex-direction: column;
+    background-color: #054D8A;
 }
 
 a {
@@ -23,7 +24,7 @@ a {
 
 a:hover {
     background-color: #ff9100;
-    background-color: rgba(0,0,0,.17) !important;
+    background-color: #043D77 !important;
 }
 
 #header {
@@ -33,18 +34,16 @@ a:hover {
     align-items: center;
     padding: 12px;
     box-sizing: border-box;
-    background-color: #1e88e5;
     cursor: pointer;
 }
 
 #header:hover {    
-    background-color: #1871BF !important;
+    background-color: #043D77 !important;
 
 }
 
 #content {
     flex: 1;
-    background-color: #1e88e5;
 }
 
 .mat-list-item {
@@ -59,7 +58,6 @@ a:hover {
 #footer {
     padding: 12px;
     font-size: 24px;
-    background-color: #1e88e5;
     /*border-top: 1px solid rgba(0,0,0,.14);*/
     color: white;
     display: flex;

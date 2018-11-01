@@ -18,6 +18,9 @@ export class TimeService {
   public loading: Observable<boolean> = this._loading.asObservable();
   public lastLoadLength: number;
 
+
+  lastLog;
+
   constructor(
     private afs: AngularFirestore,
     private datePipe: DatePipe,
@@ -25,21 +28,28 @@ export class TimeService {
   ) {}
 
   public getTimeLogs(
-    teamId: string,
-    startDate: Date,
-    endDate: Date
-  ): Observable<any> {
-    this._loading.next(true);
-    return this.afs
-      .collection("timeclock", ref => {
-        return (
-          ref
+    teamId: string
+    ): Observable<any> {
+      return this.afs.collection("timeclock", ref => {
+        if (!this.lastLog) {
+          return (
+            ref
             .where("teamId", "==", teamId)
-            .where("clockOut", ">=", startDate)
-            // .where("clockOut", "<=", endDate)
+            .where("clockOut", "<=", new Date())
             .orderBy("clockOut", "desc")
-        );
-      })
+            .limit(50)
+            )
+          } else {
+            return (
+              ref
+              .where("teamId", "==", teamId)
+              .where("clockOut", "<=", new Date())
+              .orderBy("clockOut", "desc")
+              .limit(20)
+              .startAfter(this.lastLog.clockOut)
+              );
+            }
+          })
       .snapshotChanges()
       .pipe(
         map(logs => {
@@ -59,9 +69,6 @@ export class TimeService {
               user
             };
           });
-        }),
-        tap(() => {
-          setTimeout(() => this._loading.next(false), 350);
         })
       );
   }

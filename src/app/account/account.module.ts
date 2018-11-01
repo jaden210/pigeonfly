@@ -12,7 +12,7 @@ import { LogComponent, CreateEditLogDialog } from "./log/log.component";
 import { AssesmentComponent } from "./assesment/assesment.component";
 import { AccountRoutingModule } from "./account-routing.module";
 import { MaterialModule } from "../material/material.module";
-import { AccountComponent, TeamSelectDialog } from "./account.component";
+import { AccountComponent, TeamSelectDialog, WelcomeDialog } from "./account.component";
 import { FormsModule } from "@angular/forms";
 import { AgmCoreModule } from "@agm/core";
 import { MomentModule } from "angular2-moment";
@@ -62,7 +62,8 @@ import { TrainingComponent } from "./training/training.component";
     ImagesDialogComponent,
     CreateEditLogDialog,
     CreateEditTimeDialog,
-    TrainingComponent
+    TrainingComponent,
+    WelcomeDialog
   ],
   exports: [MaterialModule],
   entryComponents: [
@@ -73,7 +74,8 @@ import { TrainingComponent } from "./training/training.component";
     NoAccessDialog,
     ImagesDialogComponent,
     CreateEditLogDialog,
-    CreateEditTimeDialog
+    CreateEditTimeDialog,
+    WelcomeDialog
   ],
   providers: [DatePipe]
 })

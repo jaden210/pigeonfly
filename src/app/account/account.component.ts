@@ -26,7 +26,7 @@ import { AppService } from '../app.service';
 })
 export class AccountComponent implements OnInit {
 
-  bShowAccount: boolean; // temp var
+  bShowAccountInfo: boolean = false; // temp var
 
   constructor(
     public accountService: AccountService,
@@ -80,7 +80,12 @@ export class AccountComponent implements OnInit {
   }
   
   selectTeam() {
-    if (Object.keys(this.accountService.user.teams).length == 1) { // set the team and go home
+    if (localStorage.getItem('teamId')) {
+      this.accountService.setActiveTeam(localStorage.getItem('teamId'));
+    } else if (Object.keys(this.accountService.user.teams).length == 1) { // set the team and go home
+      if (this.appService.firstTimeUser) { // checking here because first time user will always only have one team
+        this.welcomeDialog();
+      }
       this.accountService.setActiveTeam(Object.keys(this.accountService.user.teams)[0]);
     } else { // pop the dialog asking which team to look at
       this.accountService.userTeams = [];
@@ -91,20 +96,38 @@ export class AccountComponent implements OnInit {
           this.accountService.userTeams.push(team);
         });
       })
-      if (localStorage.getItem('teamId')) {
-        this.accountService.setActiveTeam(localStorage.getItem('teamId'));
-      } else {
       let dialog = this.dialog.open(TeamSelectDialog, {
-          data: this.accountService.userTeams,
-          disableClose: true
-        });
-        dialog.afterClosed().subscribe((teamId: any) => {
-          if (teamId) {
-            this.accountService.setActiveTeam(teamId);
-          } else this.accountService.logout();
-        });
-      }
+        data: this.accountService.userTeams,
+        disableClose: true
+      });
+      dialog.afterClosed().subscribe((teamId: any) => {
+        if (teamId) {
+          this.accountService.setActiveTeam(teamId);
+        } else this.accountService.logout();
+      });
     }
+  }
+
+  welcomeDialog() {
+    let dialog = this.dialog.open(WelcomeDialog, {
+      disableClose: true,
+      width: '750px',
+      data: {
+        name: this.accountService.user.name,
+        businessName: null,
+        industryId: null
+      }
+    });
+    dialog.afterClosed().subscribe(data => {
+      this.accountService.user.name = data.name;
+      this.accountService.db.collection("user").doc(this.accountService.user.id).update({...this.accountService.user});
+      this.accountService.aTeam.name = data.businessName;
+      this.accountService.aTeam.industryId = data.industryId;
+      this.accountService.db.collection("team").doc(this.accountService.aTeam.id).update({...this.accountService.aTeam});
+      this.router.navigate(['/account/training']);
+      this.accountService.helperProfiles.welcome;
+      this.accountService.showHelper = true;
+    });
   }
 
   ngOnInit() {
@@ -115,7 +138,7 @@ export class AccountComponent implements OnInit {
     this.accountService.showHelper = false;
   }
 
-  submit() {
+  submitFeedback() {
     this.accountService.feedback.name = "Thanks for your feedback!"
     setTimeout(() => {
       this.accountService.showFeedback = false;
@@ -147,6 +170,36 @@ export class TeamSelectDialog {
 
   close(teamId?): void {
     this.dialogRef.close(teamId);
+  }
+
+}
+
+@Component({
+  selector: 'welcome-dialog',
+  templateUrl: 'welcome-dialog.html',
+  styleUrls: ['./account.component.css']
+})
+export class WelcomeDialog {
+
+  industries;
+
+  constructor(
+    public dialogRef: MatDialogRef<TeamSelectDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any, public accountService: AccountService) {
+      let accountTypesCollection = this.accountService.db.collection("industries"); //thinking this will never be a large call, but check with nested collections to see later.
+      accountTypesCollection.snapshotChanges().pipe(
+        map(actions => actions.map(a => {
+          const data = a.payload.doc.data();
+          const id = a.payload.doc.id;
+          return { id, ...data };
+        }))
+      ).subscribe(industries => {
+        this.industries = industries;
+      });
+    }
+
+  close(): void {
+    this.dialogRef.close(this.data);
   }
 
 }

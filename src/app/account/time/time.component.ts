@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Inject } from "@angular/core";
+import { Component, OnInit, ViewChild, Inject, HostListener } from "@angular/core";
 import { trigger, style, transition, animate } from "@angular/animations";
 import { Timeclock, AccountService } from "../account.service";
 import * as moment from "moment";
@@ -35,8 +35,6 @@ export class TimeComponent implements OnInit {
   lat: number;
   long: number;
 
-  logs;
-
 
   now: any = moment().format('MMM');
 
@@ -50,37 +48,48 @@ export class TimeComponent implements OnInit {
   ngOnInit() {
     /// NOTE: MAYBE CHANGE SO A USER ONLY SHOWS ONCE FOR A DAY AND EXPANDING SHOWS ALL INS AND OUTS
     this.accountService.helper = this.accountService.helperProfiles.time;
-    const fortnightAgo = new Date(Date.now() - 12096e5);
     this.accountService.teamUsersObservable.subscribe(aTeam => {
-      if (aTeam) this.getLogs(fortnightAgo, new Date());
+      if (aTeam) this.getLogs();
     });
   }
 
-  private getLogs(startDate: Date, endDate: Date): void {
+  private getLogs(): void {
     this.timeService
-    .getTimeLogs(this.accountService.aTeam.id, startDate, endDate)
+    .getTimeLogs(this.accountService.aTeam.id)
     .subscribe(logs => {
-      this.logs = logs;
-      if (logs.length == 0) this.accountService.showHelper = true;
-      this.timeClocks.push(logs);
-      this.buildCalendar(logs);
+      if (logs.length == 0) return;
+      this.timeClocks = this.timeClocks.concat(logs);
+      this.timeService.lastLog = logs[logs.length - 1];
+      if (this.timeClocks.length == 0) {
+        this.accountService.showHelper = true;
+        return;
+      }
+      this.buildCalendar();
+      this.onScroll();
     });
   }
+
+  @HostListener('scroll', ['$event'])
+  onScroll(event?: any) {
+    if (!event) {
+      if (document.getElementById('body').clientHeight < document.getElementById('window').clientHeight) this.getLogs(); // if there isn't enough results to pass the fold, load more
+      return;
+    }
+    if (event.target.offsetHeight + event.target.scrollTop >= event.target.scrollHeight) {
+      this.getLogs();
+    }
+  }
   
-  private buildCalendar(logs: any[]): void {
-    console.log(this.logs);
-    
+  private buildCalendar(): void {
     this.days = [];
     let now: any = new Date();
-    let total_days = Math.round(
-      (now - logs[logs.length - 1].clockIn) / (1000 * 60 * 60 * 24)
-    ); //moment equilivant?
+    let total_days = moment(now).diff(this.timeClocks[this.timeClocks.length -1].clockIn, 'days');
     for (let i = 0; i <= total_days; i++) {
       let date = moment().subtract(i, "days");
       let month = date.format("MMM");
       let day = date.format("DD");
       let dOW = date.format("ddd");
-      let timeClocks = this.getClocksByDate(date, logs);
+      let timeClocks = this.getClocksByDate(date, this.timeClocks);
       this.days.push({
         id: i + 1,
         date,
@@ -260,7 +269,7 @@ export class TimeComponent implements OnInit {
           this.accountService.db.collection('timeclock').add({...time}).then(snapshot => {
             time.id = snapshot.id;
             this.createEvent(time, "Created a Timeclock");
-            this.buildCalendar(this.logs);
+            this.buildCalendar();
           });
         }
       }

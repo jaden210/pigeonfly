@@ -1,0 +1,21 @@
+<h2 mat-dialog-title style="font-size: 36px !important;">Welcome!</h2>
+<mat-dialog-content>
+  <div id="d-content">We need three final items for your account to be ready to use</div>
+  <mat-form-field>
+    <input matInput type="text" placeholder="your name" [(ngModel)]="data.name">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput type="text" placeholder="business name" [(ngModel)]="data.businessName">
+  </mat-form-field>
+  <mat-form-field>
+      <mat-select placeholder="which industry best describes your business?" [(ngModel)]="data.industryId">
+        <mat-option *ngFor="let industry of industries" [value]="industry.id">
+          {{industry.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button color="accent" [disabled]="!data.name && !data.businessName && !data.industryId" (click)="close()">DONE</button>
+</mat-dialog-actions>

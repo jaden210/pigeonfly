@@ -28,7 +28,7 @@ export class AppComponent {
       }
       document.getElementById('scroll').scrollTop = 0;
     });
-    if(localStorage.getItem("minute-user")) { //they have been here before
+    if(localStorage.getItem("cc-user")) { //they have been here before
       this.appService.isUser = true;
       this.auth.auth.onAuthStateChanged(user => {
         if (user && user.uid) {

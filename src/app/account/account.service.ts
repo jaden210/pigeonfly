@@ -64,6 +64,10 @@ export class AccountService {
     companyType: {
       name: "Company Type",
       description: "Selecting a company type will help us show the right infomation to your users in the app. put better stuff here."
+    },
+    welcome: {
+      name: "Welcome",
+      description: "Compliancechimp is simple, but seriously powerful. When fully embraced, it will change the safety and compliance risk profile of your business. This Welcome section is always available in the menu, and is designed to guide you through every feature so you can get fully up to speed."
     }
   }
   helper: Helper = this.helperProfiles.newTeam;
@@ -88,7 +92,7 @@ export class AccountService {
         return data;
       })
       ).subscribe(team => {
-        if (this.user.teams[team.id] == 0) { // they cant be here
+        if (this.user.teams[team.id] == 0) { // they cant be here. TODO: Check this before getting the team data
           let dialog = this.dialog.open(NoAccessDialog, {
             disableClose: true
           });
@@ -164,6 +168,7 @@ export class Team {
   ownerId: string;
   logoUrl?: string;
   phone?: string;
+  industryId?: string;
 }
 
 export class Log {

@@ -21,7 +21,7 @@
     </div>
   </ng-container>
   <ng-container *ngFor="let user of users">
-    <div class="day" (click)="editUser(user)">
+    <div class="day pointer" (click)="editUser(user)">
       <div class="heads">
        <div class="head"><img class="head-img" src={{user.user.profileUrl}} onerror="src = 'assets/face.png'"></div>
       </div>
@@ -33,7 +33,7 @@
         <div class="active-text">{{user.status}}</div>
       </div>
       <div class="flex"></div>
-      <div class="map-icon" matTooltip="View last logged location" matTooltipShowDelay="300" (click)="showMap(user)"><mat-icon class="map">location_on</mat-icon></div>
+      <div class="map-icon" *ngIf="user.timeclock" matTooltip="View last logged location" matTooltipShowDelay="300" (click)="$event.stopPropagation();showMap(user)"><mat-icon class="map">location_on</mat-icon></div>
     </div>
   </ng-container>
   <button mat-fab id="fab" color="accent" (click)="inviteToTeam()"><mat-icon>add</mat-icon></button>

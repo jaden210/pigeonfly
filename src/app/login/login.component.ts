@@ -77,24 +77,24 @@ export class LoginComponent implements OnInit {
         this.loginErrorStr = "passwords do not match"
       } else {
         let teams;
-        this.login.invites.forEach(invite => { // the team is added here, so we only need to remove the invite in the accService.
-          teams[invite.teamId] = invite.isAdmin ? 1 : 0;
-        });
+        if (!createTeam) {
+          this.login.invites.forEach(invite => { // the team is added here, so we only need to remove the invite in the accService.
+            teams[invite.teamId] = invite.isAdmin ? 1 : 0;
+          });
+        }
         this.auth.auth.createUserWithEmailAndPassword(this.login.email, this.login.password).then(
           data => { // right now anyone can join with any email. we might want to send out a verify link
-            this.appService.db.collection<User>("user").doc(data.user.uid).set({ // create user in system
-              uid: data.user.uid,
+            this.user = {
+              id: data.user.uid,
               email: data.user.email,
               profileUrl: data.user.photoURL || null,
-              name: this.login.name || data.user.displayName,
+              name: data.user.displayName || null,
               username: null,
               phone: data.user.phoneNumber || null,
               accountType: 'owner',
               teams: createTeam ? {} : teams
-            }).then(user => {
-              console.log(user);
-              
-              this.user = user;
+            };
+            this.appService.db.collection<User>("user").doc(data.user.uid).set({...this.user}).then(() => {
               createTeam ? this.createTeam() : this.sendToAccount(true);
             });
           },
@@ -117,14 +117,15 @@ export class LoginComponent implements OnInit {
         }
         
         createTeam() {
-          this.isUser();
+          this.appService.firstTimeUser = true;
           let newTeam = new Team();
           newTeam.createdAt = new Date();
           newTeam.ownerId = this.user.id;
           this.appService.db.collection("team").add({...newTeam}).then(snapshot => {
-          this.user.teams[snapshot.id] = 1;
-          this.appService.db.collection('user').doc(this.user.id).update({...this.user});
-          this.sendToAccount(false)
+            this.user.teams[snapshot.id] = 1;
+            this.appService.db.collection('user').doc(this.user.id).update({...this.user});
+            this.sendToAccount(false)
+            this.isUser();
     });
         }
         
@@ -135,14 +136,14 @@ export class LoginComponent implements OnInit {
         
         isUser() {
           this.loginErrorStr = '';
-          localStorage.setItem('minute-user', 'true');
+          localStorage.setItem('cc-user', 'true');
           this.appService.isUser = true;
           this.bSignUp = false;
         }
         
         setSignUp() {
           this.loginErrorStr = '';
-          localStorage.removeItem('minute-user');
+          localStorage.removeItem('cc-user');
           this.appService.isUser = false;
           this.bSignUp = true;
         }
@@ -150,8 +151,6 @@ export class LoginComponent implements OnInit {
 }
 
 export class Login {
-  name: string;
-  companyName: string = "Your new team";
   email: string;
   password: string;
   password2: string;

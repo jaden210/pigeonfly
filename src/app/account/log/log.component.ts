@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject, HostListener } from '@angular/core';
 import { trigger, style, transition, animate } from "@angular/animations";
 import { Timeclock, AccountService, Log } from '../account.service';
 import { map, tap, finalize } from 'rxjs/operators';
 import * as moment from 'moment';
 import { ImagesDialogComponent } from '../images-dialog/images-dialog.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-log',
@@ -28,8 +29,8 @@ export class LogComponent {
   searchStr; // template variable
   filterUsers; // template variable
 
-  logs: any;
-  oldestLog: any = new Date();
+  logs: any = [];
+  lastLog; // for pagination
   days = [];
 
   
@@ -46,47 +47,81 @@ export class LogComponent {
     this.accountService.helper = this.accountService.helperProfiles.log;
     this.accountService.teamUsersObservable.subscribe(aTeam => {
       if (aTeam) {
-        let logCollection = this.accountService.db.collection("log", ref => ref.where("teamId", "==", this.accountService.aTeam.id))
-        logCollection.snapshotChanges().pipe(
-          map(actions => {
-            return actions.map(a => {
-              let data:any = a.payload.doc.data();
-              return <Log>{
-                ...data,
-                id: a.payload.doc.id,
-                createdAt: data["createdAt"].toDate(),
-                updatedAt: data["updatedAt"] ? data["updatedAt"].toDate() : null
-              };
-            });
-          }),
-          tap(results => {
-            results.sort((a, b) => {
-              return a.createdAt < b.createdAt ? -1 : 1;
-            });
-          })
-        ).subscribe(logs => {
-          if (logs.length == 0) this.accountService.showHelper = true;
-          this.logs = logs;
-          this.logs.forEach(log => {
-            if (this.oldestLog > log.createdAt) {
-              this.oldestLog = log.createdAt;
-            }
-            log.user = this.accountService.teamUsers.find(user => user.id == log.userId);
-            if (!this.lat && log.LatPos) { // gives scope to the google map plugin
-              this.lat = log.LatPos;
-              this.long = log.LongPos;
-            }
-          });
-          this.buildCalendar();
-        }); 
+        this.getLogs();
       }
-    });
+    })
+  }
+
+  getLogs() {
+    this.getTimeLogs().subscribe(logs => {
+      if (logs.length == 0) return;
+      this.logs = this.logs.concat(logs);
+      this.lastLog = logs[logs.length - 1];
+      if (this.logs.length == 0) {
+        this.accountService.showHelper = true;
+        return;
+      }
+      this.logs.forEach(log => {
+        log.user = this.accountService.teamUsers.find(user => user.id == log.userId);
+        if (!this.lat && log.LatPos) { // gives scope to the google map plugin
+          this.lat = log.LatPos;
+          this.long = log.LongPos;
+        }
+      });
+      this.buildCalendar();
+      this.onScroll();
+    }); 
+  }
+
+  public getTimeLogs(): Observable<any> {
+    return this.accountService.db.collection("log", ref => {
+      if (!this.lastLog) {
+        return (
+          ref
+          .where("teamId", "==", this.accountService.aTeam.id)
+          .orderBy("createdAt", "desc")
+          .limit(50)
+          )
+      } else {
+        return (   
+          ref
+          .where("teamId", "==", this.accountService.aTeam.id)
+          .orderBy("createdAt", "desc")
+          .limit(20)
+          .startAfter(this.lastLog.createdAt)
+          );
+        }
+      })
+      .snapshotChanges().pipe(
+        map(actions => {
+          return actions.map(a => {
+            let data:any = a.payload.doc.data();
+            return <Log>{
+              ...data,
+              id: a.payload.doc.id,
+              createdAt: data["createdAt"].toDate(),
+              updatedAt: data["updatedAt"] ? data["updatedAt"].toDate() : null
+            };
+          });
+        })
+      )
+  }
+
+  @HostListener('scroll', ['$event'])
+  onScroll(event?: any) {
+    if (!event) {
+      if (document.getElementById('body').clientHeight < document.getElementById('window').clientHeight) this.getLogs(); // if there isn't enough results to pass the fold, load more
+      return;
+    }
+    if (event.target.offsetHeight + event.target.scrollTop >= event.target.scrollHeight) {
+      this.getLogs();
+    }
   }
 
   buildCalendar() {
     this.days = [];
     let now: any = new Date();
-    let total_days = Math.round((now - this.oldestLog) / (1000 * 60 * 60 * 24)); //moment equilivant?
+    let total_days = moment(now).diff(this.logs[this.logs.length -1].createdAt, 'days');
     for (let i = 0; i <= total_days; i++) {
       let date = moment().subtract(i, 'days');
       let month = date.format('MMM');

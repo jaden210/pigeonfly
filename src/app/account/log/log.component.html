@@ -9,14 +9,15 @@
   <div class="flex"></div>
   <toolbar-helper></toolbar-helper>
 </mat-toolbar>
-   <div class="window">
-        <div class="month">{{now}}</div>
-        <ng-container *ngFor="let day of days | search: searchStr : filterUsers">
-          <div class="day-box">
-            <div class="day" (click)="aDay ? aDay = null : aDay = day.id">
-              <div class="date box" (click)="createEditLog(day)">
-                <div class="date" matTooltip="Add a new log" matTooltipPosition="right" matTooltipShowDelay="600" [ngClass]="{'small': day.logs.length == 0}">{{day.day}}</div>
-                <div class="dow" [ngClass]="{'hide': day.logs.length == 0}">{{day.dOW}}</div>
+   <div class="window" id="window" (scroll)="onScroll($event)">
+     <div id="body">
+       <div class="month">{{now}}</div>
+       <ng-container *ngFor="let day of days | search: searchStr : filterUsers; index as i">
+         <div class="day-box">
+           <div class="day" (click)="aDay ? aDay = null : aDay = day.id">
+             <div class="date box" (click)="createEditLog(day)">
+               <div class="date" matTooltip="Add a new log" matTooltipPosition="right" matTooltipShowDelay="600" [ngClass]="{'small': day.logs.length == 0}">{{day.day}}</div>
+               <div class="dow" [ngClass]="{'hide': day.logs.length == 0}">{{day.dOW}}</div>
               </div>
               <div class="row">
                 <div class="event"  *ngFor="let log of day.logs">
@@ -39,6 +40,7 @@
               </div>
             </div>
           </div>
-          <div class="month" *ngIf="day.day == 1">{{day.displayMonth}}</div>
+          <div class="month" *ngIf="day.day == 1">{{days[i + 1]?.month}}</div>
         </ng-container>
       </div>
+    </div>

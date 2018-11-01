@@ -14,36 +14,37 @@
   <div class="flex"></div>
   <toolbar-helper></toolbar-helper>
 </mat-toolbar>
-<div class="window">
-  <div class="month">{{now}}</div>
-  <ng-container *ngFor="let day of days | eventSearch: searchStr : filterUsers: filterTypes">
-    <div class="day-box">
-      <div class="day" (click)="aDay ? aDay = null : aDay = day.id">
-        <div class="date box">
-          <div class="date" [ngClass]="{'small': day.events.length == 0}">{{day.day}}</div>
-          <div class="dow" [ngClass]="{'hide': day.events.length == 0}">{{day.dOW}}</div>
-        </div>
-        <div class="row">
-          <div class="event" [ngClass]="{'log': event.type == 'log', 'timeclock': event.type == 'timeclock'}" *ngFor="let event of day.events">
-            <div class="block" (click)="event.bShowDetails == true ? event.bShowDetails = false : getEventDetails(event)">
-              <div class="type">{{event.user.name}} created a {{event.type}} -&nbsp;</div>
-              <div class="title">{{event.title}}</div>
-            </div>
-            <div class="details" [@expand] *ngIf="event.bShowDetails">
-              <div class="image-row" *ngIf="event.type == 'log' && event.details.images.length > 0">
-                <div class="log-image-box" *ngFor="let image of event.details.images" (click)="showImages(event.details.images)"><img class="log-image" src={{image.imageUrl}} onerror="src = '/assets/face.png'"></div>
+<div class="window" id="window" (scroll)="onScroll($event)">
+  <div id="body">
+    <div class="month">{{now}}</div>
+    <ng-container *ngFor="let day of days | eventSearch: searchStr : filterUsers: filterTypes; index as i">
+      <div class="day-box">
+        <div class="day" (click)="aDay ? aDay = null : aDay = day.id">
+          <div class="date box">
+            <div class="date" [ngClass]="{'small': day.events.length == 0}">{{day.day}}</div>
+            <div class="dow" [ngClass]="{'hide': day.events.length == 0}">{{day.dOW}}</div>
+          </div>
+          <div class="row">
+            <div class="event" [ngClass]="{'log': event.type == 'log', 'timeclock': event.type == 'timeclock'}" *ngFor="let event of day.events">
+              <div class="block" (click)="event.bShowDetails == true ? event.bShowDetails = false : getEventDetails(event)">
+                <div class="type">{{event.user.name}} created a {{event.type}} -&nbsp;</div>
+                <div class="title">{{event.title}}</div>
               </div>
-              <div class="time-detail" *ngIf="event.type == 'timeclock'">
-                <div class="time-item"><mat-icon>hourglass_empty</mat-icon>{{event.details.clockIn | date: 'h:mm a'}}</div>
-                <div class="time-item" *ngIf="event.details.clockOut"><mat-icon>hourglass_full</mat-icon>{{event.details.clockOut | date: 'h:mm a'}}</div>
-                <div class="time-item" *ngIf="event.details.clockOut"><mat-icon>access_time</mat-icon>{{getDiff(event.details)}}</div>
+              <div class="details" [@expand] *ngIf="event.bShowDetails">
+                <div class="image-row" *ngIf="event.type == 'log' && event.details.images.length > 0">
+                  <div class="log-image-box" *ngFor="let image of event.details.images" (click)="showImages(event.details.images)"><img class="log-image" src={{image.imageUrl}} onerror="src = '/assets/face.png'"></div>
+                </div>
+                <div class="time-detail" *ngIf="event.type == 'timeclock'">
+                  <div class="time-item"><mat-icon>hourglass_empty</mat-icon>{{event.details.clockIn | date: 'h:mm a'}}</div>
+                  <div class="time-item" *ngIf="event.details.clockOut"><mat-icon>hourglass_full</mat-icon>{{event.details.clockOut | date: 'h:mm a'}}</div>
+                  <div class="time-item" *ngIf="event.details.clockOut"><mat-icon>access_time</mat-icon>{{getDiff(event.details)}}</div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="month" *ngIf="day.day == 1">{{day.displayMonth}}</div>
-  </ng-container>
+      <div class="month" *ngIf="day.day == 1">{{days[i + 1]?.month}}</div>
+    </ng-container>
+  </div>
 </div>
-  

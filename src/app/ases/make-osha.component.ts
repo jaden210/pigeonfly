@@ -43,12 +43,13 @@ export class AssesComponent implements OnInit {
 
   selectDoc(item) {
     this.newDoc = item;
-    let questions = this.appService.db.collection(this.collection).doc(item.id).collection('questions')
+    let questions = this.appService.db.collection(this.collection).doc(item.id).collection('questions', ref => ref.orderBy('createdAt'))
     questions.snapshotChanges().pipe(
       map(actions => actions.map(a => { //better way
         const data = a.payload.doc.data() as any;
         const id = a.payload.doc.id;
-        return { id, ...data };
+        const createdAt = data.createdAt ? data.createdAt.toDate() : null
+        return { id, createdAt, ...data };
       }))
     ).subscribe(questions => {
       this.newDoc.questions = questions;
@@ -58,12 +59,14 @@ export class AssesComponent implements OnInit {
   addQuestion() {
     let d = this.newDoc;
     delete d.questions;
+    this.newQuestion.createdAt = new Date();
     this.appService.db.collection(this.collection).doc(d.id).collection('questions').add({...this.newQuestion}).then(() => {
       this.newQuestion = new NewQ();
     });
   }
 
   updateQ(q) {
+    q.createdAt = new Date();
     this.appService.db.collection(this.collection).doc(this.newDoc.id).collection('questions').doc(q.id).update({... q});
   }
 
@@ -118,4 +121,5 @@ export class NewDoc {
 export class NewQ {
   id?: string;
   name: string;
+  createdAt: Date;
 }
