@@ -127,7 +127,6 @@ export class AccountService {
   }
 
   logout() {
-    localStorage.removeItem('teamId');
     this.auth.auth.signOut().then(() => this.router.navigate(['/login']));
   }
 }

@@ -1,274 +1,194 @@
 .p {
-    padding: 0 64px;
-    box-sizing: border-box;
-  }
+  padding: 0 64px;
+  box-sizing: border-box;
+}
   
-  .v {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .h {
-    display: flex;
-  }
-  
-  .pt {
-    color: #ffffff;
-    font-size: 62px;
-    padding-top: 125px;
-    margin-bottom: 60px;
-    font-weight: 600;
-    line-height: 64px;
-  }
+.v {
+  display: flex;
+  flex-direction: column;
+}
+
+.h {
+  display: flex;
+}
+
+.pt {
+  color: #ffffff;
+  font-size: 62px;
+  padding-top: 125px;
+  margin-bottom: 60px;
+  font-weight: 600;
+  line-height: 64px;
+}
   
 .header {
-    color: #ffffff;
-    font-size: 42px;
-    margin: 24px 0;
+  color: #ffffff;
+  font-size: 42px;
+  margin: 24px 0;
 }
 
 .question {
-    color: #ffffff;
-    font-size: 27px;
-    margin: 32px 0 8px 0;
-    font-weight: 600;
+  color: #ffffff;
+  font-size: 27px;
+  margin: 32px 0 8px 0;
+  font-weight: 600;
 }
 
 .answer {
-    color: #ffffff;
-    opacity: .87;
-    font-size: 17px;
+  color: #ffffff;
+  opacity: .87;
+  font-size: 17px;
 }
   
   .info {
-    color: #ffffff;
-    font-size: 20px;
-    opacity: .87;
-    max-width: 740px;
+  color: #ffffff;
+  font-size: 20px;
+  opacity: .87;
+  max-width: 740px;
   }
   
-  #signup {
-    margin: 48px 0;
-    background-color: #46abb7;
-    height: 200px;
-    padding: 12px;
-    box-sizing: border-box;
-    border-radius: 8px;
-    color: #ffffff;
-    display: flex;
-    align-items: center;
-    margin: auto;
-    flex: 1;
-    max-width: 600px;
-  }
+#signup {
+  background-color: #ffffff;
+  padding: 24px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  color: #054d8a;
+  display: flex;
+  align-items: center;
+  margin: auto;
+  flex: 1;
+  max-width: 600px;
+}
+  
+#signupcol {
+  display: flex;
+  flex-direction: column;
+  flex: 2;
+}
 
+#shhh {
+  margin-top: 18px;
+  text-align: center;
+  opacity: .87;
+}
+  
+.border {
+  width: 100vw;
+  background: url(/assets/border.png) repeat-x;
+  height: 8px;
+  margin-top: 48px;
+  background-size: contain;
+}
 
-#signupE {
-    height: 48px;
-    border-radius: 4px;
-    outline: none;
-    margin: 12px 0;
-    border: none;
-    font-size: 18px;
-    padding: 0 12px;
-    color: #666666;
-    border: 1px solid #054d8a;
-  }
-  
-  #signupcol {
-    display: flex;
-    flex-direction: column;
-    flex: 2;
-  }
-  
-  #imgcont {
-    flex: 1;
-  }
-  
-  #signupchimp {
-    height: 200px;
-  }
-  
-  #shhh {
-    margin-top: 18px;
-    text-align: center;
-    opacity: .87;
-  }
-  
-  .border {
-    width: 100vw;
-    background: url(/assets/border.png) repeat-x;
-    height: 8px;
-    margin-top: 48px;
-    background-size: contain;
-  }
-
-  .images {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    margin-right: 40px;
-    margin-top: 24px;
+.images {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-right: 40px;
+  margin-top: 24px;
 }
 
 .mobile-link {
-    height: 45px;
-    margin: 0 6px;
+  height: 45px;
+  margin: 0 6px;
 }
 
-  .spacer {
-      height: 64px;
-  }
-  
-  .sub {
-    color: #ffffff;
-    font-size: 26px;
-    margin: 24px 0;
-    font-weight: 600;
-    max-width: 730px;
-  }
-  
-  #box {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 48px;
-    box-sizing: border-box;
-    justify-content: center;
-  }
-  
-  .card {
-    margin: 8px;
-  }
-  
-  .ci {
-    height: 200px;
-    object-fit: contain;
-  }
-  
-  .ct {
-    text-align: center;
-    color: #ffffff;
-    font-size: 20px;
-    font-weight: 700;
-  }
-  
-  .quote {
-    color: #ffffff;
-    font-size: 19px;
-  }
-  
-  .sig {
-    text-align: end;
-    color: #ffffff;
-    font-style: italic;
-  }
-  
-  .col {
-    flex: 2;
-  }
-  
-  #lady {
-    flex: 1;
-    object-fit: contain;
-    height: 400px;
-    margin-left: 24px;
-  }
-
-  .center {
-    font-size: 42px;
-    color: #ffffff;
-    font-weight: 600;
-    text-align: center;
-    margin-top: 48px;
-    margin-bottom: 8px;
+.spacer {
+  height: 64px;
 }
 
-.cinfo {
-    text-align: center;
-    color: #ffffff;
-    font-size: 21px;
-    opacity: .87;
-    margin-bottom: 24px;
-    margin: 0 12px;
+#box {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 48px;
+  box-sizing: border-box;
+  justify-content: center;
+}
+
+.card {
+  margin: 8px;
+}
+
+.ci {
+  height: 200px;
+  object-fit: contain;
+}
+
+.ct {
+  text-align: center;
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 700;
 }
 
 .check {
-    margin: 12px 0;
-    font-size: 18px;
-    color: #ffffff;
-    display: flex;
-    align-items: center;
+  margin: 12px 0;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
 }
 
 .cico {
-    width: 32px;
-    height: 32px;
-    font-size: 32px;
-    margin-right: 12px;
-    font-weight: bold;
+  width: 32px;
+  height: 32px;
+  font-size: 32px;
+  margin-right: 12px;
+  font-weight: bold;
 }
 
 .ctext {
-    max-width: 500px;
-    opacity: .87;
+  max-width: 500px;
+  opacity: .87;
 }
-
-.suinfo {
-    font-size: 15px;
-    color: #ffffff;
-    opacity: .87;
-    text-align: justify;
+  
+@media screen and (max-width: 500px) {
+  .p {
     padding: 8px;
-    max-width: 600px;
-}
-  
-  @media screen and (max-width: 500px) {
-    .p {
-      padding: 8px;
-    }
-    .h {
-        flex-direction: column;
-    }
-    .col {
-        margin-bottom: 24px;
-    }
-    #signup {
-      max-width: calc(100vw - 16px);
-    }
-    .pt {
-      font-size: 28px;
-      text-align: center;
-      padding-top: 24px;
-    }
-    .center {
-        font-size: 28px;
-    }
-    .spacer {
-        height: 24px;
-    }
-    .info {
-      font-size: 15px;
-      text-align: center;
-    }
-    #imgcont {
-      display: none;
-    }
-  
-    .hide {
-      display: none;
-    }
-  
-    #shhh {
-      font-size: 12px;
-    }
-  
-    .sub {
-      font-size: 21px;
-      text-align: center;
-    }
-  
-    .quote {
-      font-size: 15px;
-      padding: 12px;
-    }
   }
+  .h {
+      flex-direction: column;
+  }
+  .col {
+      margin-bottom: 24px;
+  }
+  #signup {
+    max-width: calc(100vw - 16px);
+  }
+  .pt {
+    font-size: 28px;
+    line-height: 28px;
+    text-align: center;
+    padding-top: 24px;
+  }
+  .center {
+      font-size: 28px;
+  }
+  .spacer {
+      height: 24px;
+  }
+  .info {
+    font-size: 15px;
+    text-align: center;
+  }
+  #imgcont {
+    display: none;
+  }
+
+  .hide {
+    display: none;
+  }
+
+  #shhh {
+    font-size: 12px;
+  }
+
+  .sub {
+    font-size: 21px;
+    text-align: center;
+  }
+
+  .quote {
+    font-size: 15px;
+    padding: 12px;
+  }
+}

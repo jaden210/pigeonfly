@@ -81,6 +81,7 @@ textarea {
     }
     .pt {
       font-size: 28px;
+      line-height: 28px;
       text-align: center;
       padding-top: 24px;
     }
@@ -90,5 +91,6 @@ textarea {
     }
     #box {
         width: calc(100vw - 42px);
+        padding: 12px;
     }
 }

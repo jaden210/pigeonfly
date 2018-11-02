@@ -1,65 +1,68 @@
-
 <div class="window">
-
-  <div *ngIf="!appService.isUser" class="p">
-    <span class="title">Start for Free</span>
-    <div class="info">Use Minute for 30 days on us. If you don't love it, don't keep it. We won't even ask for a credit card
-      until your 30 day trial is up. And there's no contract, ever. We're entirely confident you'll love Minute and the value
-      it brings to your team.
+  <div id="layout">
+    <div *ngIf="!appService.isUser" class="p">
+      <span class="title">Start for Free</span>
+      <div class="info">No credit card required unless you choose to keep Compliancechimp beyond your 30 day free trial.
+      </div>
+      <div class="check"><mat-icon class="cico">check</mat-icon><div class="ctext">Safety training</div></div>
+      <div class="check"><mat-icon class="cico">check</mat-icon><div class="ctext">Self-inspection</div></div>
+      <div class="check"><mat-icon class="cico">check</mat-icon><div class="ctext">Injury reporting</div></div>
+      <div class="check"><mat-icon class="cico">check</mat-icon><div class="ctext">Worksite logs</div></div>
+      <div class="check"><mat-icon class="cico">check</mat-icon><div class="ctext">Time clock</div></div>
+      <div class="check"><mat-icon class="cico">check</mat-icon><div class="ctext">Record-keeping and events tracking</div></div>
+      <div class="check"><mat-icon class="cico">check</mat-icon><div class="ctext">Stored in one simple place, forever</div></div>
     </div>
-    <div class="check"><mat-icon class="cico">check</mat-icon><div class="ctext">Safety training</div></div>
-    <div class="check"><mat-icon class="cico">check</mat-icon><div class="ctext">Self-inspection</div></div>
-    <div class="check"><mat-icon class="cico">check</mat-icon><div class="ctext">Injury reporting</div></div>
-    <div class="check"><mat-icon class="cico">check</mat-icon><div class="ctext">Worksite logs</div></div>
-    <div class="check"><mat-icon class="cico">check</mat-icon><div class="ctext">Time clock</div></div>
-    <div class="check"><mat-icon class="cico">check</mat-icon><div class="ctext">Record-keeping and events tracking</div></div>
-    <div class="check"><mat-icon class="cico">check</mat-icon><div class="ctext">Stored in one simple place, forever</div></div>
- 
-  </div>
-  <div *ngIf="appService.isUser" id="spacer"></div>
-  <div class="card"  *ngIf="bSignUp">
-    <img id="header" src="/assets/ccLogoDark.png">
-    <div class="error">{{loginErrorStr}}</div>
-    <div id="form">
-      <mat-form-field>
-        <input matInput type="email" required placeholder="email" [(ngModel)]="login.email">
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput type="password" required placeholder="password" [(ngModel)]="login.password">
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput type="password" required placeholder="verify password" [(ngModel)]="login.password2">
-      </mat-form-field>
-    </div>
-    <div class="row">
-      <span id="account">Already have an account?</span><span (click)="isUser()" id="sign-in">Log in</span>
-      <button mat-raised-button *ngIf="!appService.isUser" color="accent" style="color: white" (click)="createAccount(true)">CREATE ACCOUNT</button>
-    </div>
-  </div>
-  <div class="card"  *ngIf="!bSignUp">
-    <img id="header" src="/assets/ccLogoDark.png">
-    <div class="error">{{loginErrorStr}}</div>
-    <div id="form">
-      <div class="helper-text" *ngIf="!isVerified && bSetPassword">Hey {{login.name}}. Welcome to minute! set a password and you'll be on your way.</div>
-      <div class="helper-text" *ngIf="isVerified">Welcome back! Enter your password and login</div>
-      <mat-form-field *ngIf="!isVerified && !bSetPassword">
-        <input matInput type="email" placeholder="email" [(ngModel)]="login.email">
-      </mat-form-field>
-      <mat-form-field *ngIf="!isVerified && bSetPassword">
-        <input matInput type="password" placeholder="password" [(ngModel)]="login.password">
-      </mat-form-field>
-      <mat-form-field *ngIf="!isVerified && bSetPassword">
-        <input matInput type="password" placeholder="password" [(ngModel)]="login.password2">
-      </mat-form-field>
-      <mat-form-field *ngIf="isVerified">
-        <input matInput type="password" placeholder="password" [(ngModel)]="login.password">
-      </mat-form-field>
-    </div>
-    <div class="row">
-      <span id="account">Here to start a new team?</span><span (click)="setSignUp()" id="sign-in">Sign up</span>
-      <button mat-raised-button *ngIf="!isVerified && !bSetPassword" color="accent" style="color: white" (click)="checkEmail()">NEXT</button>
-      <button mat-raised-button *ngIf="isVerified" color="accent" style="color: white" (click)="signInEmail()">LOG IN</button>
-      <button mat-raised-button *ngIf="!isVerified && bSetPassword" color="accent" style="color: white" (click)="joinTeam()">JOIN TEAM</button>
+    <div *ngIf="appService.isUser" id="spacer"></div>
+    <div id="side">
+      <div class="card"  *ngIf="bSignUp">
+        <img id="header" src="/assets/ccLogoDark.png">
+        <div class="error">{{loginErrorStr}}</div>
+        <div id="form">
+          <mat-form-field>
+            <input matInput type="email" required placeholder="email" [(ngModel)]="login.email">
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput type="password" required placeholder="password" [(ngModel)]="login.password">
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput type="password" required placeholder="verify password" [(ngModel)]="login.password2">
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <span id="account" class="hide">Already have an account?</span><span (click)="isUser()" id="sign-in">Log in</span>
+          <button mat-raised-button *ngIf="!appService.isUser" color="accent" style="color: white" (click)="createAccount(true)">CREATE ACCOUNT</button>
+        </div>
+      </div>
+      <div class="card"  *ngIf="!bSignUp">
+        <img id="header" src="/assets/ccLogoDark.png">
+        <div class="error">{{loginErrorStr}}</div>
+        <div id="form">
+          <div class="helper-text" *ngIf="!isVerified && bSetPassword">Hey {{login.name}}. Welcome to minute! set a password and you'll be on your way.</div>
+          <div class="helper-text" *ngIf="isVerified">Welcome back! Enter your password and login</div>
+          <mat-form-field *ngIf="!isVerified && !bSetPassword">
+            <input matInput type="email" placeholder="email" [(ngModel)]="login.email">
+          </mat-form-field>
+          <mat-form-field *ngIf="!isVerified && bSetPassword">
+            <input matInput type="password" placeholder="password" [(ngModel)]="login.password">
+          </mat-form-field>
+          <mat-form-field *ngIf="!isVerified && bSetPassword">
+            <input matInput type="password" placeholder="password" [(ngModel)]="login.password2">
+          </mat-form-field>
+          <mat-form-field *ngIf="isVerified">
+            <input matInput type="password" placeholder="password" [(ngModel)]="login.password">
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <span id="account" class="hide">Here to start a new team?</span><span (click)="setSignUp()" id="sign-in">Sign up</span>
+          <button mat-raised-button *ngIf="!isVerified && !bSetPassword" color="accent" style="color: white" (click)="checkEmail()">NEXT</button>
+          <button mat-raised-button *ngIf="isVerified" color="accent" style="color: white" (click)="signInEmail()">LOG IN</button>
+          <button mat-raised-button *ngIf="!isVerified && bSetPassword" color="accent" style="color: white" (click)="joinTeam()">JOIN TEAM</button>
+        </div>
+      </div>
+      <div class="card lock">
+        <mat-icon id="lock">lock</mat-icon>
+        <div id="secure">We secure your login information using <b>Google's highest standart oAuth 2.0</b> and secure your data in the cloud using Cloud Firestore</div>
+      </div>
     </div>
   </div>
 </div>

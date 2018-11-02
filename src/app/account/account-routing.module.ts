@@ -10,6 +10,7 @@ import { TimeComponent } from "./time/time.component";
 import { IncidentReportsComponent } from "./incident-reports/incident-reports.component";
 import { EventComponent } from "./event/event.component";
 import { TrainingComponent } from "./training/training.component";
+import { WelcomeComponent } from "./welcome/welcome.component";
 
 const routes: Routes = [
   {
@@ -25,6 +26,7 @@ const routes: Routes = [
       { path: "time", component: TimeComponent },
       { path: "event", component: EventComponent },
       { path: "incident-reports", component: IncidentReportsComponent },
+      { path: "welcome", component: WelcomeComponent },
       {
         path: "training",
         loadChildren: "./training/training.module#TrainingModule"

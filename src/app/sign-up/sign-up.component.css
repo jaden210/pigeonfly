@@ -64,6 +64,7 @@ img {
 
   #box {
     flex-direction: column-reverse;
+    margin-bottom: 60px;
   }
 
   #info {
