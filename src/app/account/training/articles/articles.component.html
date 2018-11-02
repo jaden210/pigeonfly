@@ -1,0 +1,14 @@
+<mat-nav-list>
+  <mat-list-item *ngFor="let article of articles | async" (click)="routeTo(article)">
+    <progress-shield *ngIf="article.favorited" [complianceLevel]="article.myContent?.complianceLevel"></progress-shield>
+    <button mat-icon-button class="heart" color="warn" (click)="favorite(article); $event.stopPropagation()">
+      <mat-icon matListIcon [ngStyle]="{'color': article.favorited ? '#E91E63' : '#757575'}">
+        {{article.favorited ? 'favorite' : 'favorite_border'}}
+      </mat-icon>
+    </button>
+    <a matLine>{{article.name}}</a>
+  </mat-list-item>
+</mat-nav-list>
+<button mat-stroked-button color="primary" id="create-btn" (click)="createArticle()">
+  CREATE ARTICLE
+</button>

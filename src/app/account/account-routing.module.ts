@@ -25,7 +25,10 @@ const routes: Routes = [
       { path: "time", component: TimeComponent },
       { path: "event", component: EventComponent },
       { path: "incident-reports", component: IncidentReportsComponent },
-      { path: "training", component: TrainingComponent }
+      {
+        path: "training",
+        loadChildren: "./training/training.module#TrainingModule"
+      }
     ]
   }
 ];

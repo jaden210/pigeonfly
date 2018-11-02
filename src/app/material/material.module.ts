@@ -24,7 +24,9 @@ import {
   MatExpansionModule,
   MatMenuModule,
   MatProgressBarModule,
-  MatTreeModule
+  MatTreeModule,
+  MatProgressSpinnerModule,
+  MatChipsModule
 } from "@angular/material";
 
 @NgModule({
@@ -53,7 +55,9 @@ import {
     MatCheckboxModule,
     MatMenuModule,
     MatProgressBarModule,
-    MatTreeModule
+    MatProgressSpinnerModule,
+    MatTreeModule,
+    MatChipsModule
   ],
   exports: [
     MatButtonModule,
@@ -79,7 +83,9 @@ import {
     MatCheckboxModule,
     MatMenuModule,
     MatProgressBarModule,
-    MatTreeModule
+    MatTreeModule,
+    MatProgressSpinnerModule,
+    MatChipsModule
   ],
   declarations: []
 })

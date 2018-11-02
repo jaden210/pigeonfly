@@ -1,0 +1,8 @@
+.mat-list-avatar {
+  border-radius: 2px !important;
+  object-fit: cover;
+}
+
+#create-btn {
+  margin: 24px 32px;
+}

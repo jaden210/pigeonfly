@@ -1,6 +1,8 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
+import { SharedModule } from "./shared-module";
+
 import { NgModule } from "@angular/core";
 import { AngularFireModule } from "angularfire2";
 import { AngularFirestoreModule } from "angularfire2/firestore";
@@ -57,7 +59,8 @@ import { HowComponent } from "./how/how.component";
     AngularFirestoreModule,
     FormsModule,
     AngularEditorModule,
-    HttpClientModule
+    HttpClientModule,
+    SharedModule.forRoot()
   ],
   entryComponents: [PreviewDialogComponent, TopicDialogComponent],
   providers: [],

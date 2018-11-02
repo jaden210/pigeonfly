@@ -12,7 +12,11 @@ import { LogComponent, CreateEditLogDialog } from "./log/log.component";
 import { AssesmentComponent } from "./assesment/assesment.component";
 import { AccountRoutingModule } from "./account-routing.module";
 import { MaterialModule } from "../material/material.module";
-import { AccountComponent, TeamSelectDialog, WelcomeDialog } from "./account.component";
+import {
+  AccountComponent,
+  TeamSelectDialog,
+  WelcomeDialog
+} from "./account.component";
 import { FormsModule } from "@angular/forms";
 import { AgmCoreModule } from "@agm/core";
 import { MomentModule } from "angular2-moment";
@@ -22,11 +26,11 @@ import { DatePipe } from "@angular/common";
 import { IncidentReportsComponent } from "./incident-reports/incident-reports.component";
 import { EventComponent } from "./event/event.component";
 import { EventSearchPipe } from "./event/search.pipe";
-import { ToolbarHelperComponent } from "./toolbar-helper/toolbar-helper.component";
 import { NoAccessDialog } from "./account.service";
 import { ImagesDialogComponent } from "./images-dialog/images-dialog.component";
 import { SurveySearchPipe } from "./survey/search.pipe";
-import { TrainingComponent } from "./training/training.component";
+import { TrainingModule } from "./training/training.module";
+import { SharedModule } from "../shared-module";
 
 @NgModule({
   imports: [
@@ -35,6 +39,8 @@ import { TrainingComponent } from "./training/training.component";
     MaterialModule,
     FormsModule,
     MomentModule,
+    TrainingModule,
+    SharedModule,
     AgmCoreModule.forRoot({
       apiKey: "AIzaSyCg1x6Pm29QsCbzSb0Astep5D4_-KEXlSk",
       libraries: ["places"]
@@ -58,14 +64,12 @@ import { TrainingComponent } from "./training/training.component";
     SurveySearchPipe,
     MapDialogComponent,
     IncidentReportsComponent,
-    ToolbarHelperComponent,
     ImagesDialogComponent,
     CreateEditLogDialog,
     CreateEditTimeDialog,
-    TrainingComponent,
     WelcomeDialog
   ],
-  exports: [MaterialModule],
+  exports: [MaterialModule, TrainingModule],
   entryComponents: [
     InviteDialog,
     MapDialogComponent,

@@ -269,22 +269,29 @@ export class MakeOSHAComponent implements OnInit {
 
   migrate() {
     this.appService.db
-      .doc(`osha-manual-en/8N0B0ZNxGqecJlk7ZX9T`)
+      .doc(`${this.oshaManual}/ijIMGXUQGNkfxOzptzey`)
       .collection("topics")
       .snapshotChanges()
       .pipe(
         map((actions: any[]) =>
           actions.map(a => {
-            const data = a.payload.doc.data();
+            let data = a.payload.doc.data();
+            const industryIds = ["ijIMGXUQGNkfxOzptzey"];
+            const id = a.payload.doc.id;
             const isGlobal = true;
-            const industryIds = ["8N0B0ZNxGqecJlk7ZX9T"];
-            return { ...data, isGlobal, industryIds };
+            return { ...data, industryIds, id, isGlobal };
           })
         )
       )
       .subscribe(articles => {
         articles.forEach(article => {
-          this.appService.db.collection(`topics`).add(article);
+          let id = article.id;
+          delete article.id;
+          // this.appService.db.collection(`topic`).add(article);
+          this.db
+            .collection("topic")
+            .doc(id)
+            .set(article);
         });
       });
   }

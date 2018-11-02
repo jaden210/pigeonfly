@@ -1,4 +1,4 @@
-.window {
+/* .window {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
@@ -146,4 +146,9 @@
 }
 .four .circle {
     background-color: #4fc3f7;
+} */
+h1 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 24px;
 }
