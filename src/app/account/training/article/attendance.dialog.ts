@@ -6,11 +6,8 @@ import { AccountService } from "../../account.service";
 
 @Component({
   template: `
-    <h1 mat-dialog-title>Add Trainees</h1>
+    <h1 mat-dialog-title>Who's in Attendance?</h1>
     <div mat-dialog-content>
-        <p style="margin-top: 0; color: #757575">
-          Add users from your team who should receive training on this article.
-        </p>
         <mat-selection-list dense [(ngModel)]="trainees" style="outline: none;">
             <mat-list-option *ngFor="let user of users | async" [value]="user.uid">
                 <img matListAvatar [src]="user.profileUrl" onerror="src='/assets/face.png'">
@@ -20,17 +17,17 @@ import { AccountService } from "../../account.service";
     </div>
     <div mat-dialog-actions align="end">
         <button mat-button mat-dialog-close>CANCEL</button>
-        <button mat-button (click)="save()" color="primary">SAVE</button>
+        <button mat-button (click)="save()" color="primary">START TRAINING</button>
     </div>
     `
 })
-export class AddTraineeDialog {
+export class AttendanceDialog {
   users: BehaviorSubject<User[]>;
   trainees: string[] = [];
 
   constructor(
     private accountService: AccountService,
-    public dialogRef: MatDialogRef<AddTraineeDialog>,
+    public dialogRef: MatDialogRef<AttendanceDialog>,
     @Inject(MAT_DIALOG_DATA) public data
   ) {
     this.users = this.accountService.teamUsersObservable;

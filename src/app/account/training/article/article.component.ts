@@ -16,12 +16,17 @@ import {
 import { Subscription, BehaviorSubject, Observable, forkJoin } from "rxjs";
 import { AccountService, User } from "../../account.service";
 import { AddTraineeDialog } from "./add-trainee.dialog";
+import { AttendanceDialog } from "./attendance.dialog";
 import { tap } from "rxjs/operators";
+import { SurveyService } from "../../survey/survey.service";
+import { Survey } from "../../survey/survey";
+import { UserHistoryDialog } from "./user-history.dialog";
 
 @Component({
   selector: "app-article",
   templateUrl: "./article.component.html",
-  styleUrls: ["./article.component.css"]
+  styleUrls: ["./article.component.css"],
+  providers: [SurveyService]
 })
 export class ArticleComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
@@ -40,7 +45,8 @@ export class ArticleComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private route: ActivatedRoute,
     private service: TrainingService,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private surveyService: SurveyService
   ) {}
 
   ngOnInit() {
@@ -154,7 +160,51 @@ export class ArticleComponent implements OnInit, OnDestroy {
     });
   }
 
-  public viewHistory(): void {}
+  public viewHistory(trainee): void {
+    this.dialog.open(UserHistoryDialog, {
+      data: {
+        user: this.accountService.teamUsers.find(user => user.uid == trainee),
+        teamId: this.teamId,
+        articleId: this.article.id
+      }
+    });
+  }
+
+  public startTraining(): void {
+    let trainees = this.article.myContent.trainees || {};
+    let dialogRef = this.dialog.open(AttendanceDialog, {
+      data: trainees
+    });
+    dialogRef.afterClosed().subscribe((traineeIds: string[]) => {
+      if (traineeIds) {
+        let userSurvey = {};
+        traineeIds.forEach(id => {
+          userSurvey[id] = 0;
+        });
+        let survey = new Survey();
+        survey.createdAt = new Date();
+        survey.runType = "once";
+        survey.category = "OSHA Training";
+        survey.title = `Did you participate in this training? -- ${
+          this.article.name
+        }`;
+        survey.active = true;
+        survey.OSHAArticleId = this.article.id;
+        survey.teamId = this.teamId;
+        survey.userSurvey = userSurvey;
+        this.surveyService.createSurvey(survey).then(data => {
+          const surveyId = data.id;
+          this.accountService.createEvent(
+            "Safety Training",
+            surveyId,
+            this.accountService.user.uid,
+            this.article.name,
+            this.teamId
+          );
+        });
+      }
+    });
+  }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();

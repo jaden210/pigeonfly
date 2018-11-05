@@ -20,8 +20,10 @@ mat-chip {
   align-items: center;
   padding-right: 14px;
   background: white;
-  border: 1px solid #0e86e8;
-  color: #0e86e8;
+  -webkit-box-shadow: inset 0px 0px 0px 1px #004b8c;
+  -moz-box-shadow: inset 0px 0px 0px 1px #004b8c;
+  box-shadow: inset 0px 0px 0px 1px #004b8c;
+  color: #004b8c;
 }
 
 #add-trainee-chip mat-icon {

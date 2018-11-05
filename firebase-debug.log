@@ -1,0 +1,386 @@
+[debug] [2018-11-05T23:12:08.444Z] ----------------------------------------------------------------------
+[debug] [2018-11-05T23:12:08.447Z] Command:       /usr/local/bin/node /usr/local/bin/firebase deploy
+[debug] [2018-11-05T23:12:08.447Z] CLI Version:   3.18.6
+[debug] [2018-11-05T23:12:08.447Z] Platform:      darwin
+[debug] [2018-11-05T23:12:08.447Z] Node Version:  v10.6.0
+[debug] [2018-11-05T23:12:08.448Z] Time:          Mon Nov 05 2018 16:12:08 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:08.448Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-11-05T23:12:08.464Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-11-05T23:12:08.464Z] > authorizing via signed-in user
+[debug] [2018-11-05T23:12:08.466Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-11-05T23:12:08.466Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ { refresh_token:
+   '1/Ss_UbD6YLewbKz4-F8ZALWl5H8VgPUtsiCs27gQ8304FTbtiHZ5WxAiC_MyaST0s',
+  client_id:
+   '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
+  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
+  grant_type: 'refresh_token',
+  scope:
+   'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
+ Mon Nov 05 2018 16:12:08 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:08.845Z] <<< HTTP RESPONSE 200
+[debug] [2018-11-05T23:12:08.861Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/teamlog-2d74c  
+  
+ Mon Nov 05 2018 16:12:08 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:09.311Z] <<< HTTP RESPONSE 200
+[debug] [2018-11-05T23:12:09.312Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/teamlog-2d74c/tokens  
+  
+ Mon Nov 05 2018 16:12:09 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:09.644Z] <<< HTTP RESPONSE 200
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions.
+ Please upgrade using npm install --save firebase-functions@latest in your functions directory.
+[info] 
+[info] === Deploying to 'teamlog-2d74c'...
+[info] 
+[info] i  deploying storage, firestore, functions, hosting
+[debug] [2018-11-05T23:12:12.007Z] >>> HTTP REQUEST GET https://appengine.googleapis.com/v1/apps/teamlog-2d74c  
+  
+ Mon Nov 05 2018 16:12:12 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:12.795Z] <<< HTTP RESPONSE 200
+[info] i  storage: checking storage.rules for compilation errors...
+[debug] [2018-11-05T23:12:12.797Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/teamlog-2d74c:test  
+ { source: { files: [ [Object] ] } } 
+ Mon Nov 05 2018 16:12:12 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:13.611Z] <<< HTTP RESPONSE 200
+[info] ✔  storage: rules file storage.rules compiled successfully
+[info] i  firestore: checking firestore.rules for compilation errors...
+[debug] [2018-11-05T23:12:13.616Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/teamlog-2d74c:test  
+ { source: { files: [ [Object] ] } } 
+ Mon Nov 05 2018 16:12:13 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:14.225Z] <<< HTTP RESPONSE 200
+[info] ✔  firestore: rules file firestore.rules compiled successfully
+[debug] [2018-11-05T23:12:14.227Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "build": "tsc",
+    "serve": "npm run build && firebase serve --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "firebase-admin": "~5.12.1",
+    "firebase-functions": "^1.0.3",
+    "nodemailer": "^4.6.7"
+  },
+  "devDependencies": {
+    "typescript": "^2.5.3"
+  },
+  "private": true
+}
+[info] i  functions: ensuring necessary APIs are enabled...
+[debug] [2018-11-05T23:12:14.228Z] >>> HTTP REQUEST GET https://servicemanagement.googleapis.com/v1/services/cloudfunctions.googleapis.com/projectSettings/teamlog-2d74c?view=CONSUMER_VIEW  
+  
+ Mon Nov 05 2018 16:12:14 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:14.228Z] >>> HTTP REQUEST GET https://servicemanagement.googleapis.com/v1/services/runtimeconfig.googleapis.com/projectSettings/teamlog-2d74c?view=CONSUMER_VIEW  
+  
+ Mon Nov 05 2018 16:12:14 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:15.212Z] <<< HTTP RESPONSE 200
+[debug] [2018-11-05T23:12:15.351Z] <<< HTTP RESPONSE 200
+[info] ✔  functions: all necessary APIs are enabled
+[debug] [2018-11-05T23:12:15.351Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/teamlog-2d74c  
+  
+ Mon Nov 05 2018 16:12:15 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:16.067Z] <<< HTTP RESPONSE 200
+[debug] [2018-11-05T23:12:16.067Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/800172058622:getServerAppConfig  
+  
+ Mon Nov 05 2018 16:12:16 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:16.437Z] <<< HTTP RESPONSE 200
+[info] i  storage: uploading rules storage.rules...
+[debug] [2018-11-05T23:12:16.440Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/teamlog-2d74c/rulesets  
+ { source: { files: [ [Object] ] } } 
+ Mon Nov 05 2018 16:12:16 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:17.073Z] <<< HTTP RESPONSE 200
+[debug] [2018-11-05T23:12:17.073Z] [rules] created ruleset projects/teamlog-2d74c/rulesets/4011e1b2-81e9-4ad9-805e-943c3a6b3372
+[info] i  firestore: uploading rules firestore.rules...
+[debug] [2018-11-05T23:12:17.074Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/teamlog-2d74c/rulesets  
+ { source: { files: [ [Object] ] } } 
+ Mon Nov 05 2018 16:12:17 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:17.075Z] >>> HTTP REQUEST GET https://firestore.googleapis.com/v1beta1/projects/teamlog-2d74c/databases/(default)/indexes  
+  
+ Mon Nov 05 2018 16:12:17 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:17.615Z] <<< HTTP RESPONSE 200
+[info] 
+[info] NOTE: The following indexes are already deployed but not present in the specified indexes file:
+[info] [READY] (timeclock) -- (teamId,ASCENDING) (clockOut,DESCENDING) 
+[info] [READY] (timeclock) -- (teamId,ASCENDING) (clockOut,ASCENDING) 
+[info] [READY] (event) -- (teamId,ASCENDING) (createdAt,DESCENDING) 
+[info] [READY] (timeclock) -- (userId,ASCENDING) (clockOut,ASCENDING) 
+[info] [READY] (survey) -- (teamId,ASCENDING) (OSHAArticleId,ASCENDING) 
+[info] [READY] (timeclock) -- (userId,ASCENDING) (clockIn,DESCENDING) 
+[info] [READY] (incident-report) -- (teamId,ASCENDING) (createdAt,DESCENDING) 
+[info] [READY] (survey) -- (teamId,ASCENDING) (createdAt,DESCENDING) 
+[info] [READY] (log) -- (teamId,ASCENDING) (createdAt,DESCENDING) 
+[info] [READY] (survey) -- (teamId,ASCENDING) (expiresAt,ASCENDING) 
+[info] [READY] (survey) -- (OSHAArticleId,ASCENDING) (teamId,ASCENDING) (userSurvey.ph7BwCH9GtNmcy4L3wZAqF81kx83,ASCENDING) (createdAt,DESCENDING) 
+[info] [READY] (assesment) -- (teamId,ASCENDING) (createdAt,DESCENDING) 
+[info] [READY] (timeclock) -- (teamId,ASCENDING) (clockIn,DESCENDING) 
+[info] [READY] (survey) -- (OSHAArticleId,ASCENDING) (teamId,ASCENDING) (userSurvey.gqbN9YkYR9bbRUZrAHM6MovPFZl2,ASCENDING) (createdAt,DESCENDING) 
+[info] [READY] (survey) -- (inAttendance,ARRAY_CONTAINS) (OSHAArticleId,ASCENDING) (createdAt,DESCENDING) 
+[info] 
+[debug] [2018-11-05T23:12:17.623Z] <<< HTTP RESPONSE 200
+[debug] [2018-11-05T23:12:17.623Z] [rules] created ruleset projects/teamlog-2d74c/rulesets/63a04a79-7f82-4c92-a73d-0b32cd95b5e0
+[info] i  functions: preparing functions directory for uploading...
+[debug] [2018-11-05T23:12:17.625Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/teamlog-2d74c/configs  
+  
+ Mon Nov 05 2018 16:12:17 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:18.545Z] <<< HTTP RESPONSE 200
+[info] i  functions: packaged functions (42.85 KB) for uploading
+[debug] [2018-11-05T23:12:18.733Z] >>> HTTP REQUEST POST https://cloudfunctions.googleapis.com/v1/projects/teamlog-2d74c/locations/us-central1/functions:generateUploadUrl  
+  
+ Mon Nov 05 2018 16:12:18 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:19.888Z] <<< HTTP RESPONSE 200
+[debug] [2018-11-05T23:12:19.888Z] >>> HTTP REQUEST PUT https://storage.googleapis.com/gcf-upload-us-central1-bd8022c6-80d9-4599-b1df-9fb57450220f/47c4122e-f9f0-4066-8b07-a06c91d8f651.zip?GoogleAccessId=service-800172058622@gcf-admin-robot.iam.gserviceaccount.com&Expires=1541461339&Signature=ED8ptJPT06bRlXtZImFloolqCmmOXv%2FZyZpdgocvOk8OtGGFnTjYei2Wyg5RugZACxqMIPNByVcTyW8XuB9Av29ByY9Ln3dr4dMBfB3cGKcech9dC5mjdHrST3avVcjWXRGiu2J0GpEp3QBhbOYdmyV9XpsKadiYbuEALk9vKpQ4PopCePkJrpC7A%2FumDIMvKTx59qRaYDMsUt9%2FRH8kLCusvkXMBZwUljYknt%2Bt%2FeNmfCkgSSP7hmTdNa6kGP50KlUBrBxkk%2Bf%2FvAx178msOiKuNyZ3TTk5Ik%2FXy3Wm4dmgn7dXgODjltEKF4bAMusA9%2Bxns4a3frAS%2FAXOA4Sz8w%3D%3D  
+ ReadStream {
+  _readableState:
+   ReadableState {
+     objectMode: false,
+     highWaterMark: 65536,
+     buffer: BufferList { length: 1 },
+     length: 43883,
+     pipes: null,
+     pipesCount: 0,
+     flowing: null,
+     ended: true,
+     endEmitted: false,
+     reading: false,
+     sync: false,
+     needReadable: false,
+     emittedReadable: true,
+     readableListening: false,
+     resumeScheduled: false,
+     emitClose: false,
+     destroyed: false,
+     defaultEncoding: 'utf8',
+     awaitDrain: 0,
+     readingMore: false,
+     decoder: null,
+     encoding: null },
+  readable: true,
+  domain: null,
+  _events: { end: [Function] },
+  _eventsCount: 1,
+  _maxListeners: undefined,
+  path:
+   '/var/folders/st/m7tqpms125jghb254qq0xtpm0000gn/T/firebase-functions-19001N4HZ6Mu5C49x.zip',
+  fd: 19,
+  flags: 'r',
+  mode: 438,
+  start: undefined,
+  end: Infinity,
+  autoClose: true,
+  pos: undefined,
+  bytesRead: 43883,
+  closed: false } 
+ Mon Nov 05 2018 16:12:19 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:22.049Z] <<< HTTP RESPONSE 200
+[info] ✔  functions: functions folder uploaded successfully
+[info] i  hosting: preparing dist directory for upload...
+[debug] [2018-11-05T23:12:22.774Z] >>> HTTP REQUEST PUT https://deploy.firebase.com/v1/hosting/teamlog-2d74c/uploads/-LQa8Tc3HAlWzXt54zek?fileCount=59&message=  
+  
+ Mon Nov 05 2018 16:12:22 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:29.465Z] <<< HTTP RESPONSE 410
+[debug] [2018-11-05T23:12:29.466Z] <<< HTTP RESPONSE BODY undefined
+[debug] [2018-11-05T23:12:29.467Z] TypeError: Cannot read property 'error' of undefined
+    at module.exports (/usr/local/lib/node_modules/firebase-tools/lib/responseToError.js:10:13)
+    at Request._callback (/usr/local/lib/node_modules/firebase-tools/lib/api.js:47:25)
+    at Request.self.callback (/usr/local/lib/node_modules/firebase-tools/node_modules/request/request.js:185:22)
+    at Request.emit (events.js:182:13)
+    at Request.EventEmitter.emit (domain.js:442:20)
+    at Request.<anonymous> (/usr/local/lib/node_modules/firebase-tools/node_modules/request/request.js:1157:10)
+    at Request.emit (events.js:182:13)
+    at Request.EventEmitter.emit (domain.js:442:20)
+    at IncomingMessage.<anonymous> (/usr/local/lib/node_modules/firebase-tools/node_modules/request/request.js:1079:12)
+    at Object.onceWrapper (events.js:273:13)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2018-11-05T23:12:49.075Z] ----------------------------------------------------------------------
+[debug] [2018-11-05T23:12:49.077Z] Command:       /usr/local/bin/node /usr/local/bin/firebase deploy
+[debug] [2018-11-05T23:12:49.077Z] CLI Version:   3.18.6
+[debug] [2018-11-05T23:12:49.077Z] Platform:      darwin
+[debug] [2018-11-05T23:12:49.077Z] Node Version:  v10.6.0
+[debug] [2018-11-05T23:12:49.077Z] Time:          Mon Nov 05 2018 16:12:49 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:49.077Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-11-05T23:12:49.087Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-11-05T23:12:49.087Z] > authorizing via signed-in user
+[debug] [2018-11-05T23:12:49.089Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/teamlog-2d74c  
+  
+ Mon Nov 05 2018 16:12:49 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:49.454Z] <<< HTTP RESPONSE 200
+[debug] [2018-11-05T23:12:49.455Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/teamlog-2d74c/tokens  
+  
+ Mon Nov 05 2018 16:12:49 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:49.751Z] <<< HTTP RESPONSE 200
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions.
+ Please upgrade using npm install --save firebase-functions@latest in your functions directory.
+[info] 
+[info] === Deploying to 'teamlog-2d74c'...
+[info] 
+[info] i  deploying storage, firestore, functions, hosting
+[debug] [2018-11-05T23:12:51.600Z] >>> HTTP REQUEST GET https://appengine.googleapis.com/v1/apps/teamlog-2d74c  
+  
+ Mon Nov 05 2018 16:12:51 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:52.318Z] <<< HTTP RESPONSE 200
+[info] i  storage: checking storage.rules for compilation errors...
+[debug] [2018-11-05T23:12:52.320Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/teamlog-2d74c:test  
+ { source: { files: [ [Object] ] } } 
+ Mon Nov 05 2018 16:12:52 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:52.911Z] <<< HTTP RESPONSE 200
+[info] ✔  storage: rules file storage.rules compiled successfully
+[info] i  firestore: checking firestore.rules for compilation errors...
+[debug] [2018-11-05T23:12:52.912Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/teamlog-2d74c:test  
+ { source: { files: [ [Object] ] } } 
+ Mon Nov 05 2018 16:12:52 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:53.549Z] <<< HTTP RESPONSE 200
+[info] ✔  firestore: rules file firestore.rules compiled successfully
+[debug] [2018-11-05T23:12:53.551Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "build": "tsc",
+    "serve": "npm run build && firebase serve --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "firebase-admin": "~5.12.1",
+    "firebase-functions": "^1.0.3",
+    "nodemailer": "^4.6.7"
+  },
+  "devDependencies": {
+    "typescript": "^2.5.3"
+  },
+  "private": true
+}
+[info] i  functions: ensuring necessary APIs are enabled...
+[debug] [2018-11-05T23:12:53.552Z] >>> HTTP REQUEST GET https://servicemanagement.googleapis.com/v1/services/cloudfunctions.googleapis.com/projectSettings/teamlog-2d74c?view=CONSUMER_VIEW  
+  
+ Mon Nov 05 2018 16:12:53 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:53.552Z] >>> HTTP REQUEST GET https://servicemanagement.googleapis.com/v1/services/runtimeconfig.googleapis.com/projectSettings/teamlog-2d74c?view=CONSUMER_VIEW  
+  
+ Mon Nov 05 2018 16:12:53 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:54.576Z] <<< HTTP RESPONSE 200
+[debug] [2018-11-05T23:12:54.638Z] <<< HTTP RESPONSE 200
+[info] ✔  functions: all necessary APIs are enabled
+[debug] [2018-11-05T23:12:54.639Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/teamlog-2d74c  
+  
+ Mon Nov 05 2018 16:12:54 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:55.187Z] <<< HTTP RESPONSE 200
+[debug] [2018-11-05T23:12:55.188Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/800172058622:getServerAppConfig  
+  
+ Mon Nov 05 2018 16:12:55 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:55.490Z] <<< HTTP RESPONSE 200
+[info] i  storage: uploading rules storage.rules...
+[debug] [2018-11-05T23:12:55.493Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/teamlog-2d74c/rulesets  
+ { source: { files: [ [Object] ] } } 
+ Mon Nov 05 2018 16:12:55 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:56.211Z] <<< HTTP RESPONSE 200
+[debug] [2018-11-05T23:12:56.211Z] [rules] created ruleset projects/teamlog-2d74c/rulesets/76f87c46-147f-4095-9ba7-5ff2538b90e4
+[info] i  firestore: uploading rules firestore.rules...
+[debug] [2018-11-05T23:12:56.212Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/teamlog-2d74c/rulesets  
+ { source: { files: [ [Object] ] } } 
+ Mon Nov 05 2018 16:12:56 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:56.213Z] >>> HTTP REQUEST GET https://firestore.googleapis.com/v1beta1/projects/teamlog-2d74c/databases/(default)/indexes  
+  
+ Mon Nov 05 2018 16:12:56 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:56.761Z] <<< HTTP RESPONSE 200
+[debug] [2018-11-05T23:12:56.761Z] [rules] created ruleset projects/teamlog-2d74c/rulesets/895f9d50-3c8b-40ec-8be5-e3f95f33bc95
+[debug] [2018-11-05T23:12:56.776Z] <<< HTTP RESPONSE 200
+[info] 
+[info] NOTE: The following indexes are already deployed but not present in the specified indexes file:
+[info] [READY] (timeclock) -- (teamId,ASCENDING) (clockOut,DESCENDING) 
+[info] [READY] (timeclock) -- (teamId,ASCENDING) (clockOut,ASCENDING) 
+[info] [READY] (event) -- (teamId,ASCENDING) (createdAt,DESCENDING) 
+[info] [READY] (timeclock) -- (userId,ASCENDING) (clockOut,ASCENDING) 
+[info] [READY] (survey) -- (teamId,ASCENDING) (OSHAArticleId,ASCENDING) 
+[info] [READY] (timeclock) -- (userId,ASCENDING) (clockIn,DESCENDING) 
+[info] [READY] (incident-report) -- (teamId,ASCENDING) (createdAt,DESCENDING) 
+[info] [READY] (survey) -- (teamId,ASCENDING) (createdAt,DESCENDING) 
+[info] [READY] (log) -- (teamId,ASCENDING) (createdAt,DESCENDING) 
+[info] [READY] (survey) -- (teamId,ASCENDING) (expiresAt,ASCENDING) 
+[info] [READY] (survey) -- (OSHAArticleId,ASCENDING) (teamId,ASCENDING) (userSurvey.ph7BwCH9GtNmcy4L3wZAqF81kx83,ASCENDING) (createdAt,DESCENDING) 
+[info] [READY] (assesment) -- (teamId,ASCENDING) (createdAt,DESCENDING) 
+[info] [READY] (timeclock) -- (teamId,ASCENDING) (clockIn,DESCENDING) 
+[info] [READY] (survey) -- (OSHAArticleId,ASCENDING) (teamId,ASCENDING) (userSurvey.gqbN9YkYR9bbRUZrAHM6MovPFZl2,ASCENDING) (createdAt,DESCENDING) 
+[info] [READY] (survey) -- (inAttendance,ARRAY_CONTAINS) (OSHAArticleId,ASCENDING) (createdAt,DESCENDING) 
+[info] 
+[info] i  functions: preparing functions directory for uploading...
+[debug] [2018-11-05T23:12:56.779Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/teamlog-2d74c/configs  
+  
+ Mon Nov 05 2018 16:12:56 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:57.645Z] <<< HTTP RESPONSE 200
+[info] i  functions: packaged functions (42.85 KB) for uploading
+[debug] [2018-11-05T23:12:57.811Z] >>> HTTP REQUEST POST https://cloudfunctions.googleapis.com/v1/projects/teamlog-2d74c/locations/us-central1/functions:generateUploadUrl  
+  
+ Mon Nov 05 2018 16:12:57 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:58.568Z] <<< HTTP RESPONSE 200
+[debug] [2018-11-05T23:12:58.569Z] >>> HTTP REQUEST PUT https://storage.googleapis.com/gcf-upload-us-central1-bd8022c6-80d9-4599-b1df-9fb57450220f/4a236e2c-9d0e-4642-8ba9-b9c5d93a52b8.zip?GoogleAccessId=service-800172058622@gcf-admin-robot.iam.gserviceaccount.com&Expires=1541461378&Signature=F8YP0s0F4XhBAczf4V9W8ip9IDc32C71Z9SBYUFlYuvgNuEHtyaCfuJN949WaHRP1oTzwWBBsTtKrtv0cNf2mLWj0P63rj5%2FC9qUDK1ftVBExnUqhBvhaV3nK15ANxz3DFszLo749FD7cWmW8Nuw9xVprpvK3JFfXSHvRXGFJb5%2FNbjN%2BsX0%2FOqRPiIAQNVp90v%2BSd3sscPkbvm0G74E8IqPUZf3Db5WvFKXXjQFT9a%2BzrRZXBgFavowoXsd7ijul8hWcqnsWp%2BWOgxGynNYQd48GRA72limZ9leDrNhd5I%2Fvdarwhys2sWpSDSAxcWzGq4NNfPukr4WhiMujEegVA%3D%3D  
+ ReadStream {
+  _readableState:
+   ReadableState {
+     objectMode: false,
+     highWaterMark: 65536,
+     buffer: BufferList { length: 1 },
+     length: 43883,
+     pipes: null,
+     pipesCount: 0,
+     flowing: null,
+     ended: true,
+     endEmitted: false,
+     reading: false,
+     sync: false,
+     needReadable: false,
+     emittedReadable: true,
+     readableListening: false,
+     resumeScheduled: false,
+     emitClose: false,
+     destroyed: false,
+     defaultEncoding: 'utf8',
+     awaitDrain: 0,
+     readingMore: false,
+     decoder: null,
+     encoding: null },
+  readable: true,
+  domain: null,
+  _events: { end: [Function] },
+  _eventsCount: 1,
+  _maxListeners: undefined,
+  path:
+   '/var/folders/st/m7tqpms125jghb254qq0xtpm0000gn/T/firebase-functions-19009F2BYCXUjX4mo.zip',
+  fd: 19,
+  flags: 'r',
+  mode: 438,
+  start: undefined,
+  end: Infinity,
+  autoClose: true,
+  pos: undefined,
+  bytesRead: 43883,
+  closed: false } 
+ Mon Nov 05 2018 16:12:58 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:12:59.144Z] <<< HTTP RESPONSE 200
+[info] ✔  functions: functions folder uploaded successfully
+[info] i  hosting: preparing dist directory for upload...
+[debug] [2018-11-05T23:12:59.879Z] >>> HTTP REQUEST PUT https://deploy.firebase.com/v1/hosting/teamlog-2d74c/uploads/-LQa8c9Fujoz01XLk4L6?fileCount=59&message=  
+  
+ Mon Nov 05 2018 16:12:59 GMT-0700 (Mountain Standard Time)
+[debug] [2018-11-05T23:13:06.157Z] <<< HTTP RESPONSE 410
+[debug] [2018-11-05T23:13:06.157Z] <<< HTTP RESPONSE BODY undefined
+[debug] [2018-11-05T23:13:06.159Z] TypeError: Cannot read property 'error' of undefined
+    at module.exports (/usr/local/lib/node_modules/firebase-tools/lib/responseToError.js:10:13)
+    at Request._callback (/usr/local/lib/node_modules/firebase-tools/lib/api.js:47:25)
+    at Request.self.callback (/usr/local/lib/node_modules/firebase-tools/node_modules/request/request.js:185:22)
+    at Request.emit (events.js:182:13)
+    at Request.EventEmitter.emit (domain.js:442:20)
+    at Request.<anonymous> (/usr/local/lib/node_modules/firebase-tools/node_modules/request/request.js:1157:10)
+    at Request.emit (events.js:182:13)
+    at Request.EventEmitter.emit (domain.js:442:20)
+    at IncomingMessage.<anonymous> (/usr/local/lib/node_modules/firebase-tools/node_modules/request/request.js:1079:12)
+    at Object.onceWrapper (events.js:273:13)
+[error] 
+[error] Error: An unexpected error has occurred.

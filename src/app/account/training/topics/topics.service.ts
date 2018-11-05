@@ -17,7 +17,7 @@ export class TopicsService {
 
   public createTopic(topic: Topic): Promise<Topic> {
     return this.db
-      .collection("topics")
+      .collection("topic")
       .add({ ...topic })
       .then(document => {
         topic.id = document.id;
@@ -31,7 +31,7 @@ export class TopicsService {
 
   public editTopic(topic): Promise<Topic> {
     return this.db
-      .collection("topics")
+      .collection("topic")
       .doc(topic.id)
       .update({ ...topic })
       .then(() => topic)
@@ -43,7 +43,7 @@ export class TopicsService {
 
   public deleteTopic(topic): Promise<void> {
     return this.db
-      .collection("topics")
+      .collection("topic")
       .doc(topic.id)
       .delete()
       .catch(error => {

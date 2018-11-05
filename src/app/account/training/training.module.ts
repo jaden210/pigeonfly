@@ -15,7 +15,9 @@ import { PendingChangesGuard } from "./create-edit-article/pending-changes.guard
 import { ProgressShieldComponent } from "./articles/progress-shield/progress-shield.component";
 import { UserNamePipe } from "./article/user-name.pipe";
 import { AddTraineeDialog } from "./article/add-trainee.dialog";
+import { AttendanceDialog } from "./article/attendance.dialog";
 import { TopicDialogComponent } from "./topics/topic-dialog/topic-dialog.component";
+import { UserHistoryDialog } from "./article/user-history.dialog";
 
 const routes: Routes = [
   {
@@ -58,9 +60,16 @@ const routes: Routes = [
     ProgressShieldComponent,
     UserNamePipe,
     AddTraineeDialog,
-    TopicDialogComponent
+    TopicDialogComponent,
+    AttendanceDialog,
+    UserHistoryDialog
   ],
-  entryComponents: [AddTraineeDialog, TopicDialogComponent],
+  entryComponents: [
+    AddTraineeDialog,
+    TopicDialogComponent,
+    AttendanceDialog,
+    UserHistoryDialog
+  ],
   providers: [TrainingService, PendingChangesGuard]
 })
 export class TrainingModule {}

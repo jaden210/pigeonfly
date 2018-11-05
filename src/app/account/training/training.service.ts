@@ -4,7 +4,8 @@ import { AngularFirestore } from "angularfire2/firestore";
 import { Router } from "@angular/router";
 import { AngularFireStorage } from "angularfire2/storage";
 import { map, catchError, tap, take, mergeMap } from "rxjs/operators";
-import { AccountService, Survey } from "../account.service";
+import { AccountService } from "../account.service";
+import { Survey } from "../survey/survey";
 
 @Injectable({
   providedIn: "root"
@@ -239,8 +240,8 @@ export class TrainingService {
         ref
           .where("teamId", "==", teamId)
           .where("OSHAArticleId", "==", articleId)
-          .where(`userSurvey.${userId}`, ">", 0)
-          .orderBy(`userSurvey.${userId}`)
+          .where("inAttendance", "array-contains", userId)
+          .orderBy("inAttendance")
           .orderBy("createdAt", "desc")
           .limit(1)
       )
@@ -251,6 +252,58 @@ export class TrainingService {
           actions.map(action => {
             const data = <Survey>action.payload.doc.data();
             return new Date(data.createdAt);
+          })
+        )
+      );
+  }
+
+  public getTrainingHistoryForUserByArticle(
+    userId,
+    teamId,
+    articleId
+  ): Observable<Survey[]> {
+    console.log(teamId, userId, articleId);
+    return this.db
+      .collection("survey", ref =>
+        ref
+          .where("teamId", "==", teamId)
+          .where("OSHAArticleId", "==", articleId)
+          .where("inAttendance", "array-contains", userId)
+          .orderBy("createdAt", "desc")
+      )
+      .snapshotChanges()
+      .pipe(
+        take(1),
+        map(actions =>
+          actions.map(action => {
+            const data = <any>action.payload.doc.data();
+            const createdAt = data.createdAt.toDate();
+            const user = this.accountService.teamUsers.find(
+              u => u.uid == data.userId
+            );
+            const trainedBy = user ? user.name : "Anonymous";
+            return { ...data, createdAt, trainedBy };
+          })
+        )
+      );
+  }
+
+  public getTrainingHistoryByArticle(teamId, articleId): Observable<Survey[]> {
+    return this.db
+      .collection("survey", ref =>
+        ref
+          .where("teamId", "==", teamId)
+          .where("OSHAArticleId", "==", articleId)
+          .orderBy("createdAt", "desc")
+      )
+      .snapshotChanges()
+      .pipe(
+        take(1),
+        map(actions =>
+          actions.map(action => {
+            const data = <any>action.payload.doc.data();
+            const createdAt = data.createdAt.toDate();
+            return { ...data, createdAt };
           })
         )
       );

@@ -1,6 +1,6 @@
 <div id="content" *ngIf="article">
   <div id="toolbar">
-    <button mat-flat-button color="primary">START TRAINING</button>
+    <button mat-flat-button color="primary" (click)="startTraining()">START TRAINING</button>
     <span style="flex-grow: 1"></span>
     <button mat-button [matMenuTriggerFor]="menu" *ngIf="article.favorited">Renew
       {{article.myContent?.trainingExpiration}}</button>
@@ -21,7 +21,8 @@
   </div>
   <div id="trainees" *ngIf="article.favorited">
     <mat-chip-list>
-      <mat-chip removable selectable *ngFor="let trainee of objectKeys(article.myContent?.trainees)" (removed)="removeTrainee(trainee)">
+      <mat-chip removable selectable *ngFor="let trainee of objectKeys(article.myContent?.trainees)" (click)="viewHistory(trainee)"
+        (removed)="removeTrainee(trainee)">
         <mat-icon class="warning" *ngIf="isExpired(trainee)" matTooltip="Needs Training">error_outline</mat-icon>
         {{ trainee | userName : (users | async) }}
         <mat-icon matChipRemove>cancel</mat-icon>
