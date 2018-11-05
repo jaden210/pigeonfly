@@ -11,8 +11,4 @@ export class PricingComponent implements OnInit {
 
   ngOnInit() {
   }
-
-  signUp(value) {
-    
-  }
 }

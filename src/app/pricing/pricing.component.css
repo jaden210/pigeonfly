@@ -140,6 +140,10 @@
   max-width: 500px;
   opacity: .87;
 }
+
+.b {
+  text-decoration: underline;
+}
   
 @media screen and (max-width: 500px) {
   .p {

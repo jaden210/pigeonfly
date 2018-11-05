@@ -31,7 +31,7 @@ import { UserHistoryDialog } from "./user-history.dialog";
 export class ArticleComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
   private userSubscription: Subscription;
-  private article: Article;
+  public article: Article;
   private teamId: string;
   @ViewChild("dataContainer")
   dataContainer: ElementRef;

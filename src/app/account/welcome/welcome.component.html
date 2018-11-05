@@ -3,83 +3,20 @@
     <toolbar-helper></toolbar-helper>
   </mat-toolbar>
   <div class="window">
-    <div class="box one">
-      <div class="level">
-        <div class="circle">1</div>
-        <div class="bar">Setup</div>
-      </div>
-      <div class="cards">
-        <div class="card">
-          <div class="icon-circle"><mat-icon>person</mat-icon></div>
-          <div class="header">Your profile</div>
-          <div class="body">upload a logo, profile pic and additional contact information (optional).
-          </div>
-        </div>
-        <div class="card">
-          <div class="icon-circle"><mat-icon>smartphone</mat-icon></div>
-          <div class="header">The app</div>
-          <div class="body">The app is free and every member of the team should download it now.
-          </div>
-        </div>
-        <div class="card">
-          <div class="icon-circle"><mat-icon>group</mat-icon></div>
-          <div class="header">Invite the team</div>
-          <div class="body">Your team can be any size. see how to add them and grow your workforce.
-          </div>
-        </div>
-      </div>
+    <div id="header">
+      <div id="h-title">Achievements</div>
+      <div id="h-progress">{{completedAchievements?.length}}/{{achievements?.length}}</div>
     </div>
-    <div class="box two">
-      <div class="level">
-        <div class="circle">2</div>
-        <div class="bar">Safety Training</div>
-      </div>
-      <div class="cards">
-        <div class="card">
-          <div class="icon-circle"><mat-icon>book</mat-icon></div>
-          <div class="header">OSHA training</div>
-          <div class="body">The combination of OSHA content and individual surveys makes this a leading feature of the platform
+    <div class="achievements">
+      <div class="achievement" *ngFor="let achievement of achievements" [ngClass]="{'complete': achievement.complete}" [routerLink]="achievement.routerLink">
+        <img class="trophy" src="/assets/trophy.png">
+        <div class="box">
+          <div class="row">
+            <div class="cat">{{achievement.category}}</div>
+            <div class="completed" *ngIf="achievement.complete">{{achievement?.createdAt}}</div>
           </div>
-        </div>
-      </div>
-    </div>
-    <div class="box three">
-      <div class="level">
-        <div class="circle">3</div>
-        <div class="bar">Record Keeping</div>
-      </div>
-      <div class="cards">
-        <div class="card">
-          <div class="icon-circle"><mat-icon>date_range</mat-icon></div>
-          <div class="header">Record Keeping</div>
-          <div class="body">Perform regular self-inspections/ capture injury and near miss reports.
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="box four">
-      <div class="level">
-        <div class="circle">4</div>
-        <div class="bar">Logs</div>
-      </div>
-      <div class="cards">
-        <div class="card">
-          <div class="icon-circle"><mat-icon>star</mat-icon></div>
-          <div class="header">Record Keeping</div>
-          <div class="body">Perform regular self-inspections/ capture injury and near miss reports.
-          </div>
-        </div>
-        <div class="card">
-          <div class="icon-circle"><mat-icon>favorite</mat-icon></div>
-          <div class="header">Record Keeping</div>
-          <div class="body">Perform regular self-inspections/ capture injury and near miss reports.
-          </div>
-        </div>
-        <div class="card">
-          <div class="icon-circle"><mat-icon>cake</mat-icon></div>
-          <div class="header">Record Keeping</div>
-          <div class="body">Perform regular self-inspections/ capture injury and near miss reports.
-          </div>
+          <div class="name">{{achievement.name}}</div>
+          <div class="progress">{{achievement.complete ? achievement.completedValue : achievement.progress || 0}}/{{achievement.completedValue}}</div>
         </div>
       </div>
     </div>
