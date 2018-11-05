@@ -49,29 +49,14 @@
 }
 
 #signup {
-  margin: 48px 0;
-  background-color: #46abb7;
-  height: 200px;
   padding: 12px;
   box-sizing: border-box;
   border-radius: 8px;
   color: #ffffff;
   display: flex;
   align-items: center;
-  margin: 32px 0;
-  max-width: 600px;
-}
-
-#signupE {
-  height: 48px;
-  border-radius: 4px;
-  outline: none;
-  margin: 12px 0;
-  border: none;
-  font-size: 18px;
-  padding: 0 12px;
-  color: #666666;    
-  border: 1px solid #054d8a;
+  margin: 32px auto;
+  max-width: 400px;
 }
 
 #signupcol {
@@ -231,7 +216,25 @@
   margin: 0px 16px;
 }
 
-@media screen and (max-width: 1300px) {
+#mobile-img {
+  height: 40vh;
+  position: relative;
+  display: none;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 42px;
+}
+
+#mobile-chimp {
+  height: 100%;
+}
+
+#mobile-fade {
+  height: 100%;
+  position: absolute;
+}
+
+@media screen and (max-width: 1200px) {
   .big-hide {
     display: none;
   }
@@ -246,6 +249,7 @@
   }
   .pt {
     font-size: 28px;
+    line-height: 28px;
     text-align: center;
     padding-top: 24px;
   }
@@ -276,5 +280,21 @@
   .quote {
     font-size: 15px;
     padding: 12px;
+  }
+  #mobile-img {
+    display: flex;
+  }
+  .stats {
+    flex-direction: column;
+  }
+  .stat-card {
+    width: calc(100vw - 92px);
+  }
+  .stat-card-last {
+    flex-direction: column-reverse;
+    width: calc(100vw - 92px);
+  }
+  .stat-info {
+    text-align: center !important;
   }
 }

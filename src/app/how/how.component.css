@@ -192,6 +192,7 @@
     }
     .pt {
       font-size: 28px;
+      line-height: 28px;
       text-align: center;
       padding-top: 24px;
     }
@@ -225,5 +226,8 @@
     .quote {
       font-size: 15px;
       padding: 12px;
+    }
+    .left {
+      text-align: left !important;
     }
   }

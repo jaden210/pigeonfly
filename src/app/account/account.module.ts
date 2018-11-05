@@ -31,6 +31,7 @@ import { ImagesDialogComponent } from "./images-dialog/images-dialog.component";
 import { SurveySearchPipe } from "./survey/search.pipe";
 import { TrainingModule } from "./training/training.module";
 import { SharedModule } from "../shared-module";
+import { WelcomeComponent } from "./welcome/welcome.component";
 
 @NgModule({
   imports: [
@@ -67,6 +68,7 @@ import { SharedModule } from "../shared-module";
     ImagesDialogComponent,
     CreateEditLogDialog,
     CreateEditTimeDialog,
+    WelcomeComponent,
     WelcomeDialog
   ],
   exports: [MaterialModule, TrainingModule],

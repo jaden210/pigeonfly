@@ -64,10 +64,12 @@
     }
     #spacer {
         height: 56px;
-    }
+    }    
     .border {
         width: 100vw;
         background: url(/assets/border.png) repeat-x;
-        height: 22px;
-      }
+        height: 8px;
+        margin: 42px 0;
+        background-size: contain;
+    }
   }
