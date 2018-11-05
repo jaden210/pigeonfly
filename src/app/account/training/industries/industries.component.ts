@@ -18,7 +18,7 @@ export class IndustriesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.service.setActiveRoute(null);
+    this.service.setActiveRoute("Select an Industry");
     this.industries = this.service.getIndustries();
   }
 

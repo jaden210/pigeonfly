@@ -39,4 +39,8 @@ export class TrainingComponent implements OnInit {
   public get ActiveRoute(): string {
     return this.service.getActiveRoute();
   }
+
+  public get NavBack(): boolean {
+    return this.service.getActiveRoute() != "Select an Industry" ? true : false;
+  }
 }
