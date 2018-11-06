@@ -3,6 +3,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { Router } from '@angular/router';
 import { AppService, User } from '../app.service';
 import { Team } from '../account/account.service';
+declare var gtag: Function;
 
 @Component({
   selector: 'app-login',
@@ -118,6 +119,10 @@ export class LoginComponent implements OnInit {
         
         createTeam() {
           this.appService.firstTimeUser = true;
+          gtag("event", "account_created", {
+            event_category: "newAccount",
+            event_label: "${user.name} created an account"
+          });
           let newTeam = new Team();
           newTeam.createdAt = new Date();
           newTeam.ownerId = this.user.id;

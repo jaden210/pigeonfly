@@ -29,6 +29,9 @@ import { PreviewDialogComponent } from "./make-osha/preview-dialog/preview-dialo
 import { TopicDialogComponent } from "./make-osha/topic-dialog/topic-dialog.component";
 import { SignUpComponent } from "./sign-up/sign-up.component";
 import { HowComponent } from "./how/how.component";
+import { TermsOfUseComponent } from "./terms-of-use/terms-of-use.component";
+import { PrivacyPolicyComponent } from "./privacy-policy/privacy-policy.component";
+import { CustomerAgreementComponent } from "./customer-agreement/customer-agreement.component";
 
 @NgModule({
   declarations: [
@@ -46,7 +49,10 @@ import { HowComponent } from "./how/how.component";
     FooterComponent,
     SignUpComponent,
     PreviewDialogComponent,
-    TopicDialogComponent
+    TopicDialogComponent,
+    TermsOfUseComponent,
+    PrivacyPolicyComponent,
+    CustomerAgreementComponent
   ],
   imports: [
     BrowserModule,

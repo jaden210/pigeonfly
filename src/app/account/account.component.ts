@@ -6,6 +6,7 @@ import { map } from "rxjs/operators";
 import { Router } from '@angular/router';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material';
 import { AppService } from '../app.service';
+declare var gtag: Function;
 
 @Component({
   selector: 'app-account',
@@ -119,6 +120,7 @@ export class AccountComponent implements OnInit {
       }
     });
     dialog.afterClosed().subscribe(data => {
+      this.createCompletedAchievement(this.accountService.aTeam.id);
       this.accountService.user.name = data.name;
       this.accountService.db.collection("user").doc(this.accountService.user.id).update({...this.accountService.user});
       this.accountService.aTeam.name = data.businessName;
@@ -127,6 +129,27 @@ export class AccountComponent implements OnInit {
       this.router.navigate(['/account/training']);
       this.accountService.helperProfiles.welcome;
       this.accountService.showHelper = true;
+      gtag("event", "account_created", {
+        event_category: "info added",
+        event_label: "info was added to the account"
+      });
+    });
+  }
+
+  createCompletedAchievement(teamId) { // TODO: make this an interface that the cloud function can access
+    this.accountService.db.collection("completed-achievement").add({
+      teamId: teamId,
+      hasCompanyLogo: false,
+      hasOwnerProfileUrl: false,
+      hasBillingInfo: false,
+      logsCount: 0,
+      timeclocksCount: 0,
+      invitedUsers: 0,
+      likedTrainingContent: 0,
+      startedTrainings: 0,
+      startedSelfAssesments: 0,
+      completedSelfAssesments: 0,
+      injuryReports: 0
     });
   }
 

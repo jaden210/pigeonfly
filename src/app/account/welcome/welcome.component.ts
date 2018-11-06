@@ -26,7 +26,7 @@ export class WelcomeComponent implements OnInit {
           }))
           ).subscribe(achievements => {
             this.achievements = achievements;
-            let completedCollection = this.accountService.db.collection("completed-achievement");
+            let completedCollection = this.accountService.db.collection("completed-achievement", ref => ref.where("teamId", "==", this.accountService.aTeam.id));
             completedCollection.snapshotChanges().pipe(
               map(actions => actions.map(a => { //better way
                 const data = a.payload.doc.data() as CompletedAchievements;
@@ -37,10 +37,12 @@ export class WelcomeComponent implements OnInit {
               ).subscribe(completedAchievements => {
                 this.completedAchievements = completedAchievements;
                 achievements.forEach(achievement => {
-                  if (completedAchievements.find(ca => ca.achievementId == achievement.id)) { //already acheived
+                  let completedAchievement = completedAchievements.find(ca => ca.achievementId == achievement.id);
+                  if (completedAchievement) { //already achieved
                     achievement.complete = true;
+                    achievement.completedAt = completedAchievement.createdAt;
                   } else { // see if achieved yet...
-
+                    
                   }; // end
                 });
               })
@@ -48,6 +50,14 @@ export class WelcomeComponent implements OnInit {
           });
       }
     })
+  }
+
+  createCompletedAchievement(achievementId) {
+    let completedAchievement = new CompletedAchievements();
+    completedAchievement.teamId = this.accountService.aTeam.id;
+    completedAchievement.achievementId = achievementId;
+    completedAchievement.createdAt = new Date();
+    this.accountService.db.collection("completed-achievement").add({...completedAchievement});
   }
 
 }
@@ -60,7 +70,8 @@ export class Achievements {
   completedValue: number;
 
   complete: boolean;
-  progress: any;
+  completedAt?: Date;
+  progress?: any;
 }
 
 export class CompletedAchievements {

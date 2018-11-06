@@ -5,6 +5,7 @@ import { map, tap } from 'rxjs/operators';
 import * as moment from 'moment';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { MapDialogComponent } from '../map-dialog/map-dialog.component';
+declare var gtag: Function;
 
 @Component({
   selector: 'app-home',
@@ -119,7 +120,11 @@ export class HomeComponent {
       if (data) {
         data.companyName = this.accountService.aTeam.name;
         data.teamId = this.accountService.aTeam.id;
-        this.accountService.db.collection("invitation").add({... data})
+        this.accountService.db.collection("invitation").add({... data});
+        gtag("event", "user_invited", {
+          event_category: "user Invited",
+          event_label: "a new user has been invited to a team"
+        });
       }
     });
   }
