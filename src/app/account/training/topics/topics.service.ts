@@ -55,7 +55,8 @@ export class TopicsService {
   }
 
   public uploadImage(image): Observable<string> {
-    let filePath = `topicImages`;
+    const date = new Date().getTime();
+    let filePath = `topicImages/${date}`;
     let ref = this.storage.ref(filePath);
     let task = this.storage.upload(filePath, image);
     return task.snapshotChanges().pipe(

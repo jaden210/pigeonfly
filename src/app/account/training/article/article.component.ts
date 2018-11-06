@@ -176,7 +176,9 @@ export class ArticleComponent implements OnInit, OnDestroy {
   }
 
   public startTraining(): void {
-    let trainees = this.article.myContent.trainees || {};
+    let trainees = this.article.myContent
+      ? this.article.myContent.trainees
+      : {};
     let dialogRef = this.dialog.open(AttendanceDialog, {
       data: trainees
     });
@@ -187,16 +189,16 @@ export class ArticleComponent implements OnInit, OnDestroy {
           userSurvey[id] = 0;
         });
         let survey = new Survey();
-        survey.createdAt = new Date();
-        survey.runType = "once";
+        survey.runOncePerUserSurvey = true;
         survey.category = "OSHA Training";
-        survey.title = `Did you participate in this training? -- ${
+        survey.title = `Did you participate in this training? -${
           this.article.name
         }`;
         survey.active = true;
-        survey.OSHAArticleId = this.article.id;
+        survey.oshaArticleId = this.article.id;
         survey.teamId = this.teamId;
         survey.userSurvey = userSurvey;
+        survey.userId = this.accountService.user.uid;
         this.surveyService.createSurvey(survey).then(data => {
           const surveyId = data.id;
           this.accountService.createEvent(

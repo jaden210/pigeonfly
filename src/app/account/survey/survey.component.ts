@@ -4,7 +4,7 @@ import { AccountService, User } from "../account.service";
 import { map, tap, take } from "rxjs/operators";
 import { MatSnackBar } from "@angular/material";
 import { SurveyService } from "./survey.service";
-import { Observable, forkJoin } from "rxjs";
+import { Observable, combineLatest } from "rxjs";
 import { Survey } from "./survey";
 
 @Component({
@@ -56,25 +56,26 @@ export class SurveyComponent implements OnInit {
     private service: SurveyService
   ) {
     this.accountService.helper = this.accountService.helperProfiles.survey;
-    forkJoin(
+    combineLatest(
       this.accountService.teamUsersObservable,
       this.accountService.aTeamObservable
     ).subscribe(results => {
       if (results[0] && results[1]) {
         this.surveys = this.service.getSurveys(results[1].id).pipe(
           tap(surveys => {
+            console.log(surveys);
             if (surveys.length == 0) this.accountService.showHelper = true;
-          }),
-          map(surveys =>
-            surveys.map(survey => {
-              let ranNumber = 0;
-              Object.keys(survey.userSurvey).forEach(key => {
-                if (survey.userSurvey[key] > 0) ranNumber += 1;
-              });
-              const ranPercent = ranNumber / results[0].length;
-              return { ...survey, ranNumber, ranPercent };
-            })
-          )
+          })
+          // map(surveys =>
+          //   surveys.map(survey => {
+          //     let ranNumber = 0;
+          //     Object.keys(survey.userSurvey).forEach(key => {
+          //       if (survey.userSurvey[key] > 0) ranNumber += 1;
+          //     });
+          //     const ranPercent = ranNumber / results[0].length;
+          //     return { ...survey, ranNumber, ranPercent };
+          //   })
+          // )
         );
       }
     });
@@ -104,17 +105,14 @@ export class SurveyComponent implements OnInit {
 
   checkIfChecked(d) {
     // terribly inefficient
-    return d ? this.aSurvey.types[this.aSurvey.runType].indexOf(d) > -1 : null;
+    return d ? this.aSurvey[d].indexOf(d) > -1 : null;
   }
 
   addTo(d) {
-    if (this.aSurvey.types[this.aSurvey.runType].find(day => day == d)) {
-      this.aSurvey.types[this.aSurvey.runType].splice(
-        this.aSurvey.types[this.aSurvey.runType].indexOf(d),
-        1
-      );
+    if (this.aSurvey[d].find(day => day == d)) {
+      this.aSurvey[d].splice(this.aSurvey[d].indexOf(d), 1);
     } else {
-      this.aSurvey.types[this.aSurvey.runType].push(d);
+      this.aSurvey[d].push(d);
     }
   }
 

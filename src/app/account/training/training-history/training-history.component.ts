@@ -60,7 +60,7 @@ export class TrainingHistoryComponent implements OnInit {
             const name = this.article.name;
             const trainer = survey.userId;
             const trainees = Object.keys(survey.userSurvey);
-            const inAttendance = survey.inAttendance;
+            const inAttendance = survey.receivedTraining;
             return { date, name, trainer, trainees, inAttendance };
           })
         )

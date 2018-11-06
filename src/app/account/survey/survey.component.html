@@ -1,4 +1,4 @@
-<mat-toolbar style="font-size: 15px">
+<!-- <mat-toolbar style="font-size: 15px">
   <input id="search" placeholder="search" type="text" [(ngModel)]="searchStr">
   <mat-form-field class="filter">
     <mat-select placeholder="Filter by people" [(ngModel)]="filterUsers" multiple>
@@ -85,4 +85,20 @@
 </div>
 <button class="fab" mat-fab color="accent" (click)="startNewSurvey()">
   <mat-icon>add</mat-icon>
-</button>
+</button> -->
+
+
+<mat-toolbar>
+  Surveys
+  <div class="flex"></div>
+  <button mat-icon-button style="margin-right: 8px;">
+    <mat-icon>filter_list</mat-icon>
+  </button>
+  <toolbar-helper></toolbar-helper>
+</mat-toolbar>
+<mat-nav-list>
+  <mat-list-item *ngFor="let survey of surveys | async">
+    <h3 matLine> {{survey.category}} </h3>
+    <p matLine>{{survey.title}}</p>
+  </mat-list-item>
+</mat-nav-list>
