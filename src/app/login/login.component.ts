@@ -19,6 +19,9 @@ export class LoginComponent implements OnInit {
   bSetPassword: boolean = false;
   user: any;
 
+  forgotPassword: boolean = false;
+  isPassReset: boolean = false;
+
   constructor(
     private auth: AngularFireAuth,
     public router: Router,
@@ -68,8 +71,27 @@ export class LoginComponent implements OnInit {
       data => {
         this.sendToAccount(false);
       },
-      error => this.loginErrorStr = error.message
+      error => {
+        this.loginErrorStr = error.message;
+        this.forgotPassword = true;
+      }
       )
+    }
+
+    resetPassword(email: string) {
+      return this.auth.auth.sendPasswordResetEmail(email)
+      .then(() => {
+        this.loginErrorStr = null;
+        this.forgotPassword = false;
+        this.isPassReset = true;
+        this.login.password = null;
+        gtag("event", "password_reset", {
+          event_category: "password",
+          event_label: "${user.name} reset a password"
+        });
+         console.log('sent Password Reset Email!')
+        })
+       .catch((error) => console.log(error))
     }
     
     createAccount(createTeam) {

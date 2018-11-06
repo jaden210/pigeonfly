@@ -32,6 +32,7 @@ import { HowComponent } from "./how/how.component";
 import { TermsOfUseComponent } from "./terms-of-use/terms-of-use.component";
 import { PrivacyPolicyComponent } from "./privacy-policy/privacy-policy.component";
 import { CustomerAgreementComponent } from "./customer-agreement/customer-agreement.component";
+import { VideoDialogComponent } from "./video-dialog/video-dialog.component";
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { CustomerAgreementComponent } from "./customer-agreement/customer-agreem
     TopicDialogComponent,
     TermsOfUseComponent,
     PrivacyPolicyComponent,
-    CustomerAgreementComponent
+    CustomerAgreementComponent,
+    VideoDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -68,7 +70,7 @@ import { CustomerAgreementComponent } from "./customer-agreement/customer-agreem
     HttpClientModule,
     SharedModule.forRoot()
   ],
-  entryComponents: [PreviewDialogComponent, TopicDialogComponent],
+  entryComponents: [PreviewDialogComponent, TopicDialogComponent, VideoDialogComponent],
   providers: [],
   bootstrap: [AppComponent]
 })

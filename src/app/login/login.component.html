@@ -37,7 +37,7 @@
           <button mat-raised-button *ngIf="!appService.isUser" color="accent" [disabled]="!login.agree" style="color: white" (click)="createAccount(true)">CREATE ACCOUNT</button>
         </div>
       </div>
-      <div class="card"  *ngIf="!bSignUp">
+      <div class="card"  *ngIf="!bSignUp && !isPassReset">
         <img id="header" src="/assets/ccLogoDark.png">
         <div class="error">{{loginErrorStr}}</div>
         <div id="form">
@@ -55,6 +55,7 @@
           <mat-form-field *ngIf="isVerified">
             <input matInput type="password" placeholder="password" [(ngModel)]="login.password">
           </mat-form-field>
+          <div class="reset" (click)="resetPassword(login.email)" *ngIf="forgotPassword">Forgot password? click here to reset</div>
         </div>
         <div class="row">
           <span id="account" class="hide">Here to start a new team?</span><span (click)="setSignUp()" id="sign-in">Sign up</span>
@@ -62,6 +63,14 @@
           <button mat-raised-button *ngIf="isVerified" color="accent" style="color: white" (click)="signInEmail()">LOG IN</button>
           <button mat-raised-button *ngIf="!isVerified && bSetPassword" color="accent" style="color: white" (click)="joinTeam()">JOIN TEAM</button>
         </div>
+      </div>
+      <div class="card" *ngIf="isPassReset">
+        <img id="header" src="/assets/ccLogoDark.png">
+        <div id="form">
+          <div id="reset-text">Head to your inbox to reset your password. We'll be here waiting.</div>
+          <button mat-raised-button color="accent" style="border-radius:20px;color:#ffffff" (click)="isPassReset = false">LOGIN</button>
+        </div>
+        
       </div>
       <div class="card lock">
         <mat-icon id="lock">lock</mat-icon>

@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
+import { MatDialog } from '@angular/material';
+import { VideoDialogComponent } from './video-dialog/video-dialog.component';
+declare var gtag: Function;
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +17,17 @@ export class AppService {
   toolbarShadow: boolean = true;
 
   constructor(
-    public db: AngularFirestore
+    public db: AngularFirestore,
+    public dialog: MatDialog
   ) { }
+
+  watchVideo() {
+    let dialog = this.dialog.open(VideoDialogComponent);
+    gtag("event", "video_watched", {
+      event_category: "video",
+      event_label: "video"
+    });
+  }
   
 }
 
