@@ -126,7 +126,7 @@ export class AccountComponent implements OnInit {
       this.accountService.aTeam.name = data.businessName;
       this.accountService.aTeam.industryId = data.industryId;
       this.accountService.db.collection("team").doc(this.accountService.aTeam.id).update({...this.accountService.aTeam});
-      this.router.navigate(['/account/training']);
+      this.router.navigate(['/account/achievements']);
       this.accountService.helperProfiles.welcome;
       this.accountService.showHelper = true;
       gtag("event", "account_created", {

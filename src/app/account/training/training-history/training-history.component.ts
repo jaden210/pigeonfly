@@ -19,7 +19,7 @@ export class TrainingHistoryComponent implements OnInit {
   private subscription: Subscription;
   private userSubscription: Subscription;
   private teamId: string;
-  private article: Article;
+  public article: Article;
   isDev: boolean;
   users: BehaviorSubject<User[]>;
   history;
