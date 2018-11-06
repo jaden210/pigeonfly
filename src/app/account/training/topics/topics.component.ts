@@ -15,8 +15,10 @@ import { TopicsService } from "./topics.service";
 })
 export class TopicsComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
+  private userSubscription: Subscription;
   private industryId: string;
   public topics: Observable<Topic[]>;
+  public isDev: boolean;
 
   constructor(
     private route: ActivatedRoute,
@@ -29,6 +31,7 @@ export class TopicsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription = this.accountService.aTeamObservable.subscribe(team => {
       if (team) {
+        this.setIsDev();
         this.route.paramMap.subscribe((params: ParamMap) => {
           this.industryId = params.get("industry");
           this.setActiveRoute();
@@ -36,6 +39,14 @@ export class TopicsComponent implements OnInit, OnDestroy {
         });
       }
     });
+  }
+
+  private setIsDev(): void {
+    this.userSubscription = this.accountService.userObservable.subscribe(
+      user => {
+        if (user) this.isDev = user.isDev;
+      }
+    );
   }
 
   private getTopics(forceRefresh = false): void {
@@ -64,7 +75,7 @@ export class TopicsComponent implements OnInit, OnDestroy {
   private launchTopicDialog(topic: Topic): void {
     this.dialog
       .open(TopicDialogComponent, {
-        data: { topic }
+        data: { topic, industryId: this.industryId }
       })
       .afterClosed()
       .subscribe(topic => {
@@ -74,5 +85,6 @@ export class TopicsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.userSubscription.unsubscribe();
   }
 }

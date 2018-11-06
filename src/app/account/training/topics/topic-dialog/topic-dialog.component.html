@@ -15,7 +15,7 @@
                 <mat-icon>delete</mat-icon>
             </button>
         </div>
-        <img [src]="previewImg || topic?.imageUrl" onerror="this.style.display='none'">
+        <img *ngIf="previewImg || topic?.imageUrl" [src]="previewImg || topic?.imageUrl">
     </div>
 </mat-dialog-content>
 <mat-dialog-actions>

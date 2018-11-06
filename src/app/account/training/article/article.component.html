@@ -21,7 +21,7 @@
   </div>
   <div id="trainees" *ngIf="article.favorited">
     <mat-chip-list>
-      <mat-chip removable selectable *ngFor="let trainee of objectKeys(article.myContent?.trainees)" (click)="viewHistory(trainee)"
+      <mat-chip removable selectable *ngFor="let trainee of objectKeys(article.myContent?.trainees)" (click)="viewHistoryByTrainee(trainee)"
         (removed)="removeTrainee(trainee)">
         <mat-icon class="warning" *ngIf="isExpired(trainee)" matTooltip="Needs Training">error_outline</mat-icon>
         {{ trainee | userName : (users | async) }}

@@ -12,6 +12,8 @@ import { AccountService } from "../../account.service";
 export class ArticlesComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
   private teamId: string;
+  private industryId: string;
+  private topicId: string;
   public articles: Observable<Article[]>;
 
   constructor(
@@ -25,9 +27,10 @@ export class ArticlesComponent implements OnInit, OnDestroy {
     this.subscription = this.accountService.aTeamObservable.subscribe(team => {
       if (team) {
         this.route.paramMap.subscribe((params: ParamMap) => {
-          let industryId = params.get("industry");
+          this.industryId = params.get("industry");
+          this.topicId = params.get("topic");
           let topicId = params.get("topic");
-          this.setActiveRoute(industryId, topicId, team.id);
+          this.setActiveRoute(this.industryId, topicId, team.id);
           this.teamId = team.id;
           this.articles = this.service.getArticles(topicId, team.id);
         });
@@ -51,7 +54,8 @@ export class ArticlesComponent implements OnInit, OnDestroy {
   }
 
   public createArticle(): void {
-    this.router.navigate(["account/training/create-article"]);
+    let queryParams = { industryId: this.industryId, topicId: this.topicId };
+    this.router.navigate(["account/training/create-article"], { queryParams });
   }
 
   ngOnDestroy() {

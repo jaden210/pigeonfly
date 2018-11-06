@@ -51,13 +51,11 @@ export class TrainingService {
   /* will automatically unsubscribe with async pipe */
   public getTopics(industryId, forceRefresh = false): Observable<Topic[]> {
     if (forceRefresh) this.topics = [];
-    const topics = this.topics.filter(t => t.industryIds.includes(industryId));
+    const topics = this.topics.filter(t => t.industryId == industryId);
     return topics.length
       ? of(topics)
       : this.db
-          .collection("topic", ref =>
-            ref.where("industryIds", "array-contains", industryId)
-          )
+          .collection("topic", ref => ref.where("industryId", "==", industryId))
           .snapshotChanges()
           .pipe(
             take(1),
@@ -400,7 +398,7 @@ export class Industry {
 
 export class Topic {
   imageUrl: string;
-  industryIds: string[];
+  industryId: string;
   isGlobal: boolean;
   name: string;
   nameEs: string;
@@ -414,7 +412,7 @@ export class Article {
   isGlobal: boolean;
   name: string;
   nameEs: string;
-  topicIds: string[];
+  topicIds: string[] = [];
   teamId: string;
   /* word count / 6 */
   trainingLevel: number;

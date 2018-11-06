@@ -33,6 +33,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
   private userSubscription: Subscription;
   public article: Article;
   private teamId: string;
+  private industryId: string;
   @ViewChild("dataContainer")
   dataContainer: ElementRef;
   isDev: boolean;
@@ -57,6 +58,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
         this.route.paramMap.subscribe((params: ParamMap) => {
           const articleId = params.get("article");
           this.teamId = team.id;
+          this.industryId = params.get("industry");
           this.service.getArticle(articleId, team.id).subscribe(article => {
             this.service.setActiveRoute(article.name);
             this.article = article;
@@ -73,7 +75,10 @@ export class ArticleComponent implements OnInit, OnDestroy {
   }
 
   public editArticle(): void {
-    let queryParams = { articleId: this.article.id };
+    let queryParams = {
+      articleId: this.article.id,
+      industryId: this.industryId
+    };
     this.router.navigate(["account/training/edit-article"], { queryParams });
   }
 
@@ -160,7 +165,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
     });
   }
 
-  public viewHistory(trainee): void {
+  public viewHistoryByTrainee(trainee): void {
     this.dialog.open(UserHistoryDialog, {
       data: {
         user: this.accountService.teamUsers.find(user => user.uid == trainee),
@@ -204,6 +209,10 @@ export class ArticleComponent implements OnInit, OnDestroy {
         });
       }
     });
+  }
+
+  viewHistory(): void {
+    this.router.navigate(["account/training/history", this.article.id]);
   }
 
   ngOnDestroy() {

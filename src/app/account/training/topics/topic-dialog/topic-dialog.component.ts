@@ -8,6 +8,7 @@ import { TopicsService } from "../topics.service";
   styleUrls: ["topic-dialog.component.css"]
 })
 export class TopicDialogComponent implements OnInit {
+  private industryId: string;
   public topic: Topic;
   public image: any;
   public isEdit: boolean;
@@ -23,6 +24,7 @@ export class TopicDialogComponent implements OnInit {
 
   ngOnInit() {
     this.topic = this.data.topic;
+    this.industryId = this.data.industryId;
     this.isEdit = this.topic.id ? true : false;
   }
 
@@ -49,6 +51,7 @@ export class TopicDialogComponent implements OnInit {
     this.loading = true;
     this.service.uploadImage(this.image).subscribe(imageUrl => {
       this.topic.imageUrl = imageUrl;
+      this.topic.industryId = this.industryId;
       this.service
         .createTopic(this.topic)
         .then(() => this.dialogRef.close(this.topic))

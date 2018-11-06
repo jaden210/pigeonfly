@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Observable, throwError } from "rxjs";
 import { AngularFirestore } from "angularfire2/firestore";
 import { AngularFireStorage } from "angularfire2/storage";
-import { catchError, flatMap, takeLast } from "rxjs/operators";
+import { catchError, flatMap, takeLast, map, take } from "rxjs/operators";
 import { TrainingService, Topic } from "../training.service";
 
 @Injectable({
@@ -30,9 +30,11 @@ export class TopicsService {
   }
 
   public editTopic(topic): Promise<Topic> {
+    const id = topic.id;
+    delete topic.id;
     return this.db
       .collection("topic")
-      .doc(topic.id)
+      .doc(id)
       .update({ ...topic })
       .then(() => topic)
       .catch(error => {

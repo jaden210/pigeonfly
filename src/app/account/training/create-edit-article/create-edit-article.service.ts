@@ -37,7 +37,7 @@ export class CreateEditArticleService {
   public createArticle(article: Article): Promise<any> {
     return this.db
       .collection("article")
-      .add({ article })
+      .add({ ...article })
       .catch(error => {
         console.error(`Error creating article ${article.name}`, article, error);
         alert(`Error creating article ${article.name}`);

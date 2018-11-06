@@ -9,6 +9,6 @@
     <a matLine>{{article.name}}</a>
   </mat-list-item>
 </mat-nav-list>
-<button mat-stroked-button color="primary" id="create-btn" (click)="createArticle()">
+<button mat-stroked-button [disabled]="!articles" color="primary" id="create-btn" (click)="createArticle()">
   CREATE ARTICLE
 </button>

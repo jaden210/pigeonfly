@@ -18,6 +18,7 @@ import { AddTraineeDialog } from "./article/add-trainee.dialog";
 import { AttendanceDialog } from "./article/attendance.dialog";
 import { TopicDialogComponent } from "./topics/topic-dialog/topic-dialog.component";
 import { UserHistoryDialog } from "./article/user-history.dialog";
+import { TrainingHistoryComponent } from "./training-history/training-history.component";
 
 const routes: Routes = [
   {
@@ -35,6 +36,7 @@ const routes: Routes = [
         component: CreateEditArticleComponent,
         canDeactivate: [PendingChangesGuard]
       },
+      { path: "history/:article", component: TrainingHistoryComponent },
       { path: ":industry", component: TopicsComponent },
       { path: ":industry/:topic", component: ArticlesComponent },
       { path: ":industry/:topic/:article", component: ArticleComponent }
@@ -62,7 +64,8 @@ const routes: Routes = [
     AddTraineeDialog,
     TopicDialogComponent,
     AttendanceDialog,
-    UserHistoryDialog
+    UserHistoryDialog,
+    TrainingHistoryComponent
   ],
   entryComponents: [
     AddTraineeDialog,

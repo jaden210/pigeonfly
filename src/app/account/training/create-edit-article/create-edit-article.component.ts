@@ -17,6 +17,7 @@ import { MatSnackBar } from "@angular/material";
 export class CreateEditArticleComponent
   implements OnInit, ComponentCanDeactivate {
   private originalArticle: Article;
+  private deactivate: boolean;
   public article = new Article();
   public isEdit: boolean;
   public submitButton: string = "CREATE ARTICLE";
@@ -42,13 +43,14 @@ export class CreateEditArticleComponent
 
   ngOnInit() {
     this.route.queryParams.subscribe((params: ParamMap) => {
-      this.topics = this.service.getTopics();
+      this.topics = this.trainingService.getTopics(params["industryId"]);
       if (params["articleId"]) {
         this.trainingService.setActiveRoute("Edit Article");
         this.getArticle(params["articleId"]);
         this.isEdit = true;
         this.submitButton = "UPDATE ARTICLE";
       } else {
+        this.article.topicIds.push(params["topicId"]);
         this.trainingService.setActiveRoute("Create Article");
       }
     });
@@ -68,6 +70,7 @@ export class CreateEditArticleComponent
 
   private updateArticle(): void {
     this.service.updateArticle(this.article).then(() => {
+      this.deactivate = true;
       this.popSnackbar("Updated", this.article.name);
       this.goBack();
     });
@@ -75,6 +78,7 @@ export class CreateEditArticleComponent
 
   private createArticle(): void {
     this.service.createArticle(this.article).then(() => {
+      this.deactivate = true;
       this.popSnackbar("Created", this.article.name);
       this.goBack();
     });
@@ -94,7 +98,8 @@ export class CreateEditArticleComponent
     // insert logic to check if there are pending changes here;
     // returning true will navigate without confirmation
     // returning false will show a confirm dialog before navigating away
-    if (!this.article.id && (this.article.name || this.article.content))
+    if (this.deactivate) return true;
+    else if (!this.article.id && (this.article.name || this.article.content))
       return false;
     else if (this.article.id) {
       if (
