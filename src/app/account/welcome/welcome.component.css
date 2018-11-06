@@ -3,6 +3,14 @@
     justify-content: space-between;
     margin: 12px 24px;
     font-size: 32px;
+    font-weight: 600;
+}
+
+#info {
+    margin: 8px 24px 48px;
+    font-size: 17px;
+    opacity: .87;
+    font-weight: 400;
 }
 
 #h-progress {
@@ -17,16 +25,26 @@
 }
 
 .achievement {
-    border: 2px solid #054d8a;
+    position: relative;
+    border: 3px solid #054d8a;
     margin: 8px;
     padding: 10px;
     border-radius: 8px;
     display: flex;
     align-items: center;
-    filter: grayscale(50%);
-    opacity: .6;
+    filter: grayscale(80%);
+    opacity: .8;
     cursor: pointer;
     transition: all 250ms;
+    min-width: calc(50vw - 250px);
+}
+
+.fill {
+    height: 100%;
+    position: absolute;
+    background-color: #b4cadc;
+    margin-left: -10px;
+    border-radius: 5px;
 }
 
 .achievement:hover {
@@ -40,10 +58,12 @@
 }
 
 .trophy {
+    z-index: 1;
     height: 56px;
 }
 
 .box {
+    z-index: 1;
     display: flex;
     flex-direction: column;
     margin-left: 12px;
@@ -61,7 +81,7 @@
 }
 
 .name {
-    font-size: 15px;
+    font-size: 17px;
     opacity: .87;
     max-width: 300px;
 }

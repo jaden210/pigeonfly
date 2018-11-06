@@ -10,14 +10,14 @@ import { map } from 'rxjs/operators';
 export class WelcomeComponent implements OnInit {
 
   achievements;
-  completedAchievements;
+  completedCount: number;
 
   constructor(public accountService: AccountService) { }
 
   ngOnInit() {
     this.accountService.teamUsersObservable.subscribe(users => {
       if (users) {
-        let achievementsCollection = this.accountService.db.collection("achievement");
+        let achievementsCollection = this.accountService.db.collection("achievement", ref => ref.orderBy("category"));
         achievementsCollection.snapshotChanges().pipe(
           map(actions => actions.map(a => { //better way
             const data = a.payload.doc.data() as Achievements;
@@ -31,33 +31,25 @@ export class WelcomeComponent implements OnInit {
               map(actions => actions.map(a => { //better way
                 const data = a.payload.doc.data() as CompletedAchievements;
                 const id = a.payload.doc.id;
-                const createdAt = data['createdAt'];
-                return { id, createdAt, ...data };
+                return { id, ...data };
               }))
-              ).subscribe(completedAchievements => {
-                this.completedAchievements = completedAchievements;
+              ).subscribe(completedAchievement => {
+                this.completedCount = 0;
                 achievements.forEach(achievement => {
-                  let completedAchievement = completedAchievements.find(ca => ca.achievementId == achievement.id);
-                  if (completedAchievement) { //already achieved
+                  achievement.progress = completedAchievement[0][achievement.key];
+                  if (achievement.progress >= achievement.completedValue) { //already achieved
                     achievement.complete = true;
-                    achievement.completedAt = completedAchievement.createdAt;
-                  } else { // see if achieved yet...
-                    
-                  }; // end
+                    this.completedCount ++;
+                    achievement.fill = '100%';
+                  } else {
+                    achievement.fill = ((achievement.progress / achievement.completedValue) * 100).toString() + "%";
+                  }
                 });
               })
             
           });
       }
-    })
-  }
-
-  createCompletedAchievement(achievementId) {
-    let completedAchievement = new CompletedAchievements();
-    completedAchievement.teamId = this.accountService.aTeam.id;
-    completedAchievement.achievementId = achievementId;
-    completedAchievement.createdAt = new Date();
-    this.accountService.db.collection("completed-achievement").add({...completedAchievement});
+    });
   }
 
 }
@@ -68,10 +60,11 @@ export class Achievements {
   category: string;
   name: string;
   completedValue: number;
+  key: string
 
   complete: boolean;
-  completedAt?: Date;
   progress?: any;
+  fill;
 }
 
 export class CompletedAchievements {
