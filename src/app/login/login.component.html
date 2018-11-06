@@ -27,10 +27,14 @@
           <mat-form-field>
             <input matInput type="password" required placeholder="verify password" [(ngModel)]="login.password2">
           </mat-form-field>
+          <div style="display: flex; align-items: center">
+            <mat-checkbox [(ngModel)]="login.agree"></mat-checkbox>
+            <mat-label style="margin-left:12px; opacity:.87;font-size: 14px;">I agree to the Terms of Service, Privacy Policy, and Customer Agreement.</mat-label>
+          </div>
         </div>
         <div class="row">
           <span id="account" class="hide">Already have an account?</span><span (click)="isUser()" id="sign-in">Log in</span>
-          <button mat-raised-button *ngIf="!appService.isUser" color="accent" style="color: white" (click)="createAccount(true)">CREATE ACCOUNT</button>
+          <button mat-raised-button *ngIf="!appService.isUser" color="accent" [disabled]="!login.agree" style="color: white" (click)="createAccount(true)">CREATE ACCOUNT</button>
         </div>
       </div>
       <div class="card"  *ngIf="!bSignUp">

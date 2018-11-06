@@ -52,7 +52,7 @@ exports.achievementProfile = functions.firestore.document("user/{userId}").onUpd
   let newUser = change.after.data();
   
   /* profileUrl achievement */
-  if (!oldUser.profileUrl && newUser.profileUrl) {
+  if (oldUser.accountType == "owner" && !oldUser.profileUrl && newUser.profileUrl) {
     this.updateCompletedAchievement(newUser.teamId, "hasOwnerProfileUrl", true);
   }
 });
