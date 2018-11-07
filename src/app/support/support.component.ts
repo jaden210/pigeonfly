@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AppService } from '../app.service';
 
 @Component({
   selector: 'app-support',
@@ -7,12 +8,27 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SupportComponent implements OnInit {
 
-  body;
-  email;
+  support: Support = new Support();
+  submitted: boolean = false;
 
-  constructor() { }
+  constructor(public appService: AppService) { }
 
   ngOnInit() {
   }
 
+  submit() {
+    this.support.createdAt = new Date();
+    this.appService.db.collection("support").add({...this.support}).then(() => {
+      this.submitted = true;
+      this.support = new Support();
+    });
+  }
+
+}
+
+
+export class Support {
+  email: string;
+  body: string;
+  createdAt: Date;
 }

@@ -11,7 +11,7 @@
     <div class="achievements">
       <div class="achievement" *ngFor="let achievement of achievements" [ngClass]="{'complete': achievement.complete}" [routerLink]="achievement.routerLink">
         <div class="fill" [ngStyle]="{'width':achievement.fill}"></div>
-        <img class="trophy" src="/assets/trophy.png">
+        <img class="trophy" [src]="'/assets/achievements/' + achievement.category + '.png'">
         <div class="box">
           <div class="row">
             <div class="cat">{{achievement.category}}</div>

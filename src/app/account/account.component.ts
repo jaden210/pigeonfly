@@ -172,6 +172,8 @@ export class AccountComponent implements OnInit {
         userId: this.accountService.user.id,
         userName: this.accountService.user.name,
         teamName: this.accountService.aTeam.name,
+        email: this.accountService.user.email,
+        isClosed: false,
         createdAt: new Date()
       }).then(() => {
         this.accountService.feedback = this.accountService.helperProfiles.feedback;

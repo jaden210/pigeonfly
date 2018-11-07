@@ -11,6 +11,8 @@ import { IncidentReportsComponent } from "./incident-reports/incident-reports.co
 import { EventComponent } from "./event/event.component";
 import { TrainingComponent } from "./training/training.component";
 import { WelcomeComponent } from "./welcome/welcome.component";
+import { StatsComponent } from "./stats/stats.component";
+import { AuthGuard } from "./auth.gaurd";
 
 const routes: Routes = [
   {
@@ -27,6 +29,7 @@ const routes: Routes = [
       { path: "event", component: EventComponent },
       { path: "incident-reports", component: IncidentReportsComponent },
       { path: "achievements", component: WelcomeComponent },
+      { path: "overvieww", component: StatsComponent, canActivate: [AuthGuard] },
       {
         path: "training",
         loadChildren: "./training/training.module#TrainingModule"

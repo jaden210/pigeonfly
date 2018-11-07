@@ -6,6 +6,11 @@
     box-sizing: border-box;
 }
 
+.p {
+    padding-left: 62px;
+    box-sizing: border-box;
+}
+
 .title {
     color: #ffffff;
     font-size: 62px;
@@ -174,6 +179,9 @@ img {
 @media screen and (max-width: 1000px) {
     #layout {
         flex-direction: column;
+    }
+    .p {
+        padding: 0;
     }
     #side {
         margin-top: 24px;

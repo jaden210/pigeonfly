@@ -16,6 +16,7 @@
         <a mat-list-item routerLink="assesment" routerLinkActive="active">OSHA Safety Assesment</a>
         <a mat-list-item routerLink="account" routerLinkActive="active">Account</a>
         <a mat-list-item routerLink="achievements" routerLinkActive="active">Achievements</a>
+        <a mat-list-item *ngIf="accountService.user.isDev" routerLink="overvieww" routerLinkActive="overvieww">Support</a>
       </mat-list>
     </div>
     <div id="footer">

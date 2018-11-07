@@ -1,0 +1,51 @@
+  <mat-toolbar>
+  <div class="flex"></div>
+    <toolbar-helper></toolbar-helper>
+  </mat-toolbar>
+  <div class="window">
+    <mat-tab-group>
+      <mat-tab label="support">
+        <div class="support-items" *ngFor="let item of supportItems">
+          <div class="row" (click)="expandItem(item)">
+            <div class="new-dot" *ngIf="!item.respondedAt"></div>
+            <div class="name">{{item.email}}</div>
+            <div class="short-body">{{item.body}}</div>
+            <div style="flex:1"></div>
+            <div class="submitted">{{item.createdAt | date:'medium'}}</div>
+          </div>
+          <div class="expand" *ngIf="aItem?.id == item.id">
+            <div class="body">{{item.body}}</div>
+            <div class="user-info">
+              <div class="info">{{item.isUser ? '' : 'New Visitor'}}</div>
+              <img class="user-img" src={{item.user?.profileUrl}}>
+              <div class="user-data">{{item.user?.name}}</div>
+              <div class="user-data">phone:{{item.user?.phone}}</div>
+              <div class="user-data">account type: {{item.user?.accountType}}</div>
+            </div>
+            <div class="action-row">
+              <button mat-raised-button color="accent" style="color: #FFFFFF; border-radius:20px" (click)="markReplied()">MARK REPLIED</button>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="feedback">
+        <div class="feeback-items" *ngFor="let item of feedbackItems | async" [ngClass]="{'closed':item.isClosed}">
+          <div class="row" style="margin:0">
+            <div class="f-name">{{item.userName}}</div>
+            <div class="t-name">{{item.teamName}}</div>
+            <div style="flex:1"></div>
+            <div class="submitted">{{item.createdAt | date:'medium'}}</div>
+          </div>
+          <div class="t-body">{{item.description}}</div>
+          <div class="t-from">location when submitted: {{item.originPage}}</div>
+          <div class="action-row">
+              <button mat-button color="accent" style="border-radius:20px;margin-right:12px" (click)="close(item)">Close</button>
+              <button mat-raised-button color="accent" style="color: #FFFFFF; border-radius:20px" (click)="email(item)">Email</button>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="statistics">
+
+      </mat-tab>
+    </mat-tab-group>
+  </div>

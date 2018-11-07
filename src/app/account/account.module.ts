@@ -32,6 +32,7 @@ import { SurveySearchPipe } from "./survey/search.pipe";
 import { TrainingModule } from "./training/training.module";
 import { SharedModule } from "../shared-module";
 import { WelcomeComponent } from "./welcome/welcome.component";
+import { StatsComponent } from "./stats/stats.component";
 
 @NgModule({
   imports: [
@@ -69,7 +70,8 @@ import { WelcomeComponent } from "./welcome/welcome.component";
     CreateEditLogDialog,
     CreateEditTimeDialog,
     WelcomeComponent,
-    WelcomeDialog
+    WelcomeDialog,
+    StatsComponent
   ],
   exports: [MaterialModule, TrainingModule],
   entryComponents: [
