@@ -177,6 +177,7 @@ export class User {
   phone?: string;
   accountType?: string;
   teams?: any[];
+  isDev: boolean = false;
 }
 
 export class Team {
