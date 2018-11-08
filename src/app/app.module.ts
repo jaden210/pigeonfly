@@ -58,7 +58,7 @@ import { VideoDialogComponent } from "./video-dialog/video-dialog.component";
     VideoDialogComponent
   ],
   imports:[
-    CommonModule,
+    BrowserModule,
     BrowserAnimationsModule,
     MaterialModule,
     AppRoutingModule,
@@ -73,5 +73,6 @@ import { VideoDialogComponent } from "./video-dialog/video-dialog.component";
   ],
   entryComponents: [PreviewDialogComponent, TopicDialogComponent, VideoDialogComponent],
   providers: [],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}

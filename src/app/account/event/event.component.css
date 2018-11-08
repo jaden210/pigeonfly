@@ -119,6 +119,7 @@
     overflow: hidden;
     margin: 8px;
     display: inline-block;
+    border-radius: 8px;
 }
 
 .log-image {

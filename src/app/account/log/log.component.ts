@@ -211,7 +211,6 @@ export class LogComponent {
             .add({ ...log })
             .then(snapshot => {
               log.id = snapshot.id;
-              this.createEvent(log);
             });
         }
       }

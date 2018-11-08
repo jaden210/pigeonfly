@@ -101,6 +101,7 @@ exports.supportTicketSubmitted = functions.firestore.document("support/{supportI
 
 
 /*    --------- ACHIEVEMENTS ----------     */
+
 exports.achievementTeam = functions.firestore.document("team/{teamId}").onUpdate((change, context) => {
   let oldTeam = change.before.data();
   let newTeam = change.after.data();
@@ -126,6 +127,8 @@ exports.achievementLogs = functions.firestore.document("log/{id}").onCreate((sna
   
   /* total logs achievement */
   updateCompletedAchievement(log.teamId, "logsCount", 1, true).then(() => console.log('successs')).catch(error => console.log(error));
+
+  logAsEvent("log", log.id,log.userId,log.description,log.teamId);
 });
 
 exports.achievementTimeclocks = functions.firestore.document("timeclock/{id}").onCreate((snapshot) => {
@@ -187,4 +190,15 @@ function updateCompletedAchievement(teamId: string, mapKey: string, value: any, 
     .catch(function(error) {
         console.log("Error getting documents: ", error);
     });
+}
+
+/*  ---------- EVENTS ----------  */
+
+function logAsEvent(type: string, documentId: string, userId: string, title: string, teamId: string): Promise<any> {
+  let nd = new Date();
+  return admin.firestore().collection("event").add(
+    { type, documentId, userId, title, createdAt: nd, teamId }
+  )
+  .then(() => console.log("new Event recorded"))
+  .catch(error => console.log(error));
 }
