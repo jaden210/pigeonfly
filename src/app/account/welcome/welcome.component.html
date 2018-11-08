@@ -7,7 +7,7 @@
       <div id="h-title">Achievements</div>
       <div id="h-progress">{{completedCount}}/{{achievements?.length}}</div>
     </div>
-    <div id="info">Well done, the chimp is here to help. Complete the achievements and you will be well on your way to using Compiance Chimp to it maximun potential.</div>
+    <div id="info">Completing the achievements below will put you on the path to using Compliancechimp to its potential. This will help you understand the value it can bring to your business. Complete them all and we'll send you some sweet Compliancechimp swag as a reward!</div>
     <div class="achievements">
       <div class="achievement" *ngFor="let achievement of achievements" [ngClass]="{'complete': achievement.complete}" [routerLink]="achievement.routerLink">
         <div class="fill" [ngStyle]="{'width':achievement.fill}"></div>

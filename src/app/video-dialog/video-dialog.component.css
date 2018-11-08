@@ -6,8 +6,8 @@ mat-dialog-content {
 .video-responsive {
   position: relative;
   overflow: hidden;
-  height: 400px;
-  width: 660px;
+  height: 315px;
+  width: 560px;
   background: black;
 }
 

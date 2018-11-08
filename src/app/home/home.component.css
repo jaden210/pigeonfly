@@ -20,15 +20,15 @@
 }
 
 #home-chimp {
-  height: 382px;
+  height: 350px;
   position: absolute;
-  bottom: 30px;
+  top: 190px;
 }
 
 #home-fade {
   position: absolute;
-  height: 440px;
-  bottom: 110px;
+  height: 390px;
+  top: 100px;
 }
 
 .pt {
@@ -245,11 +245,13 @@
 }
 
 #mobile-chimp {
-  height: 100%;
+  height: 84%;
+  position: absolute;
+  bottom: 0;
 }
 
 #mobile-fade {
-  height: 100%;
+  height: 89%;
   position: absolute;
 }
 

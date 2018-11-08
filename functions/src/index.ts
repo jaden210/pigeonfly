@@ -12,20 +12,86 @@ exports.inviteNewUser = functions.firestore.document("invitation/{invitationId}"
     from: '"Compliancechimp" <support@compliancechimp.com>',
     to: info.inviteEmail,
   }
-  mailOptions.subject = 'You’re a new member of  Compliancechimp with ' + info.companyName + ' - Please see how to join your team below.';
+  mailOptions.subject = 'You have been invited to join ' + info.companyName + ' at Compliancechimp';
     mailOptions.html = `Hi ${info.inviteName}<br><br>
-    ${info.companyName} is using Compliancechimp to manage time tracking, worksite logs, and safety training. Please visit the App Store or Goolge Play Stopre to download the free app and join your team now.
+    ${info.companyName} is using Compliancechimp to manage safety training, worksite logs, record keeping, and more, as part of an ongoing commitment to safety and compliance. You've been invited to the team. Please visit the App Store or Goolge Play Store to download the free app and join your team today. Feel free to contact us at support@compliancechimp.com with any questions, and welcome!
     <br><br> <a href="https://inviteme.me/account" target="_blank">LETS GET STARTED</a>
     <br> <a href="https://inviteme.me/account" target="_blank">LETS GET STARTED</a>
-    <br><br>Compliancechimp enables a safer workplace, and streamlines key activities for your team and leadership. Although it is completely mobile, once you have downloaded the app and joined your team, you can also visit Complilancechimp online at https://compliancechimp.com.
     <br><br>Sincerely,
-    <br><br>MiKayla, Client Success Team
+    <br><br>Alan, Client Success Team
     <br>Compliancechimp
     <br>support@compliancechimp.com`;
     
     return mailTransport.sendMail(mailOptions)
     .then(() => {
       console.log(`New invitation email sent to:` + info.inviteName)
+    }) 
+    .catch((error) => {
+      console.error('There was an error while sending the email:', error)
+    });
+});
+
+exports.newTeamEmail = functions.firestore.document("team/{teamId}").onUpdate((change, context) => {
+  const db = admin.firestore();
+  let oldTeam = change.before.data();
+  let newTeam = change.after.data();
+  const nodemailer = require('nodemailer');
+  
+  if ((!oldTeam.name && newTeam.name)) {
+    let user;
+    db.doc("user/" + newTeam.ownerId).get().then(teamUser => {
+      user = teamUser.data();
+      const mailTransport = nodemailer.createTransport(`smtps://jaden210@gmail.com:FordGT-40@smtp.gmail.com`);    
+      const mailOptions: any = {
+        from: '"Compliancechimp" <support@compliancechimp.com>',
+        to: user.email,
+      }
+      mailOptions.subject = 'Welcome to your free 30 day trial of Compliancechimp!';
+      mailOptions.html = `Hi ${user.name}<br><br>
+      Glad to meet you! We want you to get the most out of Compliancechimp during these first 30 days. If you haven't already, visit the Achievements page inside your account, which walks you through the various features of the platform as an owner or administrator. Remember, Compliancechimp is largely driven from our free app which can be found here for Apple users, or here for Android users. Head over and get the app if you haven't already. As you invite your team, they'll do the same. Please take advantage of the many benefits of the platform which enable compliance, including: training your team and getting their survey responses, capturing worksite logs, performing self-inspection, and more.
+      <br><br> <a href="https://inviteme.me/account" target="_blank">LETS GET STARTED</a>
+      <br> <a href="https://inviteme.me/account" target="_blank">LETS GET STARTED</a>
+      <br><br>Don't hesitate to contact us with any questions at support@compliancechimp.com, and enjoy!
+      <br><br>Sincerely,
+      <br><br>alan, Client Success Team
+      <br>Compliancechimp
+      <br>support@compliancechimp.com`;
+      
+      return mailTransport.sendMail(mailOptions)
+      .then(() => {
+        console.log(`New invitation email sent to:` + user.name)
+      }) 
+      .catch((error) => {
+        console.error('There was an error while sending the email:', error)
+      });
+    }).catch(error => {
+      console.log(error + ": no user found to send email");
+      return;
+    });
+  }
+});
+
+exports.supportTicketSubmitted = functions.firestore.document("support/{supportId}").onCreate((snapshot) => {
+  let info = snapshot.data();
+  const nodemailer = require('nodemailer');
+  const db = admin.firestore();
+  
+  const mailTransport = nodemailer.createTransport(`smtps://jaden210@gmail.com:FordGT-40@smtp.gmail.com`);    
+  const mailOptions: any = {
+    from: '"Compliancechimp" <support@compliancechimp.com>',
+    to: info.email,
+  }
+  mailOptions.subject = 'We have received your message - hello from Compliancechimp';
+    mailOptions.html = `Hi there<br><br>
+    This is just a friendly note to say we've received your message and will respond as quickly as possible.
+    <br><br>Thank you,
+    <br><br>Ken, Client Support
+    <br>Compliancechimp
+    <br>support@compliancechimp.com`;
+    
+    return mailTransport.sendMail(mailOptions)
+    .then(() => {
+      console.log(`New invitation email sent to:` + info.email)
     }) 
     .catch((error) => {
       console.error('There was an error while sending the email:', error)
