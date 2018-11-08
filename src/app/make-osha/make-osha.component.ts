@@ -1,4 +1,4 @@
-import { Component, OnInit, Pipe } from "@angular/core";
+import { Component, OnInit, Pipe , Inject} from '@angular/core';
 import { AppService } from "../app.service";
 import {
   map,
@@ -51,7 +51,7 @@ export class MakeOSHAComponent implements OnInit {
     translate: "yes"
   };
 
-  constructor(
+  constructor( 
     private appService: AppService,
     private snackbar: MatSnackBar,
     private location: Location,

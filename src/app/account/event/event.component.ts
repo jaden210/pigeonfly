@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, HostListener } from "@angular/core";
+import { Component, OnInit, ViewChild, HostListener , Inject} from '@angular/core';
 import { trigger, style, transition, animate } from "@angular/animations";
 import { Timeclock, AccountService, Log, Event } from "../account.service";
 import { map, tap } from "rxjs/operators";
@@ -38,7 +38,7 @@ export class EventComponent {
   now: any = moment().format('MMM');
 
   constructor(public accountService: AccountService, public dialog: MatDialog) {
-    this.accountService.helper = this.accountService.helperProfiles.log;
+    this.accountService.helper = this.accountService.helperProfiles.event;
     this.accountService.aTeamObservable.subscribe(aTeam => {
       if (aTeam) {
         this.getLogs();

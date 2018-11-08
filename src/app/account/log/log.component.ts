@@ -40,7 +40,7 @@ export class LogComponent {
 
   now: any = moment().format('MMM');
 
-  constructor(
+  constructor( 
     public accountService: AccountService,
     public dialog: MatDialog
   ) {

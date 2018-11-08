@@ -3,14 +3,14 @@
     overflow: scroll;
 }
 
-#title {
+.title {
     height: 64px;
     outline: none;
     cursor: pointer;
 }
 
 
-#toolbar {
+.toolbar {
     position: fixed;
     z-index: 1;
     background-color: #054d8a !important;

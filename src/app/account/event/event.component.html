@@ -32,7 +32,7 @@
               </div>
               <div class="details" [@expand] *ngIf="event.bShowDetails">
                 <div class="image-row" *ngIf="event.type == 'log' && event.details.images.length > 0">
-                  <div class="log-image-box" *ngFor="let image of event.details.images" (click)="showImages(event.details.images)"><img class="log-image" src={{image.imageUrl}} onerror="src = '/assets/face.png'"></div>
+                  <div class="log-image-box" *ngFor="let image of event.details.images" (click)="showImages(event.details.images)"><img class="log-image" src={{image.imageUrl}} onerror="src = '/assets/face.png'" alt="Compliancechimp"></div>
                 </div>
                 <div class="time-detail" *ngIf="event.type == 'timeclock'">
                   <div class="time-item"><mat-icon>hourglass_empty</mat-icon>{{event.details.clockIn | date: 'h:mm a'}}</div>

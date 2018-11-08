@@ -4,7 +4,7 @@
     <textarea matInput [(ngModel)]="data.description"></textarea>
   </mat-form-field>
   <div class="images">
-    <img class="image" *ngFor="let image of data.images" src={{image.imageUrl}} onerror="src = '/assets/face.png'">
+    <img class="image" *ngFor="let image of data.images" src={{image.imageUrl}} onerror="src = '/assets/face.png'" alt="Compliancechimp">
     <div class="image new" (click)="upload()">
       <mat-icon>add_a_photo</mat-icon>
 

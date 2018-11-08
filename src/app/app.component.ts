@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component , Inject} from '@angular/core';
 import { Router, NavigationEnd } from "@angular/router";
 import { AppService } from './app.service';
 import { AngularFireAuth } from '@angular/fire/auth';

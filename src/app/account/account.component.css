@@ -6,11 +6,13 @@ mat-sidenav-container {
     right: 0;
 }
 
-mat-sidenav {
+.mat-sidenav {
     width: 280px;
     display: flex;
     flex-direction: column;
     background-color: #054D8A;
+    align-items: flex-start;
+    height: 100%;
 }
 
 a {

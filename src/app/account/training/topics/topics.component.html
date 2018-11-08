@@ -1,6 +1,6 @@
 <mat-nav-list>
   <mat-list-item *ngFor="let topic of topics | async" (click)="routeTo(topic)">
-    <img matListAvatar [src]="topic.imageUrl">
+    <img matListAvatar [src]="topic.imageUrl" alt="Compliancechimp">
     <h2 matLine> {{topic.name}} </h2>
     <button class="edit" mat-icon-button *ngIf="!topic.isGlobal || isDev" (click)="editTopic(topic); $event.stopPropagation();"
       matTooltip="Edit Topic">

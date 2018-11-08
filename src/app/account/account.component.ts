@@ -29,7 +29,7 @@ export class AccountComponent implements OnInit {
 
   bShowAccountInfo: boolean = false; // temp var
 
-  constructor(
+  constructor( 
     public accountService: AccountService,
     public appService: AppService,
     private auth: AngularFireAuth,
@@ -81,6 +81,14 @@ export class AccountComponent implements OnInit {
   }
   
   selectTeam() {
+    this.accountService.userTeams = [];
+    Object.keys(this.accountService.user.teams).forEach(key => {
+      let teamDoc = this.accountService.db.collection("team").doc(key)
+      teamDoc.valueChanges().subscribe((team: Team) => {
+        team.id = key;
+        this.accountService.userTeams.push(team);
+      });
+    });
     if (localStorage.getItem('teamId')) {
       this.accountService.setActiveTeam(localStorage.getItem('teamId'));
     } else if (Object.keys(this.accountService.user.teams).length == 1) { // set the team and go home
@@ -89,14 +97,6 @@ export class AccountComponent implements OnInit {
       }
       this.accountService.setActiveTeam(Object.keys(this.accountService.user.teams)[0]);
     } else { // pop the dialog asking which team to look at
-      this.accountService.userTeams = [];
-      Object.keys(this.accountService.user.teams).forEach(key => {
-        let teamDoc = this.accountService.db.collection("team").doc(key)
-        teamDoc.valueChanges().subscribe((team: Team) => {
-          team.id = key;
-          this.accountService.userTeams.push(team);
-        });
-      })
       let dialog = this.dialog.open(TeamSelectDialog, {
         data: this.accountService.userTeams,
         disableClose: true
@@ -127,7 +127,7 @@ export class AccountComponent implements OnInit {
       this.accountService.aTeam.industryId = data.industryId;
       this.accountService.db.collection("team").doc(this.accountService.aTeam.id).update({...this.accountService.aTeam});
       this.router.navigate(['/account/achievements']);
-      this.accountService.helperProfiles.welcome;
+      this.accountService.helperProfiles.achievement;
       this.accountService.showHelper = true;
       gtag("event", "account_created", {
         event_category: "info added",
@@ -167,7 +167,7 @@ export class AccountComponent implements OnInit {
       this.accountService.showFeedback = false;
       this.accountService.db.collection("feedback").add({
         origin: 'feeback helper',
-        originPage: window.location.pathname,
+        originPage: location.pathname,
         description: this.accountService.feedback.description,
         userId: this.accountService.user.id,
         userName: this.accountService.user.name,

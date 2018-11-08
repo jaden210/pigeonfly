@@ -30,7 +30,7 @@ export class IncidentReportsComponent implements OnInit {
   constructor(
     public accountService: AccountService
   ) {
-    this.accountService.helper = this.accountService.helperProfiles.osha;
+    this.accountService.helper = this.accountService.helperProfiles.incidentReport;
     this.accountService.aTeamObservable.subscribe(team => {
       if (team) {
         let assesmentCollection = this.accountService.db.collection("incident-report", ref => ref.where("teamId", "==", this.accountService.aTeam.id).orderBy("createdAt", "desc"));

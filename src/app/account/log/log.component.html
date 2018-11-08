@@ -27,7 +27,7 @@
                   </div>
                   <div class="details" [@expand] *ngIf="log.bShowDetails">
                     <div class="image-row">
-                      <div class="log-image-box" *ngFor="let image of log.images" (click)="showImages(log.images)"><img class="log-image" src={{image.imageUrl}} onerror="src = '/assets/face.png'"></div>
+                      <div class="log-image-box" *ngFor="let image of log.images" (click)="showImages(log.images)"><img class="log-image" src={{image.imageUrl}} onerror="src = '/assets/face.png'" alt="Compliancechimp"></div>
                     </div>
                     <div class="info">
                       <mat-icon (click)="createEditLog(day, log)" class="edit">edit</mat-icon>

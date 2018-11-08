@@ -28,8 +28,8 @@
       <div class="item header" *ngFor="let q of aReport.questions; let i = index">
         <div class="question category">{{q.description}}</div>
         <div *ngIf="q.name !== 'signature' && q.name !== 'images'" id="answer" class="title">{{q.value}}</div>
-        <img *ngIf="q.name == 'signature'" id="sig" src={{q.value}} onerror = "src = '/assets/face.png'">
-        <ng-container *ngIf="q.name == 'images'"><img *ngFor="let image of q.value" class="images" src={{image.imageUrl}}></ng-container>
+        <img *ngIf="q.name == 'signature'" id="sig" src={{q.value}} onerror = "src = '/assets/face.png'" alt="Compliancechimp">
+        <ng-container *ngIf="q.name == 'images'"><img *ngFor="let image of q.value" class="images" src={{image.imageUrl}} alt="Compliancechimp"></ng-container>
       </div>
     </div>
   </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , Inject} from '@angular/core';
 import { AccountService } from '../account.service';
 import { map } from 'rxjs/operators';
 import { User } from '../../app.service';
@@ -101,6 +101,7 @@ export class Support {
   body: string;
   isUser?: boolean = false;
   user?: User;
+
   respondedAt?: any;
   notes?: string;
 }

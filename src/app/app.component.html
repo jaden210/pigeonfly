@@ -1,7 +1,7 @@
 <mat-sidenav-container>
   <mat-sidenav mode="over" #sidenav id="sidenav" position="end" [(opened)]="open">
-    <mat-toolbar id="toolbar">
-      <img src="/assets/ccLogo.png" id="title"  routerLink="home">
+    <mat-toolbar class="toolbar">
+      <img src="/assets/ccLogo.png" class="title"  routerLink="home" alt="Compliancechimp">
       <div class="flex"></div>
       <button mat-icon-button (click)="sidenav.close()"><mat-icon style="color:#ffffff">close</mat-icon></button>
     </mat-toolbar>
@@ -11,15 +11,15 @@
         <button mat-button class="link" style="border-radius:20px" (click)="navRoute('pricing')" routerLinkActive="tactive">Pricing</button>
         <button mat-button class="link" style="border-radius:20px" (click)="navRoute('support')" routerLinkActive="tactive">Support</button>
         <button mat-button class="link" style="border-radius:20px" (click)="navRoute('about')" routerLinkActive="tactive">About us</button>
-        <button mat-stroked-button style="border-radius:20px;margin: 24px 0;color:#ffffff" (click)="navRoute('login')">{{appService.isUser ? 'GO TO ACCOUNT' : 'START FOR FREE'}}</button>
+        <button mat-stroked-button style="border-radius:20px;margin: 24px 0;color:#ffffff;border-color:#ffffff !important" (click)="navRoute('login')">{{appService.isUser ? 'GO TO ACCOUNT' : 'START FOR FREE'}}</button>
         <div class="border"></div>
         <sign-up></sign-up>
       </div>
     </div>
   </mat-sidenav>
   <mat-sidenav-content>
-    <mat-toolbar id="toolbar" *ngIf="!router.isActive('/account', false)"  [class.shadow]="appService.toolbarShadow">
-      <img src="/assets/ccLogo.png" id="title"  routerLink="home">
+    <mat-toolbar class="toolbar" *ngIf="!router.isActive('/account', false)"  [class.shadow]="appService.toolbarShadow">
+      <img src="/assets/ccLogo.png" class="title"  routerLink="home" alt="Compliancechimp">
       <div style="width: 50px"></div>
       <div class="flex"></div>
       <div class="desktop">
@@ -27,7 +27,7 @@
         <button mat-button class="link" style="border-radius:20px" routerLink="pricing" routerLinkActive="tactive">Pricing</button>
         <button mat-button class="link" style="border-radius:20px" routerLink="support" routerLinkActive="tactive">Support</button>
         <button mat-button class="link" style="border-radius:20px" routerLink="about" routerLinkActive="tactive">About us</button>
-        <button mat-stroked-button style="border-radius:20px;color: #ffffff;" routerLink="login">{{appService.isUser ? 'GO TO ACCOUNT' : 'START FOR FREE'}}</button>
+        <button mat-stroked-button style="border-radius:20px;color: #ffffff;border-color:#ffffff !important" routerLink="login">{{appService.isUser ? 'GO TO ACCOUNT' : 'START FOR FREE'}}</button>
       </div>
       <div class="mobile">
         <button mat-icon-button (click)="open = true"><mat-icon style="color:#ffffff">menu</mat-icon></button>

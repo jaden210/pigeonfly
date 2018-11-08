@@ -38,7 +38,7 @@ export class AssesmentComponent implements OnInit {
     public accountService: AccountService,
     public snackbar: MatSnackBar
   ) {
-    this.accountService.helper = this.accountService.helperProfiles.osha;
+    this.accountService.helper = this.accountService.helperProfiles.selfInspection;
     this.accountService.aTeamObservable.subscribe(team => {
       if (team) {
         let assesmentCollection = this.accountService.db.collection("assesment", ref => ref.where("teamId", "==", this.accountService.aTeam.id).orderBy("createdAt", "desc"));

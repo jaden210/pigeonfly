@@ -30,6 +30,7 @@ export class HomeComponent {
     public accountService: AccountService,
     public dialog: MatDialog
   ) {
+    this.accountService.helper = this.accountService.helperProfiles.team;
     this.accountService.teamUsersObservable.subscribe(teamUsers => {
       if (teamUsers) {
         let invitedCollection = this.accountService.db.collection<InviteToTeam[]>("invitation", ref => ref.where("status", "==", "invited").where("teamId", "==", this.accountService.aTeam.id));

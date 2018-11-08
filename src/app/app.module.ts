@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
@@ -56,8 +57,8 @@ import { VideoDialogComponent } from "./video-dialog/video-dialog.component";
     CustomerAgreementComponent,
     VideoDialogComponent
   ],
-  imports: [
-    BrowserModule,
+  imports:[
+    CommonModule,
     BrowserAnimationsModule,
     MaterialModule,
     AppRoutingModule,
@@ -72,6 +73,5 @@ import { VideoDialogComponent } from "./video-dialog/video-dialog.component";
   ],
   entryComponents: [PreviewDialogComponent, TopicDialogComponent, VideoDialogComponent],
   providers: [],
-  bootstrap: [AppComponent]
 })
 export class AppModule {}

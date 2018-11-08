@@ -6,7 +6,7 @@
   <ng-container *ngFor="let user of invitedUsers">
     <div class="day">
       <div class="heads">
-       <div class="head"><img class="head-img" src="/assets/face.png"></div>
+       <div class="head"><img class="head-img" src="/assets/face.png" alt="Compliancechimp"></div>
       </div>
       <div class="box">
         <div class="row">
@@ -23,7 +23,7 @@
   <ng-container *ngFor="let user of users">
     <div class="day pointer" (click)="editUser(user)">
       <div class="heads">
-       <div class="head"><img class="head-img" src={{user.user.profileUrl}} onerror="src = 'assets/face.png'"></div>
+       <div class="head"><img class="head-img" src={{user.user.profileUrl}} onerror="src = 'assets/face.png'" alt="Compliancechimp"></div>
       </div>
       <div class="box">
         <div class="row">

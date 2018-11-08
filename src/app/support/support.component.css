@@ -31,7 +31,7 @@
     background-size: contain;
 }
 
-#box {
+.box {
     display: flex;
     flex-direction: column;
     padding: 24px;
@@ -94,7 +94,7 @@ textarea {
       font-size: 15px;
       text-align: center;
     }
-    #box {
+    .box {
         width: calc(100vw - 42px);
         padding: 12px;
     }

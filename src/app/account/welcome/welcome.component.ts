@@ -15,6 +15,7 @@ export class WelcomeComponent implements OnInit {
   constructor(public accountService: AccountService) { }
 
   ngOnInit() {
+    this.accountService.helper = this.accountService.helperProfiles.achievement;
     this.accountService.teamUsersObservable.subscribe(users => {
       if (users) {
         let achievementsCollection = this.accountService.db.collection("achievement", ref => ref.orderBy("category"));

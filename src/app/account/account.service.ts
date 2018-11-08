@@ -40,18 +40,33 @@ export class AccountService {
     time: {
       name: "Time",
       description:
-        "This page is a digital time card which includes location. When members of your team clock in and out using the Minute app, those events are stored and calculated here. Click “Run Payroll” to run a payroll report. When your entire team uses the Minute app to securely clock in and out, you’ll save time and reduce the complexity of collecting payroll data each pay period. Location is logged with every clock in and clock out for future reference, or in the event of an OSHA audit or litigation."
-    },
+        "Using the app, anyone on your team can track their time. Each time event is recorded here so that you have a historical record. Time can be exported at any time, for anyone, which makes entering payroll a breeze. The administrator of this account can adjust time as necessary by clicking on any time log and editing it. Forget paperwork and workers trying to rely on memory. Use the time clock instead."
+      },
     log: {
       name: "Log",
       description:
-        "Using the app, any member of your team can create a worksite log, to include pictures and text. Location is also captured each time a log is created. Worksite logs can and should include everything from periodic progress and work accomplished, to client change orders and project updates, to incidents or other noteworthy happenings. Worksite logs form the critical historical record which is called upon in the event of an OSHA audit, or client dispute or litigation. Aside from that non-fun stuff, worksite logs create a living journal of the work you accomplish over time, which is pretty neat."
-    },
+        "Using the app, any member of your team can create a worksite log, including pictures and text. Location is also captured each time a log is created. Worksite logs can and should include everything from periodic progress and work accomplished, to client change orders and project updates, to incidents, injuries, near misses, safety concerns, or other noteworthy happenings. Worksite logs build the historical record which is called upon in the event of an OSHA audit or inspection. Aside from that, worksite logs create a living journal of the work your business accomplishes over time, all in one central place."
+      },
+    event: {
+      name: "Events",
+      description:
+        "Every time any member of your team uses the Compliancechimp app for anything (worksite log, training, training surveys, time clock, injury report, etc), the “event” gets recorded here in the Events page. Think of this as a flowing stream of consciousness of your team’s activity. Why does this page exist? The answer is simple: proof of compliance.  One of the most difficult parts of compliance is paperwork, or evidence of compliance. We take the hassle completely out of it. When your team uses the Compliancechimp app to its potential, the Events page gives you a very simple, clean, consolidated, and searchable record of activity that goes back as far as the day you signed up. It’s the critical backstop in the event of an audit, and can provide additional insights to your business along the way."
+        },
     survey: {
       name: "Surveys",
       description:
-        "Surveys deliver the critical insights you need to protect and grow your business, and make adjustments along the way to keep improving. Surveys are simple: you ask your team anything, and they are prompted to respond upon clocking out for the day on the day you set the survey to run. “Did you receive ladder safety training?”, “Did you receive sexual harassment training?”, “Did you receive PPE training?”, “Is any of your personal equipment faulty or in need of repair or replacement?”, etc. Anything you can think to ask, you can ask. Team members answer with a yes or no, and have an open text field to expound on any answer. Every question and answer is recorded so you have a unique history of training received, not as relayed by your team lead or supervisor, but as responded to _by the employees themselves_. Minute Surveys are perhaps the most powerful tool to protect and improve your business."
-    },
+        "Welcome to a surprisingly insightful and meaningful part of Compliancechimp; worker surveys. How do provide safety training to your team, and how do you track those trainings? How do you know if someone feels safe? How do you know that everyone has the safety equipment they need, and that you are required to provide? Sure, you could create paperwork to check these boxes. But we’ve made this much easier, much more reliable, and much more meaningful.  Every time a training is given, a survey automatically goes out to each member of the team that participated. They can answer yes or no to whether or not they received the training, and add any further comments. Now, you don’t simply have a supervisor’s report. You have a first-person worker response to training, which is very easy for them to do, happens every time, and is stored forever.  These surveys go even further. You can create a  custom survey at any time and send it to any person, group, or the entire team. Find out first-person if your workers have performed the inspections they are responsible for, if they have the personal protective equipment they need, and anything else you can think of. The power of the survey is that it is always first-person, and it is tracked and stored forever."
+      },
+    incidentReport: {
+      name: "Incident Reports",
+      description:
+        "Compliancechimp puts injury and near miss reporting, along with the accompanying investigation, right in the hands of every worker. From the Account section of the app, anyone can report an injury or near miss, including pictures and signature. Those reports flow here, where they are stored safely, forever. This is massively important in the event of an inspection or audit. These reports create what is known as the 300 Log."
+      },
+    selfInspection: {
+      name: "Self-Inspection",
+      description:
+        "The most important preventive measure any business takes to protect its workers, is ensuring the workplace itself is safe. No amount of training can compensate for an unsafe work environment. Our self-inspection process helps you identify risks, and address them. Click the plus button to the right to begin your first self inspection. And you can create as many self-inspections as you’d like - covering any number of different locations or worksites, etc."
+      },
     osha: {
       name: "OSHA Self-Inspection",
       description:
@@ -60,23 +75,28 @@ export class AccountService {
     account: {
       name: "Your Account",
       description:
-        "For the sake of your team, please complete all available information on this page."
+        "Please ensure all information is filled out in your Account, even down to your company logo and profile picture. Your account holds personal details, business details, and billing and payment details."
     },
     team: {
       name: "Team",
       description:
-        "On this page you’ll build your team by entering names and email addresses, and sending invitations. Invite as many members as you’d like. Once a member accepts the invitation, they’ll download the Minute app onto their phone and show up here. A green dot indicates someone who is currently clocked in. An orange dot indicates someone who has been clocked in today, but is not currently clocked in. A gray dot is someone who has not clocked in at any point today. Location is also recorded with each clock in or out and can be accessed by clicking on the map pin. Return to this page often to see who’s actively on the clock, and to invite more members to join."
-    },
+        "Invite everyone on your team by clicking the orange “+” button to the right. Each person you invite will receive an email with instructions to download the app and join your team. Once joined, you’ll see all of their activity including training surveys, worksite logs, injury reports, and time if you choose to have your team track their time using the app (it’s really easy). Invite your entire team today!"
+      },
     companyType: {
       name: "Company Type",
       description:
         "Selecting a company type will help us show the right infomation to your users in the app. put better stuff here."
     },
-    welcome: {
-      name: "Welcome",
+    achievement: {
+      name: "Achievements",
       description:
-        "Compliancechimp is simple, but seriously powerful. When fully embraced, it will change the safety and compliance risk profile of your business. This Welcome section is always available in the menu, and is designed to guide you through every feature so you can get fully up to speed."
-    }
+        "CThis page was designed specifically to help you gain the benefits of Compliancechimp as quickly as possible. Compliancechimp is a thorough and powerful platform which improves safety and protects businesses. But those benefits only come if it gets used. Get started on earning every trophy, today. Your compliance coincides with earning these trophies. When you’ve earned them all, we’ll send along some fun Compliancechimp merch as a reward."
+      },
+    training: {
+      name: "Training",
+      description:
+        "The difference between each of your workers making it home safe tonight, or not, could be the next safety training. And the difference between passing an OSHA audit or not, is proof that the training occurred.  We’ve curated and organized OSHA safety content as the most fundamental starting point. Your opportunity is to go through the available training topics and select the ones that are relevant to your operation. When you heart a topic, it will become available to each of your workers via the app. Each training shows the estimated time to accomplish, but remember this is only an estimate. Training can go longer or shorter based on your specific needs.  And training doesn’t stop with OSHA content. We’ve opened the training platform up for you to add your own training materials as well. Use this training page to build topics and articles and make them available to your entire team. From a compliance perspective, giving safety training is key to keeping workers safe. But proving you’ve given training is the key to protecting your business in an OSHA audit. By training here, you lock down an authoritative record of what training was given, when, and to who. And it’s stored forever in one consolidated, simple place.  Compliancechimp’s training platform is powerful, and we encourage you to take full advantage of it."
+        }
   };
   helper: Helper = this.helperProfiles.newTeam;
   feedback: Helper = this.helperProfiles.feedback;
@@ -181,7 +201,7 @@ export class User {
 }
 
 export class Team {
-  id: string;
+  id: string
   name: string;
   createdAt: Date;
   ownerId: string;

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , Inject} from '@angular/core';
 import { AccountService, User, Team } from '../account.service';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { map, finalize } from 'rxjs/operators';

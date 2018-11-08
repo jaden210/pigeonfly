@@ -1,0 +1,17 @@
+{
+  "universal": {
+    "project": "compliance-chimp-web",
+    "skipInstall": false,
+    "directory": "."
+  },
+  "serverless": {
+    "directory": ".",
+    "skipInstall": true,
+    "provider": "firebase",
+    "project": "compliance-chimp-web",
+    "serverless": {
+      "aws": {},
+      "gcloud": {}
+    }
+  }
+}

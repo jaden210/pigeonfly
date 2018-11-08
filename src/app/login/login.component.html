@@ -15,7 +15,7 @@
     <div *ngIf="appService.isUser" id="spacer"></div>
     <div id="side">
       <div class="card"  *ngIf="bSignUp">
-        <img id="header" src="/assets/ccLogoDark.png">
+        <img id="header" src="/assets/ccLogoDark.png" alt="Compliancechimp">
         <div class="error">{{loginErrorStr}}</div>
         <div id="form">
           <mat-form-field>
@@ -38,7 +38,7 @@
         </div>
       </div>
       <div class="card"  *ngIf="!bSignUp && !isPassReset">
-        <img id="header" src="/assets/ccLogoDark.png">
+        <img id="header" src="/assets/ccLogoDark.png" alt="Compliancechimp">
         <div class="error">{{loginErrorStr}}</div>
         <div id="form">
           <div class="helper-text" *ngIf="!isVerified && bSetPassword">Hey {{login.name}}. Welcome to minute! set a password and you'll be on your way.</div>
@@ -65,7 +65,7 @@
         </div>
       </div>
       <div class="card" *ngIf="isPassReset">
-        <img id="header" src="/assets/ccLogoDark.png">
+        <img id="header" src="/assets/ccLogoDark.png" alt="Compliancechimp">
         <div id="form">
           <div id="reset-text">Head to your inbox to reset your password. We'll be here waiting.</div>
           <button mat-raised-button color="accent" style="border-radius:20px;color:#ffffff" (click)="isPassReset = false">LOGIN</button>
