@@ -1,11 +1,11 @@
 import { Injectable, Component } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
-import { AngularFirestore } from "angularfire2/firestore";
+import { AngularFirestore } from "@angular/fire/firestore";
 import { map } from "rxjs/operators";
 import { MatDialog, MatDialogRef } from "@angular/material";
-import { AngularFireAuth } from "angularfire2/auth";
+import { AngularFireAuth } from "@angular/fire/auth";
 import { Router } from "@angular/router";
-import { AngularFireStorage } from "angularfire2/storage";
+import { AngularFireStorage } from "@angular/fire/storage";
 
 @Injectable({
   providedIn: "root"

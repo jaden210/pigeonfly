@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { of, Observable } from "rxjs";
-import { AngularFirestore, DocumentReference } from "angularfire2/firestore";
+import { AngularFirestore, DocumentReference } from "@angular/fire/firestore";
 import { map, catchError } from "rxjs/operators";
 import { Survey } from "./survey";
 import { SurveyResponse } from "./survey-response";

@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable, throwError } from "rxjs";
-import { AngularFirestore } from "angularfire2/firestore";
-import { AngularFireStorage } from "angularfire2/storage";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { AngularFireStorage } from "@angular/fire/storage";
 import { catchError, flatMap, takeLast, map, take } from "rxjs/operators";
 import { TrainingService, Topic } from "../training.service";
 

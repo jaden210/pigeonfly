@@ -13,7 +13,7 @@ import { AngularEditorConfig } from "@kolkov/angular-editor";
 import { MatSnackBar, MatDialog } from "@angular/material";
 import { Location } from "@angular/common";
 import { PreviewDialogComponent } from "./preview-dialog/preview-dialog.component";
-import { AngularFirestore } from "angularfire2/firestore";
+import { AngularFirestore } from "@angular/fire/firestore";
 import {
   DomSanitizer,
   SafeHtml,

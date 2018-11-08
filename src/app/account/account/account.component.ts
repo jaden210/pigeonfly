@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AccountService, User, Team } from '../account.service';
-import { AngularFireStorage } from 'angularfire2/storage';
+import { AngularFireStorage } from '@angular/fire/storage';
 import { map, finalize } from 'rxjs/operators';
-import { AngularFireAuth } from 'angularfire2/auth';
+import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 

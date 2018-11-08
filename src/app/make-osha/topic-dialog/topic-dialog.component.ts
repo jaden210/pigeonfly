@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
-import { AngularFireStorage } from "angularfire2/storage";
+import { AngularFireStorage } from "@angular/fire/storage";
 import {
   catchError,
   flatMap,
@@ -11,8 +11,8 @@ import {
   takeLast
 } from "rxjs/operators";
 import { Observable, of, throwError } from "rxjs";
-import { AngularFirestore } from "angularfire2/firestore";
-import { UploadTaskSnapshot } from "angularfire2/storage/interfaces";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { UploadTaskSnapshot } from "@angular/fire/storage/interfaces";
 
 @Component({
   templateUrl: "./topic-dialog.component.html",

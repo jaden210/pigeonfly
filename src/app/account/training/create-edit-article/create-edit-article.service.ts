@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, of, Observable } from "rxjs";
-import { AngularFirestore } from "angularfire2/firestore";
+import { AngularFirestore } from "@angular/fire/firestore";
 import { Router } from "@angular/router";
-import { AngularFireStorage } from "angularfire2/storage";
+import { AngularFireStorage } from "@angular/fire/storage";
 import { map, catchError } from "rxjs/operators";
 import { Article, Topic } from "../training.service";
 

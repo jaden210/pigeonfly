@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { trigger, style, transition, animate } from "@angular/animations";
 import { AccountService, User, Team, InviteToTeam } from './account.service';
-import { AngularFireAuth } from 'angularfire2/auth';
+import { AngularFireAuth } from '@angular/fire/auth';
 import { map } from "rxjs/operators";
 import { Router } from '@angular/router';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material';
@@ -52,7 +52,7 @@ export class AccountComponent implements OnInit {
             this.accountService.user = user;
             let invitedCollection = this.accountService.db.collection("invitation", ref => ref.where("status", "==", "invited").where("inviteEmail", "==", user.email.toLowerCase()));
             invitedCollection.snapshotChanges().pipe(
-              map(actions => actions.map(a => {
+              map((actions:any)=> actions.map(a => {
                 const data = a.payload.doc.data() as InviteToTeam;
                 const id = a.payload.doc.id;
                 return { id, ...data };
@@ -213,7 +213,7 @@ export class WelcomeDialog {
     @Inject(MAT_DIALOG_DATA) public data: any, public accountService: AccountService) {
       let accountTypesCollection = this.accountService.db.collection("industries"); //thinking this will never be a large call, but check with nested collections to see later.
       accountTypesCollection.snapshotChanges().pipe(
-        map(actions => actions.map(a => {
+        map((actions:any) => actions.map(a => {
           const data = a.payload.doc.data();
           const id = a.payload.doc.id;
           return { id, ...data };

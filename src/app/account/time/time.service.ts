@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { AngularFirestore } from "angularfire2/firestore";
+import { AngularFirestore } from "@angular/fire/firestore";
 import { Observable, BehaviorSubject } from "rxjs";
 import { map, tap, groupBy, flatMap, toArray, switchMap } from "rxjs/operators";
 import { of, combineLatest } from "rxjs";

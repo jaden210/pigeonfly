@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from 'angularfire2/firestore';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { MatDialog } from '@angular/material';
 import { VideoDialogComponent } from './video-dialog/video-dialog.component';
 declare var gtag: Function;
