@@ -18,15 +18,15 @@ import { AccountService, User } from "../../account.service";
 import { AddTraineeDialog } from "./add-trainee.dialog";
 import { AttendanceDialog } from "./attendance.dialog";
 import { tap } from "rxjs/operators";
-import { SurveyService } from "../../survey/survey.service";
-import { Survey } from "../../survey/survey";
+import { SurveysService } from "../../surveys/surveys.service";
+import { Survey } from "../../surveys/survey/survey";
 import { UserHistoryDialog } from "./user-history.dialog";
 
 @Component({
   selector: "app-article",
   templateUrl: "./article.component.html",
   styleUrls: ["./article.component.css"],
-  providers: [SurveyService]
+  providers: [SurveysService]
 })
 export class ArticleComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
@@ -47,7 +47,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private service: TrainingService,
     private accountService: AccountService,
-    private surveyService: SurveyService
+    private surveysService: SurveysService
   ) {}
 
   ngOnInit() {
@@ -190,7 +190,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
         });
         let survey = new Survey();
         survey.runOncePerUserSurvey = true;
-        survey.category = "OSHA Training";
+        survey.category = "Safety Training";
         survey.title = `Did you participate in this training? -${
           this.article.name
         }`;
@@ -199,16 +199,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
         survey.teamId = this.teamId;
         survey.userSurvey = userSurvey;
         survey.userId = this.accountService.user.uid;
-        this.surveyService.createSurvey(survey).then(data => {
-          const surveyId = data.id;
-          this.accountService.createEvent(
-            "Safety Training",
-            surveyId,
-            this.accountService.user.uid,
-            this.article.name,
-            this.teamId
-          );
-        });
+        this.surveysService.createSurvey(survey);
       }
     });
   }

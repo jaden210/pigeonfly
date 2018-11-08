@@ -4,6 +4,7 @@ import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
 import { ToolbarHelperComponent } from "./account/toolbar-helper/toolbar-helper.component";
 import { MaterialModule } from "./material/material.module";
+import { UserNamePipe } from "./user-name.pipe";
 
 @NgModule({
   imports: [
@@ -13,12 +14,13 @@ import { MaterialModule } from "./material/material.module";
     RouterModule,
     MaterialModule
   ],
-  declarations: [ToolbarHelperComponent],
+  declarations: [ToolbarHelperComponent, UserNamePipe],
   exports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     ToolbarHelperComponent,
+    UserNamePipe,
     MaterialModule
   ],
   entryComponents: [],

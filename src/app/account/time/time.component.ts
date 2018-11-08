@@ -1,4 +1,10 @@
-import { Component, OnInit, ViewChild, Inject, HostListener } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  Inject,
+  HostListener
+} from "@angular/core";
 import { trigger, style, transition, animate } from "@angular/animations";
 import { Timeclock, AccountService } from "../account.service";
 import * as moment from "moment";
@@ -35,8 +41,7 @@ export class TimeComponent implements OnInit {
   lat: number;
   long: number;
 
-
-  now: any = moment().format('MMM');
+  now: any = moment().format("MMM");
 
   constructor(
     public accountService: AccountService,
@@ -55,35 +60,45 @@ export class TimeComponent implements OnInit {
 
   private getLogs(): void {
     this.timeService
-    .getTimeLogs(this.accountService.aTeam.id)
-    .subscribe(logs => {
-      if (logs.length == 0) return;
-      this.timeClocks = this.timeClocks.concat(logs);
-      this.timeService.lastLog = logs[logs.length - 1];
-      if (this.timeClocks.length == 0) {
-        this.accountService.showHelper = true;
-        return;
-      }
-      this.buildCalendar();
-      this.onScroll();
-    });
+      .getTimeLogs(this.accountService.aTeam.id)
+      .subscribe(logs => {
+        if (logs.length == 0) return;
+        this.timeClocks = this.timeClocks.concat(logs);
+        this.timeService.lastLog = logs[logs.length - 1];
+        if (this.timeClocks.length == 0) {
+          this.accountService.showHelper = true;
+          return;
+        }
+        this.buildCalendar();
+        this.onScroll();
+      });
   }
 
-  @HostListener('scroll', ['$event'])
+  @HostListener("scroll", ["$event"])
   onScroll(event?: any) {
     if (!event) {
-      if (document.getElementById('body').clientHeight < document.getElementById('window').clientHeight) this.getLogs(); // if there isn't enough results to pass the fold, load more
+      if (
+        document.getElementById("body").clientHeight <
+        document.getElementById("window").clientHeight
+      )
+        this.getLogs(); // if there isn't enough results to pass the fold, load more
       return;
     }
-    if (event.target.offsetHeight + event.target.scrollTop >= event.target.scrollHeight) {
+    if (
+      event.target.offsetHeight + event.target.scrollTop >=
+      event.target.scrollHeight
+    ) {
       this.getLogs();
     }
   }
-  
+
   private buildCalendar(): void {
     this.days = [];
     let now: any = new Date();
-    let total_days = moment(now).diff(this.timeClocks[this.timeClocks.length -1].clockIn, 'days');
+    let total_days = moment(now).diff(
+      this.timeClocks[this.timeClocks.length - 1].clockIn,
+      "days"
+    );
     for (let i = 0; i <= total_days; i++) {
       let date = moment().subtract(i, "days");
       let month = date.format("MMM");
@@ -116,7 +131,7 @@ export class TimeComponent implements OnInit {
       let co = moment(day.clockOut);
       let duration: any = moment.duration(co.diff(ci));
       day.loggedHours = parseInt(duration.asHours());
-      day.loggedMinutes = (parseInt(duration.asMinutes()) % 60);
+      day.loggedMinutes = parseInt(duration.asMinutes()) % 60;
       loggedHours = loggedHours + parseInt(duration.asHours());
       loggedMinutes = loggedMinutes + (parseInt(duration.asMinutes()) % 60);
       if (loggedMinutes > 60) {
@@ -142,8 +157,8 @@ export class TimeComponent implements OnInit {
     let co = moment(time.clockOut);
     let duration: any = moment.duration(co.diff(ci));
     let lh = parseInt(duration.asHours());
-    let lm = parseInt(duration.asMinutes())%60;
-    return lh + 'h ' + lm + 'm';
+    let lm = parseInt(duration.asMinutes()) % 60;
+    return lh + "h " + lm + "m";
   }
 
   public exportCSV(): void {
@@ -250,115 +265,185 @@ export class TimeComponent implements OnInit {
     });
     dialog.afterClosed().subscribe((time: Timeclock) => {
       if (time) {
-        let tempUser = time['user'];
-        delete time['bShowDetails'];
-        delete time['querySelectorId'];
-        delete time['user'];
-        delete time['loggedHours'];
-        delete time['loggedMinutes'];
+        let tempUser = time["user"];
+        delete time["bShowDetails"];
+        delete time["querySelectorId"];
+        delete time["user"];
+        delete time["loggedHours"];
+        delete time["loggedMinutes"];
         time.updatedAt = new Date();
         time.updatedBy = this.accountService.user.name;
         time.updatedId = this.accountService.user.id;
         if (time.id) {
-          this.accountService.db.collection('timeclock').doc(time.id).update({...time}).then(() => {
-            time['user'] = tempUser;
-            this.createEvent(time, "Edited a Timeclock")
-          });
+          this.accountService.db
+            .collection("timeclock")
+            .doc(time.id)
+            .update({ ...time })
+            .then(() => {
+              time["user"] = tempUser;
+              this.createEvent(time, "Edited a Timeclock");
+            });
         } else {
           time.teamId = this.accountService.aTeam.id;
-          this.accountService.db.collection('timeclock').add({...time}).then(snapshot => {
-            time.id = snapshot.id;
-            this.createEvent(time, "Created a Timeclock");
-            this.buildCalendar();
-          });
+          this.accountService.db
+            .collection("timeclock")
+            .add({ ...time })
+            .then(snapshot => {
+              time.id = snapshot.id;
+              this.createEvent(time, "Created a Timeclock");
+              this.buildCalendar();
+            });
         }
       }
-    })
+    });
   }
 
   createEvent(time, type) {
-    this.accountService.createEvent(
-      "timeclock",
-      time.id,
-      this.accountService.user.id,
-      type,
-      this.accountService.aTeam.id
-    );
+    this.accountService.createEvent("timeclock", time.id, type);
   }
 }
 
 @Component({
-  selector: 'create-edit-time-dialog',
-  templateUrl: 'create-edit-time-dialog.html',
-  styleUrls: ['./time.component.css']
+  selector: "create-edit-time-dialog",
+  templateUrl: "create-edit-time-dialog.html",
+  styleUrls: ["./time.component.css"]
 })
 export class CreateEditTimeDialog {
-
   clockInHour;
   clockInMinute;
   clockOutHour;
   clockOutMinute;
   hours = [
-    {name: '1 AM', value: '1'},
-    {name: '2 AM', value: '2'},
-    {name: '3 AM', value: '3'},
-    {name: '4 AM', value: '4'},
-    {name: '5 AM', value: '5'},
-    {name: '6 AM', value: '6'},
-    {name: '7 AM', value: '7'},
-    {name: '8 AM', value: '8'},
-    {name: '9 AM', value: '9'},
-    {name: '10 AM', value: '10'},
-    {name: '11 AM', value: '11'},
-    {name: '12 PM', value: '12'},
-    {name: '1 PM', value: '13'},
-    {name: '2 PM', value: '14'},
-    {name: '3 PM', value: '15'},
-    {name: '4 PM', value: '16'},
-    {name: '5 PM', value: '17'},
-    {name: '6 PM', value: '18'},
-    {name: '7 PM', value: '19'},
-    {name: '8 PM', value: '20'},
-    {name: '9 PM', value: '21'},
-    {name: '10 PM', value: '22'},
-    {name: '11 PM', value: '23'},
-    {name: '12 AM', value: '24'}
+    { name: "1 AM", value: "1" },
+    { name: "2 AM", value: "2" },
+    { name: "3 AM", value: "3" },
+    { name: "4 AM", value: "4" },
+    { name: "5 AM", value: "5" },
+    { name: "6 AM", value: "6" },
+    { name: "7 AM", value: "7" },
+    { name: "8 AM", value: "8" },
+    { name: "9 AM", value: "9" },
+    { name: "10 AM", value: "10" },
+    { name: "11 AM", value: "11" },
+    { name: "12 PM", value: "12" },
+    { name: "1 PM", value: "13" },
+    { name: "2 PM", value: "14" },
+    { name: "3 PM", value: "15" },
+    { name: "4 PM", value: "16" },
+    { name: "5 PM", value: "17" },
+    { name: "6 PM", value: "18" },
+    { name: "7 PM", value: "19" },
+    { name: "8 PM", value: "20" },
+    { name: "9 PM", value: "21" },
+    { name: "10 PM", value: "22" },
+    { name: "11 PM", value: "23" },
+    { name: "12 AM", value: "24" }
   ];
   minutes = [
-    '01', '02', '03', '04', '05', '06', '07', '08', '09',
-    '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
-    '20', '21', '22', '23', '24', '25', '26', '27', '28', '29',
-    '30', '31', '32', '33', '34', '35', '36', '37', '38', '39',
-    '40', '41', '42', '43', '44', '45', '46', '47', '48', '49',
-    '50', '51', '52', '53', '54', '55', '56', '57', '58', '59'
-  ]
-  
+    "01",
+    "02",
+    "03",
+    "04",
+    "05",
+    "06",
+    "07",
+    "08",
+    "09",
+    "10",
+    "11",
+    "12",
+    "13",
+    "14",
+    "15",
+    "16",
+    "17",
+    "18",
+    "19",
+    "20",
+    "21",
+    "22",
+    "23",
+    "24",
+    "25",
+    "26",
+    "27",
+    "28",
+    "29",
+    "30",
+    "31",
+    "32",
+    "33",
+    "34",
+    "35",
+    "36",
+    "37",
+    "38",
+    "39",
+    "40",
+    "41",
+    "42",
+    "43",
+    "44",
+    "45",
+    "46",
+    "47",
+    "48",
+    "49",
+    "50",
+    "51",
+    "52",
+    "53",
+    "54",
+    "55",
+    "56",
+    "57",
+    "58",
+    "59"
+  ];
+
   constructor(
     public dialogRef: MatDialogRef<CreateEditTimeDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: any,public accountService: AccountService) {
-      this.clockInHour = moment(this.data.clockIn).format('HH').toString();
-      this.clockInMinute = moment(this.data.clockIn).format('mm').toString();
-      this.clockOutHour = moment(this.data.clockOut).format('HH').toString();
-      this.clockOutMinute = moment(this.data.clockOut).format('mm').toString();
-    }
-    
-    close(time?): void {
-      this.data.clockIn = moment(this.data.clockIn).set('hour',+this.clockInHour).set('minute',+this.clockInMinute).toDate();
-      this.data.clockOut = moment(this.data.clockOut).set('hour',+this.clockOutHour).set('minute',+this.clockOutMinute).toDate();
-      this.dialogRef.close(time);
-    }
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    public accountService: AccountService
+  ) {
+    this.clockInHour = moment(this.data.clockIn)
+      .format("HH")
+      .toString();
+    this.clockInMinute = moment(this.data.clockIn)
+      .format("mm")
+      .toString();
+    this.clockOutHour = moment(this.data.clockOut)
+      .format("HH")
+      .toString();
+    this.clockOutMinute = moment(this.data.clockOut)
+      .format("mm")
+      .toString();
+  }
 
-    delete() {
-      this.accountService.db.collection("timeclock").doc(this.data.id).delete().then(() => {
+  close(time?): void {
+    this.data.clockIn = moment(this.data.clockIn)
+      .set("hour", +this.clockInHour)
+      .set("minute", +this.clockInMinute)
+      .toDate();
+    this.data.clockOut = moment(this.data.clockOut)
+      .set("hour", +this.clockOutHour)
+      .set("minute", +this.clockOutMinute)
+      .toDate();
+    this.dialogRef.close(time);
+  }
+
+  delete() {
+    this.accountService.db
+      .collection("timeclock")
+      .doc(this.data.id)
+      .delete()
+      .then(() => {
         this.accountService.createEvent(
           "timeclock",
           this.data.id,
-          this.accountService.user.id,
-          "Deleted a Timeclock",
-          this.accountService.aTeam.id
+          "Deleted a Timeclock"
         );
         this.dialogRef.close();
       });
-    }
-    
   }
+}

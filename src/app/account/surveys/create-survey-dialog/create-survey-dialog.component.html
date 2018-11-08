@@ -1,0 +1,129 @@
+<h1 mat-dialog-title>{{ title }}</h1>
+<mat-dialog-content [ngSwitch]="step">
+  <ng-container *ngSwitchCase="1">
+    <span class="subtitle"> What is this survey about? </span>
+    <mat-form-field appearance="outline">
+      <mat-label>Category</mat-label>
+      <input matInput required [(ngModel)]="survey.category" />
+      <mat-hint align="end">ie. Pizza Friday</mat-hint>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Survey Question</mat-label>
+      <textarea matInput required [(ngModel)]="survey.title"></textarea>
+    </mat-form-field>
+  </ng-container>
+  <ng-container *ngSwitchCase="2">
+    <span class="subtitle">
+      How often would you like to send this survey?
+    </span>
+    <mat-radio-group class="radio-group" [(ngModel)]="sendOption">
+      <mat-radio-button
+        class="radio-button"
+        *ngFor="let option of sendOptions"
+        [value]="option"
+      >
+        {{ option }}
+      </mat-radio-button>
+    </mat-radio-group>
+  </ng-container>
+  <ng-container *ngSwitchCase="3">
+    <span class="subtitle"> {{ step3Subtitle }} </span>
+    <ng-container [ngSwitch]="sendOption">
+      <div *ngSwitchCase="'Monthly'" id="dom">
+        <div
+          *ngFor="let dom of daysOfMonth"
+          [class.selected]="survey.runOnDom.includes(dom)"
+          (click)="setDom(dom)"
+        >
+          {{ dom }}
+        </div>
+      </div>
+      <div *ngSwitchCase="'Weekly'" id="dow">
+        <div
+          *ngFor="let dow of daysOfWeek"
+          [class.selected]="survey.runOnDow.includes(dow.val)"
+          (click)="setDow(dow.val)"
+        >
+          {{ dow.name }}
+        </div>
+      </div>
+      <mat-form-field *ngSwitchCase="'Once'" style="width: 240px;">
+        <input
+          matInput
+          [matDatepicker]="picker"
+          placeholder="Choose a date"
+          disabled
+          [(ngModel)]="survey.runOnceOnDate"
+        />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker disabled="false"></mat-datepicker>
+      </mat-form-field>
+    </ng-container>
+  </ng-container>
+  <ng-container *ngSwitchCase="4">
+    <span class="subtitle"> Who would you like to send this survey to? </span>
+    <button mat-stroked-button (click)="selectAllContacts()">Select All</button>
+    <mat-selection-list
+      dense
+      [(ngModel)]="surveyContacts"
+      style="outline: none;"
+    >
+      <mat-list-option *ngFor="let user of (users | async)" [value]="user.uid">
+        <img
+          matListAvatar
+          [src]="user.profileUrl"
+          onerror="src='/assets/face.png'"
+        />
+        <h3 matLine>{{ user.name }}</h3>
+      </mat-list-option>
+    </mat-selection-list>
+  </ng-container>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">CANCEL</button>
+  <ng-container *ngIf="!isEdit; else: isEditButtons">
+    <button mat-button *ngIf="step > 1" (click)="back()">BACK</button>
+    <button
+      mat-button
+      *ngIf="step < 4"
+      color="primary"
+      (click)="next()"
+      [disabled]="!survey.category || !survey.title"
+    >
+      NEXT
+    </button>
+    <button
+      mat-button
+      *ngIf="step == 4"
+      color="primary"
+      (click)="create()"
+      [disabled]="!surveyContacts.length"
+    >
+      CREATE
+    </button>
+  </ng-container>
+  <ng-template #isEditButtons>
+    <button mat-button *ngIf="step == 3" (click)="back()">BACK</button>
+    <button
+      mat-button
+      *ngIf="step == 2 && sendOption != 'Daily'"
+      color="primary"
+      (click)="next()"
+    >
+      NEXT
+    </button>
+    <button
+      mat-button
+      *ngIf="sendOption == 'Daily' || step != 2"
+      color="primary"
+      (click)="save()"
+      [disabled]="
+        (!surveyContacts.length && step == 4) ||
+        ((!survey.category || !survey.title) && step == 1)
+      "
+    >
+      SAVE
+    </button>
+  </ng-template>
+  <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+</mat-dialog-actions>

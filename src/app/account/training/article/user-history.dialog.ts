@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from "@angular/core";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 import { Observable } from "rxjs";
 import { TrainingService } from "../training.service";
-import { Survey } from "../../survey/survey";
+import { Survey } from "../../surveys/survey/survey";
 import { tap } from "rxjs/operators";
 
 @Component({

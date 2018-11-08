@@ -5,7 +5,7 @@ import { Router } from "@angular/router";
 import { AngularFireStorage } from "@angular/fire/storage";
 import { map, catchError, tap, take, mergeMap } from "rxjs/operators";
 import { AccountService } from "../account.service";
-import { Survey } from "../survey/survey";
+import { Survey } from "../surveys/survey/survey";
 
 @Injectable({
   providedIn: "root"

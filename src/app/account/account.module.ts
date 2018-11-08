@@ -6,7 +6,7 @@ import {
   InviteDialog,
   EditUserDialog
 } from "./home/home.component";
-import { SurveyComponent } from "./survey/survey.component";
+import { SurveysModule } from "./surveys/surveys.module";
 import { TimeComponent, CreateEditTimeDialog } from "./time/time.component";
 import { LogComponent, CreateEditLogDialog } from "./log/log.component";
 import { AssesmentComponent } from "./assesment/assesment.component";
@@ -28,7 +28,6 @@ import { EventComponent } from "./event/event.component";
 import { EventSearchPipe } from "./event/search.pipe";
 import { NoAccessDialog } from "./account.service";
 import { ImagesDialogComponent } from "./images-dialog/images-dialog.component";
-import { SurveySearchPipe } from "./survey/search.pipe";
 import { TrainingModule } from "./training/training.module";
 import { SharedModule } from "../shared-module";
 import { WelcomeComponent } from "./welcome/welcome.component";
@@ -42,6 +41,7 @@ import { StatsComponent } from "./stats/stats.component";
     FormsModule,
     MomentModule,
     TrainingModule,
+    SurveysModule,
     SharedModule,
     AgmCoreModule.forRoot({
       apiKey: "AIzaSyCg1x6Pm29QsCbzSb0Astep5D4_-KEXlSk",
@@ -53,7 +53,6 @@ import { StatsComponent } from "./stats/stats.component";
     TeamSelectDialog,
     ProfileComponent,
     HomeComponent,
-    SurveyComponent,
     TimeComponent,
     LogComponent,
     EventComponent,
@@ -63,7 +62,6 @@ import { StatsComponent } from "./stats/stats.component";
     NoAccessDialog,
     SearchPipe,
     EventSearchPipe,
-    SurveySearchPipe,
     MapDialogComponent,
     IncidentReportsComponent,
     ImagesDialogComponent,
@@ -73,7 +71,7 @@ import { StatsComponent } from "./stats/stats.component";
     WelcomeDialog,
     StatsComponent
   ],
-  exports: [MaterialModule, TrainingModule],
+  exports: [MaterialModule, TrainingModule, SurveysModule],
   entryComponents: [
     InviteDialog,
     MapDialogComponent,
