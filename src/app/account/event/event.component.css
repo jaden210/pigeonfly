@@ -97,6 +97,7 @@
 .type {
     font-weight: 600;
     opacity: .87;
+    white-space: nowrap;
 }
 
 .title {
