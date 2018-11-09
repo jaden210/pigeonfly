@@ -100,7 +100,7 @@ exports.createdLog = functions.firestore.document("log/{id}").onCreate(snapshot 
 });
 exports.modifiedLog = functions.firestore.document("log/{logId}").onUpdate((change, context) => {
     let newDoc = change.after.data();
-    return logAsEvent(EventType.log, EventAction.updated, change.after.id, newDoc.userId, newDoc.description, newDoc.teamId)
+    return logAsEvent(EventType.log, EventAction.updated, change.after.id, newDoc.updatedId, newDoc.description, newDoc.teamId)
         .then(() => console.log("update logs complete"));
 });
 exports.deletedLog = functions.firestore.document("log/{logId}").onDelete(snapshot => {
@@ -149,12 +149,16 @@ exports.createdTimeclock = functions.firestore.document("timeclock/{id}").onCrea
 exports.modifiedTimeclock = functions.firestore.document("timeclock/{id}").onUpdate((change, context) => {
     let oldTime = change.before.data();
     let newTime = change.after.data();
+    const array = [];
     if (!oldTime.clockedOut && newTime.clockedOut) {
-        return logAsEvent(EventType.timeclock, EventAction.created, change.after.id, newTime.userId, "Clocked-in", newTime.teamId)
-            .then(() => console.log("updated timeclock complete"));
+        let event = logAsEvent(EventType.timeclock, EventAction.created, change.after.id, newTime.userId, "Clocked-in", newTime.teamId);
+        array.push(event);
     }
-    else
-        return null;
+    if (!oldTime.updatedId && newTime.updatedId) {
+        let updatedEvent = logAsEvent(EventType.timeclock, EventAction.updated, change.after.id, newTime.updatedId, "modified a timeclock", newTime.teamId);
+        array.push(updatedEvent);
+    }
+    Promise.all(array).then(() => console.log("updated timeclock complete"));
 });
 /* ----- INVITATIONS ----- */
 exports.createdInvitation = functions.firestore.document("invitation/{id}").onCreate(snapshot => {
