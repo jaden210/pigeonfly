@@ -32,7 +32,6 @@ export class AppComponent {
       this.appService.isUser = true;
       this.auth.auth.onAuthStateChanged(user => {
         if (user && user.uid) {
-          console.log(this.appService.isUser);
           this.appService.isLoggedIn = true;
         } 
       });

@@ -46,9 +46,6 @@ text-align: left;
     .p {
       padding: 8px;
     }
-    #signup {
-      max-width: calc(100vw - 16px);
-    }
     .pt {
       font-size: 28px;
       line-height: 28px;
@@ -60,27 +57,13 @@ text-align: left;
     .info {
       font-size: 15px;
     }
-    #imgcont {
-      display: none;
-    }
-    
     .hide {
       display: none;
     }
-    
-    #shhh {
-      font-size: 12px;
-    }
-    
     .sub {
       font-size: 21px;
       width: 100vw;
       padding: 12px;
       box-sizing: border-box;
-    }
-  
-    .quote {
-      font-size: 15px;
-      padding: 12px;
     }
   }

@@ -29,6 +29,7 @@ export class TopicsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.accountService.helper = this.accountService.helperProfiles.training;
     this.subscription = this.accountService.aTeamObservable.subscribe(team => {
       if (team) {
         this.setIsDev();

@@ -25,7 +25,6 @@ import { ContactComponent } from "./contact/contact.component";
 import { LoginComponent } from "./login/login.component";
 import { MakeOSHAComponent, Safe } from "./make-osha/make-osha.component";
 import { FooterComponent } from "./footer/footer.component";
-import { AssesComponent } from "./ases/make-osha.component";
 import { PreviewDialogComponent } from "./make-osha/preview-dialog/preview-dialog.component";
 import { TopicDialogComponent } from "./make-osha/topic-dialog/topic-dialog.component";
 import { SignUpComponent } from "./sign-up/sign-up.component";
@@ -46,7 +45,6 @@ import { VideoDialogComponent } from "./video-dialog/video-dialog.component";
     ContactComponent,
     LoginComponent,
     MakeOSHAComponent,
-    AssesComponent,
     Safe,
     FooterComponent,
     SignUpComponent,

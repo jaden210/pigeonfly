@@ -3,6 +3,7 @@ import { trigger, style, transition, animate } from "@angular/animations";
 import { AccountService } from '../account.service';
 import { map } from 'rxjs/operators';
 import * as jsPDF from 'jspdf';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-incident-reports',
@@ -28,7 +29,8 @@ export class IncidentReportsComponent implements OnInit {
   aReport: any = null;
 
   constructor(
-    public accountService: AccountService
+    public accountService: AccountService,
+    public snackbar: MatSnackBar
   ) {
     this.accountService.helper = this.accountService.helperProfiles.incidentReport;
     this.accountService.aTeamObservable.subscribe(team => {
@@ -62,6 +64,24 @@ export class IncidentReportsComponent implements OnInit {
 
   cancel() {
     this.aReport = null;
+  }
+
+  delete() {
+    if (this.aReport.id) { // remove from db
+      let snackbar = this.snackbar.open("deleting", "undo", {
+        duration: 6000
+      });
+      snackbar.afterDismissed().subscribe(action => {
+        if (!action.dismissedByAction) {
+          this.accountService.db.doc("incident-report/" + this.aReport.id).delete().then(() => this.aReport = null);
+        } else {
+          this.aReport = null;
+        }
+      });
+      snackbar.onAction().subscribe(action => {
+        snackbar.dismiss();
+      });
+    }
   }
 
   export() {

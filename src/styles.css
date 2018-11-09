@@ -10,9 +10,12 @@
 
 .fab {
     position: fixed !important;
-    bottom: 24px;
+    bottom: 48px;
     right: 24px;
     color: white !important;
+    width: auto !important;
+    border-radius: 30px !important;
+    padding: 0px 12px !important;
 }
 
 mat-toolbar {

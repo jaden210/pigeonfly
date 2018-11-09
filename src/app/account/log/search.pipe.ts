@@ -35,6 +35,11 @@ export class SearchPipe implements PipeTransform {
             let push = false;
             logLoop:
             for (let log of day.logs) {
+
+              if (log.id.toLowerCase().includes(f.toLowerCase())) {
+                push = true;
+                continue logLoop;
+              }
               if (log.description.toLowerCase().includes(f.toLowerCase())) {
                 push = true;
                 continue logLoop;

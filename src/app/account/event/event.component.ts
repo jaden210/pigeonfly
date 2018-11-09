@@ -6,6 +6,7 @@ import * as moment from "moment";
 import { MatDialog } from "@angular/material";
 import { ImagesDialogComponent } from "../images-dialog/images-dialog.component";
 import { Observable } from "rxjs";
+import { Router } from '@angular/router';
 
 @Component({
   selector: "app-event",
@@ -37,9 +38,9 @@ export class EventComponent {
 
   now: any = moment().format('MMM');
 
-  constructor(public accountService: AccountService, public dialog: MatDialog) {
+  constructor(public accountService: AccountService, public dialog: MatDialog, public router: Router) {
     this.accountService.helper = this.accountService.helperProfiles.event;
-    this.accountService.aTeamObservable.subscribe(aTeam => {
+    this.accountService.teamUsersObservable.subscribe(aTeam => {
       if (aTeam) {
         this.getLogs();
       }
@@ -72,14 +73,14 @@ export class EventComponent {
           ref
           .where("teamId", "==", this.accountService.aTeam.id)
           .orderBy("createdAt", "desc")
-          .limit(1)
+          .limit(50)
           )
       } else {
         return (   
           ref
           .where("teamId", "==", this.accountService.aTeam.id)
           .orderBy("createdAt", "desc")
-          .limit(5)
+          .limit(50)
           .startAfter(this.lastLog.createdAt)
           );
         }
@@ -137,38 +138,43 @@ export class EventComponent {
     return { events: eventsOnDate };
   }
 
-  getEventDetails(event) {
-    if (event.details) {
-      event.bShowDetails = true;
-    } else {
-      let doc = this.accountService.db
-        .collection(event.type)
-        .doc(event.documentId);
-      doc.valueChanges().subscribe((details: any) => {
-        details.clockIn ? (details.clockIn = details.clockIn.toDate()) : null;
-        details.clockOut
-          ? (details.clockOut = details.clockOut.toDate())
-          : null;
-        event.details = details;
-        event.bShowDetails = true;
-      });
+  routeToEventOrigin(event: Event) {
+    switch (event.type) {
+      case EventType.log:
+      this.accountService.searchForHelper = event.documentId;
+      this.router.navigate(['account/log']);
+      return;
+      case EventType.timeclock:
+      this.accountService.searchForHelper = event.documentId;
+      this.router.navigate(['account/time']);
+      return;
+      case EventType.member:
+      this.accountService.searchForHelper = event.documentId;
+      this.router.navigate(['account/dashboard']);
+      return;
+      case EventType.incidentReport:
+      this.router.navigate(['account/incident-reports']);
+      return;
+      case EventType.selfInspection:
+      this.router.navigate(['account/self-inspection']);
+      return;
+      case EventType.survey:
+      this.router.navigate(['account/surveys/' + event.documentId]);
+      return;
+      case EventType.surveyResponse:
+      this.router.navigate(['account/surveys/' + event.documentId]);
+      return;
     }
   }
+}
 
-  getDiff(time) {
-    let ci = moment(time.clockIn);
-    let co = moment(time.clockOut);
-    let duration: any = moment.duration(co.diff(ci));
-    let lh = parseInt(duration.asHours());
-    let lm = parseInt(duration.asMinutes()) % 60;
-    return lh + "h " + lm + "m";
-  }
-
-  showImages(images) {
-    let dialog = this.dialog.open(ImagesDialogComponent, {
-      data: images
-    });
-  }
-
-  export() {}
+enum EventType {
+  log = 'Log',
+  timeclock = "Timeclock",
+  incidentReport = "Incident Report",
+  survey = "Survey",
+  surveyResponse = "Survey Response",
+  selfInspection = "Self Inspection",
+  training = "Training",
+  member = "Member"
 }

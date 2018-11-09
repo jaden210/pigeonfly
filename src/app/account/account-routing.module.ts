@@ -20,7 +20,7 @@ const routes: Routes = [
       { path: "", redirectTo: "dashboard", pathMatch: "full" },
       { path: "dashboard", component: HomeComponent },
       { path: "account", component: ProfileComponent },
-      { path: "assesment", component: AssesmentComponent },
+      { path: "self-inspection", component: AssesmentComponent },
       { path: "log", component: LogComponent },
       { path: "time", component: TimeComponent },
       { path: "event", component: EventComponent },
@@ -34,7 +34,8 @@ const routes: Routes = [
       {
         path: "surveys",
         loadChildren: "./surveys/surveys.module#SurveysModule"
-      }
+      },
+      { path: "**", redirectTo: "dashboard" }
     ]
   }
 ];

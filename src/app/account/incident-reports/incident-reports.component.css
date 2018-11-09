@@ -48,6 +48,14 @@
     max-width: 500px;
     opacity: .87;
   }
+
+  .date {
+    font-size: 13px;
+    white-space: nowrap;
+    font-weight: 500;
+    margin-bottom: 0;
+    font-style: italic;
+  }
   
   .body {
     padding: 12px;

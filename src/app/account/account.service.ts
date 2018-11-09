@@ -21,6 +21,7 @@ export class AccountService {
   showHelper: boolean = false;
   showFeedback: boolean = false;
   bShowProfile: boolean = false; // template var
+  searchForHelper: string; // template var to assist event system;
 
   helperProfiles = {
     newTeam: {
@@ -90,7 +91,7 @@ export class AccountService {
     achievement: {
       name: "Achievements",
       description:
-        "CThis page was designed specifically to help you gain the benefits of Compliancechimp as quickly as possible. Compliancechimp is a thorough and powerful platform which improves safety and protects businesses. But those benefits only come if it gets used. Get started on earning every trophy, today. Your compliance coincides with earning these trophies. When you’ve earned them all, we’ll send along some fun Compliancechimp merch as a reward."
+        "This page was designed specifically to help you gain the benefits of Compliancechimp as quickly as possible. Compliancechimp is a thorough and powerful platform which improves safety and protects businesses. But those benefits only come if it gets used. Get started on earning every trophy, today. Your compliance coincides with earning these trophies. When you’ve earned them all, we’ll send along some fun Compliancechimp merch as a reward."
     },
     training: {
       name: "Training",
@@ -153,20 +154,6 @@ export class AccountService {
               this.teamUsersObservable.next(users);
             });
         }
-      });
-  }
-
-  createEvent(type, documentId, title) {
-    //this method also exists in minute project, if changes are made here make them there as well
-    let createdAt = new Date();
-    let userId = this.user.id;
-    let teamId = this.aTeam.id;
-    this.db
-      .collection("event")
-      .add({ type, documentId, userId, title, createdAt, teamId })
-      .then(() => {})
-      .catch(error => {
-        console.error("error creating event", error);
       });
   }
 

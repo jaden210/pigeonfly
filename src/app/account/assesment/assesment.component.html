@@ -1,20 +1,15 @@
-<mat-toolbar style="font-size: 15px">
+<mat-toolbar>
+  Self-Inspections
   <div class="flex"></div>
   <toolbar-helper></toolbar-helper>
 </mat-toolbar>
 <div class="window">
-    <div class="assesments">
-      <ng-container *ngFor="let assesment of assesments">
-        <div class="assesment">
-          <div class="header" (click)="selectAssesment(assesment)">
-            <div class="title" >{{assesment.title}}</div>
-          </div>
-          <div class="body">
-            {{assesment.createdAt| date: 'longDate'}}
-          </div>
-        </div>
-      </ng-container>
-    </div>
+  <mat-nav-list>
+    <mat-list-item *ngFor="let assesment of assesments" (click)="selectAssesment(assesment)">
+      <h2 matLine> {{assesment.title}} </h2>
+      <p mat-line> {{assesment.createdAt| date: 'longDate'}} </p>
+    </mat-list-item>
+  </mat-nav-list>
   </div>
   <div id="assesment-window" *ngIf="aAssesment && !takeInspection" [@assesment]>
     <mat-toolbar>
@@ -29,7 +24,7 @@
       <button mat-stroked-button class="ml" color="primary" (click)="save()" [disabled]="!aAssesment.title">SAVE</button>
     </mat-toolbar>
     <div class="panel">
-      <div id="instructions">Select the questions that are relevant to your assessment. Questions are grouped by their category.</div>
+      <div id="instructions">Select the questions that are relevant to you. Questions are grouped by their category.</div>
       <mat-accordion>
         <mat-expansion-panel *ngFor="let sub of aAssesment.assesment; let i = index">
           <mat-expansion-panel-header>
@@ -101,4 +96,4 @@
     </div>
   </div>
 
-  <button class="fab" mat-fab color="accent" (click)="startNewAssesment()"><mat-icon>add</mat-icon></button>
+  <button class="fab" mat-mini-fab color="accent" (click)="startNewAssesment()"><mat-icon>find_replace</mat-icon>New Self-Inspection</button>

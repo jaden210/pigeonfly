@@ -7,11 +7,11 @@ import { ContactComponent } from './contact/contact.component';
 import { SupportComponent } from './support/support.component';
 import { LoginComponent } from './login/login.component';
 import { MakeOSHAComponent } from './make-osha/make-osha.component';
-import { AssesComponent } from './ases/make-osha.component';
 import { HowComponent } from './how/how.component';
 import { TermsOfUseComponent } from './terms-of-use/terms-of-use.component';
 import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 import { CustomerAgreementComponent } from './customer-agreement/customer-agreement.component';
+import { AuthGuard } from './auth.gaurd';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -23,11 +23,10 @@ const routes: Routes = [
   { path: 'how-it-works', component: HowComponent },
   { path: 'login', component: LoginComponent },
   { path: 'ken-page', component: MakeOSHAComponent },
-  { path: 'osha-assesment', component: AssesComponent },
   { path: 'terms-of-use', component: TermsOfUseComponent },
   { path: 'privacy-policy', component: PrivacyPolicyComponent },
   { path: 'customer-agreement', component: CustomerAgreementComponent },
-  { path: 'account', loadChildren: './account/account.module#AccountModule' }
+  { path: 'account', loadChildren: './account/account.module#AccountModule', canActivate: [AuthGuard] }
 ]
 
 @NgModule({

@@ -239,6 +239,9 @@ export class AssesmentComponent implements OnInit {
           this.aAssesment = null;
         }
       });
+      snackbar.onAction().subscribe(action => {
+        snackbar.dismiss();
+      });
     }
   }
 

@@ -95,14 +95,7 @@ export class SurveysService {
       .collection("survey")
       .doc(id)
       .update({ ...survey })
-      .then(data => {
-        this.accountService.createEvent(
-          "Survey Modified",
-          survey.id,
-          survey.title
-        );
-        return data;
-      })
+      .then(data => {return data})
       .catch(error => {
         console.error("Error updating survey.", error);
         alert("Error updating survey");
@@ -115,8 +108,6 @@ export class SurveysService {
       .collection("survey")
       .add({ ...survey })
       .then(data => {
-        const surveyId = data.id;
-        this.accountService.createEvent("New Survey", surveyId, survey.title);
         return data;
       })
       .catch(error => {

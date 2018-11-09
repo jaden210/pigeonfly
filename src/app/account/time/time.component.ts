@@ -153,7 +153,7 @@ export class TimeComponent implements OnInit {
   }
 
   getDiff(time) {
-    let ci = moment(time.clockIn);
+    let ci = moment(time.clockIn).startOf('minutes');
     let co = moment(time.clockOut);
     let duration: any = moment.duration(co.diff(ci));
     let lh = parseInt(duration.asHours());
@@ -281,7 +281,6 @@ export class TimeComponent implements OnInit {
             .update({ ...time })
             .then(() => {
               time["user"] = tempUser;
-              this.createEvent(time, "Edited a Timeclock");
             });
         } else {
           time.teamId = this.accountService.aTeam.id;
@@ -290,16 +289,11 @@ export class TimeComponent implements OnInit {
             .add({ ...time })
             .then(snapshot => {
               time.id = snapshot.id;
-              this.createEvent(time, "Created a Timeclock");
               this.buildCalendar();
             });
         }
       }
     });
-  }
-
-  createEvent(time, type) {
-    this.accountService.createEvent("timeclock", time.id, type);
   }
 }
 
@@ -437,13 +431,6 @@ export class CreateEditTimeDialog {
       .collection("timeclock")
       .doc(this.data.id)
       .delete()
-      .then(() => {
-        this.accountService.createEvent(
-          "timeclock",
-          this.data.id,
-          "Deleted a Timeclock"
-        );
-        this.dialogRef.close();
-      });
+      .then(() => this.dialogRef.close());
   }
 }

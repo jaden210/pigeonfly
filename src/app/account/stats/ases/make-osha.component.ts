@@ -1,5 +1,5 @@
 import { Component, OnInit, Pipe } from '@angular/core';
-import { AppService } from '../app.service';
+import { AccountService } from '../../account.service';
 import { map } from "rxjs/operators";
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { DomSanitizer, SafeHtml, SafeStyle, SafeUrl, SafeScript, SafeResourceUrl } from '@angular/platform-browser';
@@ -21,7 +21,7 @@ export class AssesComponent implements OnInit {
 
 
   constructor(
-    public appService: AppService
+    public accountService: AccountService
   ) { }
 
   ngOnInit() {
@@ -29,7 +29,7 @@ export class AssesComponent implements OnInit {
   }
 
   get() {
-    let collection = this.appService.db.collection(this.collection, ref => ref.orderBy("order", "asc"));
+    let collection = this.accountService.db.collection(this.collection, ref => ref.orderBy("order", "asc"));
     collection.snapshotChanges().pipe(
       map(actions => actions.map(a => { //better way
         const data = a.payload.doc.data() as any;
@@ -43,7 +43,7 @@ export class AssesComponent implements OnInit {
 
   selectDoc(item) {
     this.newDoc = item;
-    let questions = this.appService.db.collection(this.collection).doc(item.id).collection('questions', ref => ref.orderBy('createdAt'))
+    let questions = this.accountService.db.collection(this.collection).doc(item.id).collection('questions', ref => ref.orderBy('createdAt'))
     questions.snapshotChanges().pipe(
       map(actions => actions.map(a => { //better way
         const data = a.payload.doc.data() as any;
@@ -60,26 +60,26 @@ export class AssesComponent implements OnInit {
     let d = this.newDoc;
     delete d.questions;
     this.newQuestion.createdAt = new Date();
-    this.appService.db.collection(this.collection).doc(d.id).collection('questions').add({...this.newQuestion}).then(() => {
+    this.accountService.db.collection(this.collection).doc(d.id).collection('questions').add({...this.newQuestion}).then(() => {
       this.newQuestion = new NewQ();
     });
   }
 
   updateQ(q) {
     q.createdAt = new Date();
-    this.appService.db.collection(this.collection).doc(this.newDoc.id).collection('questions').doc(q.id).update({... q});
+    this.accountService.db.collection(this.collection).doc(this.newDoc.id).collection('questions').doc(q.id).update({... q});
   }
 
   deleteQ(q) {
-    this.appService.db.collection(this.collection).doc(this.newDoc.id).collection('questions').doc(q.id).delete();
+    this.accountService.db.collection(this.collection).doc(this.newDoc.id).collection('questions').doc(q.id).delete();
   }
 
   push() {
     if (this.newDoc.id) {
-      this.appService.db.collection(this.collection).doc(this.newDoc.id).update({...this.newDoc}).then(() => {
+      this.accountService.db.collection(this.collection).doc(this.newDoc.id).update({...this.newDoc}).then(() => {
       });
     } else {
-      this.appService.db.collection(this.collection).add({...this.newDoc}).then(snapshot => {
+      this.accountService.db.collection(this.collection).add({...this.newDoc}).then(snapshot => {
         this.newDoc.id = snapshot.id;
         this.selectDoc(this.newDoc);
       });
@@ -87,7 +87,7 @@ export class AssesComponent implements OnInit {
   }
   
   deleteDoc() {
-    let dq = this.appService.db.collection(this.collection).doc(this.newDoc.id).collection('questions');
+    let dq = this.accountService.db.collection(this.collection).doc(this.newDoc.id).collection('questions');
     dq.snapshotChanges().pipe(
       map(actions => actions.map(a => { //better way
         const data = a.payload.doc.data() as any;
@@ -96,10 +96,10 @@ export class AssesComponent implements OnInit {
       }))
     ).subscribe(questions => {
       questions.forEach(q => {
-        let dq = this.appService.db.collection(this.collection).doc(this.newDoc.id).collection('questions').doc(q.id).delete();
+        let dq = this.accountService.db.collection(this.collection).doc(this.newDoc.id).collection('questions').doc(q.id).delete();
       })
     });
-    this.appService.db.collection(this.collection).doc(this.newDoc.id).delete().then(() => {
+    this.accountService.db.collection(this.collection).doc(this.newDoc.id).delete().then(() => {
     this.newDoc = new NewDoc();
     })
   }

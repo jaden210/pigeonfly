@@ -31,7 +31,7 @@ import { Observable } from "rxjs";
   ]
 })
 export class LogComponent {
-  searchStr; // template variable
+  searchStr: string; // template variable
   filterUsers; // template variable
 
   logs: any = [];
@@ -53,6 +53,7 @@ export class LogComponent {
   }
 
   getLogs() {
+    this.searchStr = this.accountService.searchForHelper; //sucks
     this.getTimeLogs().subscribe(logs => {
       if (logs.length == 0) return;
       this.logs = this.logs.concat(logs);
@@ -200,8 +201,7 @@ export class LogComponent {
           this.accountService.db
             .collection("log")
             .doc(log.id)
-            .update({ ...log })
-            .then(() => this.createEvent(log));
+            .update({ ...log });
         } else {
           log.createdAt = new Date(log.createdAt);
           log.teamId = this.accountService.aTeam.id;
@@ -215,10 +215,6 @@ export class LogComponent {
         }
       }
     });
-  }
-
-  createEvent(log) {
-    this.accountService.createEvent("log", log.id, log.description);
   }
 }
 
@@ -243,10 +239,7 @@ export class CreateEditLogDialog {
       .collection("log")
       .doc(this.data.id)
       .delete()
-      .then(() => {
-        this.accountService.createEvent("log", this.data.id, "Deleted a Log");
-        this.dialogRef.close();
-      });
+      .then(() => this.dialogRef.close());
   }
 
   upload(): void {

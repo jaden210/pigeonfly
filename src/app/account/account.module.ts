@@ -32,6 +32,8 @@ import { TrainingModule } from "./training/training.module";
 import { SharedModule } from "../shared-module";
 import { WelcomeComponent } from "./welcome/welcome.component";
 import { StatsComponent } from "./stats/stats.component";
+import { AngularEditorModule } from "@kolkov/angular-editor";
+import { AssesComponent } from "./stats/ases/make-osha.component";
 
 @NgModule({
   imports: [
@@ -43,6 +45,7 @@ import { StatsComponent } from "./stats/stats.component";
     TrainingModule,
     SurveysModule,
     SharedModule,
+    AngularEditorModule,
     AgmCoreModule.forRoot({
       apiKey: "AIzaSyCg1x6Pm29QsCbzSb0Astep5D4_-KEXlSk",
       libraries: ["places"]
@@ -69,7 +72,8 @@ import { StatsComponent } from "./stats/stats.component";
     CreateEditTimeDialog,
     WelcomeComponent,
     WelcomeDialog,
-    StatsComponent
+    StatsComponent,
+    AssesComponent
   ],
   exports: [MaterialModule, TrainingModule, SurveysModule],
   entryComponents: [

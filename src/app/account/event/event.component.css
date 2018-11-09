@@ -66,16 +66,32 @@
     cursor: pointer;
 }
 
-.log {
-    background-color: #ffcdd2;
-}
-
-.survey {
-    background-color: #bbdefb;
-}
-
-.timeclock {
+.Log {
     background-color: #ffe0b2;
+}
+
+.Survey {
+    background-color: #c8e6c9;
+}
+
+.Training {
+    background-color: #c5cae9;
+}
+
+.Member {
+    background-color: #b3e5fc;
+}
+
+.Timeclock {
+    background-color: #cfd8dc;
+}
+
+.Injury {
+    background-color: #f8bbd0;
+}
+
+.Inspection {
+    background-color: #ffecb3;
 }
 
 .type {
@@ -103,40 +119,6 @@
     font-size: 24px;
     color: #666666;
     font-weight: 500;
-}
-
-.details {
-    overflow: hidden;
-}
-
-.image-row {
-    white-space: nowrap;
-    overflow: scroll;
-}
-
-.log-image-box {
-    height: 120px;
-    overflow: hidden;
-    margin: 8px;
-    display: inline-block;
-    border-radius: 8px;
-}
-
-.log-image {
-    height: 100%;
-}
-
-.time-detail {
-    display: flex;
-    margin: 8px 0;
-    opacity: .87;
-    user-select: none;
-}
-
-.time-item {
-    display: flex;
-    align-items: center;
-    margin: 0 12px;
 }
 
 .small {
