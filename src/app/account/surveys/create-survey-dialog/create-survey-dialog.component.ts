@@ -53,7 +53,8 @@ export class CreateSurveyDialogComponent implements OnInit {
   ngOnInit() {
     this.daysOfMonth = Array.from(new Array(31), (val, index) => index + 1);
     this.users = this.accountService.teamUsersObservable;
-    if (this.data.survey) this.configureEdit(this.data.survey, this.data.step);
+    if (this.data && this.data.survey)
+      this.configureEdit(this.data.survey, this.data.step);
   }
 
   private configureEdit(survey: Survey, step): void {

@@ -88,15 +88,18 @@ export class SurveysService {
   }
 
   public updateSurvey(survey: Survey): Promise<void> {
+    const id = survey.id;
+    delete survey["user"];
+    delete survey.id;
     return this.db
       .collection("survey")
-      .doc(survey.id)
+      .doc(id)
       .update({ ...survey })
       .then(data => {
         this.accountService.createEvent(
           "Survey Modified",
           survey.id,
-          this.survey.title
+          survey.title
         );
         return data;
       })
@@ -113,11 +116,7 @@ export class SurveysService {
       .add({ ...survey })
       .then(data => {
         const surveyId = data.id;
-        this.accountService.createEvent(
-          "New Survey",
-          surveyId,
-          this.survey.title
-        );
+        this.accountService.createEvent("New Survey", surveyId, survey.title);
         return data;
       })
       .catch(error => {

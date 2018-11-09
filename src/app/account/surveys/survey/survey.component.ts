@@ -6,7 +6,7 @@ import { Observable, Subscription, combineLatest, of } from "rxjs";
 import { ActivatedRoute, Router, ParamMap } from "@angular/router";
 import { Survey } from "../survey/survey";
 import { Location, DatePipe } from "@angular/common";
-import { map, groupBy, flatMap, toArray, share } from "rxjs/operators";
+import { map, groupBy, flatMap, toArray, share, tap } from "rxjs/operators";
 import { CreateSurveyDialogComponent } from "../create-survey-dialog/create-survey-dialog.component";
 
 @Component({
@@ -23,6 +23,7 @@ export class SurveyComponent implements OnInit, OnDestroy {
   public users: User[];
   public surveyResponseList: Observable<any[]>;
   public runType: string;
+  public surveyResponseListLength: number;
   private colors = [
     "#FF6F00",
     "#B71C1C",
@@ -162,6 +163,7 @@ export class SurveyComponent implements OnInit, OnDestroy {
           return rr;
         });
       }),
+      tap(responses => (this.surveyResponseListLength = responses.length)),
       share()
     );
   }
@@ -186,15 +188,23 @@ export class SurveyComponent implements OnInit, OnDestroy {
   public editSurvey(step: number): void {
     /* **step - which step of the dialog is being edited.
     1 = Category and Title, 2 = Run Date, 4 = Contacts. */
-    this.dialog.open(CreateSurveyDialogComponent, {
-      disableClose: true,
-      data: { survey: this.survey, step }
-    });
+    if (step == 1 && this.surveyResponseListLength) {
+      alert(
+        "You cannot change the survey question or category after a receiving a response."
+      );
+    } else {
+      this.dialog.open(CreateSurveyDialogComponent, {
+        disableClose: true,
+        data: { survey: this.survey, step }
+      });
+    }
   }
 
   /* called when flipping active toggle */
   public updateSurvey(active): void {
     this.survey.active = active;
+    delete this.survey["user"];
+    delete this.survey.id;
     this.service.updateSurvey(this.survey);
   }
 
