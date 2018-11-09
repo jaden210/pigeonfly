@@ -1,6 +1,9 @@
 import * as functions from 'firebase-functions';
+import { database } from 'firebase-admin';
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
+admin.firestore().settings( { timestampsInSnapshots: true });
+
 
 exports.inviteNewUser = functions.firestore.document("invitation/{invitationId}").onCreate((snapshot) => {
   let info = snapshot.data();
@@ -99,60 +102,113 @@ exports.supportTicketSubmitted = functions.firestore.document("support/{supportI
 });
 
 
+/* ----- LOGS ----- */
 
-/*    --------- ACHIEVEMENTS ----------     */
+exports.createdLog = functions.firestore.document("log/{id}").onCreate(snapshot => {
+  let doc = snapshot.data();
+  
+  const event = logAsEvent(EventType.log, EventAction.created, snapshot.id, doc.userId, doc.description, doc.teamId);
+  const achievement = updateCompletedAchievement(doc.teamId, "logsCount", 1, true);
+  
+  return Promise.all([event, achievement]).then(() => console.log("create logs complete"));
+  
+});
 
-exports.achievementTeam = functions.firestore.document("team/{teamId}").onUpdate((change, context) => {
+exports.modifiedLog = functions.firestore.document("log/{logId}").onUpdate((change, context) => {
+  let newDoc = change.after.data();
+  
+  return logAsEvent(EventType.log, EventAction.updated, change.after.id, newDoc.userId, newDoc.description, newDoc.teamId)
+  .then(() => console.log("update logs complete"));
+});
+
+exports.deletedLog = functions.firestore.document("log/{logId}").onDelete(snapshot => {
+  let doc = snapshot.data();
+  
+  return logAsEvent(EventType.log, EventAction.deleted, snapshot.id, doc.userId, doc.description, doc.teamId)
+  .then(() => console.log("delete logs complete"));
+});
+
+/* ----- TEAM ----- */
+
+exports.updateTeam = functions.firestore.document("team/{teamId}").onUpdate((change, context) => {
   let oldTeam = change.before.data();
   let newTeam = change.after.data();
   
   /* logoUrl achievement */
   if (!oldTeam.logoUrl && newTeam.logoUrl) {
-    updateCompletedAchievement(newTeam.id, "hasCompanyLogo", true).then(() => console.log('successs')).catch(error => console.log(error));
+    return updateCompletedAchievement(newTeam.id, "hasCompanyLogo", true)
+    .then(() => console.log('update team complete'));
+  } else {
+    return console.log("nothing interesting happened");
+    ;
   }
 });
 
-exports.achievementProfile = functions.firestore.document("user/{userId}").onUpdate((change, context) => {
+/* ----- USER ----- */
+
+exports.userCreated = functions.firestore.document("user/{userId}").onCreate(snapshot => {
+  let user = snapshot.data();
+
+  return logAsEvent(EventType.member, EventAction.created, snapshot.id, user.id, "Was added to the system", user.teams[0] || null)
+  .then(() => console.log("created user complete"));
+})
+
+exports.userChange = functions.firestore.document("user/{userId}").onUpdate((change, context) => {
   let oldUser = change.before.data();
   let newUser = change.after.data();
   
   /* profileUrl achievement */
   if (oldUser.accountType == "owner" && !oldUser.profileUrl && newUser.profileUrl) {
-   updateCompletedAchievement(newUser.teamId, "hasOwnerProfileUrl", true).then(() => console.log('successs')).catch(error => console.log(error));
-  }
+   return updateCompletedAchievement(newUser.teamId, "hasOwnerProfileUrl", true)
+   .then(() => console.log("updated user complete"));
+  } else return null;
 });
 
-exports.achievementLogs = functions.firestore.document("log/{id}").onCreate((snapshot) => {
-  let log = snapshot.data();
-  
-  /* total logs achievement */
-  updateCompletedAchievement(log.teamId, "logsCount", 1, true).then(() => console.log('successs')).catch(error => console.log(error));
 
-  logAsEvent("log", log.id,log.userId,log.description,log.teamId);
-});
+/* ----- TIMECLOCKS ----- */
 
-exports.achievementTimeclocks = functions.firestore.document("timeclock/{id}").onCreate((snapshot) => {
+exports.createdTimeclock = functions.firestore.document("timeclock/{id}").onCreate(snapshot => {
   let timeclock = snapshot.data();
+
+  const event = logAsEvent(EventType.timeclock, EventAction.created, snapshot.id, timeclock.userId, "Clocked-in", timeclock.teamId);
+  const achievement = updateCompletedAchievement(timeclock.teamId, "timeclocksCount", 1, true);
   
-  /* total timeclock achievement */
-  updateCompletedAchievement(timeclock.teamId, "timeclocksCount", 1, true).then(() => console.log('successs')).catch(error => console.log(error));
+  return Promise.all([event, achievement]).then(() => console.log("create timeclock complete"));
 });
 
-exports.achievementinvitedUsers = functions.firestore.document("invitation/{id}").onCreate((snapshot) => {
+exports.modifiedTimeclock = functions.firestore.document("timeclock/{id}").onUpdate((change, context) => {
+  let oldTime = change.before.data();
+  let newTime = change.after.data();
+
+  if (!oldTime.clockedOut && newTime.clockedOut) {
+    return logAsEvent(EventType.timeclock, EventAction.created, change.after.id, newTime.userId, "Clocked-in", newTime.teamId)
+      .then(() => console.log("updated timeclock complete"));
+  } else return null;
+});
+
+/* ----- INVITATIONS ----- */
+
+exports.createdInvitation = functions.firestore.document("invitation/{id}").onCreate(snapshot => {
   let invitation = snapshot.data();
 
   /* total invites achievement */
-  updateCompletedAchievement(invitation.teamId, "invitedUsers", 1, true).then(() => console.log('successs')).catch(error => console.log(error));
+  return updateCompletedAchievement(invitation.teamId, "invitedUsers", 1, true)
+  .then(() => console.log("created invitation complete"));
 });
 
-exports.achievementSelfAssesment = functions.firestore.document("self-inspection/{id}").onCreate((snapshot) => {
+/* ----- SELF INSPECTION ----- */
+
+exports.createdSelfInspection = functions.firestore.document("self-inspection/{id}").onCreate(snapshot => {
   let selfInspection = snapshot.data();
   
   /* total self inspections achievement */
-  updateCompletedAchievement(selfInspection.teamId, "startedSelfAssesments", 1, true).then(() => console.log('successs')).catch(error => console.log(error));
+  const achievement = updateCompletedAchievement(selfInspection.teamId, "startedSelfAssesments", 1, true)
+  const event = logAsEvent(EventType.selfInspection, EventAction.created, snapshot.id, selfInspection.userId, "Started a Self Inspection", selfInspection.teamId)
+    
+  return Promise.all([achievement, event]).then(() => console.log("created self inspection complete"));
 });
 
-exports.achievementFinishSelfInspection = functions.firestore.document("self-inspection/{id}").onUpdate((change, context) => {
+exports.modifySelfInspection = functions.firestore.document("self-inspection/{id}").onUpdate((change, context) => {
   let oldSI = change.before.data();
   let newSI = change.after.data();
   
@@ -160,45 +216,107 @@ exports.achievementFinishSelfInspection = functions.firestore.document("self-ins
   newSI.selfInspections.forEach(nInspection => {
     oldSI.selfInspections.forEach(oInspection => {
       if (nInspection.completedAt !== null && oInspection.completedAt == null) { // has been completed
-        updateCompletedAchievement(newSI.teamId, "completedSelfAssesments", 1, true).then(() => console.log('successs')).catch(error => console.log(error));
-      }
-    })
+        const achievement = updateCompletedAchievement(newSI.teamId, "completedSelfAssesments", 1, true);
+        const event = logAsEvent(EventType.selfInspection, EventAction.created, change.after.id, newSI.userId, "Finished a Self Inspection", newSI.teamId);
+          
+        return Promise.all([event, achievement]).then(() => console.log("updated self inspection complete"));
+      } else return null;
+    });
   });
 });
 
-exports.achievementInjuryReport = functions.firestore.document("injury-report/{Id}").onCreate((snapshot) => {
+/* ----- INJURY REPORT ----- */
+
+exports.createdInjuryReport = functions.firestore.document("injury-report/{id}").onCreate(snapshot => {
   let injuryReport = snapshot.data();
   
   /* total self inspections achievement */
-  updateCompletedAchievement(injuryReport.teamId, "injuryReports", 1, true).then(() => console.log('successs')).catch(error => console.log(error));
+  const achievement = updateCompletedAchievement(injuryReport.teamId, "injuryReports", 1, true);
+  const event = logAsEvent(EventType.incidentReport, EventAction.created, snapshot.id, injuryReport.userId, "Created a new " + injuryReport.type, injuryReport.teamId);
+
+  return Promise.all([event, achievement]).then(() => console.log("created injury report complete"));
 });
 
+/* ----- SURVEY ----- */
+
+exports.createdSurvey = functions.firestore.document("survey/{id}").onCreate(snapshot => {
+  let survey = snapshot.data();
+  return logAsEvent(EventType.survey, EventAction.created, snapshot.id, survey.userId, survey.title, survey.teamId)
+  .then(() => console.log("created survey complete"));
+});
+
+exports.modifiedSurvey = functions.firestore.document("survey/{surveyId}").onUpdate((change, context) => {
+  let newSurvey = change.after.data();
+  return logAsEvent(EventType.survey, EventAction.updated, change.after.id, newSurvey.userId, newSurvey.title, newSurvey.teamId)
+  .then(() => console.log("updated survey complete"));
+});
+
+exports.deletedSurvey = functions.firestore.document("survey/{logId}").onDelete(snapshot => {
+  let deletedSurvey = snapshot.data();
+  return logAsEvent(EventType.log, EventAction.deleted, snapshot.id, deletedSurvey.userId, deletedSurvey.title, deletedSurvey.teamId)
+  .then(() => console.log("deleted survey complete"));
+});
+
+/* ----- SURVEY RESPONSE ----- */
+
+exports.createdSurveyResponse = functions.firestore.document("survey-response/{id}").onCreate(snapshot => {
+  let surveyResponse = snapshot.data();
+  return logAsEvent(EventType.survey, EventAction.created, snapshot.id, surveyResponse.userId, surveyResponse.shortAnswer || '' + ' ' + surveyResponse || '', surveyResponse.teamId)
+  .then(() => console.log("created survey response complete"));
+});
+
+/*  ---------- Achievements ----------  */
 
 function updateCompletedAchievement(teamId: string, mapKey: string, value: any, sum?: boolean): Promise<any> {
   return admin.firestore().collection("completed-achievement").where("teamId", "==", teamId)
-    .get()
+  .get()
     .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          const docData = doc.data();
-          let obj = {};
-          obj[mapKey] = sum ? docData[mapKey] + value : value;
-          return admin.firestore().doc("completed-achievement/" + doc.id).update(obj)
-          .then(() => console.log(mapKey + " has been updated in completed-achievement"))
-          .catch(error => console.log(error));
-        });
+      querySnapshot.forEach(doc => { // should only be one, can't think of a better way
+      const docData = doc.data();
+      let obj = {};
+      obj[mapKey] = sum ? docData[mapKey] + value : value;
+        return admin.firestore().doc("completed-achievement/" + doc.id).update(obj);
+      });
     })
-    .catch(function(error) {
-        console.log("Error getting documents: ", error);
+    .catch(error => {
+        return console.log("Error getting documents: ", error);
     });
 }
 
+
 /*  ---------- EVENTS ----------  */
 
-function logAsEvent(type: string, documentId: string, userId: string, title: string, teamId: string): Promise<any> {
-  let nd = new Date();
-  return admin.firestore().collection("event").add(
-    { type, documentId, userId, title, createdAt: nd, teamId }
-  )
-  .then(() => console.log("new Event recorded"))
-  .catch(error => console.log(error));
+function logAsEvent(type: string, action: string, documentId: string, userId: string, description: string, teamId: string): Promise<FirebaseFirestore.DocumentSnapshot> {
+  let createdAt = new Date();
+  let event: Event = { type, action, documentId, userId, description, teamId, createdAt}
+  return admin.firestore().collection("event").add(event).then(newEvent => {
+    console.log(`event created: ${newEvent.id}`);
+  });
+}
+
+export class Event {
+  type: string;
+  action: string;
+  createdAt: Date;
+  userId: string;
+  teamId: string;
+  description: string;
+  documentId: string;
+}
+
+enum EventType {
+  log = 'Log',
+  timeclock = "Timeclock",
+  incidentReport = "Incident Report",
+  survey = "Survey",
+  surveyResponse = "Survey Response",
+  selfInspection = "Self Inspection",
+  training = "Training",
+  member = "Member"
+}
+
+enum EventAction {
+  created = "created",
+  updated = "updated",
+  deleted = "deleted",
 }
