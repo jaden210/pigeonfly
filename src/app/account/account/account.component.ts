@@ -1,10 +1,15 @@
-import { Component, OnInit , Inject} from '@angular/core';
+import { Component, OnInit , Inject, ViewChild, ElementRef, ChangeDetectorRef} from '@angular/core';
 import { AccountService, User, Team } from '../account.service';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { map, finalize } from 'rxjs/operators';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
+import { environment } from 'src/environments/environment';
+import { MatDialog } from '@angular/material';
+import { MakePaymentComponent } from './payments/make-payment/make-payment.component';
+declare var Stripe: Function;
+declare var elements: any;
 
 @Component({
   selector: 'app-account',
@@ -12,21 +17,24 @@ import * as moment from 'moment';
   styleUrls: ['./account.component.css']
 })
 export class ProfileComponent implements OnInit {
-
   showCompany: boolean = false;
   accountTypes;
   trialDaysLeft;
+  teamTier: number;
 
   constructor(
     public accountService: AccountService,
     private storage: AngularFireStorage,
     public auth: AngularFireAuth,
-    public router: Router
+    public router: Router,
+    public dialog: MatDialog
   ) { }
 
+
   ngOnInit() {
-    this.accountService.aTeamObservable.subscribe(team => {
+    this.accountService.teamUsersObservable.subscribe(team => {
       if (team) {
+        this.getTierInfo();
         this.accountService.helper = this.accountService.helperProfiles.account;
         if (this.accountService.aTeam.ownerId == this.accountService.user.id) {
           this.showCompany = true;
@@ -37,8 +45,25 @@ export class ProfileComponent implements OnInit {
           this.trialDaysLeft = 30 - moment().diff(this.accountService.aTeam.createdAt, 'days');
           
         }
+
       }
     })
+  }
+
+  enterCardInfo() {
+    let dialog = this.dialog.open(MakePaymentComponent, {
+      disableClose: true
+    });
+  }
+
+  getTierInfo() {
+    if (this.accountService.teamUsers.length <=10) {
+      this.teamTier = 39;
+    } else if (11 < this.accountService.teamUsers.length && this.accountService.teamUsers.length <= 100) {
+      this.teamTier = 99;
+    } else {
+      this.teamTier = this.accountService.teamUsers.length * 2;
+    }
   }
 
   upload(profile): void { // this will call the file input from our custom button

@@ -1,0 +1,18 @@
+<h1 mat-dialog-title>Enter Card Info</h1>
+<mat-dialog-content>
+  <form action="/charge" method="post" id="payment-form">
+    <div class="form-row">
+      <div id="card-element">
+        <!-- A Stripe Element will be inserted here. -->
+      </div>
+
+      <!-- Used to display Element errors. -->
+      <div id="card-errors" role="alert"></div>
+    </div>
+
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button color="primary" (click)="cancel()">CANCEL</button>
+  <button mat-raised-button color="accent" style="color:#ffffff" [disabled]="!isValid" (click)="formSubmit()">SAVE</button>
+</mat-dialog-actions>

@@ -29,10 +29,6 @@
     opacity: .87;
 }
 
-button {
-    border-radius: 20px;
-}
-
 .reset {
     font-size: 12px;
     color: blue;

@@ -23,7 +23,7 @@
               <div class="user-data">account type: {{item.user?.accountType}}</div>
             </div>
             <div class="action-row">
-              <button mat-raised-button color="accent" style="color: #FFFFFF; border-radius:20px" (click)="markReplied()">MARK REPLIED</button>
+              <button mat-raised-button color="accent" style="color: #FFFFFF;" (click)="markReplied()">MARK REPLIED</button>
             </div>
           </div>
         </div>
@@ -39,8 +39,8 @@
           <div class="t-body">{{item.description}}</div>
           <div class="t-from">location when submitted: {{item.originPage}}</div>
           <div class="action-row">
-              <button mat-button color="accent" style="border-radius:20px;margin-right:12px" (click)="close(item)">Close</button>
-              <button mat-raised-button color="accent" style="color: #FFFFFF; border-radius:20px" (click)="email(item)">Email</button>
+              <button mat-button color="accent" style="margin-right:12px" (click)="close(item)">Close</button>
+              <button mat-raised-button color="accent" style="color: #FFFFFF" (click)="email(item)">Email</button>
           </div>
         </div>
       </mat-tab>

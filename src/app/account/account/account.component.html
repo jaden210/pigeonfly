@@ -48,6 +48,10 @@
     </div>
     </mat-tab>
     <mat-tab label="Billing" *ngIf="showCompany">
-      <div class="free" *ngIf="trialDaysLeft > 0">You have {{trialDaysLeft}} days left until your free trial is up. No billing info is required until then.</div>
+      <div id="billing">
+        <div class="free" *ngIf="trialDaysLeft > 0">You’re in a free trial period for {{trialDaysLeft}} more days. Payment can be entered any time, but is not required until your free trial is up. You’ll be charged based on your team size, on the one month anniversary of your account creation date according to our Customer Agreement which you agreed to when setting up your account. Feel free to review the Customer Agreement again. Based on your current team size, you will be charged ${{teamTier}} per month, and can cancel at any time. All payments are handled securely through Stripe.</div>
+        <div class="free" *ngIf="trialDaysLeft <= 0">You’re free trial has expired. Please enter payment information to access your account. You’ll be charged based on your team size, on the one month anniversary of your account creation date according to our Customer Agreement which you agreed to when setting up your account. Feel free to review the Customer Agreement again. Based on your current team size, you will be charged ${{teamTier}} per month, and can cancel at any time. All payments are handled securely through Stripe.</div>
+        <button mat-raised-button color="accent" style="color:#ffffff" (click)="enterCardInfo()">ENTER PAYMENT</button>
+      </div>
     </mat-tab>
   </mat-tab-group>

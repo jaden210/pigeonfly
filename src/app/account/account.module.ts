@@ -34,6 +34,7 @@ import { WelcomeComponent } from "./welcome/welcome.component";
 import { StatsComponent } from "./stats/stats.component";
 import { AngularEditorModule } from "@kolkov/angular-editor";
 import { AssesComponent } from "./stats/ases/make-osha.component";
+import { MakePaymentComponent } from "./account/payments/make-payment/make-payment.component";
 
 @NgModule({
   imports: [
@@ -73,7 +74,8 @@ import { AssesComponent } from "./stats/ases/make-osha.component";
     WelcomeComponent,
     WelcomeDialog,
     StatsComponent,
-    AssesComponent
+    AssesComponent,
+    MakePaymentComponent
   ],
   exports: [MaterialModule, TrainingModule, SurveysModule],
   entryComponents: [
@@ -85,7 +87,8 @@ import { AssesComponent } from "./stats/ases/make-osha.component";
     ImagesDialogComponent,
     CreateEditLogDialog,
     CreateEditTimeDialog,
-    WelcomeDialog
+    WelcomeDialog,
+    MakePaymentComponent
   ],
   providers: [DatePipe]
 })

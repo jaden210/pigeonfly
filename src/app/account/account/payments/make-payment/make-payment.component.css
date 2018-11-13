@@ -1,0 +1,11 @@
+.mat-dialog-content {
+    min-height: 150px;
+    min-width: 350px;
+}
+
+#card-errors {
+    font-size: 13px;
+    margin-top: 12px;
+    color: #e91e63;
+    font-style: italic;
+}

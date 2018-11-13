@@ -35,6 +35,8 @@ export class TopicDialogComponent implements OnInit {
   public setImage(event): void {
     // callback from view
     if (event.target.files && event.target.files[0]) {
+      console.log(event.target.files);
+      
       var reader = new FileReader();
       reader.onload = (event: ProgressEvent) => {
         this.previewImg = (<FileReader>event.target).result;
