@@ -334,7 +334,7 @@
     width: calc(100vw - 24px);
   }
   .c-point {
-    min-height: 30px;
-    line-height: 30px;
-  }
+    min-height: 24px;
+    font-size: 12px;
+}
 }

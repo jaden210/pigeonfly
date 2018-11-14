@@ -175,12 +175,17 @@ img {
 @media screen and (max-width: 1000px) {
     #layout {
         flex-direction: column;
+        padding: 8px;
     }
     .p {
         padding: 0;
     }
+    #spacer {
+        height: 8px;
+    }
     #side {
         margin-top: 24px;
+        max-width: 100%;
     }
     .title {
         font-size: 28px;

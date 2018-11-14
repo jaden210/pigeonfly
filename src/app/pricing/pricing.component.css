@@ -218,6 +218,9 @@
   .sprice {
     font-size: 22px;
   }
+  .images {
+    margin-right: 0;
+  }
   #imgcont {
     display: none;
   }

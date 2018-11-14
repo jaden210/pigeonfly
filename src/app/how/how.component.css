@@ -209,25 +209,25 @@
     #imgcont {
       display: none;
     }
-  
     .hide {
       display: none;
     }
-  
     #shhh {
       font-size: 12px;
     }
-  
     .sub {
       font-size: 21px;
       text-align: center;
     }
-  
     .quote {
       font-size: 15px;
       padding: 12px;
     }
     .left {
       text-align: left !important;
+    }
+    .check {
+      min-width: auto;
+      font-size: 15px;
     }
   }

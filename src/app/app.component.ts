@@ -43,8 +43,9 @@ export class AppComponent {
     this.open = false;
     this.router.navigate([link]);
   }
-
+  
   routeLogin() {
+    this.open = false;
     this.auth.auth.onAuthStateChanged(user => {
       if (user && user.uid) {
         this.router.navigate(['account']);

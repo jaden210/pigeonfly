@@ -18,13 +18,13 @@ text-align: left;
   
 @media screen and (max-width: 500px) {
   .screen {
-
+    padding: 8px;
   }
   .pt {
     font-size: 28px;
     line-height: 28px;
     padding-top: 24px;
-    width: 100vw;
+    width: 100%;
     padding: 12px;
     box-sizing: border-box;
   }
