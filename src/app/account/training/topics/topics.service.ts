@@ -70,6 +70,9 @@ export class TopicsService {
   }
 
   public removeImage(imageUrl): void {
-    this.storage.storage.refFromURL(imageUrl).delete();
+    this.storage.storage
+      .refFromURL(imageUrl)
+      .delete()
+      .catch();
   }
 }

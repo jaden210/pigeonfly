@@ -26,8 +26,12 @@ export class AccountService {
   helperProfiles = {
     newTeam: {
       name: "welcome to Compliance Chimp!",
+<<<<<<< Updated upstream
       description:
         "Before you can get started, you need to make a profile and create your company. All changes are saved as you make them, so feel free to leave and come back at will."
+=======
+      description: "Before you can get started, you need to make a profile and create your company. All changes are saved as you make them, so feel free to leave and come back at will.",
+>>>>>>> Stashed changes
     },
     feedback: {
       name: "How can we do better?",
@@ -45,6 +49,7 @@ export class AccountService {
     },
     log: {
       name: "Log",
+<<<<<<< Updated upstream
       description:
         "Using the app, any member of your team can create a worksite log, including pictures and text. Location is also captured each time a log is created. Worksite logs can and should include everything from periodic progress and work accomplished, to client change orders and project updates, to incidents, injuries, near misses, safety concerns, or other noteworthy happenings. Worksite logs build the historical record which is called upon in the event of an OSHA audit or inspection. Aside from that, worksite logs create a living journal of the work your business accomplishes over time, all in one central place."
     },
@@ -52,6 +57,9 @@ export class AccountService {
       name: "Events",
       description:
         "Every time any member of your team uses the Compliancechimp app for anything (worksite log, training, training surveys, time clock, injury report, etc), the “event” gets recorded here in the Events page. Think of this as a flowing stream of consciousness of your team’s activity. Why does this page exist? The answer is simple: proof of compliance.  One of the most difficult parts of compliance is paperwork, or evidence of compliance. We take the hassle completely out of it. When your team uses the Compliancechimp app to its potential, the Events page gives you a very simple, clean, consolidated, and searchable record of activity that goes back as far as the day you signed up. It’s the critical backstop in the event of an audit, and can provide additional insights to your business along the way."
+=======
+      description: "Using the app, any member of your team can create a worksite log, to include pictures and text. Location is also captured each time a log is created. Worksite logs can and should include everything from periodic progress and work accomplished, to client change orders and project updates, to incidents or other noteworthy happenings. Worksite logs form the critical historical record which is called upon in the event of an OSHA audit, or client dispute or litigation. Aside from that non-fun stuff, worksite logs create a living journal of the work you accomplish over time, which is pretty neat."
+>>>>>>> Stashed changes
     },
     survey: {
       name: "Surveys",
@@ -70,8 +78,12 @@ export class AccountService {
     },
     osha: {
       name: "OSHA Self-Inspection",
+<<<<<<< Updated upstream
       description:
         "We simplify self-inspection and enables you to confidently check this incredibly important compliance box. Use the self-inspection wizard to customize OSHA’s list of questions to fit your workspace. Then, take and retake the assessment periodically. Each time you do, a report will be saved in this page where you can refer to it to make improvements, or simply to prove a historical record of performing self-inspections per OSHA’s recommendation. OSHA means business. Self-inspection is key to keeping your workforce safe and your business protected."
+=======
+      description: "We simplify self-inspection and enables you to confidently check this incredibly important compliance box. Use the self-inspection wizard to customize OSHA’s list of questions to fit your workspace. Then, take and retake the assessment periodically. Each time you do, a report will be saved in this page where you can refer to it to make improvements, or simply to prove a historical record of performing self-inspections per OSHA’s recommendation. OSHA means business. Self-inspection is key to keeping your workforce safe and your business protected."
+>>>>>>> Stashed changes
     },
     account: {
       name: "Your Account",

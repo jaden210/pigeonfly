@@ -1,6 +1,9 @@
 <mat-nav-list>
-    <mat-list-item *ngFor="let industry of industries | async" (click)="routeTo(industry)">
-        <img matListAvatar [src]="industry.imageUrl" alt="Compliancechimp">
-        <h2 matLine> {{industry.name}} </h2>
-    </mat-list-item>
+  <mat-list-item
+    *ngFor="let industry of (industries | async)"
+    (click)="routeTo(industry)"
+  >
+    <img matListAvatar [src]="industry.imageUrl" alt="..." />
+    <h2 matLine>{{ industry.name }}</h2>
+  </mat-list-item>
 </mat-nav-list>

@@ -1,4 +1,4 @@
-import { Component, OnInit, Pipe , Inject} from '@angular/core';
+import { Component, OnInit, Pipe, Inject } from "@angular/core";
 import { AppService } from "../app.service";
 import {
   map,
@@ -7,7 +7,8 @@ import {
   share,
   flatMap,
   mergeMap,
-  concatMap
+  concatMap,
+  take
 } from "rxjs/operators";
 import { AngularEditorConfig } from "@kolkov/angular-editor";
 import { MatSnackBar, MatDialog } from "@angular/material";
@@ -36,7 +37,7 @@ import {
 export class MakeOSHAComponent implements OnInit {
   private oshaManual: string = "osha-manual-en";
   public topics: Observable<any[]>;
-  public articles: Observable<any[]>;
+  public articles: any[];
   public activeArticle = new Article();
   private originalActiveArticle: Article;
   public industries: Observable<any[]>;
@@ -51,7 +52,7 @@ export class MakeOSHAComponent implements OnInit {
     translate: "yes"
   };
 
-  constructor( 
+  constructor(
     private appService: AppService,
     private snackbar: MatSnackBar,
     private location: Location,
@@ -72,7 +73,7 @@ export class MakeOSHAComponent implements OnInit {
 
   private getIndustries(): void {
     this.industries = this.appService.db
-      .collection(this.oshaManual, ref => ref.orderBy("industryName", "asc"))
+      .collection("industries", ref => ref.orderBy("name", "asc"))
       .snapshotChanges()
       .pipe(
         map(actions =>
@@ -104,29 +105,24 @@ export class MakeOSHAComponent implements OnInit {
 
   private getArticles(industry): void {
     this.industry = industry;
-    this.articles = this.appService.db
-      .doc(`${this.oshaManual}/${industry.id}`)
-      .collection("articles")
+    this.appService.db
+      .collection("article")
       .snapshotChanges()
       .pipe(
         map((actions: any[]) =>
           actions.map(a => {
             const data = a.payload.doc.data();
             const id = a.payload.doc.id;
-            return { id, ...data };
+            const missingTopicId = data.topicId ? false : true;
+            return { id, ...data, missingTopicId };
           })
         ),
         map(articles => {
-          const orderedArticles = articles
-            .filter(article => article.order || article.order == 0)
-            .sort((a, b) => (a.order < b.order ? -1 : 1));
-          const alphabetizedArticles = articles
-            .filter(article => !article.order && article.order != 0)
-            .sort(
-              (a, b) => (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1)
-            );
-          return [...orderedArticles, ...alphabetizedArticles];
+          return articles.sort((a, b) =>
+            a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1
+          );
         }),
+        map(articles => articles.filter(article => !article.topicId)),
         catchError(error => {
           console.error(`Error loading articles collection. ${error}`);
           alert(
@@ -136,13 +132,13 @@ export class MakeOSHAComponent implements OnInit {
           );
           return of([]);
         })
-      );
+      )
+      .subscribe(articles => (this.articles = articles));
   }
 
   private getTopics(industry): void {
     this.topics = this.appService.db
-      .doc(`${this.oshaManual}/${industry.id}`)
-      .collection("topics")
+      .collection("topic", ref => ref.where("industryId", "==", industry.id))
       .snapshotChanges()
       .pipe(
         map((actions: any[]) =>
@@ -153,8 +149,8 @@ export class MakeOSHAComponent implements OnInit {
           })
         ),
         map(topics => {
-          return topics.sort(
-            (a, b) => (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1)
+          return topics.sort((a, b) =>
+            a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1
           );
         }),
         catchError(error => {
@@ -170,7 +166,9 @@ export class MakeOSHAComponent implements OnInit {
       );
   }
 
+  currentIndex = 0;
   public setActiveArticle(article = new Article()): void {
+    this.currentIndex = this.articles.findIndex(a => a.id == article.id);
     if (this.confirmNavigation()) {
       this.activeArticle = { ...article };
       this.originalActiveArticle = { ...article };
@@ -178,27 +176,28 @@ export class MakeOSHAComponent implements OnInit {
   }
 
   private confirmNavigation(): boolean {
-    if (
-      !this.activeArticle.id &&
-      (this.activeArticle.name || this.activeArticle.content)
-    ) {
-      return window.confirm(
-        "You have unsaved changes, are you sure you want to exit?"
-      );
-    } else if (this.activeArticle.id) {
-      if (
-        this.activeArticle.name.localeCompare(this.originalActiveArticle.name) >
-          0 ||
-        this.activeArticle.content.localeCompare(
-          this.originalActiveArticle.content
-        ) > 0 ||
-        this.activeArticle.topicId !== this.originalActiveArticle.topicId
-      )
-        return window.confirm(
-          "You have unsaved changes, are you sure you want to exit?"
-        );
-      else return true;
-    } else return true;
+    return true;
+    // if (
+    //   !this.activeArticle.id &&
+    //   (this.activeArticle.name || this.activeArticle.content)
+    // ) {
+    //   return window.confirm(
+    //     "You have unsaved changes, are you sure you want to exit?"
+    //   );
+    // } else if (this.activeArticle.id) {
+    //   if (
+    //     this.activeArticle.name.localeCompare(this.originalActiveArticle.name) >
+    //       0 ||
+    //     this.activeArticle.content.localeCompare(
+    //       this.originalActiveArticle.content
+    //     ) > 0 ||
+    //     this.activeArticle.topicId !== this.originalActiveArticle.topicId
+    //   )
+    //     return window.confirm(
+    //       "You have unsaved changes, are you sure you want to exit?"
+    //     );
+    //   else return true;
+    // } else return true;
   }
 
   public editTopic(): void {
@@ -267,46 +266,20 @@ export class MakeOSHAComponent implements OnInit {
       );
   }
 
-  migrate() {
-    this.appService.db
-      .doc(`${this.oshaManual}/ijIMGXUQGNkfxOzptzey`)
-      .collection("topics")
-      .snapshotChanges()
-      .pipe(
-        map((actions: any[]) =>
-          actions.map(a => {
-            let data = a.payload.doc.data();
-            const industryIds = ["ijIMGXUQGNkfxOzptzey"];
-            const id = a.payload.doc.id;
-            const isGlobal = true;
-            return { ...data, industryIds, id, isGlobal };
-          })
-        )
-      )
-      .subscribe(articles => {
-        articles.forEach(article => {
-          let id = article.id;
-          delete article.id;
-          // this.appService.db.collection(`topic`).add(article);
-          this.db
-            .collection("topic")
-            .doc(id)
-            .set(article);
-        });
-      });
-  }
-
+  currentTopicId: string;
   public updateArticle(): void {
+    this.activeArticle.topicId = this.currentTopicId;
+    const id = this.activeArticle.id;
+    delete this.activeArticle.id;
+    delete this.activeArticle["missingTopicId"];
     this.appService.db
-      .doc(
-        `${this.oshaManual}/${this.industry.id}/articles/${
-          this.activeArticle.id
-        }`
-      )
+      .collection("article")
+      .doc(id)
       .update({ ...this.activeArticle })
       .then(
         () => {
           this.originalActiveArticle = this.activeArticle;
+          this.setActiveArticle(this.articles[this.currentIndex]);
           this.snackbar
             .open(`Updated Article ${this.activeArticle.name}`, null, {
               duration: 2000
@@ -445,6 +418,27 @@ export class MakeOSHAComponent implements OnInit {
           return of([]);
         })
       );
+  }
+
+  migrate() {
+    this.db
+      .collection("article")
+      .snapshotChanges()
+      .pipe(
+        take(1),
+        map(actions =>
+          actions.map(action => {
+            const data = action.payload.doc.data();
+            const id = action.payload.doc.id;
+            data["topicId"] = null;
+            this.db
+              .collection("article")
+              .doc(id)
+              .update({ ...data });
+          })
+        )
+      )
+      .subscribe();
   }
 
   private getArticles1(topicId): Observable<any> {

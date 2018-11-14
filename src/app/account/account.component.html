@@ -78,13 +78,7 @@
       </div>
     </div>
     <div class="helper" *ngIf="accountService.showFeedback" [@helper]>
-      <button
-        mat-icon-button
-        class="helper-close"
-        (click)="accountService.showFeedback = false"
-      >
-        <mat-icon>cancel</mat-icon>
-      </button>
+      <button mat-icon-button class="helper-close" (click)="accountService.showFeedback = false"><mat-icon>cancel</mat-icon></button>
       <div class="helper-name">{{ accountService.feedback?.name }}</div>
       <mat-form-field class="helper-input" color="warn"
         ><textarea

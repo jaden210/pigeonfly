@@ -2,22 +2,42 @@
   <div style="display: flex; margin-top: 8px;">
     <mat-form-field appearance="outline" style="flex: 2; margin-right: 24px;">
       <mat-label>Article Title</mat-label>
-      <input matInput placeholder="Enter Article Name" required [(ngModel)]="article.name">
+      <input
+        matInput
+        placeholder="Enter Article Name"
+        required
+        [(ngModel)]="article.name"
+      />
     </mat-form-field>
     <mat-form-field appearance="outline" style="flex: 1">
       <mat-label>Topic</mat-label>
-      <mat-select placeholder="Topic" required multiple [(ngModel)]="article.topicIds">
-        <mat-option *ngFor="let topic of topics | async" [value]="topic?.id">
-          {{topic.name}}
+      <mat-select placeholder="Topic" required [(ngModel)]="article.topicId">
+        <mat-option *ngFor="let topic of (topics | async)" [value]="topic?.id">
+          {{ topic.name }}
         </mat-option>
       </mat-select>
     </mat-form-field>
   </div>
-  <angular-editor [(ngModel)]="article.content" [config]="editorConfig"></angular-editor>
+  <angular-editor
+    [(ngModel)]="article.content"
+    [config]="editorConfig"
+  ></angular-editor>
   <div style="display: flex; margin-top: 24px;">
-    <button mat-raised-button color="primary" (click)="submit()" [disabled]="!article.name || !article.content">{{submitButton}}</button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="submit()"
+      [disabled]="!article.name || !article.content"
+    >
+      {{ submitButton }}
+    </button>
     <button mat-button (click)="goBack()">CANCEL</button>
-    <button mat-icon-button (click)="deleteArticle()" *ngIf="article?.id" style="margin-left: auto">
+    <button
+      mat-icon-button
+      (click)="deleteArticle()"
+      *ngIf="article?.id"
+      style="margin-left: auto"
+    >
       <mat-icon>delete</mat-icon>
     </button>
   </div>

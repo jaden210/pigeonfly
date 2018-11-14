@@ -189,7 +189,6 @@ export class ArticleComponent implements OnInit, OnDestroy {
           userSurvey[id] = 0;
         });
         let survey = new Survey();
-        survey.runOncePerUserSurvey = true;
         survey.category = "Safety Training";
         survey.title = `Did you participate in this training? -${
           this.article.name
