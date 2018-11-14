@@ -95,7 +95,9 @@ export class SurveysService {
       .collection("survey")
       .doc(id)
       .update({ ...survey })
-      .then(data => {return data})
+      .then(data => {
+        return data;
+      })
       .catch(error => {
         console.error("Error updating survey.", error);
         alert("Error updating survey");

@@ -67,8 +67,8 @@ export class TrainingService {
               })
             ),
             map(topics => {
-              return topics.sort(
-                (a, b) => (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1)
+              return topics.sort((a, b) =>
+                a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1
               );
             }),
             tap(topics => (this.topics = topics)),
@@ -81,15 +81,13 @@ export class TrainingService {
   }
 
   public getArticles(topicId, teamId): Observable<Article[]> {
-    const articles = this.articles.filter(a => a.topicIds.includes(topicId));
+    const articles = this.articles.filter(a => a.topicId == topicId);
     return articles.length
       ? of(articles)
       : this.getMyContent(teamId).pipe(
           mergeMap(mYContent =>
             this.db
-              .collection("article", ref =>
-                ref.where("topicIds", "array-contains", topicId)
-              )
+              .collection("article", ref => ref.where("topicId", "==", topicId))
               .snapshotChanges()
               .pipe(
                 take(1),
@@ -103,9 +101,8 @@ export class TrainingService {
                   })
                 ),
                 map(articles => {
-                  return articles.sort(
-                    (a, b) =>
-                      a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1
+                  return articles.sort((a, b) =>
+                    a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1
                   );
                 }),
                 tap(articles => (this.articles = articles)),
@@ -335,12 +332,13 @@ export class TrainingService {
   article component. */
   public updateMyContent(myContent: MyContent): Promise<any> {
     let mc = { ...myContent };
+    const id = mc.id;
     /* These keys were added on get for convenience, don't persist */
     delete mc.id;
     delete mc.needsTraining;
     return this.db
       .collection("my-content")
-      .doc(myContent.id)
+      .doc(id)
       .update({ ...mc })
       .catch(error => {
         console.error(
@@ -359,12 +357,15 @@ export class TrainingService {
     this.accountService.teamUsers.forEach(user => {
       trainees[user.uid] = null;
     });
+    const trainingMinutes = Math.ceil(article.content.length / 480 / 5) * 5;
     const myContent = new MyContent(
       article.id,
       trainees,
       teamId,
       article.name,
-      article.nameEs
+      article.nameEs,
+      article.topicId,
+      trainingMinutes
     );
     const id = teamId + "_" + article.id;
     return this.db
@@ -412,7 +413,7 @@ export class Article {
   isGlobal: boolean;
   name: string;
   nameEs: string;
-  topicIds: string[] = [];
+  topicId: string;
   teamId: string;
   /* word count / 6 */
   trainingLevel: number;
@@ -427,7 +428,9 @@ export class MyContent {
     public trainees: object,
     public teamId: string,
     public articleName: string,
-    public articleNameEs: string = null
+    public articleNameEs: string = null,
+    public topicId: string,
+    public trainingMinutes: number
   ) {}
   trainingExpiration: TrainingExpiration = TrainingExpiration.Anually;
   lastTrainingDate: Date;

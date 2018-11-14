@@ -3,14 +3,11 @@ export class Survey {
   receivedTraining: string[] = [];
   userId: string;
   active: boolean = true;
-  createdAt: Date = new Date(new Date().setHours(0, 0, 0, 0)); // Make sure to set to midnight always
+  createdAt: Date = new Date();
   teamId: string;
   category: string;
   title: string;
-  runOnceOnDate: Date;
-  runOncePerUserSurvey: boolean;
-  runOnDom: number[] = [];
-  runOnDow: number[] = [];
+  runDate: Date = new Date();
   userSurvey: any = {}; // userId: ms
   id?: string;
 }

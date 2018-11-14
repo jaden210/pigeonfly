@@ -76,45 +76,8 @@ export class SurveyComponent implements OnInit, OnDestroy {
       this.getGroup(Object.keys(survey.userSurvey));
       survey["user"] = this.users.find(u => u.uid == survey.userId);
       this.survey = survey;
-      this.getRunType();
       this.getSurveyResponses(surveyId);
     });
-  }
-
-  /* This is to build the runType button */
-  private getRunType(): void {
-    if (this.survey.runOnDom.length) {
-      this.runType = "Run survey monthly on the";
-      const s = ["th", "st", "nd", "rd"];
-      this.survey.runOnDom.forEach(day => {
-        let d = day % 100;
-        this.runType += " " + day + (s[(d - 20) % 10] || s[d] || s[0]);
-      });
-    } else if (this.survey.runOnDow.length) {
-      if (this.survey.runOnDow.length == 7) {
-        this.runType = "Run survey daily";
-      } else {
-        const daysOfWeek = [
-          "Sunday",
-          "Monday",
-          "Tuesday",
-          "Wednesday",
-          "Thursday",
-          "Friday",
-          "Saturday"
-        ];
-        this.runType = "Run survey weekly on";
-        this.survey.runOnDow.forEach(weekdayIndex => {
-          this.runType += " " + daysOfWeek[weekdayIndex];
-        });
-      }
-    } else if (this.survey.runOnceOnDate) {
-      this.runType = `Run survey once on ${this.datePipe.transform(
-        this.survey.runOnceOnDate
-      )}`;
-    } else if (this.survey.runOncePerUserSurvey) {
-      this.runType = "Run survey until all contacts respond";
-    }
   }
 
   /* Builds all contacts of the survey and colors them */
@@ -187,7 +150,7 @@ export class SurveyComponent implements OnInit, OnDestroy {
 
   public editSurvey(step: number): void {
     /* **step - which step of the dialog is being edited.
-    1 = Category and Title, 2 = Run Date, 4 = Contacts. */
+    1 = Category and Title, 2 = Run Date, 3 = Contacts. */
     if (step == 1 && this.surveyResponseListLength) {
       alert(
         "You cannot change the survey question or category after a receiving a response."

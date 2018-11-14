@@ -59,3 +59,7 @@ mat-nav-list {
   width: 32px;
   height: 32px;
 }
+
+.ohno {
+  color: red !important;
+}

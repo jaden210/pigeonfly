@@ -50,7 +50,7 @@ export class CreateEditArticleComponent
         this.isEdit = true;
         this.submitButton = "UPDATE ARTICLE";
       } else {
-        this.article.topicIds.push(params["topicId"]);
+        this.article.topicId = params["topicId"];
         this.trainingService.setActiveRoute("Create Article");
       }
     });
@@ -105,7 +105,7 @@ export class CreateEditArticleComponent
       if (
         this.article.name.localeCompare(this.originalArticle.name) > 0 ||
         this.article.content.localeCompare(this.originalArticle.content) > 0 ||
-        this.article.topicIds !== this.originalArticle.topicIds
+        this.article.topicId !== this.originalArticle.topicId
       )
         return false;
       else return true;
