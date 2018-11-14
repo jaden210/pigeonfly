@@ -18,7 +18,7 @@ exports.inviteNewUser = functions.firestore.document("invitation/{invitationId}"
   mailOptions.subject = 'You have been invited to join ' + info.companyName + ' at Compliancechimp';
     mailOptions.html = `Hi ${info.inviteName}<br><br>
     ${info.companyName} is using Compliancechimp to manage safety training, worksite logs, record keeping, and more, as part of an ongoing commitment to safety and compliance. You've been invited to the team using ${info.inviteEmail}. Please visit the App Store or Goolge Play Store to download the free app and join your team today. Feel free to contact us at support@compliancechimp.com with any questions, and welcome!
-    <br><br> <a href="https://inviteme.me/account" target="_blank">LETS GET STARTED</a>
+    <br><br> <a href='https://play.google.com/store/apps/details?id=com.betterspace.complianceChimp&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
     <br> <a href="https://inviteme.me/account" target="_blank">LETS GET STARTED</a>
     <br><br>Sincerely,
     <br><br>Alan, Client Success Team
