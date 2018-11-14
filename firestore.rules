@@ -9,5 +9,8 @@ service cloud.firestore {
     match /support/{supportId} {
       allow write;
     }
+    match /team/{teamId} {
+      allow write: if resource.data.ownerId == request.auth.uid;
+    }
   }
 }

@@ -196,6 +196,10 @@
   opacity: .87;
 }
 
+.left li {
+  margin: 12px 0;
+}
+
 .stat-info {
   text-align: center;
   opacity: .87;

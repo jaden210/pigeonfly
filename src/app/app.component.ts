@@ -43,5 +43,15 @@ export class AppComponent {
     this.open = false;
     this.router.navigate([link]);
   }
+
+  routeLogin() {
+    this.auth.auth.onAuthStateChanged(user => {
+      if (user && user.uid) {
+        this.router.navigate(['account']);
+      } else {
+        this.router.navigate(['login']);
+      }
+    });
+  }
   
 }

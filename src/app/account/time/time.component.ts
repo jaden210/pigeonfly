@@ -11,7 +11,6 @@ import * as moment from "moment";
 import { TimeService } from "./time.service";
 import { DatePipe, Time } from "@angular/common";
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from "@angular/material";
-import { finalize } from "rxjs/operators";
 
 @Component({
   selector: "app-time",
@@ -62,6 +61,8 @@ export class TimeComponent implements OnInit {
     this.timeService
       .getTimeLogs(this.accountService.aTeam.id)
       .subscribe(logs => {
+        console.log('hit');
+        
         if (logs.length == 0) return;
         this.timeClocks = this.timeClocks.concat(logs);
         this.timeService.lastLog = logs[logs.length - 1];
@@ -113,8 +114,7 @@ export class TimeComponent implements OnInit {
         dOW,
         loggedHours: timeClocks.loggedHours,
         loggedMinutes: timeClocks.loggedMinutes,
-        timeLogs: timeClocks.logs,
-        loggers: timeClocks.loggers
+        timeLogs: timeClocks.logs
       });
     }
   }
@@ -122,33 +122,24 @@ export class TimeComponent implements OnInit {
   getClocksByDate(date, logs) {
     let loggedHours = 0;
     let loggedMinutes = 0;
-    let users = [];
-    let timeClocksOnDate: Timeclock[] = logs.filter(day =>
-      moment(day.clockIn).isSame(date, "day")
-    );
-    timeClocksOnDate.forEach((day: Timeclock) => {
-      let ci = moment(day.clockIn);
-      let co = moment(day.clockOut);
+    let timeClocksOnDate: Timeclock[] = logs.filter(day => moment(day.clockIn).isSame(date, "day"));
+    timeClocksOnDate.forEach((timeclock: Timeclock) => {
+      let ci = moment(timeclock.clockIn);
+      let co = moment(timeclock.clockOut);
       let duration: any = moment.duration(co.diff(ci));
-      day.loggedHours = parseInt(duration.asHours());
-      day.loggedMinutes = parseInt(duration.asMinutes()) % 60;
+      timeclock.loggedHours = parseInt(duration.asHours());
+      timeclock.loggedMinutes = parseInt(duration.asMinutes()) % 60;
       loggedHours = loggedHours + parseInt(duration.asHours());
       loggedMinutes = loggedMinutes + (parseInt(duration.asMinutes()) % 60);
       if (loggedMinutes > 60) {
         loggedMinutes = loggedMinutes - 60;
         loggedHours = loggedHours + 1;
       }
-      if (!users.find(user => user.id == day.userId)) {
-        users.push(
-          this.accountService.teamUsers.find(user => user.id == day.userId)
-        );
-      }
     });
     return {
       loggedHours,
       loggedMinutes,
-      logs: timeClocksOnDate,
-      loggers: users
+      logs: timeClocksOnDate
     };
   }
 
@@ -253,17 +244,18 @@ export class TimeComponent implements OnInit {
     link.click();
   }
 
-  createEditTime(day, time?) {
-    if (!time) {
-      time = new Timeclock();
-      time.clockIn = day.date;
-      time.clockOut = day.date;
+  createEditTime(day, timeclock?) {
+    if (!timeclock) {
+      timeclock = new Timeclock();
+      timeclock.clockIn = day.date;
+      timeclock.clockOut = day.date;
     }
     let dialog = this.dialog.open(CreateEditTimeDialog, {
-      data: time,
+      data: timeclock,
       disableClose: true
     });
     dialog.afterClosed().subscribe((time: Timeclock) => {
+      timeclock.bShowDetails = false;
       if (time) {
         let tempUser = time["user"];
         delete time["bShowDetails"];
@@ -293,6 +285,7 @@ export class TimeComponent implements OnInit {
             });
         }
       }
+      this.buildCalendar();
     });
   }
 }

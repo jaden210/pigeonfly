@@ -9,3 +9,10 @@
     color: #e91e63;
     font-style: italic;
 }
+
+.stripe {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 24px;
+}

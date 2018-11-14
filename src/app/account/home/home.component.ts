@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
-import { trigger, style, transition, animate } from "@angular/animations";
+import { Component, Inject } from '@angular/core';
 import { Timeclock, AccountService, Log, User, InviteToTeam } from '../account.service';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import * as moment from 'moment';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { MapDialogComponent } from '../map-dialog/map-dialog.component';
+import { Observable } from 'rxjs';
 declare var gtag: Function;
 
 @Component({
@@ -14,17 +14,11 @@ declare var gtag: Function;
 })
 export class HomeComponent {
 
-
-  invitedUsers: InviteToTeam[];
+  invitedUsers: Observable<InviteToTeam[]>;
   logs: any;
   oldestLog: any = new Date();
   days = [];
-
   users;
-
-  
-  lat: number;
-  long: number;
 
   constructor(
     public accountService: AccountService,
@@ -34,7 +28,7 @@ export class HomeComponent {
     this.accountService.teamUsersObservable.subscribe(teamUsers => {
       if (teamUsers) {
         let invitedCollection = this.accountService.db.collection<InviteToTeam[]>("invitation", ref => ref.where("status", "==", "invited").where("teamId", "==", this.accountService.aTeam.id));
-        invitedCollection.snapshotChanges().pipe(
+        this.invitedUsers = invitedCollection.snapshotChanges().pipe(
           map(actions => {
             return actions.map(a => {
               let data:any = a.payload.doc.data();
@@ -44,12 +38,13 @@ export class HomeComponent {
               };
             });
           })
-        ).subscribe(invitedUsers => {
-          this.invitedUsers = invitedUsers;
-        });
+        );
         this.users = [];
         this.accountService.teamUsers.forEach((user: User) => {
-          let userClocks = this.accountService.db.collection("timeclock", ref => ref.where("userId", "==", user.id).where("teamId", "==", this.accountService.aTeam.id).orderBy("clockIn", "desc").limit(1));
+          let userClocks = this.accountService.db.collection("timeclock", ref => ref
+            .where("userId", "==", user.id)
+            .where("teamId", "==", this.accountService.aTeam.id)
+            .orderBy("clockIn", "desc").limit(1));
           userClocks.snapshotChanges().pipe(
             map(actions => {
               return actions.map(a => {
@@ -64,6 +59,8 @@ export class HomeComponent {
               });
             })
           ).subscribe(timeclocks => {
+            let pushItem;
+            let foundIndex;
             if (timeclocks.length > 0) {
               let status;
               let statusColor;
@@ -72,36 +69,34 @@ export class HomeComponent {
                   status = 'clocked out at: ' + moment(timeclocks[0].clockOut).format('hh:mm a');
                   statusColor = "busy";
                 } else {
+                  let ci = moment(timeclocks[0].clockIn);
+                  let co = moment();
+                  let duration: any = moment.duration(co.diff(ci));
                   status = 'active for: ' + 
-                  moment().diff(moment(timeclocks[0].clockIn), 'hours') + 'h ' +
-                  moment().diff(moment(timeclocks[0].clockIn), 'minutes') + 'm '; // live timer would happen if this was in HTML
+                  parseInt(duration.asHours()) + 'h ' +
+                  parseInt(duration.asMinutes()) % 60 + 'm '; // live timer would happen if this was in HTML
                   statusColor = "active";
                 }
               } else {
                 status = 'last active: ' + moment(timeclocks[0].clockOut).format('MMMM Do YYYY, h:mm:ss a');
                 statusColor = "inactive";
               }
-              let pushItem = {user, timeclock: timeclocks[0], status, statusColor};
-              var foundIndex = this.users.findIndex(x => x.user.id == pushItem.user.id);
-              if (foundIndex >= 0) {
-                this.users[foundIndex] = pushItem;
-              } else {
-                this.users.push(pushItem);
-              }
+              pushItem = {user, timeclock: timeclocks[0], status, statusColor};
+              foundIndex = this.users.findIndex(x => x.user.id == pushItem.user.id);
             } else {
-              let pushItem = {user, timeclock: null, status:"new member", statusColor:"inactive"};
-              var foundIndex = this.users.findIndex(x => x.user.id == pushItem.user.id);
-              if (foundIndex >= 0) {
-                this.users[foundIndex] = pushItem;
-              } else {
-                this.users.push(pushItem);
-              }
+              pushItem = {user, timeclock: null, status:"new member", statusColor:"inactive"};
+              foundIndex = this.users.findIndex(x => x.user.id == pushItem.user.id);
             }
-            });
-          })
-        }
-      });
-    }
+            if (foundIndex >= 0) {
+              this.users[foundIndex] = pushItem;
+            } else {
+              this.users.push(pushItem);
+            }
+          });
+        })
+      }
+    });
+  }
     
   showMap(user) {
     let dialog = this.dialog.open(MapDialogComponent, {
@@ -148,15 +143,9 @@ export class HomeComponent {
     });
   }
 
-  resendEmail() {
-
-  }
-
   deleteInvite(user) {
     this.accountService.db.collection("invitation").doc(user.id).delete();
   }
-
-
 }
 
 @Component({
