@@ -3,7 +3,8 @@ import {
   OnInit,
   ViewChild,
   Inject,
-  HostListener
+  HostListener,
+  OnDestroy
 } from "@angular/core";
 import { trigger, style, transition, animate } from "@angular/animations";
 import { Timeclock, AccountService, Log } from "../account.service";
@@ -30,7 +31,7 @@ import { Observable } from "rxjs";
     ])
   ]
 })
-export class LogComponent {
+export class LogComponent implements OnDestroy {
   searchStr: string; // template variable
   filterUsers; // template variable
 
@@ -215,6 +216,9 @@ export class LogComponent {
         }
       }
     });
+  }
+  ngOnDestroy() {
+    this.accountService.searchForHelper = '';
   }
 }
 

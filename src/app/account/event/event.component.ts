@@ -159,9 +159,12 @@ export class EventComponent {
       this.router.navigate(['account/self-inspection']);
       return;
       case EventType.survey:
+      console.log(event.documentId);
       this.router.navigate(['account/surveys/' + event.documentId]);
       return;
       case EventType.surveyResponse:
+      console.log(event.documentId);
+      
       this.router.navigate(['account/surveys/' + event.documentId]);
       return;
     }

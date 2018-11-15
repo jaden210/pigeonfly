@@ -31,25 +31,29 @@ export class EventSearchPipe implements PipeTransform {
                   continue cardLoop; // if block true, run filters loop again
               }
           }
-          if (day.logs.length > 0) {
+          console.log(day);
+          
+          if (day.events.length > 0) {
             let push = false;
             logLoop:
-            for (let log of day.logs) {
-              if (log.description.toLowerCase().includes(f.toLowerCase())) {
+            for (let event of day.events) {
+              if (event.action.toLowerCase().includes(f.toLowerCase())) {
                 push = true;
                 continue logLoop;
               }
-              if (log.surveySubject) {
-                if (log.surveySubject.toLowerCase().includes(f.toLowerCase())) {
+              if (event.description) {
+                if (event.description.toLowerCase().includes(f.toLowerCase())) {
                   push = true;
                   continue logLoop;
                 }
               }
-              if (log.surveyQuestion) {
-                if (log.surveyQuestion.toLowerCase().includes(f.toLowerCase())) {
-                  push = true;
-                  continue logLoop;
-                }
+              if (event.documentId.toLowerCase().includes(f.toLowerCase())) {
+                push = true;
+                continue logLoop;
+              }
+              if (event.type.toLowerCase().includes(f.toLowerCase())) {
+                push = true;
+                continue logLoop;
               }
             };
             push ? rv.push(day) : null; // append matching store to results[]
@@ -62,7 +66,7 @@ export class EventSearchPipe implements PipeTransform {
       for (let person of people) {
         for (let day of days) {
           for (let event of day.events) {
-            if (person == event.user.id) {
+            if (person == event.userId) {
               rv.push(day);
             }
           }

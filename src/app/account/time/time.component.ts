@@ -1,15 +1,15 @@
 import {
   Component,
   OnInit,
-  ViewChild,
   Inject,
-  HostListener
+  HostListener,
+  OnDestroy
 } from "@angular/core";
 import { trigger, style, transition, animate } from "@angular/animations";
 import { Timeclock, AccountService } from "../account.service";
 import * as moment from "moment";
 import { TimeService } from "./time.service";
-import { DatePipe, Time } from "@angular/common";
+import { DatePipe } from "@angular/common";
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from "@angular/material";
 
 @Component({
@@ -30,7 +30,7 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from "@angular/material";
   ],
   providers: [TimeService]
 })
-export class TimeComponent implements OnInit {
+export class TimeComponent implements OnInit, OnDestroy {
   searchStr; // template variable
   filterUsers; // template variable
 
@@ -51,6 +51,7 @@ export class TimeComponent implements OnInit {
 
   ngOnInit() {
     /// NOTE: MAYBE CHANGE SO A USER ONLY SHOWS ONCE FOR A DAY AND EXPANDING SHOWS ALL INS AND OUTS
+    this.searchStr = this.accountService.searchForHelper; //sucks
     this.accountService.helper = this.accountService.helperProfiles.time;
     this.accountService.teamUsersObservable.subscribe(aTeam => {
       if (aTeam) this.getLogs();
@@ -61,8 +62,6 @@ export class TimeComponent implements OnInit {
     this.timeService
       .getTimeLogs(this.accountService.aTeam.id)
       .subscribe(logs => {
-        console.log('hit');
-        
         if (logs.length == 0) return;
         this.timeClocks = this.timeClocks.concat(logs);
         this.timeService.lastLog = logs[logs.length - 1];
@@ -249,6 +248,7 @@ export class TimeComponent implements OnInit {
       timeclock = new Timeclock();
       timeclock.clockIn = day.date;
       timeclock.clockOut = day.date;
+      timeclock.userId = this.accountService.user.id;
     }
     let dialog = this.dialog.open(CreateEditTimeDialog, {
       data: timeclock,
@@ -281,12 +281,16 @@ export class TimeComponent implements OnInit {
             .add({ ...time })
             .then(snapshot => {
               time.id = snapshot.id;
-              this.buildCalendar();
+              this.getLogs();
             });
         }
+      } else {
+        this.getLogs();
       }
-      this.buildCalendar();
     });
+  }
+  ngOnDestroy() {
+    this.accountService.searchForHelper = '';
   }
 }
 

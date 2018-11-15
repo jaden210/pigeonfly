@@ -13,7 +13,6 @@ export class SearchPipe implements PipeTransform {
     if (filter) {
       cardLoop: // loop variable
       for (let day of days) {
-        
         for (let f of filter) { // for value of filter array, built from arguments passed in
           if (day.dOW.toLowerCase().includes(f.toLowerCase())) { // convert to lower case, compare keyword to f
               rv.push(day); // append matching store to results[]
@@ -35,7 +34,6 @@ export class SearchPipe implements PipeTransform {
             let push = false;
             logLoop:
             for (let log of day.logs) {
-
               if (log.id.toLowerCase().includes(f.toLowerCase())) {
                 push = true;
                 continue logLoop;
@@ -44,17 +42,17 @@ export class SearchPipe implements PipeTransform {
                 push = true;
                 continue logLoop;
               }
-              if (log.surveySubject) {
-                if (log.surveySubject.toLowerCase().includes(f.toLowerCase())) {
-                  push = true;
-                  continue logLoop;
-                }
-              }
-              if (log.surveyQuestion) {
-                if (log.surveyQuestion.toLowerCase().includes(f.toLowerCase())) {
-                  push = true;
-                  continue logLoop;
-                }
+            };
+            push ? rv.push(day) : null; // append matching store to results[]
+            continue cardLoop; // if block true, run filters loop again
+          }
+          if (day.timeLogs && day.timeLogs.length > 0) {
+            let push = false;
+            timeLoop:
+            for (let log of day.timeLogs) {
+              if (log.id.toLowerCase().includes(f.toLowerCase())) {
+                push = true;
+                continue timeLoop;
               }
             };
             push ? rv.push(day) : null; // append matching store to results[]
