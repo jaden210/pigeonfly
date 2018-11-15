@@ -1,77 +1,66 @@
-import { Inject } from '@angular/core';
-import {
-  Component,
-  Input,
-  OnChanges,
-  AfterViewInit,
-  ViewChild,
-  ElementRef
-} from "@angular/core";
+import { Component, Input, OnChanges } from "@angular/core";
+import { MyContent } from "../../training.service";
 
 @Component({
   selector: "progress-shield",
-  templateUrl: "./progress-shield.component.html",
-  styleUrls: ["./progress-shield.component.css"]
+  template: `
+    <div
+      [ngClass]="{
+        warn: complianceLevel == 0,
+        attention: complianceLevel > 0,
+        good: complianceLevel == 100
+      }"
+    >
+      {{ words }}
+    </div>
+  `,
+  styles: [
+    `
+      div {
+        border-radius: 16px;
+        height: 32px;
+        border: 1px solid #bdbdbd;
+        white-space: nowrap;
+        line-height: 32px;
+        padding: 0 8px;
+      }
+
+      .warn {
+        color: #e53935;
+        border: 1px solid #e53935;
+      }
+
+      .attention {
+        color: #ffb300;
+        border: 1px solid #ffb300;
+      }
+
+      .good {
+        color: #43a047;
+        border: 1px solid #43a047;
+      }
+    `
+  ]
 })
-export class ProgressShieldComponent implements OnChanges, AfterViewInit {
+export class ProgressShieldComponent implements OnChanges {
   @Input()
+  myContent: MyContent;
   complianceLevel: number;
-  @ViewChild("myCanvas")
-  canvas: ElementRef;
-  color: string;
-  scale: number;
-  scaled: boolean;
-  context;
+  words: string;
 
   constructor() {}
 
-  ngAfterViewInit() {
-    this.context = this.canvas.nativeElement.getContext("2d");
-    this.scale = window.devicePixelRatio || 1;
-    this.context.scale(this.scale, this.scale);
-    if (this.complianceLevel >= 0) this.draw(this.context);
-  }
-
   ngOnChanges() {
-    this.color =
-      this.complianceLevel == 100
-        ? "#00BFA5"
-        : this.complianceLevel > 0
-          ? "#FFD600"
-          : "#F44336";
-    if (this.context) {
-      this.draw(this.context);
+    if (this.myContent) {
+      this.complianceLevel = this.myContent.complianceLevel || 0;
+      const traineesCount = Object.keys(this.myContent.trainees).length || 0;
+      const needsTraining = this.myContent.needsTraining.length || 0;
+      this.words =
+        traineesCount -
+        needsTraining +
+        " / " +
+        traineesCount +
+        " employees compliant";
     }
-  }
-
-  private draw(context): void {
-    const complianceLevel = this.complianceLevel || 0;
-    let al = 0;
-    const start = 4.72;
-    const cw = context.canvas.width / (2 * this.scale);
-    const ch = context.canvas.height / (2 * this.scale);
-    let diff;
-    var bar = setInterval(() => {
-      diff = (al / 100) * Math.PI * 2;
-      context.clearRect(0, 0, cw, ch);
-      context.lineWidth = 2;
-      context.beginPath();
-      context.arc(cw, ch, 17, 0, 2 * Math.PI, false);
-      context.fillStyle = "#FFF";
-      context.fill();
-      context.strokeStyle = "#e0e0e0";
-      context.stroke();
-      context.fillStyle = "#000";
-      context.textAlign = "center";
-      context.lineWidth = 4;
-      context.beginPath();
-      context.arc(cw, ch, 17, start, diff + start, false);
-      context.strokeStyle = this.color;
-      context.stroke();
-      if (al >= complianceLevel) {
-        clearTimeout(bar);
-      }
-      al++;
-    }, 30);
   }
 }

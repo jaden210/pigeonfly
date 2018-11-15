@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { Router } from "@angular/router";
 import { TrainingService } from "./training.service";
 import { Location } from "@angular/common";
@@ -6,22 +6,28 @@ import { AccountService } from "../account.service";
 
 @Component({
   selector: "app-training",
-  templateUrl: "./training.component.html",
-  styleUrls: ["./training.component.css"]
+  template: `
+    <mat-toolbar style="font-size: 15px">
+      <button
+        mat-icon-button
+        *ngIf="ActiveRoute != 'Select an Industry'"
+        (click)="goBack()"
+      >
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h1>{{ ActiveRoute }}</h1>
+      <div class="flex"></div>
+      <toolbar-helper></toolbar-helper>
+    </mat-toolbar>
+    <router-outlet></router-outlet>
+  `
 })
-export class TrainingComponent implements OnInit {
+export class TrainingComponent {
   constructor(
     private router: Router,
     private service: TrainingService,
-    private location: Location,
-    private accountService: AccountService
+    private location: Location
   ) {}
-
-  ngOnInit() {
-    this.accountService.aTeamObservable.subscribe(team => {
-      // if (team) this.service.getMyContent(team.id).subscribe();
-    });
-  }
 
   public goBack(): void {
     const activeRoute: string = this.router.url;

@@ -72,6 +72,7 @@ export class CreateEditArticleComponent
     this.service.updateArticle(this.article).then(() => {
       this.deactivate = true;
       this.popSnackbar("Updated", this.article.name);
+      this.trainingService.wipeArticles();
       this.goBack();
     });
   }
@@ -80,6 +81,7 @@ export class CreateEditArticleComponent
     this.service.createArticle(this.article).then(() => {
       this.deactivate = true;
       this.popSnackbar("Created", this.article.name);
+      this.trainingService.wipeArticles();
       this.goBack();
     });
   }
@@ -92,6 +94,29 @@ export class CreateEditArticleComponent
 
   public goBack(): void {
     this.location.back();
+  }
+
+  public deleteArticle(): void {
+    let deleteArticle = true;
+    let snackbar = this.snackbar.open("Deleting Article", "UNDO", {
+      duration: 3000
+    });
+    snackbar.onAction().subscribe(() => (deleteArticle = false));
+    snackbar.afterDismissed().subscribe(() => {
+      if (deleteArticle) {
+        this.service
+          .deleteArticle(this.article.id)
+          .then(() => {
+            this.loading = false;
+            this.deactivate = true;
+            this.trainingService.wipeArticles();
+            /* go back two pages */
+            this.location.back();
+            this.location.back();
+          })
+          .catch(() => alert("Unable to delete article"));
+      }
+    });
   }
 
   canDeactivate(): Observable<boolean> | boolean {

@@ -80,6 +80,11 @@ export class TrainingService {
           );
   }
 
+  /* Called from create-edit component to get fresh data on back route */
+  public wipeArticles(): void {
+    this.articles = [];
+  }
+
   public getArticles(topicId, teamId): Observable<Article[]> {
     const articles = this.articles.filter(a => a.topicId == topicId);
     return articles.length

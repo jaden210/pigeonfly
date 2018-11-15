@@ -64,7 +64,12 @@
           response?.user?.name
         }}</span>
         <div class="bubble">
-          {{ response.shortAnswer
+          {{
+            response.shortAnswer === true
+              ? "Yes"
+              : response.shortAnswer === false
+              ? "No"
+              : ""
           }}<span *ngIf="response.shortAnswer">.&nbsp;</span
           >{{ response.longAnswer }}
         </div>

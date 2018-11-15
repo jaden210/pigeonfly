@@ -45,3 +45,7 @@ mat-chip {
 #article {
   margin: 24px 24px 48px;
 }
+
+#current-btn mat-icon {
+  margin: -2px 8px 0 -2px;
+}

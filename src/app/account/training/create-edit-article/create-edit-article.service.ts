@@ -58,6 +58,17 @@ export class CreateEditArticleService {
       });
   }
 
+  public deleteArticle(articleId): Promise<any> {
+    return this.db
+      .collection("article")
+      .doc(articleId)
+      .delete()
+      .catch(error => {
+        console.error("Error deleting article", error);
+        throw error;
+      });
+  }
+
   public getTopics(): Observable<Topic[]> {
     return this.db
       .collection("topic")
@@ -71,8 +82,8 @@ export class CreateEditArticleService {
           })
         ),
         map(topics => {
-          return topics.sort(
-            (a, b) => (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1)
+          return topics.sort((a, b) =>
+            a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1
           );
         }),
         catchError(error => {

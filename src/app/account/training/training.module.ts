@@ -18,6 +18,7 @@ import { AttendanceDialog } from "./article/attendance.dialog";
 import { TopicDialogComponent } from "./topics/topic-dialog/topic-dialog.component";
 import { UserHistoryDialog } from "./article/user-history.dialog";
 import { TrainingHistoryComponent } from "./training-history/training-history.component";
+import { NeedsTrainingDialog } from "./article/needs-training.dialog";
 
 const routes: Routes = [
   {
@@ -63,13 +64,15 @@ const routes: Routes = [
     TopicDialogComponent,
     AttendanceDialog,
     UserHistoryDialog,
-    TrainingHistoryComponent
+    TrainingHistoryComponent,
+    NeedsTrainingDialog
   ],
   entryComponents: [
     AddTraineeDialog,
     TopicDialogComponent,
     AttendanceDialog,
-    UserHistoryDialog
+    UserHistoryDialog,
+    NeedsTrainingDialog
   ],
   providers: [TrainingService, PendingChangesGuard]
 })

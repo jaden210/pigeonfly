@@ -6,23 +6,30 @@ import { AccountService } from "../../account.service";
 
 @Component({
   template: `
-    <h1 mat-dialog-title>Add Trainees</h1>
+    <h1 mat-dialog-title>Employees</h1>
     <div mat-dialog-content>
-        <p style="margin-top: 0; color: #757575">
-          Add users from your team who should receive training on this article.
-        </p>
-        <mat-selection-list dense [(ngModel)]="trainees" style="outline: none;">
-            <mat-list-option *ngFor="let user of users | async" [value]="user.uid">
-                <img matListAvatar [src]="user.profileUrl" onerror="src='/assets/face.png'">
-                <h3 matLine> {{user.name}} </h3>
-            </mat-list-option>
-        </mat-selection-list>
+      <p style="margin-top: 0; color: #757575">
+        Who should receive this training regularly?
+      </p>
+      <mat-selection-list dense [(ngModel)]="trainees" style="outline: none;">
+        <mat-list-option
+          *ngFor="let user of (users | async)"
+          [value]="user.uid"
+        >
+          <img
+            matListAvatar
+            [src]="user.profileUrl"
+            onerror="src='/assets/face.png'"
+          />
+          <h3 matLine>{{ user.name }}</h3>
+        </mat-list-option>
+      </mat-selection-list>
     </div>
     <div mat-dialog-actions align="end">
-        <button mat-button mat-dialog-close>CANCEL</button>
-        <button mat-button (click)="save()" color="primary">SAVE</button>
+      <button mat-button mat-dialog-close>CANCEL</button>
+      <button mat-button (click)="save()" color="primary">SAVE</button>
     </div>
-    `
+  `
 })
 export class AddTraineeDialog {
   users: BehaviorSubject<User[]>;

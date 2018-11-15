@@ -62,11 +62,26 @@ export class ArticleComponent implements OnInit, OnDestroy {
           this.service.getArticle(articleId, team.id).subscribe(article => {
             this.service.setActiveRoute(article.name);
             this.article = article;
+            this.buildButtons();
             this.loadData(article.content);
           });
         });
       }
     });
+  }
+
+  srtBtn: string;
+  currentBtn: string;
+  private buildButtons() {
+    if (this.article.myContent) {
+      const srt = Object.keys(this.article.myContent.trainees).length;
+      const nt = this.article.myContent.needsTraining.length;
+      const tail = `should receive this training regularly`;
+      this.srtBtn =
+        srt == 1 ? `1 employee ${tail}` : `${srt} employees ${tail}`;
+      this.currentBtn = `${srt -
+        nt} of ${srt} employees are current on this training`;
+    }
   }
 
   private loadData(html): void {
@@ -138,6 +153,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
           )
         ).subscribe(() => {
           this.service.updateMyContent(this.article.myContent);
+          this.buildButtons();
         });
       }
     });
@@ -201,6 +217,22 @@ export class ArticleComponent implements OnInit, OnDestroy {
         this.surveysService.createSurvey(survey);
       }
     });
+  }
+
+  public needsTrainingDialog(): void {
+    // let trainees = this.article.myContent.trainees || {};
+    // let traineeIds = Object.keys(trainees);
+    // for (let srt in trainees) {
+    //   if (this.isExpired())
+    // }
+    // let dialogRef = this.dialog.open(AttendanceDialog, {
+    //   data: trainees
+    // });
+    // dialogRef.afterClosed().subscribe((traineeIds: string[]) => {
+    //   if (true) {
+    //     // go to history
+    //   }
+    // });
   }
 
   viewHistory(): void {

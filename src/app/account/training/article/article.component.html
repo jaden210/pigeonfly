@@ -1,37 +1,61 @@
 <div id="content" *ngIf="article">
   <div id="toolbar">
-    <button mat-flat-button color="primary" (click)="startTraining()">START TRAINING</button>
+    <button mat-flat-button color="primary" (click)="startTraining()">
+      START TRAINING
+    </button>
     <span style="flex-grow: 1"></span>
-    <button mat-button [matMenuTriggerFor]="menu" *ngIf="article.favorited">Renew
-      {{article.myContent?.trainingExpiration}}</button>
+    <button mat-button [matMenuTriggerFor]="menu" *ngIf="article.favorited">
+      Renew {{ article.myContent?.trainingExpiration }}
+    </button>
     <mat-menu #menu="matMenu">
-      <button mat-menu-item *ngFor="let time of Timeframe" (click)="setTrainingExpiration(time)">Renew {{time}}</button>
+      <button
+        mat-menu-item
+        *ngFor="let time of Timeframe"
+        (click)="setTrainingExpiration(time)"
+      >
+        Renew {{ time }}
+      </button>
     </mat-menu>
-    <button *ngIf="isDev" mat-icon-button (click)="editArticle()" matTooltip="Edit Article">
+    <button
+      *ngIf="isDev"
+      mat-icon-button
+      (click)="editArticle()"
+      matTooltip="Edit Article"
+    >
       <mat-icon aria-label="Edit Article">edit</mat-icon>
     </button>
-    <button *ngIf="isDev" mat-icon-button (click)="viewHistory()" matTooltip="View Training History">
+    <button
+      *ngIf="isDev"
+      mat-icon-button
+      (click)="viewHistory()"
+      matTooltip="View Training History"
+    >
       <mat-icon aria-label="Edit Article">history</mat-icon>
     </button>
-    <button mat-icon-button (click)="favorite()" [ngStyle]="{'color': article.favorited ? '#E91E63' : '#757575'}">
+    <button
+      mat-icon-button
+      (click)="favorite()"
+      [ngStyle]="{ color: article.favorited ? '#E91E63' : '#757575' }"
+    >
       <mat-icon aria-label="Add to My Training Content">
-        {{article.favorited ? 'favorite' : 'favorite_border'}}
+        {{ article.favorited ? "favorite" : "favorite_border" }}
       </mat-icon>
     </button>
   </div>
   <div id="trainees" *ngIf="article.favorited">
-    <mat-chip-list>
-      <mat-chip removable selectable *ngFor="let trainee of objectKeys(article.myContent?.trainees)" (click)="viewHistoryByTrainee(trainee)"
-        (removed)="removeTrainee(trainee)">
-        <mat-icon class="warning" *ngIf="isExpired(trainee)" matTooltip="Needs Training">error_outline</mat-icon>
-        {{ trainee | userName : (users | async) }}
-        <mat-icon matChipRemove>cancel</mat-icon>
-      </mat-chip>
-      <mat-chip id="add-trainee-chip" selected (click)="addTrainee()">
-        <mat-icon>add</mat-icon>ADD TRAINEE
-      </mat-chip>
-    </mat-chip-list>
+    <button
+      mat-stroked-button
+      style="margin-right: 12px;"
+      (click)="addTrainee()"
+    >
+      {{ srtBtn }}
+    </button>
+    <button mat-stroked-button id="current-btn">
+      <mat-icon *ngIf="article.myContent?.complianceLevel < 100" color="warn"
+        >warning</mat-icon
+      >{{ currentBtn }}
+    </button>
   </div>
-  <h3>{{article.name}}</h3>
+  <h3>{{ article.name }}</h3>
 </div>
 <div id="article" #dataContainer></div>
