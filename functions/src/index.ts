@@ -268,7 +268,7 @@ exports.deletedSurvey = functions.firestore.document("survey/{logId}").onDelete(
 
 exports.createdSurveyResponse = functions.firestore.document("survey-response/{id}").onCreate(snapshot => {
   let surveyResponse = snapshot.data();
-  return logAsEvent(EventType.survey, EventAction.created, snapshot.id, surveyResponse.userId, surveyResponse.shortAnswer || '' + ' ' + surveyResponse || '', surveyResponse.teamId)
+  return logAsEvent(EventType.surveyResponse, EventAction.repsond, surveyResponse.surveyId, surveyResponse.userId, surveyResponse.shortAnswer || '' + ' ' + surveyResponse.longAnser || '', surveyResponse.teamId)
   .then(() => console.log("created survey response complete"));
 });
 
@@ -316,7 +316,7 @@ enum EventType {
   timeclock = "Timeclock",
   incidentReport = "Incident Report",
   survey = "Survey",
-  surveyResponse = "Survey Response",
+  surveyResponse = "Survey",
   selfInspection = "Self Inspection",
   training = "Training",
   member = "Member"
@@ -326,4 +326,5 @@ enum EventAction {
   created = "created",
   updated = "updated",
   deleted = "deleted",
+  repsond = "responded to",
 }

@@ -218,7 +218,7 @@ exports.deletedSurvey = functions.firestore.document("survey/{logId}").onDelete(
 /* ----- SURVEY RESPONSE ----- */
 exports.createdSurveyResponse = functions.firestore.document("survey-response/{id}").onCreate(snapshot => {
     let surveyResponse = snapshot.data();
-    return logAsEvent(EventType.survey, EventAction.created, snapshot.id, surveyResponse.userId, surveyResponse.shortAnswer || '' + ' ' + surveyResponse || '', surveyResponse.teamId)
+    return logAsEvent(EventType.surveyResponse, EventAction.repsond, surveyResponse.surveyId, surveyResponse.userId, surveyResponse.shortAnswer || '' + ' ' + surveyResponse.longAnser || '', surveyResponse.teamId)
         .then(() => console.log("created survey response complete"));
 });
 /*  ---------- Achievements ----------  */
@@ -254,7 +254,7 @@ var EventType;
     EventType["timeclock"] = "Timeclock";
     EventType["incidentReport"] = "Incident Report";
     EventType["survey"] = "Survey";
-    EventType["surveyResponse"] = "Survey Response";
+    EventType["surveyResponse"] = "Survey";
     EventType["selfInspection"] = "Self Inspection";
     EventType["training"] = "Training";
     EventType["member"] = "Member";
@@ -264,5 +264,6 @@ var EventAction;
     EventAction["created"] = "created";
     EventAction["updated"] = "updated";
     EventAction["deleted"] = "deleted";
+    EventAction["repsond"] = "responded to";
 })(EventAction || (EventAction = {}));
 //# sourceMappingURL=index.js.map
