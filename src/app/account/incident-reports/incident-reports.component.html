@@ -17,17 +17,19 @@
       <button mat-icon-button (click)="cancel()">
         <mat-icon>arrow_back</mat-icon>
       </button>
-      <div id="title">{{aReport.reportName}}</div>
+      <div>{{aReport.reportName}}</div>
       <div class="flex"></div>
         <button mat-icon-button class="ml" style="opacity:.87" matTooltip="Delete the report" (click)="delete()"><mat-icon>delete</mat-icon></button>
         <button mat-button class="ml" color="primary" (click)="export()">EXPORT PDF</button>
     </mat-toolbar>
     <div class="panel">
-      <div class="item header" *ngFor="let q of aReport.questions; let i = index">
-        <div class="question category">{{q.description}}</div>
-        <div *ngIf="q.name !== 'signature' && q.name !== 'images'" id="answer" class="title">{{q.value}}</div>
-        <img *ngIf="q.name == 'signature'" id="sig" src={{q.value}} onerror = "src = '/assets/face.png'" alt="Compliancechimp">
-        <ng-container *ngIf="q.name == 'images'"><img *ngFor="let image of q.value" class="images" src={{image.imageUrl}} alt="Compliancechimp"></ng-container>
+      <div class="question" *ngFor="let q of aReport.questions; let i = index">
+        <div class="bubble left">{{q.description}}</div>
+        <div class="bubble right">
+          <div *ngIf="q.name !== 'signature' && q.name !== 'images'" id="answer" class="title">{{q.value}}</div>
+          <img *ngIf="q.name == 'signature'" id="sig" src={{q.value}} onerror = "src = '/assets/face.png'" alt="Compliancechimp">
+          <ng-container *ngIf="q.name == 'images'"><img *ngFor="let image of q.value" class="images" src={{image.imageUrl}} alt="Compliancechimp"></ng-container>
+        </div>
       </div>
     </div>
   </div>
