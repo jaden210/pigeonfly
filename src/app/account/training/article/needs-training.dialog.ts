@@ -1,12 +1,13 @@
-import { Component, Inject } from "@angular/core";
+import { Component, Inject, OnInit } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 import { User } from "src/app/app.service";
 import { AccountService } from "../../account.service";
+import { DatePipe } from "@angular/common";
 
 @Component({
   template: `
     <h1 mat-dialog-title>Needs Training</h1>
-    <div mat-dialog-content>
+    <div mat-dialog-content style="padding: 0;">
       <mat-list dense style="outline: none;">
         <mat-list-item *ngFor="let user of needsTraining">
           <img
@@ -15,35 +16,46 @@ import { AccountService } from "../../account.service";
             onerror="src='/assets/face.png'"
           />
           <h3 matLine>{{ user.name }}</h3>
+          <h4 matLine>{{ user.lastTrained }}</h4>
         </mat-list-item>
       </mat-list>
     </div>
     <div mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>CANCEL</button>
-      <button mat-button (click)="save()" color="primary">SEE HISTORY</button>
+      <button mat-button (click)="seeHistory()" color="primary">
+        SEE HISTORY
+      </button>
     </div>
   `
 })
-export class NeedsTrainingDialog {
-  users: User[] = [];
-  needsTraining: User[] = [];
+export class NeedsTrainingDialog implements OnInit {
+  users: User[];
+  needsTraining: any[] = [];
 
   constructor(
     private accountService: AccountService,
-    public dialogRef: MatDialogRef<NeedsTrainingDialog>,
+    private dialogRef: MatDialogRef<NeedsTrainingDialog>,
+    private dataPipe: DatePipe,
     @Inject(MAT_DIALOG_DATA) public data
-  ) {
-    // this.users = this.accountService.teamUsers;
-    // this.needsTraining = Object.keys(data)
-    // .map(id => {
-    //   return this.users.find(user => user.id == id)
-    // })
-    // for (let srt of data) {
-    //   if
-    // }
+  ) {}
+
+  ngOnInit() {
+    this.users = this.accountService.teamUsers || [];
+    const needsTrainingObj = this.data.needsTrainingObj;
+    for (let nt in needsTrainingObj) {
+      const user = this.users.find(user => user.id == nt);
+      const msLastTrained = needsTrainingObj[nt];
+      console.log(msLastTrained);
+      const lastTrained = !msLastTrained
+        ? "Hasn't received training on this article"
+        : `Last trained on ${this.dataPipe.transform(
+            new Date(needsTrainingObj[nt])
+          )}`;
+      this.needsTraining.push({ ...user, lastTrained });
+    }
   }
 
-  save(): void {
-    this.dialogRef.close();
+  seeHistory(): void {
+    this.dialogRef.close(true);
   }
 }

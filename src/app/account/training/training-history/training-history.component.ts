@@ -8,7 +8,7 @@ import {
   MyContent,
   TrainingExpiration
 } from "../training.service";
-import { map } from "rxjs/operators";
+import { map, tap } from "rxjs/operators";
 
 @Component({
   selector: "app-training-history",
@@ -23,6 +23,7 @@ export class TrainingHistoryComponent implements OnInit {
   isDev: boolean;
   users: BehaviorSubject<User[]>;
   history;
+  noHistory: boolean;
 
   displayedColumns: string[] = ["date", "trainer", "attendees"];
   dataSource: Observable<TableData[]>;
@@ -63,7 +64,8 @@ export class TrainingHistoryComponent implements OnInit {
             const inAttendance = survey.receivedTraining;
             return { date, name, trainer, trainees, inAttendance };
           })
-        )
+        ),
+        tap(surveys => (this.noHistory = surveys.length ? false : true))
       );
   }
 }

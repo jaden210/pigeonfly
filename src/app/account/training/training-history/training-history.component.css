@@ -7,3 +7,20 @@ table {
   margin-top: 8px;
   background: #fafafa;
 }
+
+#no-history p {
+  margin-left: 24px;
+}
+
+#received-training-header {
+  display: flex;
+  align-items: center;
+}
+
+#received-training-header mat-icon {
+  cursor: pointer;
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+  margin-left: 8px;
+}

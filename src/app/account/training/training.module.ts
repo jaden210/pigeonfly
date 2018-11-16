@@ -19,6 +19,7 @@ import { TopicDialogComponent } from "./topics/topic-dialog/topic-dialog.compone
 import { UserHistoryDialog } from "./article/user-history.dialog";
 import { TrainingHistoryComponent } from "./training-history/training-history.component";
 import { NeedsTrainingDialog } from "./article/needs-training.dialog";
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 const routes: Routes = [
   {
@@ -65,7 +66,8 @@ const routes: Routes = [
     AttendanceDialog,
     UserHistoryDialog,
     TrainingHistoryComponent,
-    NeedsTrainingDialog
+    NeedsTrainingDialog,
+    DashboardComponent
   ],
   entryComponents: [
     AddTraineeDialog,
