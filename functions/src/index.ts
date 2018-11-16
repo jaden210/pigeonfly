@@ -133,15 +133,19 @@ exports.deletedLog = functions.firestore.document("log/{logId}").onDelete(snapsh
 exports.updateTeam = functions.firestore.document("team/{teamId}").onUpdate((change, context) => {
   let oldTeam = change.before.data();
   let newTeam = change.after.data();
+
+  /* billing achievement */
+  let billing;
+  if (!oldTeam.cardToken && newTeam.cardToken) {
+    billing = updateCompletedAchievement(newTeam.id, "hasBillingInfo", true);
+  }
   
   /* logoUrl achievement */
+  let logo;
   if (!oldTeam.logoUrl && newTeam.logoUrl) {
-    return updateCompletedAchievement(newTeam.id, "hasCompanyLogo", true)
-    .then(() => console.log('update team complete'));
-  } else {
-    return console.log("nothing interesting happened");
-    ;
+    logo = updateCompletedAchievement(newTeam.id, "hasCompanyLogo", true)
   }
+  Promise.all([billing, logo]).then(() => console.log('update team complete'));
 });
 
 /* ----- USER ----- */
@@ -215,22 +219,18 @@ exports.createdSelfInspection = functions.firestore.document("self-inspection/{i
   return Promise.all([achievement, event]).then(() => console.log("created self inspection complete"));
 });
 
-exports.modifySelfInspection = functions.firestore.document("self-inspection/{id}").onUpdate((change, context) => {
-  let oldSI = change.before.data();
-  let newSI = change.after.data();
+exports.modifySelfInspectionInspection = functions.firestore.document("self-inspection/{id}/inspections/{inspecitonId}").onUpdate((change, context) => {
+  let oldI = change.before.data();
+  let newI = change.after.data();
   
-  /* finishSelfInspection achievement */
-  newSI.selfInspections.forEach(nInspection => {
-    oldSI.selfInspections.forEach(oInspection => {
-      if (nInspection.completedAt !== null && oInspection.completedAt == null) { // has been completed
-        const achievement = updateCompletedAchievement(newSI.teamId, "completedSelfAssesments", 1, true);
-        const event = logAsEvent(EventType.selfInspection, EventAction.created, change.after.id, newSI.userId, "Finished a Self Inspection", newSI.teamId);
-          
-        return Promise.all([event, achievement]).then(() => console.log("updated self inspection complete"));
-      } else return null;
-    });
-  });
-});
+  if (newI.completedAt !== null && oldI.completedAt == null) { // has been completed
+    const achievement = updateCompletedAchievement(newI.teamId, "completedSelfAssesments", 1, true);
+    const event = logAsEvent(EventType.selfInspection, EventAction.completed, change.after.id, newI.completedBy, "Finished a Self Inspection", newI.teamId);
+    
+    return Promise.all([event, achievement]).then(() => console.log("updated self inspection complete"));
+  } else return null;
+
+})
 
 /* ----- INJURY REPORT ----- */
 
@@ -327,4 +327,5 @@ enum EventAction {
   updated = "updated",
   deleted = "deleted",
   repsond = "responded to",
+  completed = "completed"
 }

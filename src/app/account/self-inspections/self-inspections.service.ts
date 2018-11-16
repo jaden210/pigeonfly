@@ -119,6 +119,8 @@ export class SelfInspectionsService {
 
   finishSelfInspection(): Promise<any> {
     this.takeInspection.completedAt = new Date();
+    this.takeInspection.teamId = this.accountService.aTeam.id;
+    this.takeInspection.completedBy = this.accountService.user.id;
     return this.saveSelfInspection();
   }
 
@@ -148,6 +150,8 @@ export class Inspection {
   categories: Categories[] = [];
   completedPercent: number = 0;
   compliantPercent: number = 0;
+  teamId?: string;
+  completedBy?: string;
 }
 
 export class Categories {
