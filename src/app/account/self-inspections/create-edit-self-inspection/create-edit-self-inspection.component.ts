@@ -15,7 +15,7 @@ export class CreateEditSelfInspectionComponent {
 
   constructor(
     public router: Router,
-    private selfInspectionService: SelfInspectionsService,
+    public selfInspectionService: SelfInspectionsService,
     public snackbar: MatSnackBar,
     private location: Location
   ) {

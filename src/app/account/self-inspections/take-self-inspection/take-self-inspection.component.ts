@@ -16,10 +16,10 @@ export class TakeSelfInspectionComponent {
   count: string;
 
   constructor(
-    private selfInspectionsService: SelfInspectionsService,
+    public selfInspectionsService: SelfInspectionsService,
     private snackbar: MatSnackBar,
     private router: Router,
-    private location: Location
+    public location: Location
   ) {
     !this.selfInspectionsService.selfInspection ? this.router.navigate(['account/self-inspections']) : null;
     this.aCategory = this.selfInspectionsService.takeInspection.categories[0];

@@ -15,7 +15,7 @@ export class SelfInspectionComponent {
   inspections: Inspection[];
 
   constructor(
-    private selfInspectionsService: SelfInspectionsService,
+    public selfInspectionsService: SelfInspectionsService,
     private snackbar: MatSnackBar,
     private location: Location,
     private router: Router,
