@@ -95,7 +95,6 @@ export class IncidentReportsComponent implements OnInit {
     doc.setFontSize(9);
 
     const type = this.aReport.type;
-    const reportName = this.aReport.reportName;
     const createdAt = this.aReport.createdAt.toString();
 
     const startOfPage = 0.75;
@@ -108,8 +107,6 @@ export class IncidentReportsComponent implements OnInit {
     let y = startOfPage;
 
     doc.text(type, x, y);
-    y += lineSpace;
-    doc.text(reportName, x, y);
     y += lineSpace;
     doc.text(createdAt, x, y);
     y += (lineSpace + lineSpace + sectionGap);
@@ -146,7 +143,7 @@ export class IncidentReportsComponent implements OnInit {
       }
 
       if (item.value.constructor === Array) {
-        if (item.name === 'images') {
+        if (item.type === 'Photots') {
           item.value.forEach(function (value) {
             doc.addImage(value.imageUrl, 'PNG', x, y, 3, 3);
             if (x === 0.5) {
@@ -182,7 +179,7 @@ export class IncidentReportsComponent implements OnInit {
             buffer = '';
           } else {
             const lastChar = buffer.substring(0, maxChars).lastIndexOf(' ');
-            if (item.name === 'signature') {
+            if (item.type === 'Signature') {
               doc.addImage(buffer, 'PNG', x, y, 2, 1);
               y += 1;
               buffer = '';
@@ -209,6 +206,6 @@ export class IncidentReportsComponent implements OnInit {
       }
     });
 
-    doc.save('incident.pdf');
+    doc.save(`${this.aReport.type}.pdf`);
   }
 }

@@ -7,8 +7,7 @@
   <mat-nav-list>
       <mat-list-item *ngFor="let report of incidentReports" (click)="selectReport(report)">
         <h1 matLine> {{report.type}} </h1>
-        <p mat-line> {{report.reportName || 'no name given'}} </p>
-        <p class="date">{{report.createdAt| date: 'longDate'}} </p>
+        <p mat-line> {{report.createdAt| date: 'medium'}} </p>
       </mat-list-item>
     </mat-nav-list>
   </div>
@@ -17,18 +16,20 @@
       <button mat-icon-button (click)="cancel()">
         <mat-icon>arrow_back</mat-icon>
       </button>
-      <div>{{aReport.reportName}}</div>
+      {{aReport.type}}
       <div class="flex"></div>
         <button mat-icon-button class="ml" style="opacity:.87" matTooltip="Delete the report" (click)="delete()"><mat-icon>delete</mat-icon></button>
         <button mat-button class="ml" color="primary" (click)="export()">EXPORT PDF</button>
     </mat-toolbar>
     <div class="panel">
       <div class="question" *ngFor="let q of aReport.questions; let i = index">
-        <div class="bubble left">{{q.description}}</div>
-        <div class="bubble right">
-          <div *ngIf="q.name !== 'signature' && q.name !== 'images'" id="answer" class="title">{{q.value}}</div>
-          <img *ngIf="q.name == 'signature'" id="sig" src={{q.value}} onerror = "src = '/assets/face.png'" alt="Compliancechimp">
-          <ng-container *ngIf="q.name == 'images'"><img *ngFor="let image of q.value" class="images" src={{image.imageUrl}} alt="Compliancechimp"></ng-container>
+        <div class="bubble right">{{q.description}}</div>
+        <div class="bubble left">
+          <div *ngIf="q.type == 'Text Reply'" id="answer" class="title">{{q.value}}</div>
+          <div *ngIf="q.type == 'Options'" id="answer" class="title">{{q.value}}</div>
+          <div *ngIf="q.type == 'Date'" id="answer" class="title">{{q.value.toDate() | date: 'medium'}}</div>
+          <img *ngIf="q.type == 'Signature'" id="sig" src={{q.value}} onerror = "src = '/assets/face.png'" alt="Compliancechimp">
+          <ng-container *ngIf="q.type == 'Photos'"><img *ngFor="let image of q.value" class="images" src={{image.imageUrl}} alt="Compliancechimp"></ng-container>
         </div>
       </div>
     </div>

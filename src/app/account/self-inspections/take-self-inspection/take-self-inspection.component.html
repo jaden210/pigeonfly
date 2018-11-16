@@ -32,13 +32,13 @@
     <div id="question-text">{{aQuestion?.name}}</div>
     <div id="question-answer">
       <div class="answer-buttons">
-        <button mat-stroked-button color="primary" [ngClass]="{'highlight': aQuestion.answer == false}" (click)="answerQuestion(false)">NO</button>
-        <button mat-stroked-button color="primary" [ngClass]="{'highlight': aQuestion.answer}" style="margin-left: 8px" (click)="answerQuestion(true)">YES</button>
+        <button mat-stroked-button color="primary" [ngClass]="{'highlight': aQuestion.answer == false}" (click)="answerQuestion(false)"><mat-icon class="sm-icon">highlight_off</mat-icon>NO</button>
+        <button mat-stroked-button color="primary" [ngClass]="{'highlight': aQuestion.answer}" style="margin-left: 8px" (click)="answerQuestion(true)"><mat-icon class="sm-icon">check_circle</mat-icon>YES</button>
       </div>
-      <mat-form-field class="textarea">
+      <mat-form-field appearance="outline" class="textarea">
         <textarea matInput [(ngModel)]="aQuestion.comment" matTextareaAutosize matAutosizeMinRows=8 placeholder="optional comments for the question"></textarea>
       </mat-form-field>
-      <button mat-icon-button color="primary" id="send" (click)="nextQuestion()"><mat-icon>send</mat-icon></button>
+        <button mat-icon-button color="primary" id="send" (click)="nextQuestion()"><mat-icon>send</mat-icon></button>
     </div>
   </div>
 </div>

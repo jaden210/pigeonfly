@@ -120,6 +120,7 @@
 
 .highlight {
   border-color: #ff9100;
+  color: #ff9100;
 }
 
 .background {
@@ -145,4 +146,9 @@
   font-weight: 700;
   font-style: italic;
   opacity: .64;
+}
+
+.sm-icon {
+  height: 20px;
+  font-size: 20px;
 }
