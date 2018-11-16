@@ -17,11 +17,17 @@
         <input matInput placeholder="title" type="text" [(ngModel)]="aAssesment.title">
       </mat-form-field>
       <div class="flex"></div>
-      <button mat-raised-button class="ml" style="color:white" color="accent" (click)="take()" *ngIf="aAssesment.id">{{takeBtnStr}}</button>
-      <button mat-button class="ml" color="primary" (click)="export()" *ngIf="exportable">EXPORT</button>
-      <button mat-icon-button class="ml" color="primary" (click)="delete()"><mat-icon>delete</mat-icon></button>
-      <button mat-button class="ml" color="primary" (click)="cancel()">CANCEL</button>
-      <button mat-stroked-button class="ml" color="primary" (click)="save()" [disabled]="!aAssesment.title">SAVE</button>
+      <ng-container *ngIf="aAssesment.id">
+        <button mat-raised-button class="ml" style="color:white" color="accent" (click)="take()" *ngIf="aAssesment.id">{{takeBtnStr}}</button>
+        <button mat-button class="ml" color="primary" (click)="export()" *ngIf="exportable">EXPORT</button>
+        <button mat-icon-button class="ml" color="primary" (click)="delete()"><mat-icon>delete</mat-icon></button>
+        <button mat-button class="ml" color="primary" (click)="cancel()">CANCEL</button>
+        <button mat-stroked-button class="ml" color="primary" (click)="save()" [disabled]="!aAssesment.title">SAVE</button>
+      </ng-container>
+      <ng-container *ngIf="!aAssesment.id">
+        <button mat-button class="ml" color="primary" (click)="cancel()">CANCEL</button>
+        <button mat-stroked-button class="ml" color="primary" (click)="save()" [disabled]="!aAssesment.title">CREATE INSPECTION</button>
+      </ng-container>
     </mat-toolbar>
     <div class="panel">
       <div id="instructions">Select the questions that are relevant to you. Questions are grouped by their category.</div>

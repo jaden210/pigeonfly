@@ -1,0 +1,14 @@
+<mat-toolbar>
+  Self-Inspections
+  <div class="flex"></div>
+  <toolbar-helper></toolbar-helper>
+</mat-toolbar>
+<div class="window">
+  <mat-nav-list>
+    <mat-list-item *ngFor="let inspection of selfInspections | async" (click)="selectSelfInspection(inspection)">
+      <h2 matLine> {{inspection.title}} </h2>
+      <p mat-line> {{inspection.createdAt | date: 'longDate'}} </p>
+    </mat-list-item>
+  </mat-nav-list>
+</div>
+<button class="fab" mat-mini-fab color="accent" (click)="startNewSelfInspection()"><mat-icon>find_replace</mat-icon>New Self-Inspection</button>

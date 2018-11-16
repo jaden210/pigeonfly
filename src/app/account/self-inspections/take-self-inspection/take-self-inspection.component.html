@@ -1,0 +1,44 @@
+<mat-toolbar>
+  <button mat-icon-button (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  {{selfInspectionsService.selfInspection.title}}:{{selfInspectionsService.takeInspection?.createdAt | date:'longDate'}}
+  <div class="flex"></div>
+  <button mat-button color="accent" (click)="saveAndLeave()">SAVE AND LEAVE</button>
+  <button mat-raised-button [disabled]="selfInspectionsService.takeInspection.completedPercent < 1" style="color:#ffffff" (click)="finishAndLeave()" color="accent">FINISH INSPECTION</button>
+  <button mat-icon-button class="ml" matTooltip="delete this self-inspection" (click)="deleteSelfInspection()"><mat-icon>delete</mat-icon></button>
+</mat-toolbar>
+<div class="window">
+  <div class="panel">
+    <div id="counter">{{count}}</div>
+    <div class="categories" *ngFor="let category of selfInspectionsService.takeInspection.categories">
+      <div class="crow" [ngClass]="{'background': aCategory.subject == category.subject}" (click)="category.show ? category.show = false : category.show = true">
+        <div class="dot" [ngClass]="{'done': category.finished}"></div> 
+        <div class="cname">{{category.subject}}</div>
+        <div class="flex"></div>
+        <mat-icon [ngClass]="{'rotate': category.show}">keyboard_arrow_left</mat-icon>
+      </div>
+      <ng-container *ngIf="category.show">
+        <div class="questions" *ngFor="let question of category.questions" (click)="selectQuestion(question)">
+          <div class="qrow" [ngClass]="{'background': aQuestion.name == question.name}">
+            <div class="dot" [ngClass]="{'done': question.answer == true || question.answer == false}"></div>
+            <div class="qname">{{question.name}}</div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <div class="viewer">
+    <div id="question-text">{{aQuestion?.name}}</div>
+    <div id="question-answer">
+      <div class="answer-buttons">
+        <button mat-stroked-button color="primary" [ngClass]="{'highlight': aQuestion.answer == false}" (click)="answerQuestion(false)">NO</button>
+        <button mat-stroked-button color="primary" [ngClass]="{'highlight': aQuestion.answer}" style="margin-left: 8px" (click)="answerQuestion(true)">YES</button>
+      </div>
+      <mat-form-field class="textarea">
+        <textarea matInput [(ngModel)]="aQuestion.comment" matTextareaAutosize matAutosizeMinRows=8 placeholder="optional comments for the question"></textarea>
+      </mat-form-field>
+      <button mat-icon-button color="primary" id="send" (click)="nextQuestion()"><mat-icon>send</mat-icon></button>
+    </div>
+  </div>
+</div>

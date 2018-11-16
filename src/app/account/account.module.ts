@@ -9,7 +9,6 @@ import {
 import { SurveysModule } from "./surveys/surveys.module";
 import { TimeComponent, CreateEditTimeDialog } from "./time/time.component";
 import { LogComponent, CreateEditLogDialog } from "./log/log.component";
-import { AssesmentComponent } from "./assesment/assesment.component";
 import { AccountRoutingModule } from "./account-routing.module";
 import { MaterialModule } from "../material/material.module";
 import {
@@ -60,7 +59,6 @@ import { MakePaymentComponent } from "./account/payments/make-payment/make-payme
     TimeComponent,
     LogComponent,
     EventComponent,
-    AssesmentComponent,
     InviteDialog,
     EditUserDialog,
     NoAccessDialog,

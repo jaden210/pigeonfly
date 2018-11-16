@@ -3,7 +3,6 @@ import { Routes, RouterModule } from "@angular/router";
 import { HomeComponent } from "./home/home.component";
 import { AccountComponent } from "./account.component";
 import { ProfileComponent } from "./account/account.component";
-import { AssesmentComponent } from "./assesment/assesment.component";
 import { LogComponent } from "./log/log.component";
 import { TimeComponent } from "./time/time.component";
 import { IncidentReportsComponent } from "./incident-reports/incident-reports.component";
@@ -20,7 +19,6 @@ const routes: Routes = [
       { path: "", redirectTo: "dashboard", pathMatch: "full" },
       { path: "dashboard", component: HomeComponent },
       { path: "account", component: ProfileComponent },
-      { path: "self-inspection", component: AssesmentComponent },
       { path: "log", component: LogComponent },
       { path: "time", component: TimeComponent },
       { path: "event", component: EventComponent },
@@ -34,6 +32,10 @@ const routes: Routes = [
       {
         path: "surveys",
         loadChildren: "./surveys/surveys.module#SurveysModule"
+      },
+      {
+        path: "self-inspections",
+        loadChildren: "./self-inspections/self-inspections.module#SelfInspectionsModule"
       },
       { path: "**", redirectTo: "dashboard" }
     ]

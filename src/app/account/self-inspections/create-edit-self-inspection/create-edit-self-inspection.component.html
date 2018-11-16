@@ -1,0 +1,35 @@
+<mat-toolbar>
+  <mat-form-field color="primary" id="title" floatLabel="never" style="flex:2">
+    <input matInput placeholder="title" type="text" [(ngModel)]="selfInspectionService.selfInspection.title">
+  </mat-form-field>
+  <div class="flex"></div>
+  <button mat-button class="ml" color="primary" *ngIf="!selfInspectionService.selfInspection.id" (click)="leave()">CANCEL</button>
+  <button mat-stroked-button class="ml" color="primary" *ngIf="!selfInspectionService.selfInspection.id" (click)="saveOrCreate()" [disabled]="!selfInspectionService.selfInspection.title">CREATE SELF INSPECTION</button>
+  <button mat-stroked-button class="ml" color="primary" *ngIf="selfInspectionService.selfInspection.id" (click)="saveOrCreate()">SAVE SELF INSPECTION</button>
+</mat-toolbar>
+<div class="panel">
+  <div id="instructions">Select the questions that are relevant to you. Questions are grouped by their category.</div>
+  <mat-accordion>
+    <mat-expansion-panel *ngFor="let subject of selfInspectionService.selfInspection.baseQuestions; let i = index">
+      <mat-expansion-panel-header>
+        <mat-panel-title style="flex:20">{{subject.subject}}</mat-panel-title>
+        <div class="flex"></div>
+        <mat-panel-description>{{getLength(subject.questions)}}/{{subject?.questions?.length || 0}}</mat-panel-description>
+      </mat-expansion-panel-header>
+      <mat-list #questions>
+        <mat-list-item *ngFor="let question of subject.questions">
+          {{question.name}}
+          <div class="flex"></div>
+          <mat-checkbox [(ngModel)]="question.selected"></mat-checkbox>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-form-field style="width: 100%" floatLabel="never">
+            <input matInput [(ngModel)]="newQuestionText" placeholder="new question" type="text"> 
+          </mat-form-field>
+          <div class="flex"></div>
+          <button mat-button color="primary" (click)="addQuestion(i)">ADD</button>
+        </mat-list-item>
+      </mat-list>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
