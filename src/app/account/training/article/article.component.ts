@@ -21,6 +21,7 @@ import { tap } from "rxjs/operators";
 import { SurveysService } from "../../surveys/surveys.service";
 import { Survey } from "../../surveys/survey/survey";
 import { UserHistoryDialog } from "./user-history.dialog";
+import { NeedsTrainingDialog } from "./needs-training.dialog";
 
 @Component({
   selector: "app-article",
@@ -219,20 +220,21 @@ export class ArticleComponent implements OnInit, OnDestroy {
     });
   }
 
-  public needsTrainingDialog(): void {
-    // let trainees = this.article.myContent.trainees || {};
-    // let traineeIds = Object.keys(trainees);
-    // for (let srt in trainees) {
-    //   if (this.isExpired())
-    // }
-    // let dialogRef = this.dialog.open(AttendanceDialog, {
-    //   data: trainees
-    // });
-    // dialogRef.afterClosed().subscribe((traineeIds: string[]) => {
-    //   if (true) {
-    //     // go to history
-    //   }
-    // });
+  /* Called from template, if article.myContent */
+  public openNeedsTrainingDialog(): void {
+    let needsTrainingObj = {};
+    let trainees = this.article.myContent.trainees || {};
+    this.article.myContent.needsTraining.forEach(userId => {
+      needsTrainingObj[userId] = trainees[userId];
+    });
+    let dialogRef = this.dialog.open(NeedsTrainingDialog, {
+      data: { needsTrainingObj }
+    });
+    dialogRef.afterClosed().subscribe(showHistory => {
+      if (showHistory) {
+        // go to history
+      }
+    });
   }
 
   viewHistory(): void {

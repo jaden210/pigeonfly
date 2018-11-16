@@ -1,4 +1,8 @@
-#name-input {
+mat-dialog-content {
+  width: 300px;
+}
+
+mat-form-field {
   width: 100%;
 }
 
@@ -9,6 +13,7 @@
   width: 300px;
   overflow: hidden;
   position: relative;
+  box-sizing: border-box;
 }
 
 #img-action-btns {
@@ -33,8 +38,8 @@
 }
 
 img {
-  height: 100%;
-  width: 100%;
+  height: 300px;
+  width: 300px;
   object-fit: cover;
 }
 
@@ -51,4 +56,8 @@ mat-progress-bar {
   bottom: 0;
   margin-left: -24px;
   width: calc(100% + 48px);
+}
+
+.scoot-up {
+  margin-top: -18px;
 }

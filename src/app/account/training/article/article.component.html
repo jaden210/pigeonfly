@@ -42,7 +42,7 @@
       </mat-icon>
     </button>
   </div>
-  <div id="trainees" *ngIf="article.favorited">
+  <div id="trainees" *ngIf="article.favorited && article.myContent">
     <button
       mat-stroked-button
       style="margin-right: 12px;"
@@ -50,8 +50,12 @@
     >
       {{ srtBtn }}
     </button>
-    <button mat-stroked-button id="current-btn">
-      <mat-icon *ngIf="article.myContent?.complianceLevel < 100" color="warn"
+    <button
+      mat-stroked-button
+      id="current-btn"
+      (click)="openNeedsTrainingDialog()"
+    >
+      <mat-icon *ngIf="article.myContent.complianceLevel < 100" color="warn"
         >warning</mat-icon
       >{{ currentBtn }}
     </button>

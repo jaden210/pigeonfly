@@ -33,7 +33,8 @@ export class TrainingComponent {
     const activeRoute: string = this.router.url;
     if (
       activeRoute.includes("create-article") ||
-      activeRoute.includes("edit-article")
+      activeRoute.includes("edit-article") ||
+      activeRoute.includes("history")
     )
       this.location.back();
     else {

@@ -293,7 +293,7 @@ export class TrainingService {
       .collection("survey", ref =>
         ref
           .where("teamId", "==", teamId)
-          .where("OSHAArticleId", "==", articleId)
+          .where("oshaArticleId", "==", articleId)
           .orderBy("createdAt", "desc")
       )
       .snapshotChanges()
@@ -409,6 +409,8 @@ export class Topic {
   name: string;
   nameEs: string;
   teamId: string;
+  subpart: string;
+  subpartEs: string;
   id?: string;
 }
 

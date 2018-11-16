@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 import { Topic } from "../../training.service";
 import { TopicsService } from "../topics.service";
+import { Observable, of } from "rxjs";
 
 @Component({
   templateUrl: "./topic-dialog.component.html",
@@ -35,8 +36,6 @@ export class TopicDialogComponent implements OnInit {
   public setImage(event): void {
     // callback from view
     if (event.target.files && event.target.files[0]) {
-      console.log(event.target.files);
-      
       var reader = new FileReader();
       reader.onload = (event: ProgressEvent) => {
         this.previewImg = (<FileReader>event.target).result;
@@ -51,9 +50,9 @@ export class TopicDialogComponent implements OnInit {
 
   public createTopic(): void {
     this.loading = true;
-    this.service.uploadImage(this.image).subscribe(imageUrl => {
+    this.topic.industryId = this.industryId;
+    this.doImage().subscribe(imageUrl => {
       this.topic.imageUrl = imageUrl;
-      this.topic.industryId = this.industryId;
       this.service
         .createTopic(this.topic)
         .then(() => this.dialogRef.close(this.topic))
@@ -64,11 +63,17 @@ export class TopicDialogComponent implements OnInit {
     });
   }
 
+  private doImage(): Observable<string> {
+    return this.image ? this.service.uploadImage(this.image) : of(null);
+  }
+
   public editTopic(): void {
     this.loading = true;
-    if (this.topic.imageUrl) this.service.removeImage(this.topic.imageUrl);
-    this.service.uploadImage(this.image).subscribe(imageUrl => {
-      this.topic.imageUrl = imageUrl;
+    this.doImage().subscribe(imageUrl => {
+      if (imageUrl) {
+        if (this.topic.imageUrl) this.service.removeImage(this.topic.imageUrl);
+        this.topic.imageUrl = imageUrl;
+      }
       this.service
         .editTopic(this.topic)
         .then(() => this.dialogRef.close(this.topic))
