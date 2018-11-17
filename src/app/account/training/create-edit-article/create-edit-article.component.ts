@@ -32,6 +32,7 @@ export class CreateEditArticleComponent
     placeholder: "Content *",
     translate: "yes"
   };
+  public title: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -45,13 +46,13 @@ export class CreateEditArticleComponent
     this.route.queryParams.subscribe((params: ParamMap) => {
       this.topics = this.trainingService.getTopics(params["industryId"]);
       if (params["articleId"]) {
-        this.trainingService.setActiveRoute("Edit Article");
+        this.title = "Edit Article";
         this.getArticle(params["articleId"]);
         this.isEdit = true;
         this.submitButton = "UPDATE ARTICLE";
       } else {
         this.article.topicId = params["topicId"];
-        this.trainingService.setActiveRoute("Create Article");
+        this.title = "Create Article";
       }
     });
   }

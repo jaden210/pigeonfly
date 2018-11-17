@@ -1,4 +1,12 @@
-<div id="container">
+<mat-toolbar style="font-size: 15px">
+  <button mat-icon-button (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  <h1>Training History</h1>
+  <div class="flex"></div>
+  <toolbar-helper></toolbar-helper>
+</mat-toolbar>
+<div id="body">
   <h3>{{ article?.name }}</h3>
   <table mat-table [dataSource]="dataSource">
     <!--

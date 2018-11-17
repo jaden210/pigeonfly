@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { Subscription, BehaviorSubject, Observable } from "rxjs";
 import { AccountService, User } from "../../account.service";
 import { ActivatedRoute, ParamMap, Router } from "@angular/router";
+import { Location } from "@angular/common";
 import {
   TrainingService,
   Article,
@@ -31,7 +32,8 @@ export class TrainingHistoryComponent implements OnInit {
   constructor(
     private accountService: AccountService,
     private route: ActivatedRoute,
-    private service: TrainingService
+    private service: TrainingService,
+    private location: Location
   ) {}
 
   ngOnInit() {
@@ -41,7 +43,6 @@ export class TrainingHistoryComponent implements OnInit {
         this.route.paramMap.subscribe((params: ParamMap) => {
           const articleId = params.get("article");
           this.teamId = team.id;
-          this.service.setActiveRoute("Training History");
           this.service.getArticle(articleId, team.id).subscribe(article => {
             this.article = article;
             this.getHistory();
@@ -67,6 +68,10 @@ export class TrainingHistoryComponent implements OnInit {
         ),
         tap(surveys => (this.noHistory = surveys.length ? false : true))
       );
+  }
+
+  public goBack(): void {
+    this.location.back();
   }
 }
 

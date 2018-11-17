@@ -19,14 +19,15 @@ import { TopicDialogComponent } from "./topics/topic-dialog/topic-dialog.compone
 import { UserHistoryDialog } from "./article/user-history.dialog";
 import { TrainingHistoryComponent } from "./training-history/training-history.component";
 import { NeedsTrainingDialog } from "./article/needs-training.dialog";
-import { DashboardComponent } from './dashboard/dashboard.component';
+import { DashboardComponent } from "./dashboard/dashboard.component";
 
 const routes: Routes = [
   {
     path: "",
     component: TrainingComponent,
     children: [
-      { path: "", component: IndustriesComponent },
+      { path: "", component: DashboardComponent },
+      { path: "industries", component: IndustriesComponent },
       {
         path: "create-article",
         component: CreateEditArticleComponent,

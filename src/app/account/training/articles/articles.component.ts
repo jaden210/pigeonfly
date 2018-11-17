@@ -15,6 +15,7 @@ export class ArticlesComponent implements OnInit, OnDestroy {
   private industryId: string;
   private topicId: string;
   public articles: Observable<Article[]>;
+  public title: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -41,7 +42,7 @@ export class ArticlesComponent implements OnInit, OnDestroy {
   private setActiveRoute(industryId, topicId, teamId): void {
     this.service.getTopics(industryId).subscribe(topics => {
       const topic = topics.find(t => t.id == topicId);
-      this.service.setActiveRoute(topic ? topic.name : null);
+      this.title = topic ? topic.name : null;
     });
   }
 
@@ -56,6 +57,12 @@ export class ArticlesComponent implements OnInit, OnDestroy {
   public createArticle(): void {
     let queryParams = { industryId: this.industryId, topicId: this.topicId };
     this.router.navigate(["account/training/create-article"], { queryParams });
+  }
+
+  public goBack(): void {
+    const activeRoute: string = this.router.url;
+    const backRoute = activeRoute.substr(0, activeRoute.lastIndexOf("/"));
+    this.router.navigate([backRoute]);
   }
 
   ngOnDestroy() {

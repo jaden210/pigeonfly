@@ -154,7 +154,9 @@ export class TrainingService {
     return this.myContent.length
       ? of(this.myContent)
       : this.db
-          .collection("my-content", ref => ref.where("teamId", "==", teamId))
+          .collection("my-content", ref =>
+            ref.where("teamId", "==", teamId).where("disabled", "==", false)
+          )
           .snapshotChanges()
           .pipe(
             take(1),
@@ -186,14 +188,22 @@ export class TrainingService {
   ): number {
     const t = trainees ? Object.keys(trainees).length : 0;
     const nt = needsTraining ? needsTraining.length : 0;
-    return Math.floor((t - nt) / t) || 0;
+    return Math.ceil((t - nt) / t) * 100 || 0;
   }
 
   /* Returns a list of userIds who need a refresh on their training */
-  private getExpiredTrainees(myContent: MyContent): string[] {
-    const expirationDate = this.getTrainingExpirationDate(
+  public getExpiredTrainees(
+    myContent: MyContent,
+    plusMoreDays: number = 0
+  ): string[] {
+    let expirationDate: Date = this.getTrainingExpirationDate(
       myContent.trainingExpiration
     );
+    /* This will show how many will be expired in x number of days */
+    if (plusMoreDays)
+      expirationDate = new Date(
+        expirationDate.setDate(expirationDate.getDate() + plusMoreDays)
+      );
     const trainees = myContent.trainees || {};
     let expiredTrainees = [];
     Object.keys(trainees).forEach(trainee => {
@@ -295,6 +305,24 @@ export class TrainingService {
           .where("teamId", "==", teamId)
           .where("oshaArticleId", "==", articleId)
           .orderBy("createdAt", "desc")
+      )
+      .snapshotChanges()
+      .pipe(
+        take(1),
+        map(actions =>
+          actions.map(action => {
+            const data = <any>action.payload.doc.data();
+            const createdAt = data.createdAt.toDate();
+            return { ...data, createdAt };
+          })
+        )
+      );
+  }
+
+  public getTrainingHistory(teamId): Observable<Survey[]> {
+    return this.db
+      .collection("survey", ref =>
+        ref.where("teamId", "==", teamId).orderBy("createdAt", "desc")
       )
       .snapshotChanges()
       .pipe(

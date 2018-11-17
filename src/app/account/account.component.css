@@ -1,204 +1,207 @@
 mat-sidenav-container {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 .mat-sidenav {
-    width: 280px;
-    display: flex;
-    flex-direction: column;
-    background-color: #054D8A;
-    height: 100%;
+  width: 280px;
+  display: flex;
+  flex-direction: column;
+  background-color: #054d8a;
+  height: 100%;
+}
+
+mat-sidenav-content {
+  height: 100vh;
+  overflow: hidden;
 }
 
 a {
-    text-decoration: none;
-    transition: all 250ms;
-    margin-right: 24px;
-    border-top-right-radius: 35px;
-    border-bottom-right-radius: 35px;
-    font-weight: 500;
+  text-decoration: none;
+  transition: all 250ms;
+  margin-right: 24px;
+  border-top-right-radius: 35px;
+  border-bottom-right-radius: 35px;
+  font-weight: 500;
 }
 
 a:hover {
-    background-color: #ff9100;
-    background-color: #043D77 !important;
+  background-color: #ff9100;
+  background-color: #043d77 !important;
 }
 
 #header {
-    height: 64px;
-    display: flex;
-    color: #ffffff;
-    align-items: center;
-    padding: 12px;
-    box-sizing: border-box;
-    cursor: pointer;
+  height: 64px;
+  display: flex;
+  color: #ffffff;
+  align-items: center;
+  padding: 12px;
+  box-sizing: border-box;
+  cursor: pointer;
 }
 
-#header:hover {    
-    background-color: #043D77 !important;
-
+#header:hover {
+  background-color: #043d77 !important;
 }
 
 #content {
-    flex: 1;
-    padding-right: 32px;
+  flex: 1;
+  padding-right: 32px;
 }
 
 .mat-list-item {
-    color: #ffffff;
+  color: #ffffff;
 }
 
 #name {
-    font-size: 18px;
-    margin-right: 8px;
+  font-size: 18px;
+  margin-right: 8px;
 }
 
 #footer {
-    padding: 12px;
-    font-size: 24px;
-    /*border-top: 1px solid rgba(0,0,0,.14);*/
-    color: white;
-    display: flex;
-    align-items: center;
+  padding: 12px;
+  font-size: 24px;
+  /*border-top: 1px solid rgba(0,0,0,.14);*/
+  color: white;
+  display: flex;
+  align-items: center;
 }
 
 #mlogo {
-    height: 40px;
+  height: 40px;
 }
 
 .fi {
-    height: 32px;
-    width: 32px;
-    font-size: 32px;
-    margin: 0 8px;
-    cursor: pointer;
+  height: 32px;
+  width: 32px;
+  font-size: 32px;
+  margin: 0 8px;
+  cursor: pointer;
 }
 
-
 .mat-dialog-content {
-    display: flex;
-    flex-direction: column;
-    padding: 24px;
-  }
-  
-  #d-content {
-    padding-bottom: 24px;
-  }
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+}
 
-  .team {
-      cursor: pointer;
-      padding: 12px;
-  }
+#d-content {
+  padding-bottom: 24px;
+}
 
-  .active {
-    color: #ff9100 !important;
-    background-color: rgba(0,0,0,.17) !important;
-    border-top-right-radius: 35px;
-    border-bottom-right-radius: 35px;
-    margin-right: 24px;
+.team {
+  cursor: pointer;
+  padding: 12px;
+}
+
+.active {
+  color: #ff9100 !important;
+  background-color: rgba(0, 0, 0, 0.17) !important;
+  border-top-right-radius: 35px;
+  border-bottom-right-radius: 35px;
+  margin-right: 24px;
 }
 
 .account-popup-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 20;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
 }
 
 .account-popup {
-    position: absolute;
-    top: 62px;
-    background-color: #ffffff;
-    left: 12px;
-    min-width: 260px;
-    height: 350px;
-    z-index: 21;
-    border-radius: 12px;
-    padding: 12px;
-    box-sizing: border-box;
-    box-shadow: 0 3px 2px -2px rgba(0,0,0,.1);
-    border: 1px solid rgba(0,0,0,.14);
+  position: absolute;
+  top: 62px;
+  background-color: #ffffff;
+  left: 12px;
+  min-width: 260px;
+  height: 350px;
+  z-index: 21;
+  border-radius: 12px;
+  padding: 12px;
+  box-sizing: border-box;
+  box-shadow: 0 3px 2px -2px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.14);
 }
 
 .profile-popup {
-    position: absolute;
-    top: 62px;
-    background-color: #ffffff;
-    right: 12px;
-    width: 340px;
-    height: 130px;
-    z-index: 21;
-    border-radius: 12px;
-    padding: 12px;
-    box-sizing: border-box;
-    box-shadow: 0 3px 2px -2px rgba(0,0,0,.1);
-    border: 1px solid rgba(0,0,0,.14);
-    overflow: hidden;
+  position: absolute;
+  top: 62px;
+  background-color: #ffffff;
+  right: 12px;
+  width: 340px;
+  height: 130px;
+  z-index: 21;
+  border-radius: 12px;
+  padding: 12px;
+  box-sizing: border-box;
+  box-shadow: 0 3px 2px -2px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  overflow: hidden;
 }
 
 .row {
-    margin-bottom: 12px;
+  margin-bottom: 12px;
 }
 
 #popimage {
-    height: 48px;
-    object-fit: contain;
+  height: 48px;
+  object-fit: contain;
 }
 
 #popteamname {
-    font-size: 17px;
-    font-weight: 500;
-    opacity: .87;
+  font-size: 17px;
+  font-weight: 500;
+  opacity: 0.87;
 }
 
 #popteam {
-    margin: 4px 0;
-    font-size: 15px;
-    opacity: .67;
-    font-weight: 500;
+  margin: 4px 0;
+  font-size: 15px;
+  opacity: 0.67;
+  font-weight: 500;
 }
 
 .teams {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: flex-end;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-end;
 }
 
 .otherteams {
-    height: 24px;
-    margin: 4px;
+  height: 24px;
+  margin: 4px;
 }
 
 .pr {
-    display: flex;
-    height: 100%;
+  display: flex;
+  height: 100%;
 }
 
 #pi {
-    height: 96px;
-    border-radius: 50%;
-    width: 96px;
-    object-fit: cover;
-    align-self: center;
+  height: 96px;
+  border-radius: 50%;
+  width: 96px;
+  object-fit: cover;
+  align-self: center;
 }
 
 .col {
-    margin-left: 12px;
+  margin-left: 12px;
 }
 
 #pn {
-    font-size: 14px;
-    font-weight: 500;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 #pe {
-    font-size: 15px;
-    opacity: .67;
-    margin-bottom: 20px;
+  font-size: 15px;
+  opacity: 0.67;
+  margin-bottom: 20px;
 }

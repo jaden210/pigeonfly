@@ -6,6 +6,7 @@ import { AccountService } from "../../account.service";
 import { MatDialog } from "@angular/material";
 import { TopicDialogComponent } from "./topic-dialog/topic-dialog.component";
 import { TopicsService } from "./topics.service";
+import { Location } from "@angular/common";
 
 @Component({
   selector: "app-topics",
@@ -19,13 +20,15 @@ export class TopicsComponent implements OnInit, OnDestroy {
   private industryId: string;
   public topics: Observable<Topic[]>;
   public isDev: boolean;
+  public title: string;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private service: TrainingService,
     private accountService: AccountService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private location: Location
   ) {}
 
   ngOnInit() {
@@ -57,7 +60,7 @@ export class TopicsComponent implements OnInit, OnDestroy {
   private setActiveRoute(): void {
     this.service.getIndustries().subscribe(industries => {
       const industry = industries.find(i => i.id == this.industryId);
-      this.service.setActiveRoute(industry ? industry.name : null);
+      this.title = industry ? industry.name : null;
     });
   }
 
@@ -82,6 +85,13 @@ export class TopicsComponent implements OnInit, OnDestroy {
       .subscribe(topic => {
         if (topic) this.getTopics(true);
       });
+  }
+
+  public goBack(): void {
+    this.router.navigate(["account/training/industries"]);
+    // const activeRoute: string = this.router.url;
+    // const backRoute = activeRoute.substr(0, activeRoute.lastIndexOf("/"));
+    // this.router.navigate([backRoute]);
   }
 
   ngOnDestroy() {

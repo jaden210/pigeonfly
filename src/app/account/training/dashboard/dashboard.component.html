@@ -1,0 +1,103 @@
+<mat-toolbar style="font-size: 15px">
+  <h1>Training</h1>
+  <div class="flex"></div>
+  <button mat-stroked-button id="cmt-btn" routerLink="industries">
+    <mat-icon>favorite_border</mat-icon>
+    CUSTOMIZE MY TRAINING
+  </button>
+  <toolbar-helper></toolbar-helper>
+</mat-toolbar>
+
+<div id="body">
+  <div id="dash">
+    <div id="container">
+      <canvas #myCanvas width="500" height="500"></canvas>
+    </div>
+
+    <div id="stat-column">
+      <div class="stat-tile">
+        <div class="icon" style="background: #E91E63;">
+          <mat-icon style="color: white;">favorite</mat-icon>
+        </div>
+        <div class="content">
+          {{ myContent?.length }} training articles apply to your team.
+          {{ totalTrainings }} personal trainings should stay current.
+          <mat-icon class="help">help</mat-icon>
+        </div>
+      </div>
+      <div class="stat-tile">
+        <div class="icon" style="background: #1E88E5;">
+          <mat-icon style="color: white;">thumb_up</mat-icon>
+        </div>
+        <div class="content">
+          Your team is current on {{ compliantTrainings }} personal trainings
+          <mat-icon class="help">help</mat-icon>
+        </div>
+      </div>
+      <div class="stat-tile">
+        <div class="icon" style="background: #FFC107;">
+          <mat-icon style="color: white;">warning</mat-icon>
+        </div>
+        <div class="content">
+          {{ totalTrainings - compliantTrainings }} personal trainings are out
+          of compliance
+          <mat-icon class="help">help</mat-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Training History</h3>
+
+  <table mat-table [dataSource]="dataSource">
+    <!--
+      - Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition"
+    -->
+
+    <!-- Position Column -->
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef>Training Date</th>
+      <td mat-cell *matCellDef="let element">{{ element.date | date }}</td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="articleName">
+      <th mat-header-cell *matHeaderCellDef>Article</th>
+      <td mat-cell *matCellDef="let element">{{ element.articleName }}</td>
+    </ng-container>
+
+    <!-- Weight Column -->
+    <ng-container matColumnDef="trainer">
+      <th mat-header-cell *matHeaderCellDef>Training By</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.trainer | userName: (users | async) }}
+      </td>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="attendees">
+      <th mat-header-cell *matHeaderCellDef>
+        <div id="received-training-header">
+          Received Training
+          <mat-icon
+            matTooltip="Employees who have confirmed via survey that they attended this training"
+            >help_outline</mat-icon
+          >
+        </div>
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-stroked-button color="primary">
+          {{ element.inAttendance?.length }}
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <span *ngIf="noHistory" id="no-history"
+    ><p>There is no training history for this article</p></span
+  >
+</div>

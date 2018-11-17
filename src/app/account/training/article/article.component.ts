@@ -41,6 +41,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
   users: BehaviorSubject<User[]>;
   /* Template variable to iterate over objects */
   objectKeys = Object.keys;
+  title: string;
 
   constructor(
     private router: Router,
@@ -61,7 +62,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
           this.teamId = team.id;
           this.industryId = params.get("industry");
           this.service.getArticle(articleId, team.id).subscribe(article => {
-            this.service.setActiveRoute(article.name);
+            this.title = article.name;
             this.article = article;
             this.buildButtons();
             this.loadData(article.content);
@@ -239,6 +240,12 @@ export class ArticleComponent implements OnInit, OnDestroy {
 
   viewHistory(): void {
     this.router.navigate(["account/training/history", this.article.id]);
+  }
+
+  public goBack(): void {
+    const activeRoute: string = this.router.url;
+    const backRoute = activeRoute.substr(0, activeRoute.lastIndexOf("/"));
+    this.router.navigate([backRoute]);
   }
 
   ngOnDestroy() {
