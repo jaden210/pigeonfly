@@ -15,33 +15,45 @@
     </div>
 
     <div id="stat-column">
-      <div class="stat-tile">
+      <div class="stat-tile" (click)="routeToMyContent(null)">
         <div class="icon" style="background: #E91E63;">
           <mat-icon style="color: white;">favorite</mat-icon>
         </div>
         <div class="content">
           {{ myContent?.length }} training articles apply to your team.
           {{ totalTrainings }} personal trainings should stay current.
-          <mat-icon class="help">help</mat-icon>
+          <mat-icon
+            class="help"
+            (click)="help('myArticles'); $event.stopPropagation()"
+            >help</mat-icon
+          >
         </div>
       </div>
-      <div class="stat-tile">
+      <div class="stat-tile" (click)="routeToMyContent('inCompliance')">
         <div class="icon" style="background: #1E88E5;">
           <mat-icon style="color: white;">thumb_up</mat-icon>
         </div>
         <div class="content">
           Your team is current on {{ compliantTrainings }} personal trainings
-          <mat-icon class="help">help</mat-icon>
+          <mat-icon
+            class="help"
+            (click)="help('inCompliance'); $event.stopPropagation()"
+            >help</mat-icon
+          >
         </div>
       </div>
-      <div class="stat-tile">
+      <div class="stat-tile" (click)="routeToMyContent('outOfCompliance')">
         <div class="icon" style="background: #FFC107;">
           <mat-icon style="color: white;">warning</mat-icon>
         </div>
         <div class="content">
           {{ totalTrainings - compliantTrainings }} personal trainings are out
           of compliance
-          <mat-icon class="help">help</mat-icon>
+          <mat-icon
+            class="help"
+            (click)="help('outOfCompliance'); $event.stopPropagation()"
+            >help</mat-icon
+          >
         </div>
       </div>
     </div>
@@ -58,20 +70,24 @@
     <!-- Position Column -->
     <ng-container matColumnDef="date">
       <th mat-header-cell *matHeaderCellDef>Training Date</th>
-      <td mat-cell *matCellDef="let element">{{ element.date | date }}</td>
+      <td mat-cell *matCellDef="let history">{{ history.date | date }}</td>
     </ng-container>
 
     <!-- Name Column -->
     <ng-container matColumnDef="articleName">
       <th mat-header-cell *matHeaderCellDef>Article</th>
-      <td mat-cell *matCellDef="let element">{{ element.articleName }}</td>
+      <td mat-cell *matCellDef="let history">
+        <a (click)="routeToArticle(history.articleId)">{{
+          history.articleName
+        }}</a>
+      </td>
     </ng-container>
 
     <!-- Weight Column -->
     <ng-container matColumnDef="trainer">
       <th mat-header-cell *matHeaderCellDef>Training By</th>
-      <td mat-cell *matCellDef="let element">
-        {{ element.trainer | userName: (users | async) }}
+      <td mat-cell *matCellDef="let history">
+        {{ history.trainer | userName: (users | async) }}
       </td>
     </ng-container>
 
@@ -86,9 +102,13 @@
           >
         </div>
       </th>
-      <td mat-cell *matCellDef="let element">
-        <button mat-stroked-button color="primary">
-          {{ element.inAttendance?.length }}
+      <td mat-cell *matCellDef="let history">
+        <button
+          mat-stroked-button
+          color="primary"
+          (click)="openReceivedTrainingDialog(history)"
+        >
+          {{ history.inAttendance?.length }}
         </button>
       </td>
     </ng-container>

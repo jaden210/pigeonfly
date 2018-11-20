@@ -1,12 +1,13 @@
 import { Component, OnInit, HostListener } from "@angular/core";
 import { AngularEditorConfig } from "@kolkov/angular-editor";
-import { ActivatedRoute, ParamMap, Router } from "@angular/router";
+import { ActivatedRoute, ParamMap } from "@angular/router";
 import { TrainingService, Article, Topic } from "../training.service";
 import { CreateEditArticleService } from "./create-edit-article.service";
 import { Observable } from "rxjs";
 import { Location } from "@angular/common";
 import { ComponentCanDeactivate } from "./pending-changes.guard";
 import { MatSnackBar } from "@angular/material";
+import { AccountService } from "../../account.service";
 
 @Component({
   selector: "app-create-edit-article",
@@ -16,6 +17,7 @@ import { MatSnackBar } from "@angular/material";
 })
 export class CreateEditArticleComponent
   implements OnInit, ComponentCanDeactivate {
+  private teamId: string;
   private originalArticle: Article;
   private deactivate: boolean;
   public article = new Article();
@@ -23,6 +25,7 @@ export class CreateEditArticleComponent
   public submitButton: string = "CREATE ARTICLE";
   public loading: boolean;
   public topics: Observable<Topic[]>;
+  public isGlobalArticle: boolean;
   @HostListener("window:beforeunload")
   public editorConfig: AngularEditorConfig = {
     editable: true,
@@ -39,28 +42,35 @@ export class CreateEditArticleComponent
     private service: CreateEditArticleService,
     private trainingService: TrainingService,
     private location: Location,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private accountService: AccountService
   ) {}
 
   ngOnInit() {
-    this.route.queryParams.subscribe((params: ParamMap) => {
-      this.topics = this.trainingService.getTopics(params["industryId"]);
-      if (params["articleId"]) {
-        this.title = "Edit Article";
-        this.getArticle(params["articleId"]);
-        this.isEdit = true;
-        this.submitButton = "UPDATE ARTICLE";
-      } else {
-        this.article.topicId = params["topicId"];
-        this.title = "Create Article";
+    this.accountService.aTeamObservable.subscribe(team => {
+      if (team) {
+        this.teamId = team.id;
+        this.route.queryParams.subscribe((params: ParamMap) => {
+          const industryId = params["industryId"] || team.industryId;
+          this.topics = this.trainingService.getTopics(industryId, team.id);
+          if (params["articleId"]) {
+            this.title = "Edit Article";
+            this.getArticle(params["articleId"]);
+            this.isEdit = true;
+            this.submitButton = "UPDATE ARTICLE";
+          } else {
+            this.article.topicId = params["topicId"];
+            this.title = "Create Article";
+          }
+        });
       }
     });
   }
 
   private getArticle(articleId): void {
-    this.service.getArticle(articleId).subscribe(article => {
-      this.originalArticle = { ...article };
-      this.article = article;
+    this.service.getArticle(articleId, this.teamId).subscribe(articles => {
+      this.originalArticle = { ...articles[0] };
+      this.article = articles[0];
     });
   }
 
@@ -70,7 +80,9 @@ export class CreateEditArticleComponent
   }
 
   private updateArticle(): void {
-    this.service.updateArticle(this.article).then(() => {
+    const isGlobal =
+      this.accountService.user.isDev && this.isGlobalArticle ? true : false;
+    this.service.updateArticle(this.article, this.teamId, isGlobal).then(() => {
       this.deactivate = true;
       this.popSnackbar("Updated", this.article.name);
       this.trainingService.wipeArticles();
@@ -79,10 +91,14 @@ export class CreateEditArticleComponent
   }
 
   private createArticle(): void {
-    this.service.createArticle(this.article).then(() => {
+    const isGlobal =
+      this.accountService.user.isDev && this.isGlobalArticle ? true : false;
+    this.service.createArticle(this.article, this.teamId, isGlobal).then(id => {
       this.deactivate = true;
       this.popSnackbar("Created", this.article.name);
       this.trainingService.wipeArticles();
+      this.article.id = id;
+      this.trainingService.favorite(this.article, this.teamId);
       this.goBack();
     });
   }
@@ -98,6 +114,8 @@ export class CreateEditArticleComponent
   }
 
   public deleteArticle(): void {
+    const isGlobal =
+      this.accountService.user.isDev && this.isGlobalArticle ? true : false;
     let deleteArticle = true;
     let snackbar = this.snackbar.open("Deleting Article", "UNDO", {
       duration: 3000
@@ -106,7 +124,7 @@ export class CreateEditArticleComponent
     snackbar.afterDismissed().subscribe(() => {
       if (deleteArticle) {
         this.service
-          .deleteArticle(this.article.id)
+          .deleteArticle(this.article.id, this.teamId, isGlobal)
           .then(() => {
             this.loading = false;
             this.deactivate = true;

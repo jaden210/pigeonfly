@@ -43,6 +43,12 @@ canvas {
     0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12);
   border-radius: 20px;
   background: white;
+  cursor: pointer;
+}
+
+.stat-tile:hover {
+  box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2),
+    0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12);
 }
 
 .stat-tile .icon {
@@ -77,6 +83,11 @@ canvas {
 .help {
   color: #bdbdbd;
   margin-left: auto;
+  cursor: pointer;
+}
+
+.help:hover {
+  color: #757575;
 }
 
 h3 {
@@ -104,4 +115,12 @@ table {
   height: 18px;
   width: 18px;
   margin-left: 8px;
+}
+
+a {
+  cursor: pointer;
+}
+
+a:hover {
+  color: #1976d2;
 }

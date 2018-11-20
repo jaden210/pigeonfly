@@ -40,7 +40,7 @@
         mat-raised-button
         color="primary"
         (click)="submit()"
-        [disabled]="!article.name || !article.content"
+        [disabled]="!article.name || !article.content || !article.topicId"
       >
         {{ submitButton }}
       </button>

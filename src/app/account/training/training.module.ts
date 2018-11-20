@@ -7,6 +7,7 @@ import { IndustriesComponent } from "./industries/industries.component";
 import { TopicsComponent } from "./topics/topics.component";
 import { ArticlesComponent } from "./articles/articles.component";
 import { ArticleComponent } from "./article/article.component";
+import { MyContentComponent } from "./my-content/my-content.component";
 import { SharedModule } from "../../shared-module";
 import { TrainingService } from "./training.service";
 import { CreateEditArticleComponent } from "./create-edit-article/create-edit-article.component";
@@ -20,6 +21,10 @@ import { UserHistoryDialog } from "./article/user-history.dialog";
 import { TrainingHistoryComponent } from "./training-history/training-history.component";
 import { NeedsTrainingDialog } from "./article/needs-training.dialog";
 import { DashboardComponent } from "./dashboard/dashboard.component";
+import { ReceivedTrainingDialog } from "./training-history/received-training.dialog";
+import { MyContentSearchPipe } from "./my-content/search.pipe";
+import { MyContentFiltersDialog } from "./my-content/my-content-filters.dialog";
+import { HelpDialog } from "./help.dialog";
 
 const routes: Routes = [
   {
@@ -27,6 +32,8 @@ const routes: Routes = [
     component: TrainingComponent,
     children: [
       { path: "", component: DashboardComponent },
+      { path: "my-content", component: MyContentComponent },
+      { path: "my-content/:article", component: ArticleComponent },
       { path: "industries", component: IndustriesComponent },
       {
         path: "create-article",
@@ -39,6 +46,7 @@ const routes: Routes = [
         canDeactivate: [PendingChangesGuard]
       },
       { path: "history/:article", component: TrainingHistoryComponent },
+      { path: "article/:article", component: ArticleComponent },
       { path: ":industry", component: TopicsComponent },
       { path: ":industry/:topic", component: ArticlesComponent },
       { path: ":industry/:topic/:article", component: ArticleComponent }
@@ -68,14 +76,22 @@ const routes: Routes = [
     UserHistoryDialog,
     TrainingHistoryComponent,
     NeedsTrainingDialog,
-    DashboardComponent
+    DashboardComponent,
+    ReceivedTrainingDialog,
+    MyContentComponent,
+    MyContentSearchPipe,
+    MyContentFiltersDialog,
+    HelpDialog
   ],
   entryComponents: [
     AddTraineeDialog,
     TopicDialogComponent,
     AttendanceDialog,
     UserHistoryDialog,
-    NeedsTrainingDialog
+    NeedsTrainingDialog,
+    ReceivedTrainingDialog,
+    MyContentFiltersDialog,
+    HelpDialog
   ],
   providers: [TrainingService, PendingChangesGuard]
 })

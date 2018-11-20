@@ -3,6 +3,10 @@ import { TrainingService, MyContent } from "../training.service";
 import { AccountService, User } from "../../account.service";
 import { Observable, BehaviorSubject } from "rxjs";
 import { map, tap } from "rxjs/operators";
+import { MatDialog } from "@angular/material";
+import { Router } from "@angular/router";
+import { ReceivedTrainingDialog } from "../training-history/received-training.dialog";
+import { HelpDialog } from "../help.dialog";
 
 @Component({
   selector: "app-dashboard",
@@ -29,7 +33,9 @@ export class DashboardComponent implements AfterViewInit {
 
   constructor(
     private trainingService: TrainingService,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private dialog: MatDialog,
+    private router: Router
   ) {}
 
   ngAfterViewInit() {
@@ -119,19 +125,71 @@ export class DashboardComponent implements AfterViewInit {
     this.dataSource = this.trainingService.getTrainingHistory(this.teamId).pipe(
       map(surveys =>
         surveys.map(survey => {
-          const date = survey.createdAt;
+          const date = survey.runDate;
           const mc = this.myContent.find(
             mc => mc.articleId == survey.oshaArticleId
           );
           const articleName = mc ? mc.articleName : null;
+          const articleId = mc ? mc.articleId : null;
           const trainer = survey.userId;
           const trainees = Object.keys(survey.userSurvey);
           const inAttendance = survey.receivedTraining;
-          return { date, articleName, trainer, trainees, inAttendance };
+          return {
+            date,
+            articleName,
+            trainer,
+            trainees,
+            inAttendance,
+            articleId
+          };
         })
       ),
       tap(surveys => (this.noHistory = surveys.length ? false : true))
     );
+  }
+
+  public routeToMyContent(complianceType: string): void {
+    this.router.navigate(["account", "training", "my-content"], {
+      queryParams: { complianceType }
+    });
+  }
+
+  public routeToArticle(articleId): void {
+    this.router.navigate(["account", "training", "article", articleId]);
+  }
+
+  public openReceivedTrainingDialog(survey): void {
+    this.dialog.open(ReceivedTrainingDialog, {
+      data: { people: survey.inAttendance }
+    });
+  }
+
+  public help(helpTopic: string): void {
+    const helpContent =
+      helpTopic == "myArticles"
+        ? `Clicking the 💜 button on a training-article places that article in your own custom-training-articles collection. Once here 
+    ComplianceChimp can track compliance, by user, for each article. The training-article to employee relationship is defined as a personal training. In your team's case
+    there are an average of ${(
+      this.totalTrainings / this.myContent.length
+    ).toFixed(1)} employees per training or ${
+            this.totalTrainings
+          } personal-trainings to keep track of.`
+        : helpTopic == "inCompliance"
+        ? `Great! Your team is current on ${
+            this.compliantTrainings
+          } personal trainings! A personal training is defined as an employee's relation to a training article.
+     For example, if 2 employees should receive training on the "How to remove pizza from a hot oven" training article, you would have 2 personal trainings to keep track of. Is Annie
+     current on this training? Is Joe current on this training? This is how ComplianceChimp can keep a thorough record of who is in compliance with yours' and OSHA's safety standards.`
+        : `Let's get training! ${this.totalTrainings -
+            this
+              .compliantTrainings} personal trainings are out of compliance. This means there are x number of employees times x number of 
+     training-articles that have never been trained on, or, the last training date falls outside of the compliance timeframe set on the training-article. Lets say you have a training-article
+     "How to remove pizza from a hot oven". This article requires that 2 people, Annie and Joe stay trained on this article. In this scenario you have 2 personal-trainings to keep track of:
+     Annie's training on "How to remove pizza from a hot oven" and Joes training on the same article.This is how ComplianceChimp can keep a thorough record of who is in compliance with yours' and OSHA's safety standards.`;
+    this.dialog.open(HelpDialog, {
+      data: helpContent,
+      maxWidth: "50vw"
+    });
   }
 }
 

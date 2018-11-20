@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { of, Observable } from "rxjs";
+import { of, Observable, combineLatest, merge } from "rxjs";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { Router } from "@angular/router";
 import { AngularFireStorage } from "@angular/fire/storage";
@@ -28,7 +28,7 @@ export class TrainingService {
     return this.industries.length
       ? of(this.industries)
       : this.db
-          .collection("industries", ref => ref.orderBy("name", "asc"))
+          .collection("industry", ref => ref.orderBy("name", "asc"))
           .snapshotChanges()
           .pipe(
             take(1),
@@ -49,35 +49,50 @@ export class TrainingService {
   }
 
   /* will automatically unsubscribe with async pipe */
-  public getTopics(industryId, forceRefresh = false): Observable<Topic[]> {
+  /* This function merges two collections together */
+  public getTopics(
+    industryId,
+    teamId,
+    forceRefresh = false
+  ): Observable<Topic[]> {
     if (forceRefresh) this.topics = [];
     const topics = this.topics.filter(t => t.industryId == industryId);
     return topics.length
       ? of(topics)
-      : this.db
-          .collection("topic", ref => ref.where("industryId", "==", industryId))
-          .snapshotChanges()
-          .pipe(
-            take(1),
-            map(actions =>
-              actions.map(a => {
-                const data = <Topic>a.payload.doc.data();
-                const id = a.payload.doc.id;
-                return { ...data, id };
-              })
-            ),
-            map(topics => {
-              return topics.sort((a, b) =>
-                a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1
-              );
-            }),
-            tap(topics => (this.topics = topics)),
-            catchError(error => {
-              console.error(`Error loading topics collection. ${error}`);
-              alert(`Error loading topics collection for `);
-              return of([]);
-            })
-          );
+      : combineLatest(
+          this.db
+            .collection("topic", ref =>
+              ref.where("industryId", "==", industryId)
+            )
+            .snapshotChanges(),
+          this.db
+            .collection(`team/${teamId}/topics`, ref =>
+              ref.where("industryId", "==", industryId)
+            )
+            .snapshotChanges()
+        ).pipe(
+          take(1),
+          map(topics => {
+            const [generalTopics, customTopics] = topics;
+            const combined = generalTopics.concat(customTopics);
+            return combined.map(topic => {
+              const data = <Topic>topic.payload.doc.data();
+              const id = topic.payload.doc.id;
+              return { ...data, id };
+            });
+          }),
+          map(topics => {
+            return topics.sort((a, b) =>
+              a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1
+            );
+          }),
+          tap(topics => (this.topics = topics)),
+          catchError(error => {
+            console.error(`Error loading topics collection. ${error}`);
+            alert(`Error loading topics collection for `);
+            return of([]);
+          })
+        );
   }
 
   /* Called from create-edit component to get fresh data on back route */
@@ -85,85 +100,111 @@ export class TrainingService {
     this.articles = [];
   }
 
-  public getArticles(topicId, teamId): Observable<Article[]> {
-    const articles = this.articles.filter(a => a.topicId == topicId);
+  /* This function merges two collections together */
+  public getArticles(teamId, topicId?): Observable<Article[]> {
+    const articles = topicId
+      ? this.articles.filter(a => a.topicId == topicId)
+      : [];
     return articles.length
       ? of(articles)
       : this.getMyContent(teamId).pipe(
           mergeMap(mYContent =>
-            this.db
-              .collection("article", ref => ref.where("topicId", "==", topicId))
-              .snapshotChanges()
-              .pipe(
-                take(1),
-                map(actions =>
-                  actions.map(a => {
-                    const data = <Article>a.payload.doc.data();
-                    const id = a.payload.doc.id;
-                    const myContent = mYContent.find(mc => mc.articleId == id);
-                    const favorited = myContent ? !myContent.disabled : false;
-                    return { ...data, id, myContent, favorited };
-                  })
-                ),
-                map(articles => {
-                  return articles.sort((a, b) =>
-                    a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1
-                  );
-                }),
-                tap(articles => (this.articles = articles)),
-                catchError(error => {
-                  console.error(`Error loading articles collection. ${error}`);
-                  alert(`Error loading articles collection`);
-                  return of([]);
-                })
-              )
+            combineLatest(
+              this.db
+                .collection("article", ref =>
+                  ref.where("topicId", "==", topicId)
+                )
+                .snapshotChanges(),
+              this.db
+                .collection(`team/${teamId}/article`, ref =>
+                  ref.where("topicId", "==", topicId)
+                )
+                .snapshotChanges()
+            ).pipe(
+              take(1),
+              map(articles => {
+                const [generalArticles, customArticles] = articles;
+                const combined = generalArticles.concat(customArticles);
+                return combined.map(article => {
+                  const data = <Article>article.payload.doc.data();
+                  const id = article.payload.doc.id;
+                  const myContent = mYContent.find(mc => mc.articleId == id);
+                  const favorited = myContent ? !myContent.disabled : false;
+                  return { ...data, id, myContent, favorited };
+                });
+              }),
+              map(articles => {
+                return articles.sort((a, b) =>
+                  a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1
+                );
+              }),
+              tap(articles => {
+                this.articles = articles;
+              }),
+              catchError(error => {
+                console.error(`Error loading articles collection. ${error}`);
+                alert(`Error loading articles collection`);
+                return of([]);
+              })
+            )
           )
         );
   }
 
-  public getArticle(articleId, teamId): Observable<Article> {
+  /* could be in team/article or article collection, merge both */
+  public getArticle(articleId, teamId): Observable<any> {
     const article = this.articles.find(a => a.id == articleId);
     return article
       ? of(article)
       : this.getMyContent(teamId).pipe(
           mergeMap(mYContent =>
-            this.db
-              .collection("article")
-              .doc(articleId)
-              .snapshotChanges()
-              .pipe(
-                take(1),
-                map(article => {
-                  const data = <Article>article.payload.data();
-                  const id = article.payload.id;
-                  const myContent = mYContent.find(mc => mc.articleId == id);
-                  const favorited = myContent ? !myContent.disabled : false;
-                  return { ...data, id, myContent, favorited };
-                }),
+            combineLatest(
+              this.db
+                .collection("article")
+                .doc(articleId)
+                .snapshotChanges(),
+              this.db
+                .collection(`team/${teamId}/article`)
+                .doc(articleId)
+                .snapshotChanges()
+            ).pipe(
+              take(1),
+              map(articles => articles.filter(a => a.payload.exists)),
+              map(
+                articles =>
+                  articles.map(article => {
+                    const data = article["payload"].data();
+                    const id = article["payload"].id;
+                    const myContent = mYContent.find(mc => mc.articleId == id);
+                    const favorited = myContent ? !myContent.disabled : false;
+                    return { ...data, id, myContent, favorited };
+                  }),
                 catchError(error => {
-                  console.error(`Error loading article. ${error}`);
-                  alert(`Error loading article`);
+                  console.error(`Error loading article ${articleId}. ${error}`);
+                  alert(`Error loading article ${articleId}`);
                   return of(null);
                 })
               )
+            )
           )
         );
   }
 
+  /* Gets entire collection, stores in local cache */
   public getMyContent(teamId): Observable<MyContent[]> {
     return this.myContent.length
       ? of(this.myContent)
       : this.db
-          .collection("my-content", ref =>
-            ref.where("teamId", "==", teamId).where("disabled", "==", false)
+          .collection(`team/${teamId}/my-training-content`, ref =>
+            ref.where("disabled", "==", false)
           )
           .snapshotChanges()
           .pipe(
             take(1),
-            map(actions =>
-              actions.map(a => {
-                const data = <MyContent>a.payload.doc.data();
-                const id = a.payload.doc.id;
+            map(allContent =>
+              allContent.map(content => {
+                const data = <MyContent>content.payload.doc.data();
+                const id = content.payload.doc.id;
                 const needsTraining = this.getExpiredTrainees(data);
                 const complianceLevel = this.getComplianceLevel(
                   data.trainees,
@@ -331,7 +372,8 @@ export class TrainingService {
           actions.map(action => {
             const data = <any>action.payload.doc.data();
             const createdAt = data.createdAt.toDate();
-            return { ...data, createdAt };
+            const runDate = data.runDate.toDate();
+            return { ...data, createdAt, runDate };
           })
         )
       );
@@ -339,13 +381,13 @@ export class TrainingService {
 
   /* If myContent doc exists for this article and team, flip the disabled
   flag, else create myContent for this article/team. */
-  public favorite(article: Article, teamId: string): void {
+  public favorite(article: Article, teamId: string): Promise<any> {
     article.favorited = article.favorited ? false : true;
     let myContent = this.myContent.find(mc => mc.articleId == article.id);
     if (myContent) {
       myContent.disabled = myContent.disabled ? false : true;
       article.myContent = myContent;
-      this.updateMyContent(myContent).catch(() => {
+      return this.updateMyContent(myContent, teamId).catch(() => {
         article.favorited = !article.favorited;
         myContent.disabled = !myContent.disabled;
       });
@@ -355,7 +397,7 @@ export class TrainingService {
       on the article. No need to check for the last trained date per
       trainee. If myContent is "Removed" we really just set the 
       disabled boolean to true, it is never really deleted. */
-      this.createMyContent(teamId, article)
+      return this.createMyContent(teamId, article)
         .then(myContent => (article.myContent = myContent))
         .catch(() => (article.favorited = !article.favorited));
     }
@@ -363,14 +405,14 @@ export class TrainingService {
 
   /* Called from local favorite() and after modifying trainees on the 
   article component. */
-  public updateMyContent(myContent: MyContent): Promise<any> {
+  public updateMyContent(myContent: MyContent, teamId): Promise<any> {
     let mc = { ...myContent };
     const id = mc.id;
     /* These keys were added on get for convenience, don't persist */
     delete mc.id;
     delete mc.needsTraining;
     return this.db
-      .collection("my-content")
+      .collection(`team/${teamId}/my-training-content`)
       .doc(id)
       .update({ ...mc })
       .catch(error => {
@@ -400,9 +442,9 @@ export class TrainingService {
       article.topicId,
       trainingMinutes
     );
-    const id = teamId + "_" + article.id;
+    const id = article.id;
     return this.db
-      .collection("my-content")
+      .collection(`team/${teamId}/my-training-content`)
       .doc(id)
       .set({ ...myContent })
       .then(() => {
@@ -421,6 +463,20 @@ export class TrainingService {
         alert(`Error writing to my-content collection.`);
         throw error;
       });
+  }
+
+  public getTopic(topicId, teamId): Observable<any[]> {
+    console.log(topicId, teamId);
+    return combineLatest(
+      this.db
+        .collection("topic")
+        .doc(topicId)
+        .valueChanges(),
+      this.db
+        .collection(`team/${teamId}/topic`)
+        .doc(topicId)
+        .valueChanges()
+    ).pipe(map(topics => topics.filter(t => t)));
   }
 }
 

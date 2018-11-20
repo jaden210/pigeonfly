@@ -1,9 +1,8 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, of, Observable } from "rxjs";
+import { of, Observable, combineLatest } from "rxjs";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { Router } from "@angular/router";
 import { AngularFireStorage } from "@angular/fire/storage";
-import { map, catchError } from "rxjs/operators";
+import { map, catchError, switchMap } from "rxjs/operators";
 import { Article, Topic } from "../training.service";
 
 @Injectable({
@@ -15,39 +14,47 @@ export class CreateEditArticleService {
     public storage: AngularFireStorage
   ) {}
 
-  public getArticle(articleId: string): Observable<Article> {
-    return this.db
-      .collection("article")
-      .doc(articleId)
-      .snapshotChanges()
-      .pipe(
-        map(a => {
-          const data = <Article>a.payload.data();
-          const id = a.payload.id;
-          return { ...data, id };
-        }),
-        catchError(error => {
-          console.error(`Error loading article ${articleId}. ${error}`);
-          alert(`Error loading article ${articleId}`);
-          return of(new Article());
-        })
-      );
+  public getArticle(articleId: string, teamId): Observable<Article[]> {
+    console.log(articleId);
+    return combineLatest(
+      this.db
+        .collection(`team/${teamId}/article`)
+        .doc(articleId)
+        .valueChanges(),
+      this.db
+        .collection("article")
+        .doc(articleId)
+        .valueChanges()
+    ).pipe(
+      map(topics => topics.filter(a => a)),
+      catchError(error => {
+        console.error(`Error loading article ${articleId}. ${error}`);
+        alert(`Error loading article ${articleId}`);
+        return of(null);
+      })
+    );
   }
 
-  public createArticle(article: Article): Promise<any> {
+  public createArticle(article: Article, teamId, isGlobal): Promise<any> {
+    const ref = isGlobal
+      ? this.db.collection("article")
+      : this.db.collection(`team/${teamId}/article`);
     return this.db
-      .collection("article")
+      .collection(`team/${teamId}/article`)
       .add({ ...article })
+      .then(ref => ref.id)
       .catch(error => {
         console.error(`Error creating article ${article.name}`, article, error);
         alert(`Error creating article ${article.name}`);
       });
   }
 
-  public updateArticle(article: Article): Promise<any> {
-    // also need to update article names, training level on myContent
-    return this.db
-      .collection("article")
+  public updateArticle(article: Article, teamId, isGlobal): Promise<any> {
+    // also need to update article names in myContent, training level on myContent
+    const ref = isGlobal
+      ? this.db.collection("article")
+      : this.db.collection(`team/${teamId}/article`);
+    return ref
       .doc(article.id)
       .update({ ...article })
       .catch(error => {
@@ -58,9 +65,11 @@ export class CreateEditArticleService {
       });
   }
 
-  public deleteArticle(articleId): Promise<any> {
-    return this.db
-      .collection("article")
+  public deleteArticle(articleId, teamId, isGlobal): Promise<any> {
+    const ref = isGlobal
+      ? this.db.collection("article")
+      : this.db.collection(`team/${teamId}/article`);
+    return ref
       .doc(articleId)
       .delete()
       .catch(error => {

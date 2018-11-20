@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { ActivatedRoute, Router, ParamMap } from "@angular/router";
 import { TrainingService, Article } from "../training.service";
-import { Observable, of, Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { AccountService } from "../../account.service";
+import { map } from "rxjs/operators";
 
 @Component({
   selector: "app-articles",
@@ -30,17 +31,16 @@ export class ArticlesComponent implements OnInit, OnDestroy {
         this.route.paramMap.subscribe((params: ParamMap) => {
           this.industryId = params.get("industry");
           this.topicId = params.get("topic");
-          let topicId = params.get("topic");
-          this.setActiveRoute(this.industryId, topicId, team.id);
           this.teamId = team.id;
-          this.articles = this.service.getArticles(topicId, team.id);
+          this.setActiveRoute(this.industryId, this.topicId, team.id);
+          this.articles = this.service.getArticles(team.id, this.topicId);
         });
       }
     });
   }
 
   private setActiveRoute(industryId, topicId, teamId): void {
-    this.service.getTopics(industryId).subscribe(topics => {
+    this.service.getTopics(industryId, this.teamId).subscribe(topics => {
       const topic = topics.find(t => t.id == topicId);
       this.title = topic ? topic.name : null;
     });

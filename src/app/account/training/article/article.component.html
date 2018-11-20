@@ -35,7 +35,7 @@
         <mat-icon aria-label="Edit Article">edit</mat-icon>
       </button>
       <button
-        *ngIf="isDev"
+        *ngIf="article.favorited"
         mat-icon-button
         (click)="viewHistory()"
         matTooltip="View Training History"

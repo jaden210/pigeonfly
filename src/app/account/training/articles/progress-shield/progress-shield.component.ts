@@ -23,20 +23,18 @@ import { MyContent } from "../../training.service";
         white-space: nowrap;
         line-height: 32px;
         padding: 0 8px;
+        color: #757575;
       }
 
       .warn {
-        color: #e53935;
         border: 1px solid #e53935;
       }
 
       .attention {
-        color: #ffb300;
         border: 1px solid #ffb300;
       }
 
       .good {
-        color: #43a047;
         border: 1px solid #43a047;
       }
     `
@@ -56,11 +54,7 @@ export class ProgressShieldComponent implements OnChanges {
       const traineesCount = Object.keys(this.myContent.trainees).length || 0;
       const needsTraining = this.myContent.needsTraining.length || 0;
       this.words =
-        traineesCount -
-        needsTraining +
-        " / " +
-        traineesCount +
-        " employees compliant";
+        traineesCount - needsTraining + " / " + traineesCount + " compliant";
     }
   }
 }

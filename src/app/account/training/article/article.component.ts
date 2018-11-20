@@ -22,6 +22,7 @@ import { SurveysService } from "../../surveys/surveys.service";
 import { Survey } from "../../surveys/survey/survey";
 import { UserHistoryDialog } from "./user-history.dialog";
 import { NeedsTrainingDialog } from "./needs-training.dialog";
+import { Location } from "@angular/common";
 
 @Component({
   selector: "app-article",
@@ -49,27 +50,40 @@ export class ArticleComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private service: TrainingService,
     private accountService: AccountService,
-    private surveysService: SurveysService
+    private surveysService: SurveysService,
+    private location: Location
   ) {}
 
   ngOnInit() {
     this.subscription = this.accountService.aTeamObservable.subscribe(team => {
       if (team) {
         this.users = this.accountService.teamUsersObservable;
-        this.setIsDev();
+        this.getIsDev();
         this.route.paramMap.subscribe((params: ParamMap) => {
           const articleId = params.get("article");
           this.teamId = team.id;
-          this.industryId = params.get("industry");
-          this.service.getArticle(articleId, team.id).subscribe(article => {
+          this.service.getArticle(articleId, team.id).subscribe(articles => {
+            const article = articles[0];
             this.title = article.name;
             this.article = article;
+            console.log(article);
+            this.setIndustryId(params.get("industry"));
             this.buildButtons();
             this.loadData(article.content);
           });
         });
       }
     });
+  }
+
+  private setIndustryId(industryId): void {
+    if (industryId) this.industryId = industryId;
+    else
+      this.service
+        .getTopic(this.article.topicId, this.teamId)
+        .subscribe(topics => {
+          this.industryId = topics[0].industryId;
+        });
   }
 
   srtBtn: string;
@@ -100,10 +114,12 @@ export class ArticleComponent implements OnInit, OnDestroy {
   }
 
   public favorite(): void {
-    this.service.favorite(this.article, this.teamId);
+    this.service.favorite(this.article, this.teamId).then(() => {
+      this.buildButtons();
+    });
   }
 
-  private setIsDev(): void {
+  private getIsDev(): void {
     this.userSubscription = this.accountService.userObservable.subscribe(
       user => {
         if (user) this.isDev = user.isDev;
@@ -137,33 +153,38 @@ export class ArticleComponent implements OnInit, OnDestroy {
         });
         /* Add to trainees */
         let t = traineeIds.filter(id => !(id in trainees));
-        forkJoin(
-          t.map(id =>
-            this.service
-              .getMostRecentTrainingForUserByArticle(
-                id,
-                this.teamId,
-                this.article.id
-              )
-              .pipe(
-                tap(lastTrainedDate => {
-                  if (!lastTrainedDate[0] || lastTrainedDate[0] < expDate)
-                    this.article.myContent.needsTraining.push(id);
-                  trainees[id] = lastTrainedDate[0];
-                })
-              )
-          )
-        ).subscribe(() => {
-          this.service.updateMyContent(this.article.myContent);
+        if (t.length) {
+          forkJoin(
+            t.map(id =>
+              this.service
+                .getMostRecentTrainingForUserByArticle(
+                  id,
+                  this.teamId,
+                  this.article.id
+                )
+                .pipe(
+                  tap(lastTrainedDate => {
+                    if (!lastTrainedDate[0] || lastTrainedDate[0] < expDate)
+                      this.article.myContent.needsTraining.push(id);
+                    trainees[id] = lastTrainedDate[0];
+                  })
+                )
+            )
+          ).subscribe(() => {
+            this.service.updateMyContent(this.article.myContent, this.teamId);
+            this.buildButtons();
+          });
+        } else {
+          this.service.updateMyContent(this.article.myContent, this.teamId);
           this.buildButtons();
-        });
+        }
       }
     });
   }
 
   public removeTrainee(trainee): void {
     delete this.article.myContent.trainees[trainee];
-    this.service.updateMyContent(this.article.myContent);
+    this.service.updateMyContent(this.article.myContent, this.teamId);
     let needsTraining = this.article.myContent.needsTraining;
     const i = needsTraining.indexOf(trainee);
     if (i > -1) needsTraining.splice(i, 1);
@@ -177,10 +198,12 @@ export class ArticleComponent implements OnInit, OnDestroy {
     let myContent = this.article.myContent;
     const oldValue = this.article.myContent.trainingExpiration;
     myContent.trainingExpiration = timeframe;
-    this.service.updateMyContent(this.article.myContent).catch(error => {
-      this.article.myContent.trainingExpiration = oldValue;
-      console.error("Error setting renewel timeframe on article", error);
-    });
+    this.service
+      .updateMyContent(this.article.myContent, this.teamId)
+      .catch(error => {
+        this.article.myContent.trainingExpiration = oldValue;
+        console.error("Error setting renewel timeframe on article", error);
+      });
   }
 
   public viewHistoryByTrainee(trainee): void {
@@ -244,8 +267,11 @@ export class ArticleComponent implements OnInit, OnDestroy {
 
   public goBack(): void {
     const activeRoute: string = this.router.url;
-    const backRoute = activeRoute.substr(0, activeRoute.lastIndexOf("/"));
-    this.router.navigate([backRoute]);
+    if (activeRoute.includes("article")) this.location.back();
+    else {
+      const backRoute = activeRoute.substr(0, activeRoute.lastIndexOf("/"));
+      this.router.navigate([backRoute]);
+    }
   }
 
   ngOnDestroy() {
