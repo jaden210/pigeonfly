@@ -38,7 +38,7 @@
     font-weight: 500;
 }
 
-.expand {
+.expanded {
     display: flex;
     flex-direction: column;
     padding: 12px;

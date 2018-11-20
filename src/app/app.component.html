@@ -1,7 +1,7 @@
 <mat-sidenav-container>
   <mat-sidenav mode="over" #sidenav id="sidenav" position="end" [(opened)]="open">
     <mat-toolbar class="toolbar">
-      <img src="/assets/ccLogo.png" class="title"  routerLink="home" alt="Compliancechimp">
+      <img src="/assets/ccLogo.png" class="title"  (click)="navRoute('home')" alt="Compliancechimp">
       <div class="flex"></div>
       <button mat-icon-button (click)="sidenav.close()"><mat-icon style="color:#ffffff">close</mat-icon></button>
     </mat-toolbar>

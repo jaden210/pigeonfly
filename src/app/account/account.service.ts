@@ -98,16 +98,19 @@ export class AccountService {
       disableClose: true,
       data: {
         isOwner : this.user.id == team.ownerId ? true : false,
-        disabledAt: team.disabledAt.toDate()
+        disabledAt: team.disabledAt.toDate(),
+        teams: this.userTeams
       }
     });
-    dialog.afterClosed().subscribe(reEnable => {
-      if (reEnable) {
+    dialog.afterClosed().subscribe(data => {
+      if (data.reEnable) {
         this.db.collection<Team>("team").doc(team.id).update(
           {disabled: false, disabledAt: null}
           ).then(() => {
           window.location.reload() // easiest way to get new data.
         })
+      } else if (data.teamId) {
+        this.setActiveTeam(data.teamId);
       } else {
         this.logout();
       }
@@ -153,13 +156,14 @@ export class NoAccessDialog {
 })
 export class TeamDisabledDialog {
   count;
-  constructor(public dialogRef: MatDialogRef<TeamDisabledDialog>,
+  constructor(
+    public dialogRef: MatDialogRef<TeamDisabledDialog>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
       this.count = 30 - moment().diff(this.data.disabledAt, 'days');
     }
 
-  close(reEnable): void {
-    this.dialogRef.close(reEnable);
+  close(reEnable, teamId?): void {
+    this.dialogRef.close({reEnable, teamId});
   }
 }
 

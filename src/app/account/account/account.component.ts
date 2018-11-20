@@ -140,8 +140,8 @@ export class ProfileComponent implements OnInit {
   selector: "app-map-dialog",
   template: `
   <h2 mat-dialog-title>Are you sure?</h2>
-  <mat-dialog-content>By clicking DELETE, you are removing access and inactivating your account.<br>
-  We'll hold your data for a time of 30 days, and then it will be purged from our system.</mat-dialog-content>
+  <mat-dialog-content>By clicking DELETE, you are removing access and making your account inactive.<br>
+  We'll hold your data for 30 days, and then it will be purged from our system.</mat-dialog-content>
   <mat-dialog-actions style="margin-top:12px" align="end"><button mat-button color="primary" style="margin-right:8px" (click)="close(false)">CANCEL</button>
   <button mat-raised-button color="warn" (click)="close(true)">DELETE</button>
   </mat-dialog-actions>

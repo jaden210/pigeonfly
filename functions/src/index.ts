@@ -132,7 +132,7 @@ exports.teamDisabled = functions.firestore.document("team/{teamId}").onUpdate((c
       to: "support@compliancechimp.com",
     }
     mailOptions.subject = `${newTeam.name} has re-activated their account`;
-    mailOptions.html = `looks like ${newTeam.name} decided to comeback. If you want to contact them their phone number is: ${newTeam.phone}`;
+    mailOptions.html = `looks like ${newTeam.name} decided to come back. If you want to contact them their phone number is: ${newTeam.phone}`;
     
     return mailTransport.sendMail(mailOptions) 
     .catch((error) => {

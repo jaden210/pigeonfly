@@ -16,7 +16,7 @@ exports.inviteNewUser = functions.firestore.document("invitation/{invitationId}"
     mailOptions.subject = 'You have been invited to join ' + info.companyName + ' at Compliancechimp';
     mailOptions.html = `Hi ${info.inviteName}<br><br>
     ${info.companyName} is using Compliancechimp to manage safety training, worksite logs, record keeping, and more, as part of an ongoing commitment to safety and compliance. You've been invited to the team using ${info.inviteEmail}. Please visit the App Store or Goolge Play Store to download the free app and join your team today. Feel free to contact us at support@compliancechimp.com with any questions, and welcome!
-    <br><br> <a href='https://play.google.com/store/apps/details?id=com.betterspace.complianceChimp&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
+    <br><br> <a style="height:30px" href='https://play.google.com/store/apps/details?id=com.betterspace.complianceChimp&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
     <br> <a href="https://inviteme.me/account" target="_blank">LETS GET STARTED</a>
     <br><br>Sincerely,
     <br><br>Alan, Client Success Team
@@ -46,14 +46,14 @@ exports.newTeamEmail = functions.firestore.document("team/{teamId}").onUpdate((c
             };
             mailOptions.subject = 'Welcome to your free 30 day trial of Compliancechimp!';
             mailOptions.html = `Hi ${user.name}<br><br>
-      Glad to meet you! We want you to get the most out of Compliancechimp during these first 30 days. If you haven't already, visit the Achievements page inside your account, which walks you through the various features of the platform as an owner or administrator. Remember, Compliancechimp is largely driven from our free app which can be found here for Apple users, or here for Android users. Head over and get the app if you haven't already. As you invite your team, they'll do the same. Please take advantage of the many benefits of the platform which enable compliance, including: training your team and getting their survey responses, capturing worksite logs, performing self-inspection, and more.
-      <br><br> <a href="https://inviteme.me/account" target="_blank">LETS GET STARTED</a>
-      <br> <a href="https://inviteme.me/account" target="_blank">LETS GET STARTED</a>
-      <br><br>Don't hesitate to contact us with any questions at support@compliancechimp.com, and enjoy!
-      <br><br>Sincerely,
-      <br><br>alan, Client Success Team
-      <br>Compliancechimp
-      <br>support@compliancechimp.com`;
+        Glad to meet you! We want you to get the most out of Compliancechimp during these first 30 days. If you haven't already, visit the Achievements page inside your account, which walks you through the various features of the platform as an owner or administrator. Remember, Compliancechimp is largely driven from our free app which can be found here for Apple users, or here for Android users. Head over and get the app if you haven't already. As you invite your team, they'll do the same. Please take advantage of the many benefits of the platform which enable compliance, including: training your team and getting their survey responses, capturing worksite logs, performing self-inspection, and more.
+        <br><br> <a style="height:30px" href='https://play.google.com/store/apps/details?id=com.betterspace.complianceChimp&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
+        <br> <a href="https://inviteme.me/account" target="_blank">LETS GET STARTED</a>
+        <br><br>Don't hesitate to contact us with any questions at support@compliancechimp.com, and enjoy!
+        <br><br>Sincerely,
+        <br><br>alan, Client Success Team
+        <br>Compliancechimp
+        <br>support@compliancechimp.com`;
             return mailTransport.sendMail(mailOptions)
                 .then(() => {
                 console.log(`New invitation email sent to:` + user.name);
@@ -90,6 +90,42 @@ exports.supportTicketSubmitted = functions.firestore.document("support/{supportI
         .catch((error) => {
         console.error('There was an error while sending the email:', error);
     });
+});
+exports.teamDisabled = functions.firestore.document("team/{teamId}").onUpdate((change, context) => {
+    let oldTeam = change.before.data();
+    let newTeam = change.after.data();
+    if (oldTeam.disabled == false && newTeam.disabled == true) {
+        const nodemailer = require('nodemailer');
+        const db = admin.firestore();
+        let disabledAt = newTeam.disabledAt.toDate();
+        const mailTransport = nodemailer.createTransport(`smtps://support@compliancechimp.com:thechimpishere@smtp.gmail.com`);
+        const mailOptions = {
+            from: '"Compliancechimp" <support@compliancechimp.com>',
+            to: "support@compliancechimp.com",
+        };
+        mailOptions.subject = `${newTeam.name} has deleted their account`;
+        mailOptions.html = `looks like ${newTeam.name} decided to leave. the team has been disabled and on ${disabledAt}. 
+    If you want to contact them their phone number is: ${newTeam.phone}`;
+        return mailTransport.sendMail(mailOptions)
+            .catch((error) => {
+            console.error('There was an error while sending the email:', error);
+        });
+    }
+    else if (oldTeam.disabled == true && newTeam.disabled == false) {
+        const nodemailer = require('nodemailer');
+        const db = admin.firestore();
+        const mailTransport = nodemailer.createTransport(`smtps://support@compliancechimp.com:thechimpishere@smtp.gmail.com`);
+        const mailOptions = {
+            from: '"Compliancechimp" <support@compliancechimp.com>',
+            to: "support@compliancechimp.com",
+        };
+        mailOptions.subject = `${newTeam.name} has re-activated their account`;
+        mailOptions.html = `looks like ${newTeam.name} decided to comeback. If you want to contact them their phone number is: ${newTeam.phone}`;
+        return mailTransport.sendMail(mailOptions)
+            .catch((error) => {
+            console.error('There was an error while sending the email:', error);
+        });
+    }
 });
 /* ----- LOGS ----- */
 exports.createdLog = functions.firestore.document("log/{id}").onCreate(snapshot => {
@@ -134,7 +170,7 @@ exports.userChange = functions.firestore.document("user/{userId}").onUpdate((cha
     let oldUser = change.before.data();
     let newUser = change.after.data();
     /* profileUrl achievement */
-    if (oldUser.accountType == "owner" && !oldUser.profileUrl && newUser.profileUrl) {
+    if (newUser.accountType == "owner" && (!oldUser.profileUrl && newUser.profileUrl)) {
         return updateCompletedAchievement(newUser.teamId, "hasOwnerProfileUrl", true)
             .then(() => console.log("updated user complete"));
     }
