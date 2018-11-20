@@ -47,8 +47,7 @@ import { PeopleDialogComponent } from "./people-dialog.component";
     SharedModule,
     AngularEditorModule,
     AgmCoreModule.forRoot({
-      apiKey: "AIzaSyCg1x6Pm29QsCbzSb0Astep5D4_-KEXlSk",
-      libraries: ["places"]
+      apiKey: "AIzaSyAsIwXbCi4l__VoFLdru1EC3bLxmcZQOZI"
     })
   ],
   declarations: [

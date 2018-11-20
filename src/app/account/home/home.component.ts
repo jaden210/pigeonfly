@@ -105,7 +105,7 @@ export class HomeComponent {
         longPos: user.timeclock.outLongPos || user.timeclock.inLongPos,
         latPos: user.timeclock.outLatPos || user.timeclock.inLatPos
       }
-    })
+    });
   }
 
   inviteToTeam() {

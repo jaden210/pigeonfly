@@ -104,7 +104,14 @@ export class SelfInspectionsService {
   }
 
   deleteSelfInspection(): Promise<any> {
-    return this.accountService.db.doc("self-inspection/" + this.selfInspection.id).delete();
+    let promises = [];
+    this.selfInspection.inspections.forEach((inspection) => {
+      let i = this.deleteSelfInspectionInspection(inspection);
+      promises.push(i);
+    })
+    return Promise.all(promises).then(() => {
+      return this.accountService.db.doc("self-inspection/" + this.selfInspection.id).delete();
+    });
   }
   
   startInspection(): Promise<Inspection> {
@@ -117,12 +124,12 @@ export class SelfInspectionsService {
     });
   }
   
-  deleteSelfInspectionInspection() {
+  deleteSelfInspectionInspection(inspection?) {
     return this.accountService.db
     .collection("self-inspection")
     .doc(this.selfInspection.id)
     .collection("inspections")
-    .doc(this.takeInspection.id).delete();
+    .doc(inspection || this.takeInspection.id).delete();
   }
 
   finishSelfInspection(): Promise<any> {

@@ -1,4 +1,6 @@
-<mat-toolbar>Team
+<mat-toolbar>
+  <img class="toolbar-logo" src="/assets/ccLogoDark.png">
+  <div class="toolbar-title">Team</div>
   <div class="flex"></div>
   <toolbar-helper></toolbar-helper>
 </mat-toolbar>
@@ -30,7 +32,7 @@
         <div class="active-text">{{user.status}}</div>
       </div>
       <div class="flex"></div>
-      <div class="map-icon" *ngIf="user.timeclock" matTooltip="View last logged location" matTooltipShowDelay="300" (click)="$event.stopPropagation();showMap(user)"><mat-icon class="map">location_on</mat-icon></div>
+      <div class="map-icon" *ngIf="user.timeclock?.outLongPos" matTooltip="View last logged location" matTooltipShowDelay="300" (click)="$event.stopPropagation();showMap(user)"><mat-icon class="map">location_on</mat-icon></div>
     </div>
   </ng-container>
   <button mat-mini-fab class="fab" color="accent" (click)="inviteToTeam()"><mat-icon>person</mat-icon>New Team Member</button>

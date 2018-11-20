@@ -169,7 +169,7 @@ export class LogComponent implements OnDestroy {
       moment(log.createdAt).isSame(date, "day")
     );
     logsOnDate.forEach((day: Log) => {
-      if (!users.find(user => user.id == day.userId)) {
+      if (users.length > 0 && !users.find(user => user.id == day.userId)) {
         users.push(
           this.accountService.teamUsers.find(user => user.id == day.userId)
         );

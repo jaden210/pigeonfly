@@ -2,7 +2,11 @@
 
 * {
     font-family: "Nunito", "Roboto", "Helvetica Neue", sans-serif;
-  }
+}
+
+.mat-drawer-backdrop.ng-star-inserted.mat-drawer-shown {
+    background-color: transparent;
+}
 
 .flex {
     flex: 1;
@@ -16,6 +20,20 @@
     width: auto !important;
     border-radius: 30px !important;
     padding: 0px 12px !important;
+}
+
+.toolbar-logo {
+    height: 46px;
+}
+
+.toolbar-title {
+    font-family: 'co-headline';
+    color: #757575;
+    font-size: 21px;
+    border-left: 2px solid rgba(0,0,0,.14);
+    padding-left: 6px;
+    padding-bottom: 6px;
+    line-height: 17px;
 }
 
 button {
@@ -45,11 +63,16 @@ mat-toolbar {
     background-color: rgba(0,0,0,.17) !important;
 }
 
+.bactive {
+    transition: all 250ms;
+    color: #ff9100 !important;
+}
+
 .helper {
     position: fixed;
     z-index: 1000;
     bottom: 12px;
-   left: 292px;
+   left: 112px;
     border-radius: 24px;
     background-color: #ff9100;
     padding: 12px;

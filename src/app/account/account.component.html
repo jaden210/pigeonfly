@@ -1,23 +1,23 @@
 <mat-sidenav-container>
-  <mat-sidenav mode="side" opened>
+  <mat-sidenav #sidenav mode="over">
     <div class="mat-sidenav">
       <div id="header" (click)="bShowAccountInfo = true">
         <div id="name">{{ accountService.aTeam?.name }}</div>
         <mat-icon>expand_more</mat-icon>
       </div>
-      <div id="content">
+      <div id="content" (click)="sidenav.toggle()">
         <mat-list>
-          <a mat-list-item routerLink="dashboard" routerLinkActive="active">Team</a>
-          <a mat-list-item routerLink="achievements" routerLinkActive="active">Achievements</a>
-          <a mat-list-item routerLink="training" routerLinkActive="active">Training</a>
-          <a mat-list-item routerLink="surveys" routerLinkActive="active">Surveys</a>
-          <a mat-list-item routerLink="self-inspections" routerLinkActive="active">Self-Inspection</a>
-          <a mat-list-item routerLink="log" routerLinkActive="active">Logs</a>
-          <a mat-list-item routerLink="time" routerLinkActive="active">Time</a>
-          <a mat-list-item routerLink="incident-reports" routerLinkActive="active">Incident Reports</a>
-          <a mat-list-item routerLink="event" routerLinkActive="active">Events</a>
-          <a mat-list-item routerLink="account" routerLinkActive="active">Account</a>
-          <a mat-list-item *ngIf="accountService.user.isDev" routerLink="overvieww" routerLinkActive="active">Support</a>
+          <a mat-list-item routerLink="dashboard" routerLinkActive="active"><mat-icon class="sn-icon">supervisor_account</mat-icon>Team</a>
+          <a mat-list-item routerLink="achievements" routerLinkActive="active"><mat-icon class="sn-icon">where_to_vote</mat-icon>Badges</a>
+          <a mat-list-item routerLink="training" routerLinkActive="active"><mat-icon class="sn-icon">explore</mat-icon>Training</a>
+          <a mat-list-item routerLink="surveys" routerLinkActive="active"><mat-icon class="sn-icon">scatter_plot</mat-icon>Surveys</a>
+          <a mat-list-item routerLink="self-inspections" routerLinkActive="active"><mat-icon class="sn-icon">import_contacts</mat-icon>Self-Inspection</a>
+          <a mat-list-item routerLink="log" routerLinkActive="active"><mat-icon class="sn-icon">assignment</mat-icon>Logs</a>
+          <a mat-list-item routerLink="time" routerLinkActive="active"><mat-icon class="sn-icon">schedule</mat-icon>Time</a>
+          <a mat-list-item routerLink="incident-reports" routerLinkActive="active"><mat-icon class="sn-icon">assignment_late</mat-icon>Incident Reports</a>
+          <a mat-list-item routerLink="event" routerLinkActive="active"><mat-icon class="sn-icon">event_note</mat-icon>Events</a>
+          <a mat-list-item routerLink="account" routerLinkActive="active"><mat-icon class="sn-icon">person</mat-icon>Account</a>
+          <a mat-list-item *ngIf="accountService.user.isDev" routerLink="overvieww" routerLinkActive="active"><mat-icon class="sn-icon">golf_course</mat-icon>Support</a>
         </mat-list>
       </div>
       <div id="footer">
@@ -26,19 +26,11 @@
         <mat-icon
           class="fi"
           (click)="
+            sidenav.toggle();
             accountService.showHelper = false;
             accountService.showFeedback = true
           "
           >feedback</mat-icon
-        >
-        <mat-icon
-          color="accent"
-          class="fi"
-          (click)="
-            accountService.showFeedback = false;
-            accountService.showHelper = true
-          "
-          >help_outline</mat-icon
         >
       </div>
     </div>
@@ -73,7 +65,23 @@
         SUBMIT
       </button>
     </div>
-    <router-outlet></router-outlet>
+    <div id="wrapper">
+      <div id="left">
+        <button mat-icon-button style="margin:12px" (click)="sidenav.open()"><mat-icon style="color:#ffffff">menu</mat-icon></button>
+        <div class="side-button" routerLinkActive="bactive" routerLink="dashboard"><mat-icon>supervisor_account</mat-icon>Team</div>
+        <div class="side-button" routerLinkActive="bactive" routerLink="achievements"><mat-icon>where_to_vote</mat-icon>Badges</div>
+        <div class="side-button" routerLinkActive="bactive" routerLink="training"><mat-icon>explore</mat-icon>Training</div>
+        <div class="side-button" routerLinkActive="bactive" routerLink="surveys"><mat-icon>scatter_plot</mat-icon>Surveys</div>
+        <div class="side-button" routerLinkActive="bactive" routerLink="self-inspections"><mat-icon>import_contacts</mat-icon>Inspections</div>
+        <div class="side-button" routerLinkActive="bactive" routerLink="log"><mat-icon>assignment</mat-icon>Logs</div>
+        <div class="side-button" routerLinkActive="bactive" routerLink="time"><mat-icon>schedule</mat-icon>Time</div>
+        <div class="flex"></div>
+        <div class="side-button" routerLinkActive="bactive" (click)="accountService.showFeedback=false;accountService.showHelper=true"><mat-icon>help_outline</mat-icon>Help</div>
+      </div>
+      <div id="body">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
 <div

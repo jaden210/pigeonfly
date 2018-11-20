@@ -1,4 +1,7 @@
-<mat-toolbar style="font-size: 15px">
+<mat-toolbar>
+    <img class="toolbar-logo" src="/assets/ccLogoDark.png">
+    <div class="toolbar-title">Events</div>
+    <div class="flex"></div>
   <input id="search" placeholder="search" type="text" [(ngModel)]="searchStr">
   <mat-form-field class="filter">
     <mat-select placeholder="People" [(ngModel)]="filterUsers" multiple>
@@ -26,8 +29,8 @@
           <div class="row">
             <div class="event" [ngClass]="event.type" *ngFor="let event of day.events">
               <div class="block" (click)="routeToEventOrigin(event)">
-                <div class="type">{{event.user.name}} {{event.action}} a {{event.type}} -&nbsp;</div>
-                <div class="title">{{event.description}}</div>
+                <div class="type">{{event?.user?.name}} {{event?.action}} a {{event?.type}} -&nbsp;</div>
+                <div class="title">{{event?.description}}</div>
               </div>
             </div>
           </div>

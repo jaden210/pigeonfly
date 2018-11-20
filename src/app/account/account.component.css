@@ -19,6 +19,48 @@ mat-sidenav-content {
   overflow: hidden;
 }
 
+.sn-icon {
+  margin-right: 12px;
+}
+
+#wrapper {
+  display: flex;
+  height: 100vh;
+}
+
+#left {
+  width: 100px;
+  background-color: #054d8a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1001;
+}
+
+.side-button {
+  height: 70px;
+  width: 70px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 250ms;
+  cursor: pointer;
+  outline: none;
+}
+
+.side-button:hover {
+  background-color: #044682;
+}
+
+#body {
+  width: calc(100vw - 100px);
+}
+
 a {
   text-decoration: none;
   transition: all 250ms;
@@ -95,14 +137,6 @@ a:hover {
 .team {
   cursor: pointer;
   padding: 12px;
-}
-
-.active {
-  color: #ff9100 !important;
-  background-color: rgba(0, 0, 0, 0.17) !important;
-  border-top-right-radius: 35px;
-  border-bottom-right-radius: 35px;
-  margin-right: 24px;
 }
 
 .account-popup-overlay {
