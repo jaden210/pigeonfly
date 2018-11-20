@@ -115,7 +115,7 @@ exports.teamDisabled = functions.firestore.document("team/{teamId}").onUpdate((c
       to: "support@compliancechimp.com",
     }
     mailOptions.subject = `${newTeam.name} has deleted their account`;
-    mailOptions.html = `looks like ${newTeam.name} decided to leave. the team has been disabled and on ${disabledAt}. 
+    mailOptions.html = `Looks like ${newTeam.name} decided to leave. The team has been disabled and on ${disabledAt}. 
     If you want to contact them their phone number is: ${newTeam.phone}`;
     
     return mailTransport.sendMail(mailOptions) 
@@ -132,7 +132,7 @@ exports.teamDisabled = functions.firestore.document("team/{teamId}").onUpdate((c
       to: "support@compliancechimp.com",
     }
     mailOptions.subject = `${newTeam.name} has re-activated their account`;
-    mailOptions.html = `looks like ${newTeam.name} decided to come back. If you want to contact them their phone number is: ${newTeam.phone}`;
+    mailOptions.html = `Looks like ${newTeam.name} decided to come back. If you want to contact them their phone number is: ${newTeam.phone}`;
     
     return mailTransport.sendMail(mailOptions) 
     .catch((error) => {
