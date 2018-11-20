@@ -2,7 +2,7 @@ import { Component, Inject } from "@angular/core";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 import { BehaviorSubject } from "rxjs";
 import { User } from "src/app/app.service";
-import { AccountService } from "../../account.service";
+import { AccountService } from "./account.service";
 
 @Component({
   template: `

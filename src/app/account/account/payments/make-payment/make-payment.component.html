@@ -1,5 +1,7 @@
-<h1 mat-dialog-title>Enter Card Info</h1>
 <mat-dialog-content>
+  <div class="stripe">
+    <img style="height: 30px;" src="/assets/stripe.png">
+  </div>
   <form action="/charge" method="post" id="payment-form">
     <div class="form-row">
       <div id="card-element">
@@ -11,11 +13,8 @@
     </div>
 
   </form>
-  <div class="stripe">
-    <img src="/assets/stripe.png">
-  </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button color="primary" (click)="cancel()">CANCEL</button>
-  <button mat-raised-button color="accent" style="color:#ffffff" [disabled]="!isValid" (click)="formSubmit()">SAVE</button>
+  <button mat-raised-button color="accent" style="color:#ffffff" [disabled]="!isValid" (click)="formSubmit()">SUBMIT PAYMENT</button>
 </mat-dialog-actions>

@@ -1,7 +1,4 @@
 <mat-toolbar>
-  <button mat-icon-button (click)="location.back()">
-    <mat-icon>arrow_back</mat-icon>
-  </button>
   {{selfInspectionsService.selfInspection.title}}:{{selfInspectionsService.takeInspection?.createdAt | date:'longDate'}}
   <div class="flex"></div>
   <button mat-button color="accent" (click)="saveAndLeave()">SAVE AND LEAVE</button>

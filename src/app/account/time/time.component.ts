@@ -11,6 +11,7 @@ import * as moment from "moment";
 import { TimeService } from "./time.service";
 import { DatePipe } from "@angular/common";
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from "@angular/material";
+import { PeopleDialogComponent } from "../people-dialog.component";
 
 @Component({
   selector: "app-time",
@@ -31,8 +32,9 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from "@angular/material";
   providers: [TimeService]
 })
 export class TimeComponent implements OnInit, OnDestroy {
-  searchStr; // template variable
-  filterUsers; // template variable
+  searchStr: string; // template variable
+  searchVisible: boolean = true;
+  filterUsers: string[] = [];
 
   timeClocks: any = [];
   days = [];
@@ -149,6 +151,15 @@ export class TimeComponent implements OnInit, OnDestroy {
     let lh = parseInt(duration.asHours());
     let lm = parseInt(duration.asMinutes()) % 60;
     return lh + "h " + lm + "m";
+  }
+
+  public filterByPeople(): void {
+    let dialogRef = this.dialog.open(PeopleDialogComponent, {
+      data: this.filterUsers
+    });
+    dialogRef.afterClosed().subscribe((people: string[]) => {
+      this.filterUsers = people ? people : this.filterUsers;
+    });
   }
 
   public exportCSV(): void {

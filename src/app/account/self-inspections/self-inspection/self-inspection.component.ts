@@ -12,7 +12,8 @@ import { Location } from "@angular/common";
 })
 export class SelfInspectionComponent {
 
-  inspections: Inspection[];
+  inProgressInspections: Inspection[] = [];
+  completedInspections: Inspection[] = [];
 
   constructor(
     public selfInspectionsService: SelfInspectionsService,
@@ -26,7 +27,13 @@ export class SelfInspectionComponent {
       return;
     };
     this.selfInspectionsService.getInspections().subscribe(inspections => {
-      this.inspections = inspections;
+      inspections.forEach(inspection => {
+        if (inspection.completedAt) {
+          this.completedInspections.push(inspection);
+        } else {
+          this.inProgressInspections.push(inspection);
+        }
+      });
     })
   }
 

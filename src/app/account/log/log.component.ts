@@ -13,6 +13,7 @@ import * as moment from "moment";
 import { ImagesDialogComponent } from "../images-dialog/images-dialog.component";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 import { Observable } from "rxjs";
+import { PeopleDialogComponent } from "../people-dialog.component";
 
 @Component({
   selector: "app-log",
@@ -33,7 +34,8 @@ import { Observable } from "rxjs";
 })
 export class LogComponent implements OnDestroy {
   searchStr: string; // template variable
-  filterUsers; // template variable
+  searchVisible: boolean = true;
+  filterUsers: string[] = [];
 
   logs: any = [];
   lastLog; // for pagination
@@ -41,6 +43,9 @@ export class LogComponent implements OnDestroy {
 
   lat: number;
   long: number;
+
+
+
 
   now: any = moment().format("MMM");
 
@@ -58,11 +63,11 @@ export class LogComponent implements OnDestroy {
     this.getTimeLogs().subscribe(logs => {
       if (logs.length == 0) return;
       this.logs = this.logs.concat(logs);
-      this.lastLog = logs[logs.length - 1];
       if (this.logs.length == 0) {
         this.accountService.showHelper = true;
         return;
       }
+      this.lastLog = logs[logs.length - 1];
       this.logs.forEach(log => {
         log.user = this.accountService.teamUsers.find(
           user => user.id == log.userId
@@ -177,6 +182,15 @@ export class LogComponent implements OnDestroy {
     // TODO: Pass index so it opens to the right image when there are a bunch
     let dialog = this.dialog.open(ImagesDialogComponent, {
       data: images
+    });
+  }
+
+  public filterByPeople(): void {
+    let dialogRef = this.dialog.open(PeopleDialogComponent, {
+      data: this.filterUsers
+    });
+    dialogRef.afterClosed().subscribe((people: string[]) => {
+      this.filterUsers = people ? people : this.filterUsers;
     });
   }
 

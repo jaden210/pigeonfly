@@ -27,6 +27,7 @@ export class HomeComponent {
     this.accountService.helper = this.accountService.helperProfiles.team;
     this.accountService.teamUsersObservable.subscribe(teamUsers => {
       if (teamUsers) {
+        if (teamUsers.length == 1) this.accountService.showHelper = true;
         let invitedCollection = this.accountService.db.collection<InviteToTeam[]>("invitation", ref => ref.where("status", "==", "invited").where("teamId", "==", this.accountService.aTeam.id));
         this.invitedUsers = invitedCollection.snapshotChanges().pipe(
           map(actions => {

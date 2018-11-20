@@ -7,7 +7,7 @@ import { LogComponent } from "./log/log.component";
 import { TimeComponent } from "./time/time.component";
 import { IncidentReportsComponent } from "./incident-reports/incident-reports.component";
 import { EventComponent } from "./event/event.component";
-import { WelcomeComponent } from "./welcome/welcome.component";
+import { AchievementsComponent } from "./achievements/achievements.component";
 import { StatsComponent } from "./stats/stats.component";
 import { AuthGuard } from "./auth.gaurd";
 
@@ -23,7 +23,7 @@ const routes: Routes = [
       { path: "time", component: TimeComponent },
       { path: "event", component: EventComponent },
       { path: "incident-reports", component: IncidentReportsComponent },
-      { path: "achievements", component: WelcomeComponent },
+      { path: "achievements", component: AchievementsComponent },
       { path: "overvieww", component: StatsComponent, canActivate: [AuthGuard] },
       {
         path: "training",

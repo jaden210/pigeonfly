@@ -106,7 +106,7 @@ export class SelfInspectionsService {
   deleteSelfInspection(): Promise<any> {
     return this.accountService.db.doc("self-inspection/" + this.selfInspection.id).delete();
   }
-
+  
   startInspection(): Promise<Inspection> {
     let inspection = new Inspection();
     inspection.createdAt = new Date();
@@ -115,6 +115,14 @@ export class SelfInspectionsService {
       inspection.id = snapshot.id;
       return inspection;
     });
+  }
+  
+  deleteSelfInspectionInspection() {
+    return this.accountService.db
+    .collection("self-inspection")
+    .doc(this.selfInspection.id)
+    .collection("inspections")
+    .doc(this.takeInspection.id).delete();
   }
 
   finishSelfInspection(): Promise<any> {

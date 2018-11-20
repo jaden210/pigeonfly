@@ -1,3 +1,11 @@
+.side {
+    flex: 1;
+}
+
+.scroll {
+    overflow: scroll;
+}
+
 #header {
     display: flex;
     justify-content: space-between;
@@ -16,6 +24,7 @@
 #h-progress {
     opacity: .87;
     font-style: italic;
+    margin-right: 24px;
 }
 
 .achievements {
@@ -26,12 +35,12 @@
 
 .achievement {
     position: relative;
-    margin: 8px;
+    margin: 12px;
     padding: 14px;
     border-radius: 8px;
     display: flex;
     align-items: center;
-    filter: grayscale(80%);
+    filter: grayscale(90%);
     opacity: .8;
     cursor: pointer;
     transition: all 250ms;
@@ -40,6 +49,8 @@
 
 .fill {
     height: 10%;
+    width: 0px;
+    transition: all 600ms;
     position: absolute;
     background-color: #BBDEFB;
     margin-left: -10px;
@@ -95,3 +106,14 @@
     opacity: .87;
     letter-spacing: 1.5px;
 }
+
+
+
+
+
+
+
+
+
+
+

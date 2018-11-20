@@ -7,40 +7,17 @@
       </div>
       <div id="content">
         <mat-list>
-          <a mat-list-item routerLink="dashboard" routerLinkActive="active"
-            >Team</a
-          >
+          <a mat-list-item routerLink="dashboard" routerLinkActive="active">Team</a>
+          <a mat-list-item routerLink="achievements" routerLinkActive="active">Achievements</a>
+          <a mat-list-item routerLink="training" routerLinkActive="active">Training</a>
+          <a mat-list-item routerLink="surveys" routerLinkActive="active">Surveys</a>
+          <a mat-list-item routerLink="self-inspections" routerLinkActive="active">Self-Inspection</a>
+          <a mat-list-item routerLink="log" routerLinkActive="active">Logs</a>
           <a mat-list-item routerLink="time" routerLinkActive="active">Time</a>
-          <a mat-list-item routerLink="log" routerLinkActive="active">Log</a>
-          <a mat-list-item routerLink="surveys" routerLinkActive="active"
-          >Surveys</a
-          >
-          <a mat-list-item routerLink="training" routerLinkActive="active"
-          >Training</a
-          >
-          <a
-          mat-list-item
-          routerLink="incident-reports"
-          routerLinkActive="active"
-          >Incident Reports</a
-          >
-          <a mat-list-item routerLink="self-inspections" routerLinkActive="active"
-          >Self-Inspection</a
-          >
+          <a mat-list-item routerLink="incident-reports" routerLinkActive="active">Incident Reports</a>
           <a mat-list-item routerLink="event" routerLinkActive="active">Events</a>
-          <a mat-list-item routerLink="account" routerLinkActive="active"
-            >Account</a
-          >
-          <a mat-list-item routerLink="achievements" routerLinkActive="active"
-            >Achievements</a
-          >
-          <a
-            mat-list-item
-            *ngIf="accountService.user.isDev"
-            routerLink="overvieww"
-            routerLinkActive="active"
-            >Support</a
-          >
+          <a mat-list-item routerLink="account" routerLinkActive="active">Account</a>
+          <a mat-list-item *ngIf="accountService.user.isDev" routerLink="overvieww" routerLinkActive="active">Support</a>
         </mat-list>
       </div>
       <div id="footer">
@@ -80,17 +57,17 @@
     <div class="helper" *ngIf="accountService.showFeedback" [@helper]>
       <button mat-icon-button class="helper-close" (click)="accountService.showFeedback = false"><mat-icon>cancel</mat-icon></button>
       <div class="helper-name">{{ accountService.feedback?.name }}</div>
-      <mat-form-field class="helper-input" color="warn"
+      <mat-form-field class="helper-input" color="primary"
         ><textarea
           matInput
-          placeholder="help minute work harder for you"
+          placeholder="help Compliancechimp work harder for you"
           [(ngModel)]="accountService.feedback.description"
         ></textarea
       ></mat-form-field>
       <button
         mat-stroked-button
         class="helper-button"
-        color="warn"
+        style="color: #ffffff;border-color:#ffffff"
         (click)="submitFeedback()"
       >
         SUBMIT

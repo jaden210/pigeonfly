@@ -13,7 +13,6 @@ import { AccountRoutingModule } from "./account-routing.module";
 import { MaterialModule } from "../material/material.module";
 import {
   AccountComponent,
-  TeamSelectDialog,
   WelcomeDialog
 } from "./account.component";
 import { FormsModule } from "@angular/forms";
@@ -29,11 +28,12 @@ import { NoAccessDialog } from "./account.service";
 import { ImagesDialogComponent } from "./images-dialog/images-dialog.component";
 import { TrainingModule } from "./training/training.module";
 import { SharedModule } from "../shared-module";
-import { WelcomeComponent } from "./welcome/welcome.component";
+import { AchievementsComponent } from "./achievements/achievements.component";
 import { StatsComponent } from "./stats/stats.component";
 import { AngularEditorModule } from "@kolkov/angular-editor";
 import { AssesComponent } from "./stats/ases/make-osha.component";
 import { MakePaymentComponent } from "./account/payments/make-payment/make-payment.component";
+import { PeopleDialogComponent } from "./people-dialog.component";
 
 @NgModule({
   imports: [
@@ -53,7 +53,6 @@ import { MakePaymentComponent } from "./account/payments/make-payment/make-payme
   ],
   declarations: [
     AccountComponent,
-    TeamSelectDialog,
     ProfileComponent,
     HomeComponent,
     TimeComponent,
@@ -69,24 +68,25 @@ import { MakePaymentComponent } from "./account/payments/make-payment/make-payme
     ImagesDialogComponent,
     CreateEditLogDialog,
     CreateEditTimeDialog,
-    WelcomeComponent,
+    AchievementsComponent,
     WelcomeDialog,
     StatsComponent,
     AssesComponent,
-    MakePaymentComponent
+    MakePaymentComponent,
+    PeopleDialogComponent
   ],
   exports: [MaterialModule, TrainingModule, SurveysModule],
   entryComponents: [
     InviteDialog,
     MapDialogComponent,
     EditUserDialog,
-    TeamSelectDialog,
     NoAccessDialog,
     ImagesDialogComponent,
     CreateEditLogDialog,
     CreateEditTimeDialog,
     WelcomeDialog,
-    MakePaymentComponent
+    MakePaymentComponent,
+    PeopleDialogComponent
   ],
   providers: [DatePipe]
 })

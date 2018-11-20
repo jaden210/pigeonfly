@@ -5,13 +5,12 @@ import { MatIconModule, MatListModule, MatSidenavModule, MatFormFieldModule } fr
 import { FormsModule } from '@angular/forms';
 import { AccountRoutingModule } from './account-routing.module';
 import { HomeComponent } from '../home/home.component';
-import { AssesmentComponent } from './assesment/assesment.component';
 import { EventComponent } from './event/event.component';
 import { ImagesDialogComponent } from './images-dialog/images-dialog.component';
 import { IncidentReportsComponent } from './incident-reports/incident-reports.component';
 import { LogComponent } from './log/log.component';
 import { MapDialogComponent } from './map-dialog/map-dialog.component';
-import { WelcomeComponent } from './welcome/welcome.component';
+import { AchievementsComponent } from './achievements/achievements.component';
 import { SurveyComponent } from './surveys/survey/survey.component';
 import { TimeComponent } from './time/time.component';
 import { ToolbarHelperComponent } from './toolbar-helper/toolbar-helper.component';

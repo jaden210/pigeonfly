@@ -1,12 +1,23 @@
-<mat-toolbar style="font-size: 15px">
-  <input id="search" placeholder="search" type="text" [(ngModel)]="searchStr">
-  <mat-form-field class="filter">
-    <mat-select placeholder="Filter by people" [(ngModel)]="filterUsers" multiple>
-      <mat-option *ngFor="let user of accountService.teamUsers" [value]="user.id">{{user.name}}</mat-option>
-    </mat-select>
-  </mat-form-field>
-  <button class="toolbar-button" (click)="exportCSV()" mat-button>EXPORT</button>
+<mat-toolbar>Time
   <div class="flex"></div>
+  <div id="search-box" [class.expand]="searchVisible">
+    <button mat-icon-button (click)="searchVisible = !searchVisible">
+      <mat-icon>search</mat-icon>
+    </button>
+    <input [(ngModel)]="searchStr" placeholder="Category | Question" />
+    </div>
+    <button
+    mat-icon-button
+    style="margin-right: 12px;"
+    (click)="filterByPeople()"
+    matTooltip="Filter by people"
+    [matBadge]="filterUsers.length"
+    [matBadgeHidden]="!filterUsers.length"
+    matBadgeSize="small"
+    >
+    <mat-icon>filter_list</mat-icon>
+  </button>
+  <button class="toolbar-button" (click)="exportCSV()" mat-button>EXPORT</button>
   <toolbar-helper></toolbar-helper>
 </mat-toolbar>
   <div class="window" id="window" (scroll)="onScroll($event)">

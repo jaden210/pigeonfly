@@ -6,7 +6,7 @@
   <mat-tab label="Personal"> 
     <div class="column">
       <div class="image-cont">
-        <div class="image-circle"><img src={{accountService.user?.profileUrl}} onerror="src = '/assets/face.png'" alt="Compliancechimp"></div>
+        <div class="image-circle"><mat-progress-bar style="position: absolute;bottom: 0px;" *ngIf="loading" mode="indeterminate"></mat-progress-bar><img src={{accountService.user?.profileUrl}} onerror="src = '/assets/face.png'" alt="Compliancechimp"></div>
         <div style="height: 0px; width: 0px; overflow:hidden"><input type="file" id="upProfileUrl" accept=".png,.jpg,.mp4" #uploadT (change)="uploadProfileImage($event)"></div>
         <button mat-stroked-button class="image-button" color="primary" (click)="upload(true)">CHANGE PICTURE</button>
       </div>
@@ -27,7 +27,7 @@
   <mat-tab label="Company" *ngIf="showCompany">
   <div class="column">
       <div class="image-cont">
-        <div class="image"><img src={{accountService.aTeam?.logoUrl}} style="object-fit: contain !important;" onerror="src = '/assets/ccLogo.png'" alt="Compliancechimp"></div>
+        <div class="image"><mat-progress-bar style="position: absolute;bottom: 0px;" *ngIf="loading" mode="indeterminate"></mat-progress-bar><img src={{accountService.aTeam?.logoUrl}} style="object-fit: contain !important;" onerror="src = '/assets/ccLogo.png'" alt="Compliancechimp"></div>
         <div style="height: 0px; width: 0px; overflow:hidden"><input type="file" id="upLogoUrl" accept=".png,.jpg,.mp4" #uploadT (change)="uploadLogoImage($event)"></div>
         <button mat-stroked-button class="image-button" color="primary" (click)="upload(false)">CHANGE COMPANY LOGO</button>
       </div>
@@ -49,9 +49,16 @@
     </mat-tab>
     <mat-tab label="Billing" *ngIf="showCompany">
       <div id="billing">
-        <div class="free" *ngIf="trialDaysLeft > 0">You’re in a free trial period for {{trialDaysLeft}} more days. Payment can be entered any time, but is not required until your free trial is up. You’ll be charged based on your team size, on the one month anniversary of your account creation date according to our Customer Agreement which you agreed to when setting up your account. Feel free to review the Customer Agreement again. Based on your current team size, you will be charged ${{teamTier}} per month, and can cancel at any time. All payments are handled securely through Stripe.</div>
-        <div class="free" *ngIf="trialDaysLeft <= 0">You’re free trial has expired. Please enter payment information to access your account. You’ll be charged based on your team size, on the one month anniversary of your account creation date according to our Customer Agreement which you agreed to when setting up your account. Feel free to review the Customer Agreement again. Based on your current team size, you will be charged ${{teamTier}} per month, and can cancel at any time. All payments are handled securely through Stripe.</div>
-        <button mat-raised-button color="accent" style="color:#ffffff" (click)="enterCardInfo()">ENTER PAYMENT</button>
+        <ng-container *ngIf="accountService.isTrialVersion">
+          <div class="free" *ngIf="accountService.trialDaysLeft > 0">You’re in a free trial period for {{accountService.trialDaysLeft}} more days. Payment can be entered any time, but is not required until your free trial is up. You’ll be charged based on your team size, on the one month anniversary of your account creation date according to our Customer Agreement which you agreed to when setting up your account. Feel free to review the <a routerLink="/customer-agreement">Customer Agreement</a> again. Based on your current team size, you will be charged ${{teamTier}} per month, and can cancel at any time. All payments are handled securely through Stripe.</div>
+          <div class="free" *ngIf="accountService.trialDaysLeft <= 0">You’re free trial has expired. Please enter payment information to access your account. You’ll be charged based on your team size, on the one month anniversary of your account creation date according to our Customer Agreement which you agreed to when setting up your account. Feel free to review the <a routerLink="/customer-agreement">Customer Agreement</a> again. Based on your current team size, you will be charged ${{teamTier}} per month, and can cancel at any time. All payments are handled securely through Stripe.</div>
+          <button mat-raised-button color="accent" style="color:#ffffff" (click)="enterCardInfo()">ENTER PAYMENT</button>
+        </ng-container>
+        <ng-container *ngIf="!accountService.isTrialVersion">
+          <div class="free">Thank you! Your card is on file. Click below to update or change your payment information, anytime.</div>
+          <button mat-raised-button color="accent" style="color:#ffffff" (click)="enterCardInfo()">UPDATE PAYMENT</button>
+          
+        </ng-container>
       </div>
     </mat-tab>
   </mat-tab-group>

@@ -9,7 +9,6 @@ import { SurveySearchPipe } from "./search.pipe";
 import { SurveysListComponent } from "./surveys-list/surveys-list.component";
 import { SurveysService } from "./surveys.service";
 import { CreateSurveyDialogComponent } from "./create-survey-dialog/create-survey-dialog.component";
-import { PeopleDialogComponent } from "./surveys-list/people-dialog.component";
 
 const routes: Routes = [
   {
@@ -34,10 +33,9 @@ const routes: Routes = [
     SurveyComponent,
     SurveySearchPipe,
     SurveysListComponent,
-    CreateSurveyDialogComponent,
-    PeopleDialogComponent
+    CreateSurveyDialogComponent
   ],
-  entryComponents: [CreateSurveyDialogComponent, PeopleDialogComponent],
+  entryComponents: [CreateSurveyDialogComponent],
   providers: [SurveysService]
 })
 export class SurveysModule {}

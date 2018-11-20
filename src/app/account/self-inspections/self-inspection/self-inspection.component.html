@@ -11,9 +11,9 @@
     <button mat-stroked-button color="primary" style="margin-right: 12px;" (click)="editSelfInspection()">MODIFY {{selfInspectionsService.selfInspection?.title | uppercase}}</button>
     <button mat-stroked-button color="accent" (click)="startSelfInspection()">START A NEW INSPECTION</button>
   </div>
-  <div class="inspections" *ngIf="inspections?.length > 0">
+  <div class="inspections" *ngIf="inProgressInspections?.length > 0">
     <div class="info-title">In Progress</div>
-    <ng-container *ngFor="let inspection of inspections">
+    <ng-container *ngFor="let inspection of inProgressInspections">
       <div class="row" *ngIf="!inspection.completedAt">
         <h2>{{inspection?.createdAt | date: 'longDate'}}</h2>
         <div class="fill" [matTooltip]="getCompletePercent(inspection)" [ngStyle]="{'width':(inspection.completedPercent*100)+'%'}"></div>
@@ -22,9 +22,9 @@
       </div>
     </ng-container>
   </div>
-  <div class="inspections" *ngIf="inspections?.length > 0">
+  <div class="inspections" *ngIf="completedInspections?.length > 0">
     <div class="info-title">Completed Inspections</div>
-    <ng-container *ngFor="let inspection of inspections">
+    <ng-container *ngFor="let inspection of completedInspections">
       <div class="row" *ngIf="inspection.completedAt">
         <h2>{{inspection?.createdAt | date: 'longDate'}}</h2>
         <div class="fill" [matTooltip]="getCompliantPercent(inspection)" [ngStyle]="{'width':(inspection.compliantPercent*100)+'%'}"></div>

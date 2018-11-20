@@ -89,24 +89,10 @@ export class AccountComponent implements OnInit {
         this.accountService.userTeams.push(team);
       });
     });
-    if (localStorage.getItem('teamId')) {
-      this.accountService.setActiveTeam(localStorage.getItem('teamId'));
-    } else if (Object.keys(this.accountService.user.teams).length == 1) { // set the team and go home
-      if (this.appService.firstTimeUser) { // checking here because first time user will always only have one team
-        this.welcomeDialog();
-      }
-      this.accountService.setActiveTeam(Object.keys(this.accountService.user.teams)[0]);
-    } else { // pop the dialog asking which team to look at
-      let dialog = this.dialog.open(TeamSelectDialog, {
-        data: this.accountService.userTeams,
-        disableClose: true
-      });
-      dialog.afterClosed().subscribe((teamId: any) => {
-        if (teamId) {
-          this.accountService.setActiveTeam(teamId);
-        } else this.accountService.logout();
-      });
+    if (this.appService.firstTimeUser) {
+      this.welcomeDialog();
     }
+    this.accountService.setActiveTeam(Object.keys(this.accountService.user.teams)[0]);
   }
 
   welcomeDialog() {
@@ -183,23 +169,6 @@ export class AccountComponent implements OnInit {
 }
 
 @Component({
-  selector: 'team-select-dialog',
-  templateUrl: 'team-select-dialog.html',
-  styleUrls: ['./account.component.css']
-})
-export class TeamSelectDialog {
-
-  constructor(
-    public dialogRef: MatDialogRef<TeamSelectDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: any) {}
-
-  close(teamId?): void {
-    this.dialogRef.close(teamId);
-  }
-
-}
-
-@Component({
   selector: 'welcome-dialog',
   templateUrl: 'welcome-dialog.html',
   styleUrls: ['./account.component.css']
@@ -209,7 +178,7 @@ export class WelcomeDialog {
   industries;
 
   constructor(
-    public dialogRef: MatDialogRef<TeamSelectDialog>,
+    public dialogRef: MatDialogRef<WelcomeDialog>,
     @Inject(MAT_DIALOG_DATA) public data: any, public accountService: AccountService) {
       let accountTypesCollection = this.accountService.db.collection("industries"); //thinking this will never be a large call, but check with nested collections to see later.
       accountTypesCollection.snapshotChanges().pipe(

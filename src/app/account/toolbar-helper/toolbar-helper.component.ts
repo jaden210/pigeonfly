@@ -19,13 +19,5 @@ export class ToolbarHelperComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    
-  }
-
-  logout() {
-    localStorage.removeItem('teamId');
-    this.auth.auth.signOut().then(() => {
-      this.router.navigate(['home']);
-    })
   }
 }

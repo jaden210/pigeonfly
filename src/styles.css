@@ -73,6 +73,7 @@ mat-toolbar {
 
 .helper-description {
     font-size: 15px;
+    font-weight: 300;
     color: #ffffff;
     max-width: 380px;
 }
@@ -90,13 +91,33 @@ agm-map {
     height: 40vh;
 }
 
-#mat-search-icon {
-    padding: 8px;
-    background: #41535B;
-    margin-right: -10px;
-    border-top-left-radius: 12px;
-    border-bottom-left-radius: 12px;
-    color: #ffffff;
+#search-box {
+    display: flex;
+    align-items: center;
+    max-width: 40px;
+    min-width: 40px;
+    overflow: hidden;
+    transition: all 250ms ease-in-out;
+}
+
+#search-box input {
+    height: 28px;
+    outline: none;
+    border-radius: 20px;
+    background: white;
+    padding: 0 16px;
+    font-size: 14px;
+    line-height: 28px;
+    margin-right: 12px;
+    width: 240px;
+}
+
+.expand {
+    max-width: 300px !important;
+}
+
+.toolbar-button {
+    margin: 0 4px !important;
 }
 
 @media screen and (max-width: 785px) {

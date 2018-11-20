@@ -8,7 +8,7 @@ import { Observable, combineLatest } from "rxjs";
 import { Survey } from "../survey/survey";
 import { Router, ActivatedRoute } from "@angular/router";
 import { CreateSurveyDialogComponent } from "../create-survey-dialog/create-survey-dialog.component";
-import { PeopleDialogComponent } from "./people-dialog.component";
+import { PeopleDialogComponent } from "../../people-dialog.component";
 
 @Component({
   selector: "app-surveys-list",

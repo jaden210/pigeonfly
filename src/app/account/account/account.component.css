@@ -19,6 +19,7 @@
   height: 150px;
   width: 350px;
   border-radius: 24px;
+  position: relative;
 }
 
 .image-circle {
@@ -26,6 +27,7 @@
   width: 150px;
   border-radius: 8px;
   overflow: hidden;
+  position: relative;
 }
 
 img {
@@ -90,4 +92,6 @@ mat-form-field {
   flex-direction: column;
   align-items: flex-end;
   padding: 24px;
+  max-width: 750px;
+  margin: auto;
 }

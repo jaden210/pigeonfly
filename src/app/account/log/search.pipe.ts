@@ -64,9 +64,22 @@ export class SearchPipe implements PipeTransform {
     if (people.length > 0) {
       for (let person of people) {
         for (let day of days) {
-          for (let logger of day.loggers) {
-            if (person == logger.id) {
-              rv.push(day);
+          if (day.loggers) {
+            for (let logger of day.loggers) {
+              if (person == logger.id) {
+                rv.push(day);
+              }
+            }
+          }
+          if (day.timeLogs) {
+            for (let logger of day.timeLogs) {
+              console.log('hit');
+              console.log(person);
+              console.log(logger);
+              
+              if (person == logger.userId) {
+                rv.push(day);
+              }
             }
           }
         }

@@ -2,10 +2,11 @@ import { Injectable, Component } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { map, take, debounceTime } from "rxjs/operators";
-import { MatDialog, MatDialogRef } from "@angular/material";
+import { MatDialog, MatDialogRef, MatSnackBar } from "@angular/material";
 import { AngularFireAuth } from "@angular/fire/auth";
 import { Router } from "@angular/router";
 import { AngularFireStorage } from "@angular/fire/storage";
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: "root"
@@ -22,6 +23,9 @@ export class AccountService {
   showFeedback: boolean = false;
   bShowProfile: boolean = false; // template var
   searchForHelper: string; // template var to assist event system;
+
+  isTrialVersion: boolean = false;
+  trialDaysLeft: number;
 
   helperProfiles = {
     newTeam: {
@@ -81,7 +85,7 @@ export class AccountService {
     team: {
       name: "Team",
       description:
-        "Invite everyone on your team by clicking the orange “+” button to the right. Each person you invite will receive an email with instructions to download the app and join your team. Once joined, you’ll see all of their activity including training surveys, worksite logs, injury reports, and time if you choose to have your team track their time using the app (it’s really easy). Invite your entire team today!"
+        "Invite everyone on your team by clicking the orange “New Team Member” button to the right. Each person you invite will receive an email with instructions to download the app and join your team. Once joined, you’ll see all of their activity including training surveys, worksite logs, injury reports, and time if you choose to have your team track their time using the app (it’s really easy). Invite your entire team today!"
     },
     companyType: {
       name: "Company Type",
@@ -107,7 +111,8 @@ export class AccountService {
     private auth: AngularFireAuth,
     public storage: AngularFireStorage,
     public dialog: MatDialog,
-    public router: Router
+    public router: Router,
+    public snackbar: MatSnackBar
   ) {}
 
   setActiveTeam(teamId) {
@@ -132,6 +137,7 @@ export class AccountService {
           dialog.afterClosed().subscribe(() => this.logout());
         } else {
           this.aTeam = team;
+          this.checkFreeTrial();
           this.aTeamObservable.next(team);
           this.db
             .collection("user", ref => ref.where(`teams.${team.id}`, ">=", 0))
@@ -157,8 +163,22 @@ export class AccountService {
       });
   }
 
+  checkFreeTrial() {
+    if (!this.aTeam.cardToken) {
+      this.trialDaysLeft = 30 - moment().diff(this.aTeam.createdAt, 'days') < 0 ? 0 : 30 - moment().diff(this.aTeam.createdAt, 'days');
+      this.isTrialVersion = true;
+      let snackbar = this.snackbar.open(`${this.trialDaysLeft} days left in your free trial`, "enter billing info");
+      snackbar.onAction().subscribe(() => {
+        this.router.navigate(['account/account']);
+      })
+    }
+  }
+
   logout() {
-    this.auth.auth.signOut().then(() => this.router.navigate(["/login"]));
+    this.auth.auth.signOut().then(() => {
+      this.router.navigate(["/login"]);
+      window.location.reload();
+    });
   }
 }
 
@@ -197,6 +217,7 @@ export class Team {
   logoUrl?: string;
   phone?: string;
   industryId?: string;
+  cardToken: any;
 }
 
 export class Log {

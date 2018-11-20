@@ -1,6 +1,6 @@
 <mat-toolbar>
-  <mat-form-field color="primary" id="title" floatLabel="never" style="flex:2">
-    <input matInput placeholder="title" type="text" [(ngModel)]="selfInspectionService.selfInspection.title">
+  <mat-form-field color="accent" id="title" floatLabel="never" style="flex:2">
+    <input matInput placeholder="name your new self-inspection" required autofocus type="text" [(ngModel)]="selfInspectionService.selfInspection.title">
   </mat-form-field>
   <div class="flex"></div>
   <button mat-button class="ml" color="primary" *ngIf="!selfInspectionService.selfInspection.id" (click)="leave()">CANCEL</button>

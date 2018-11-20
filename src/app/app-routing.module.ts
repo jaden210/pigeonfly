@@ -23,7 +23,7 @@ const routes: Routes = [
   { path: 'how-it-works', component: HowComponent },
   { path: 'login', component: LoginComponent },
   { path: 'ken-page', component: MakeOSHAComponent },
-  { path: 'terms-of-use', component: TermsOfUseComponent },
+  { path: 'terms-of-service', component: TermsOfUseComponent },
   { path: 'privacy-policy', component: PrivacyPolicyComponent },
   { path: 'customer-agreement', component: CustomerAgreementComponent },
   { path: 'account', loadChildren: './account/account.module#AccountModule', canActivate: [AuthGuard] }

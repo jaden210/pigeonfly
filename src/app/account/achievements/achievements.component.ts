@@ -1,16 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { AccountService } from '../account.service';
 import { map } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-welcome',
-  templateUrl: './welcome.component.html',
-  styleUrls: ['./welcome.component.css']
+  selector: 'app-achievements',
+  templateUrl: './achievements.component.html',
+  styleUrls: ['./achievements.component.css']
 })
-export class WelcomeComponent implements OnInit {
+export class AchievementsComponent implements OnInit {
 
   achievements;
   completedCount: number;
+
+  @ViewChild("myCanvas")
+  canvas: ElementRef;
+  context;
+
+  progress = 0;
 
   constructor(public accountService: AccountService) { }
 
@@ -51,8 +57,7 @@ export class WelcomeComponent implements OnInit {
           });
       }
     });
-  }
-
+  }  
 }
 
 

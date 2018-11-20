@@ -44,12 +44,12 @@
 
 .left {
   align-self: flex-start;
-  background: #f8bbd0;
+  background: #f3f3f3;
 }
 
 .right {
   align-self: flex-end;
-  background: #f3f3f3;
+  background: #f8bbd0;
 }
 
 .bubble {

@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { Observable, BehaviorSubject } from "rxjs";
-import { map, tap, groupBy, flatMap, toArray, switchMap } from "rxjs/operators";
+import { map, tap, groupBy, flatMap, toArray, switchMap, take } from "rxjs/operators";
 import { of, combineLatest } from "rxjs";
 import { DatePipe } from "@angular/common";
 import { Timeclock, AccountService } from "../account.service";
@@ -52,6 +52,7 @@ export class TimeService {
           })
       .snapshotChanges()
       .pipe(
+        take(1),
         map(logs => {
           return logs.map(log => {
             let data: any = log.payload.doc.data();

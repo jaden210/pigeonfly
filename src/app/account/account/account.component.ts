@@ -6,7 +6,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { environment } from 'src/environments/environment';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSnackBar } from '@angular/material';
 import { MakePaymentComponent } from './payments/make-payment/make-payment.component';
 declare var Stripe: Function;
 declare var elements: any;
@@ -19,8 +19,8 @@ declare var elements: any;
 export class ProfileComponent implements OnInit {
   showCompany: boolean = false;
   accountTypes;
-  trialDaysLeft;
   teamTier: number;
+  loading: boolean = false;
 
   constructor(
     public accountService: AccountService,
@@ -42,8 +42,6 @@ export class ProfileComponent implements OnInit {
           accountTypesCollection.valueChanges().subscribe(accountTypes => {
             this.accountTypes = accountTypes;
           });
-          this.trialDaysLeft = 30 - moment().diff(this.accountService.aTeam.createdAt, 'days');
-          
         }
 
       }
@@ -73,6 +71,7 @@ export class ProfileComponent implements OnInit {
   }
 
   uploadProfileImage(event) {
+    this.loading = true;
     let file = event.target.files[0];
     let filePath = this.accountService.user.id + '/' + "profile-image";
     let ref = this.storage.ref(filePath);
@@ -80,13 +79,14 @@ export class ProfileComponent implements OnInit {
     task.snapshotChanges().pipe(
       finalize(() => {
         ref.getDownloadURL().subscribe(url => {
-          this.accountService.db.collection("user").doc<User>(this.accountService.user.id).update({profileUrl: url});
+          this.accountService.db.collection("user").doc<User>(this.accountService.user.id).update({profileUrl: url}).then(() => this.loading = false);
         });
       })
     ).subscribe();
   }
 
   uploadLogoImage(event) {
+    this.loading = true;
     let file = event.target.files[0];
     let filePath = this.accountService.aTeam.id + '/' + "logo-image";
     let ref = this.storage.ref(filePath);
@@ -94,7 +94,7 @@ export class ProfileComponent implements OnInit {
     task.snapshotChanges().pipe(
       finalize(() => {
         ref.getDownloadURL().subscribe(url => {
-          this.accountService.db.collection("team").doc<Team>(this.accountService.aTeam.id).update({logoUrl: url});
+          this.accountService.db.collection("team").doc<Team>(this.accountService.aTeam.id).update({logoUrl: url}).then(() => this.loading = false);
         });
       })
     ).subscribe();
@@ -106,13 +106,6 @@ export class ProfileComponent implements OnInit {
 
   saveTeam() {
     this.accountService.db.collection("team").doc(this.accountService.aTeam.id).update({...this.accountService.aTeam});
-  }
-
-  logout() {
-    localStorage.removeItem('teamId');
-    this.auth.auth.signOut().then(() => {
-      this.router.navigate(['home']);
-    })
   }
 
   helper(profile) {
