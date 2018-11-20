@@ -152,40 +152,31 @@ export class TrainingService {
   }
 
   /* could be in team/article or article collection, merge both */
-  public getArticle(articleId, teamId): Observable<any> {
+  public getArticle(articleId, teamId): Observable<Article> {
     const article = this.articles.find(a => a.id == articleId);
     return article
       ? of(article)
       : this.getMyContent(teamId).pipe(
           mergeMap(mYContent =>
-            combineLatest(
-              this.db
-                .collection("article")
-                .doc(articleId)
-                .snapshotChanges(),
-              this.db
-                .collection(`team/${teamId}/article`)
-                .doc(articleId)
-                .snapshotChanges()
-            ).pipe(
-              take(1),
-              map(articles => articles.filter(a => a.payload.exists)),
-              map(
-                articles =>
-                  articles.map(article => {
-                    const data = article["payload"].data();
-                    const id = article["payload"].id;
-                    const myContent = mYContent.find(mc => mc.articleId == id);
-                    const favorited = myContent ? !myContent.disabled : false;
-                    return { ...data, id, myContent, favorited };
-                  }),
+            this.db
+              .collection("article")
+              .doc(articleId)
+              .snapshotChanges()
+              .pipe(
+                take(1),
+                map(article => {
+                  const data = article["payload"].data();
+                  const id = article["payload"].id;
+                  const myContent = mYContent.find(mc => mc.articleId == id);
+                  const favorited = myContent ? !myContent.disabled : false;
+                  return { ...data, id, myContent, favorited };
+                }),
                 catchError(error => {
                   console.error(`Error loading article ${articleId}. ${error}`);
                   alert(`Error loading article ${articleId}`);
                   return of(null);
                 })
               )
-            )
           )
         );
   }

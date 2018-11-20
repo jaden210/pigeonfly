@@ -62,11 +62,9 @@ export class ArticleComponent implements OnInit, OnDestroy {
         this.route.paramMap.subscribe((params: ParamMap) => {
           const articleId = params.get("article");
           this.teamId = team.id;
-          this.service.getArticle(articleId, team.id).subscribe(articles => {
-            const article = articles[0];
+          this.service.getArticle(articleId, team.id).subscribe(article => {
             this.title = article.name;
             this.article = article;
-            console.log(article);
             this.setIndustryId(params.get("industry"));
             this.buildButtons();
             this.loadData(article.content);
