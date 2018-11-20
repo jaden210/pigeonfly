@@ -6,7 +6,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { environment } from 'src/environments/environment';
-import { MatDialog, MatSnackBar } from '@angular/material';
+import { MatDialog, MatSnackBar, MatDialogRef } from '@angular/material';
 import { MakePaymentComponent } from './payments/make-payment/make-payment.component';
 declare var Stripe: Function;
 declare var elements: any;
@@ -112,5 +112,47 @@ export class ProfileComponent implements OnInit {
     this.accountService.helper = this.accountService.helperProfiles[profile];
     this.accountService.showHelper = true;
   }
-  
+
+  deleteAccount() {
+    let dialog = this.dialog.open(DeleteAccountDialog);
+    dialog.afterClosed().subscribe(shouldDelete => {
+      if (shouldDelete) { // disable the team
+        let date = new Date();
+        this.accountService.db.collection("support").add({
+          createdAt: date,
+          email: "internal",
+          body: `${this.accountService.aTeam.name} has been deleted on ${date}. ${this.accountService.user.name} can be reached at ${this.accountService.user.phone} 
+          or ${this.accountService.user.email}. Pause the Stripe account for teamId ${this.accountService.aTeam.id}.`
+        });
+        this.accountService.db.collection("team").doc(this.accountService.aTeam.id).update({
+          disabled: true,
+          disabledAt: date
+        }).then(() => {
+          window.location.reload(); // easiest way to repull the data
+        }).catch(error => console.error("cannot delete account at this time, contact us for more help. " + error));
+      }
+    });
+  } 
+}
+
+
+@Component({
+  selector: "app-map-dialog",
+  template: `
+  <h2 mat-dialog-title>Are you sure?</h2>
+  <mat-dialog-content>By clicking DELETE, you are removing access and inactivating your account.<br>
+  We'll hold your data for a time of 30 days, and then it will be purged from our system.</mat-dialog-content>
+  <mat-dialog-actions style="margin-top:12px" align="end"><button mat-button color="primary" style="margin-right:8px" (click)="close(false)">CANCEL</button>
+  <button mat-raised-button color="warn" (click)="close(true)">DELETE</button>
+  </mat-dialog-actions>
+  `
+})
+export class DeleteAccountDialog {
+  constructor(
+    public dialogRef: MatDialogRef<DeleteAccountDialog>
+  ) {}
+
+  close(shouldDelete) {
+    this.dialogRef.close(shouldDelete);
+  }
 }

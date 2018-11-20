@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { ProfileComponent } from "./account/account.component";
+import { ProfileComponent, DeleteAccountDialog } from "./account/account.component";
 import {
   HomeComponent,
   InviteDialog,
@@ -73,7 +73,8 @@ import { PeopleDialogComponent } from "./people-dialog.component";
     StatsComponent,
     AssesComponent,
     MakePaymentComponent,
-    PeopleDialogComponent
+    PeopleDialogComponent,
+    DeleteAccountDialog
   ],
   exports: [MaterialModule, TrainingModule, SurveysModule],
   entryComponents: [
@@ -86,7 +87,8 @@ import { PeopleDialogComponent } from "./people-dialog.component";
     CreateEditTimeDialog,
     WelcomeDialog,
     MakePaymentComponent,
-    PeopleDialogComponent
+    PeopleDialogComponent,
+    DeleteAccountDialog
   ],
   providers: [DatePipe]
 })

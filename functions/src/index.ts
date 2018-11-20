@@ -101,6 +101,46 @@ exports.supportTicketSubmitted = functions.firestore.document("support/{supportI
     });
 });
 
+exports.teamDisabled = functions.firestore.document("team/{teamId}").onUpdate((change, context) => {
+  let oldTeam = change.before.data();
+  let newTeam = change.after.data();
+  if (oldTeam.disabled == false && newTeam.disabled == true) {
+    const nodemailer = require('nodemailer');
+    const db = admin.firestore();
+    let disabledAt = newTeam.disabledAt.toDate();
+    
+    const mailTransport = nodemailer.createTransport(`smtps://support@compliancechimp.com:thechimpishere@smtp.gmail.com`);    
+    const mailOptions: any = {
+      from: '"Compliancechimp" <support@compliancechimp.com>',
+      to: "support@compliancechimp.com",
+    }
+    mailOptions.subject = `${newTeam.name} has deleted their account`;
+    mailOptions.html = `looks like ${newTeam.name} decided to leave. the team has been disabled and on ${disabledAt}. 
+    If you want to contact them their phone number is: ${newTeam.phone}`;
+    
+    return mailTransport.sendMail(mailOptions) 
+    .catch((error) => {
+      console.error('There was an error while sending the email:', error)
+    });
+  } else if (oldTeam.disabled == true && newTeam.disabled == false) {
+    const nodemailer = require('nodemailer');
+    const db = admin.firestore();
+    
+    const mailTransport = nodemailer.createTransport(`smtps://support@compliancechimp.com:thechimpishere@smtp.gmail.com`);    
+    const mailOptions: any = {
+      from: '"Compliancechimp" <support@compliancechimp.com>',
+      to: "support@compliancechimp.com",
+    }
+    mailOptions.subject = `${newTeam.name} has re-activated their account`;
+    mailOptions.html = `looks like ${newTeam.name} decided to comeback. If you want to contact them their phone number is: ${newTeam.phone}`;
+    
+    return mailTransport.sendMail(mailOptions) 
+    .catch((error) => {
+      console.error('There was an error while sending the email:', error)
+    });
+  }
+});
+
 
 /* ----- LOGS ----- */
 

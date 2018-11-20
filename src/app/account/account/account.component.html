@@ -2,7 +2,7 @@
   <div class="flex"></div>
   <toolbar-helper></toolbar-helper>
 </mat-toolbar>
-<mat-tab-group color="accent">
+<mat-tab-group color="accent" id="tabs">
   <mat-tab label="Personal"> 
     <div class="column">
       <div class="image-cont">
@@ -26,25 +26,26 @@
   </mat-tab>
   <mat-tab label="Company" *ngIf="showCompany">
   <div class="column">
-      <div class="image-cont">
-        <div class="image"><mat-progress-bar style="position: absolute;bottom: 0px;" *ngIf="loading" mode="indeterminate"></mat-progress-bar><img src={{accountService.aTeam?.logoUrl}} style="object-fit: contain !important;" onerror="src = '/assets/ccLogo.png'" alt="Compliancechimp"></div>
-        <div style="height: 0px; width: 0px; overflow:hidden"><input type="file" id="upLogoUrl" accept=".png,.jpg,.mp4" #uploadT (change)="uploadLogoImage($event)"></div>
-        <button mat-stroked-button class="image-button" color="primary" (click)="upload(false)">CHANGE COMPANY LOGO</button>
-      </div>
-      <mat-form-field>
-        <input matInput color="primary" placeholder="company name" type="text" [(ngModel)]="accountService.aTeam.name" (change)="saveTeam()">
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput color="primary" placeholder="phone" type="tel" [(ngModel)]="accountService.aTeam.phone" (change)="saveTeam()">
-      </mat-form-field>
-      <div id="ctype">
-        <div id="cti">Company Type<mat-icon style="color: #666666; cursor: pointer; margin:0 8px" (click)="helper('companyType')">help</mat-icon></div>
-        <mat-radio-group class="radio-group" [(ngModel)]="accountService.aTeam.type" (change)="saveTeam()">
-          <mat-radio-button class="radio-button" *ngFor="let type of accountTypes" [value]="type.industryName">
-            {{type.industryName}}
-          </mat-radio-button>
-        </mat-radio-group>
-      </div>
+    <div class="image-cont">
+      <div class="image"><mat-progress-bar style="position: absolute;bottom: 0px;" *ngIf="loading" mode="indeterminate"></mat-progress-bar><img src={{accountService.aTeam?.logoUrl}} style="object-fit: contain !important;" onerror="src = '/assets/ccLogo.png'" alt="Compliancechimp"></div>
+      <div style="height: 0px; width: 0px; overflow:hidden"><input type="file" id="upLogoUrl" accept=".png,.jpg,.mp4" #uploadT (change)="uploadLogoImage($event)"></div>
+      <button mat-stroked-button class="image-button" color="primary" (click)="upload(false)">CHANGE COMPANY LOGO</button>
+    </div>
+    <mat-form-field>
+      <input matInput color="primary" placeholder="company name" type="text" [(ngModel)]="accountService.aTeam.name" (change)="saveTeam()">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput color="primary" placeholder="phone" type="tel" [(ngModel)]="accountService.aTeam.phone" (change)="saveTeam()">
+    </mat-form-field>
+    <div id="ctype">
+      <div id="cti">Company Type<mat-icon style="color: #666666; cursor: pointer; margin:0 8px" (click)="helper('companyType')">help</mat-icon></div>
+      <mat-radio-group class="radio-group" [(ngModel)]="accountService.aTeam.type" (change)="saveTeam()">
+        <mat-radio-button class="radio-button" *ngFor="let type of accountTypes" [value]="type.industryName">
+          {{type.industryName}}
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+    <button mat-button id="delete-account" color="warn" (click)="deleteAccount()"><mat-icon>delete</mat-icon> DELETE ACCOUNT</button>
     </div>
     </mat-tab>
     <mat-tab label="Billing" *ngIf="showCompany">
