@@ -19,7 +19,7 @@ export class MyContentComponent implements OnInit, OnDestroy {
   public title: string;
   public searchVisible: boolean;
   public searchTerm: string;
-  private complianceType: string;
+  public complianceType: string;
 
   constructor(
     private route: ActivatedRoute,

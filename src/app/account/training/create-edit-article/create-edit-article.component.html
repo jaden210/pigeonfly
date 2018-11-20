@@ -45,6 +45,12 @@
         {{ submitButton }}
       </button>
       <button mat-button (click)="goBack()">CANCEL</button>
+      <mat-slide-toggle
+        *ngIf="isDev"
+        style="margin-left: auto;"
+        [(ngModel)]="isGlobalArticle"
+        >Is Global</mat-slide-toggle
+      >
       <button
         mat-icon-button
         (click)="deleteArticle()"

@@ -25,6 +25,7 @@ import { ReceivedTrainingDialog } from "./training-history/received-training.dia
 import { MyContentSearchPipe } from "./my-content/search.pipe";
 import { MyContentFiltersDialog } from "./my-content/my-content-filters.dialog";
 import { HelpDialog } from "./help.dialog";
+import { ArticlesSearchPipe } from "./articles/search.pipe";
 
 const routes: Routes = [
   {
@@ -81,7 +82,8 @@ const routes: Routes = [
     MyContentComponent,
     MyContentSearchPipe,
     MyContentFiltersDialog,
-    HelpDialog
+    HelpDialog,
+    ArticlesSearchPipe
   ],
   entryComponents: [
     AddTraineeDialog,

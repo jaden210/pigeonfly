@@ -39,8 +39,7 @@ export class CreateEditArticleService {
     const ref = isGlobal
       ? this.db.collection("article")
       : this.db.collection(`team/${teamId}/article`);
-    return this.db
-      .collection(`team/${teamId}/article`)
+    return ref
       .add({ ...article })
       .then(ref => ref.id)
       .catch(error => {

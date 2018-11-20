@@ -1,9 +1,9 @@
-import { Component, OnInit, HostListener } from "@angular/core";
+import { Component, OnInit, HostListener, OnDestroy } from "@angular/core";
 import { AngularEditorConfig } from "@kolkov/angular-editor";
 import { ActivatedRoute, ParamMap } from "@angular/router";
 import { TrainingService, Article, Topic } from "../training.service";
 import { CreateEditArticleService } from "./create-edit-article.service";
-import { Observable } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { Location } from "@angular/common";
 import { ComponentCanDeactivate } from "./pending-changes.guard";
 import { MatSnackBar } from "@angular/material";
@@ -16,16 +16,18 @@ import { AccountService } from "../../account.service";
   providers: [CreateEditArticleService]
 })
 export class CreateEditArticleComponent
-  implements OnInit, ComponentCanDeactivate {
+  implements OnInit, ComponentCanDeactivate, OnDestroy {
   private teamId: string;
   private originalArticle: Article;
   private deactivate: boolean;
+  private userSubscription: Subscription;
   public article = new Article();
   public isEdit: boolean;
   public submitButton: string = "CREATE ARTICLE";
   public loading: boolean;
   public topics: Observable<Topic[]>;
   public isGlobalArticle: boolean;
+  public isDev: boolean;
   @HostListener("window:beforeunload")
   public editorConfig: AngularEditorConfig = {
     editable: true,
@@ -50,6 +52,7 @@ export class CreateEditArticleComponent
     this.accountService.aTeamObservable.subscribe(team => {
       if (team) {
         this.teamId = team.id;
+        this.getIsDev();
         this.route.queryParams.subscribe((params: ParamMap) => {
           const industryId = params["industryId"] || team.industryId;
           this.topics = this.trainingService.getTopics(industryId, team.id);
@@ -72,6 +75,15 @@ export class CreateEditArticleComponent
       this.originalArticle = { ...articles[0] };
       this.article = articles[0];
     });
+  }
+
+  private getIsDev(): void {
+    this.userSubscription = this.accountService.userObservable.subscribe(
+      user => {
+        if (user) this.isDev = user.isDev;
+        this.isGlobalArticle = this.isDev ? true : false;
+      }
+    );
   }
 
   public submit(): void {
@@ -154,5 +166,9 @@ export class CreateEditArticleComponent
         return false;
       else return true;
     } else return true;
+  }
+
+  ngOnDestroy() {
+    this.userSubscription.unsubscribe();
   }
 }
