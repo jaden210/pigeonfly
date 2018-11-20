@@ -2,11 +2,16 @@ import { Injectable, Component, Inject } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { map, take, debounceTime } from "rxjs/operators";
-import { MatDialog, MatDialogRef, MatSnackBar, MAT_DIALOG_DATA } from "@angular/material";
+import {
+  MatDialog,
+  MatDialogRef,
+  MatSnackBar,
+  MAT_DIALOG_DATA
+} from "@angular/material";
 import { AngularFireAuth } from "@angular/fire/auth";
 import { Router } from "@angular/router";
 import { AngularFireStorage } from "@angular/fire/storage";
-import * as moment from 'moment';
+import * as moment from "moment";
 import { HelperService, Helper } from "./helper.service";
 
 @Injectable({
@@ -53,7 +58,9 @@ export class AccountService {
       });
     }
     let teamDoc = this.db.collection<Team>("team").doc(teamId);
-    teamDoc.snapshotChanges().pipe(
+    teamDoc
+      .snapshotChanges()
+      .pipe(
         map((actions: any) => {
           let data = actions.payload.data();
           data["id"] = actions.payload.id;
@@ -62,7 +69,8 @@ export class AccountService {
         })
       )
       .subscribe(team => {
-        if (team.disabled) { // the owner deleted the account
+        if (team.disabled) {
+          // the owner deleted the account
           this.showTeamDisabledDialog(team);
           return;
         } else {
@@ -76,7 +84,6 @@ export class AccountService {
               debounceTime(250), // IDK FIX
               map(actions =>
                 actions.map(a => {
-                  console.log("hithit");
                   //better way
                   const data = a.payload.doc.data() as User;
                   const id = a.payload.doc.id;
@@ -97,18 +104,20 @@ export class AccountService {
     let dialog = this.dialog.open(TeamDisabledDialog, {
       disableClose: true,
       data: {
-        isOwner : this.user.id == team.ownerId ? true : false,
+        isOwner: this.user.id == team.ownerId ? true : false,
         disabledAt: team.disabledAt.toDate(),
         teams: this.userTeams
       }
     });
     dialog.afterClosed().subscribe(data => {
       if (data.reEnable) {
-        this.db.collection<Team>("team").doc(team.id).update(
-          {disabled: false, disabledAt: null}
-          ).then(() => {
-          window.location.reload() // easiest way to get new data.
-        })
+        this.db
+          .collection<Team>("team")
+          .doc(team.id)
+          .update({ disabled: false, disabledAt: null })
+          .then(() => {
+            window.location.reload(); // easiest way to get new data.
+          });
       } else if (data.teamId) {
         this.setActiveTeam(data.teamId);
       } else {
@@ -119,12 +128,18 @@ export class AccountService {
 
   checkFreeTrial(): void {
     if (!this.aTeam.cardToken) {
-      this.trialDaysLeft = 30 - moment().diff(this.aTeam.createdAt, 'days') < 0 ? 0 : 30 - moment().diff(this.aTeam.createdAt, 'days');
+      this.trialDaysLeft =
+        30 - moment().diff(this.aTeam.createdAt, "days") < 0
+          ? 0
+          : 30 - moment().diff(this.aTeam.createdAt, "days");
       this.isTrialVersion = true;
-      let snackbar = this.snackbar.open(`${this.trialDaysLeft} days left in your free trial`, "enter billing info");
+      let snackbar = this.snackbar.open(
+        `${this.trialDaysLeft} days left in your free trial`,
+        "enter billing info"
+      );
       snackbar.onAction().subscribe(() => {
-        this.router.navigate(['account/account']);
-      })
+        this.router.navigate(["account/account"]);
+      });
     }
   }
 
@@ -158,12 +173,13 @@ export class TeamDisabledDialog {
   count;
   constructor(
     public dialogRef: MatDialogRef<TeamDisabledDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: any) {
-      this.count = 30 - moment().diff(this.data.disabledAt, 'days');
-    }
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
+    this.count = 30 - moment().diff(this.data.disabledAt, "days");
+  }
 
   close(reEnable, teamId?): void {
-    this.dialogRef.close({reEnable, teamId});
+    this.dialogRef.close({ reEnable, teamId });
   }
 }
 

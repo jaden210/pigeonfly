@@ -36,10 +36,11 @@
       "
       (click)="routeTo(content.articleId)"
     >
-      <progress-shield
+      <progress-indicator
         *ngIf="!content.disabled"
         [myContent]="content"
-      ></progress-shield>
+      ></progress-indicator>
+
       <button
         mat-icon-button
         class="heart"

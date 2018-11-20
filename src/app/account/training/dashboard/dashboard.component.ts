@@ -144,6 +144,7 @@ export class DashboardComponent implements AfterViewInit {
           };
         })
       ),
+      map(surveys => surveys.filter(s => s.articleId)),
       tap(surveys => (this.noHistory = surveys.length ? false : true))
     );
   }

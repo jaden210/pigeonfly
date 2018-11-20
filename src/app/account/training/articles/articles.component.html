@@ -16,10 +16,10 @@
       *ngFor="let article of (articles | async)"
       (click)="routeTo(article)"
     >
-      <progress-shield
+      <progress-indicator
         *ngIf="article.favorited"
         [myContent]="article.myContent"
-      ></progress-shield>
+      ></progress-indicator>
       <button
         mat-icon-button
         class="heart"

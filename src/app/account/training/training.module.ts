@@ -1,6 +1,4 @@
 import { NgModule } from "@angular/core";
-import { CommonModule } from "@angular/common";
-import { FormsModule } from "@angular/forms";
 import { Routes, RouterModule } from "@angular/router";
 import { TrainingComponent } from "./training.component";
 import { IndustriesComponent } from "./industries/industries.component";
@@ -13,7 +11,7 @@ import { TrainingService } from "./training.service";
 import { CreateEditArticleComponent } from "./create-edit-article/create-edit-article.component";
 import { AngularEditorModule } from "@kolkov/angular-editor";
 import { PendingChangesGuard } from "./create-edit-article/pending-changes.guard";
-import { ProgressShieldComponent } from "./articles/progress-shield/progress-shield.component";
+import { ProgressIndicatorComponent } from "./shared/progress-indicator/progress-indicator.component";
 import { AddTraineeDialog } from "./article/add-trainee.dialog";
 import { AttendanceDialog } from "./article/attendance.dialog";
 import { TopicDialogComponent } from "./topics/topic-dialog/topic-dialog.component";
@@ -56,13 +54,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    SharedModule,
-    AngularEditorModule,
-    RouterModule.forChild(routes)
-  ],
+  imports: [SharedModule, AngularEditorModule, RouterModule.forChild(routes)],
   declarations: [
     TrainingComponent,
     IndustriesComponent,
@@ -70,7 +62,7 @@ const routes: Routes = [
     ArticlesComponent,
     ArticleComponent,
     CreateEditArticleComponent,
-    ProgressShieldComponent,
+    ProgressIndicatorComponent,
     AddTraineeDialog,
     TopicDialogComponent,
     AttendanceDialog,

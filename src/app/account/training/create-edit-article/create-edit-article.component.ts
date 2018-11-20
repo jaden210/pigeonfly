@@ -71,9 +71,9 @@ export class CreateEditArticleComponent
   }
 
   private getArticle(articleId): void {
-    this.service.getArticle(articleId, this.teamId).subscribe(articles => {
-      this.originalArticle = { ...articles[0] };
-      this.article = articles[0];
+    this.service.getArticle(articleId, this.teamId).subscribe(article => {
+      this.originalArticle = { ...article };
+      this.article = article;
     });
   }
 
@@ -92,9 +92,7 @@ export class CreateEditArticleComponent
   }
 
   private updateArticle(): void {
-    const isGlobal =
-      this.accountService.user.isDev && this.isGlobalArticle ? true : false;
-    this.service.updateArticle(this.article, this.teamId, isGlobal).then(() => {
+    this.service.updateArticle(this.article, this.teamId).then(() => {
       this.deactivate = true;
       this.popSnackbar("Updated", this.article.name);
       this.trainingService.wipeArticles();
@@ -109,8 +107,6 @@ export class CreateEditArticleComponent
       this.deactivate = true;
       this.popSnackbar("Created", this.article.name);
       this.trainingService.wipeArticles();
-      this.article.id = id;
-      this.trainingService.favorite(this.article, this.teamId);
       this.goBack();
     });
   }
@@ -126,8 +122,6 @@ export class CreateEditArticleComponent
   }
 
   public deleteArticle(): void {
-    const isGlobal =
-      this.accountService.user.isDev && this.isGlobalArticle ? true : false;
     let deleteArticle = true;
     let snackbar = this.snackbar.open("Deleting Article", "UNDO", {
       duration: 3000
@@ -136,7 +130,7 @@ export class CreateEditArticleComponent
     snackbar.afterDismissed().subscribe(() => {
       if (deleteArticle) {
         this.service
-          .deleteArticle(this.article.id, this.teamId, isGlobal)
+          .deleteArticle(this.article.id, this.teamId)
           .then(() => {
             this.loading = false;
             this.deactivate = true;

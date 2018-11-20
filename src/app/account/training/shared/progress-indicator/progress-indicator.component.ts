@@ -2,7 +2,7 @@ import { Component, Input, OnChanges } from "@angular/core";
 import { MyContent } from "../../training.service";
 
 @Component({
-  selector: "progress-shield",
+  selector: "progress-indicator",
   template: `
     <div
       [ngClass]="{
@@ -40,7 +40,7 @@ import { MyContent } from "../../training.service";
     `
   ]
 })
-export class ProgressShieldComponent implements OnChanges {
+export class ProgressIndicatorComponent implements OnChanges {
   @Input()
   myContent: MyContent;
   complianceLevel: number;
