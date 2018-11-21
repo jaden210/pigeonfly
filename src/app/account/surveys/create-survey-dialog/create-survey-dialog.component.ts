@@ -21,6 +21,7 @@ export class CreateSurveyDialogComponent implements OnInit {
   survey: Survey = new Survey();
   isEdit: boolean;
   title: string = "New Survey";
+  teamId: string;
 
   constructor(
     private service: SurveysService,
@@ -31,6 +32,7 @@ export class CreateSurveyDialogComponent implements OnInit {
 
   ngOnInit() {
     this.users = this.accountService.teamUsersObservable;
+    this.teamId = this.accountService.aTeam.id;
     if (this.data && this.data.survey)
       this.configureEdit(this.data.survey, this.data.step);
   }
@@ -70,10 +72,9 @@ export class CreateSurveyDialogComponent implements OnInit {
       userSurvey[sc] = 0;
     });
     this.survey.userSurvey = userSurvey;
-    this.survey.teamId = this.accountService.aTeam.id;
     this.survey.userId = this.accountService.user.id;
     this.service
-      .createSurvey(this.survey)
+      .createSurvey(this.survey, this.accountService.aTeam.id)
       .then(() => this.dialogRef.close())
       .catch(error => {
         this.dialogRef.close();
@@ -92,7 +93,7 @@ export class CreateSurveyDialogComponent implements OnInit {
       this.survey.userSurvey = newUserSurvey;
     }
     this.service
-      .updateSurvey(this.survey)
+      .updateSurvey(this.survey, this.accountService.aTeam.id)
       .then(() => this.dialogRef.close())
       .catch(error => {
         this.dialogRef.close();

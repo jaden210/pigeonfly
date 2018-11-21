@@ -10,12 +10,15 @@ import { Observable, of } from "rxjs";
 })
 export class TopicDialogComponent implements OnInit {
   private industryId: string;
+  private teamId: string;
   public topic: Topic;
   public image: any;
   public isEdit: boolean;
   public errorMessage: string;
   public previewImg: any;
   public loading: boolean;
+  public isGlobal: boolean;
+  public isDev: boolean;
 
   constructor(
     public dialogRef: MatDialogRef<TopicDialogComponent>,
@@ -25,6 +28,8 @@ export class TopicDialogComponent implements OnInit {
 
   ngOnInit() {
     this.topic = this.data.topic;
+    this.teamId = this.data.teamId;
+    this.isDev = this.data.isDev;
     this.industryId = this.data.industryId;
     this.isEdit = this.topic.id ? true : false;
   }
@@ -54,7 +59,7 @@ export class TopicDialogComponent implements OnInit {
     this.doImage().subscribe(imageUrl => {
       this.topic.imageUrl = imageUrl;
       this.service
-        .createTopic(this.topic)
+        .createTopic(this.topic, this.teamId, this.isGlobal)
         .then(() => this.dialogRef.close(this.topic))
         .catch(() => {
           this.loading = false;
@@ -64,7 +69,9 @@ export class TopicDialogComponent implements OnInit {
   }
 
   private doImage(): Observable<string> {
-    return this.image ? this.service.uploadImage(this.image) : of(null);
+    return this.image
+      ? this.service.uploadImage(this.image, this.teamId)
+      : of(null);
   }
 
   public editTopic(): void {
@@ -75,7 +82,7 @@ export class TopicDialogComponent implements OnInit {
         this.topic.imageUrl = imageUrl;
       }
       this.service
-        .editTopic(this.topic)
+        .updateTopic(this.topic, this.teamId)
         .then(() => this.dialogRef.close(this.topic))
         .catch(() => {
           this.loading = false;
@@ -93,7 +100,7 @@ export class TopicDialogComponent implements OnInit {
       this.loading = true;
       if (this.topic.imageUrl) this.service.removeImage(this.topic.imageUrl);
       this.service
-        .deleteTopic(this.topic)
+        .deleteTopic(this.topic, this.teamId)
         .then(() => this.dialogRef.close("deleted"))
         .catch(() => {
           this.loading = false;

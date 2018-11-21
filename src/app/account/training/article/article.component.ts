@@ -79,8 +79,8 @@ export class ArticleComponent implements OnInit, OnDestroy {
     else
       this.service
         .getTopic(this.article.topicId, this.teamId)
-        .subscribe(topics => {
-          this.industryId = topics[0].industryId;
+        .subscribe(topic => {
+          this.industryId = topic.industryId;
         });
   }
 
@@ -233,11 +233,10 @@ export class ArticleComponent implements OnInit, OnDestroy {
           this.article.name
         }`;
         survey.active = true;
-        survey.oshaArticleId = this.article.id;
-        survey.teamId = this.teamId;
+        survey.articleId = this.article.id;
         survey.userSurvey = userSurvey;
         survey.userId = this.accountService.user.uid;
-        this.surveysService.createSurvey(survey);
+        this.surveysService.createSurvey(survey, this.teamId);
       }
     });
   }

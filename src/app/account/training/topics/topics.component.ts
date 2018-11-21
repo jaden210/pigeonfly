@@ -16,6 +16,7 @@ import { Location } from "@angular/common";
 })
 export class TopicsComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
+  private teamId: string;
   private userSubscription: Subscription;
   private industryId: string;
   public topics: Observable<Topic[]>;
@@ -35,6 +36,7 @@ export class TopicsComponent implements OnInit, OnDestroy {
     this.accountService.helper = this.accountService.helperProfiles.training;
     this.subscription = this.accountService.aTeamObservable.subscribe(team => {
       if (team) {
+        this.teamId = team.id;
         this.setIsDev();
         this.route.paramMap.subscribe((params: ParamMap) => {
           this.industryId = params.get("industry");
@@ -54,7 +56,11 @@ export class TopicsComponent implements OnInit, OnDestroy {
   }
 
   private getTopics(forceRefresh = false): void {
-    this.topics = this.service.getTopics(this.industryId, forceRefresh);
+    this.topics = this.service.getTopics(
+      this.industryId,
+      this.teamId,
+      forceRefresh
+    );
   }
 
   private setActiveRoute(): void {
@@ -79,7 +85,12 @@ export class TopicsComponent implements OnInit, OnDestroy {
   private launchTopicDialog(topic: Topic): void {
     this.dialog
       .open(TopicDialogComponent, {
-        data: { topic, industryId: this.industryId }
+        data: {
+          topic,
+          industryId: this.industryId,
+          teamId: this.teamId,
+          isDev: this.isDev
+        }
       })
       .afterClosed()
       .subscribe(topic => {

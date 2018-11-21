@@ -15,6 +15,7 @@ import { CreateSurveyDialogComponent } from "../create-survey-dialog/create-surv
   styleUrls: ["./survey.component.css"]
 })
 export class SurveyComponent implements OnInit, OnDestroy {
+  private teamId: string;
   private subscription: Subscription;
   private todaysDatePiped: string;
   public usersGroup: User[];
@@ -57,8 +58,10 @@ export class SurveyComponent implements OnInit, OnDestroy {
       this.accountService.aTeamObservable,
       this.accountService.teamUsersObservable
     ).subscribe(results => {
-      if (results[0] && results[1]) {
-        this.users = results[1];
+      const [team, users] = results;
+      if (team && users) {
+        this.teamId = team.id;
+        this.users = users;
         this.route.paramMap.subscribe((params: ParamMap) => {
           let surveyId = params.get("surveyId");
           if (surveyId) {
@@ -71,7 +74,7 @@ export class SurveyComponent implements OnInit, OnDestroy {
   }
 
   private getSurvey(surveyId): void {
-    this.service.getSurvey(surveyId).subscribe(survey => {
+    this.service.getSurvey(surveyId, this.teamId).subscribe(survey => {
       this.title = "/ " + survey.category;
       this.getGroup(Object.keys(survey.userSurvey));
       survey["user"] = this.users.find(u => u.uid == survey.userId);
@@ -100,35 +103,37 @@ export class SurveyComponent implements OnInit, OnDestroy {
 
   /* Grouping by date to show group date in template */
   private getSurveyResponses(surveyId): void {
-    this.surveyResponseList = this.service.getSurveyResponses(surveyId).pipe(
-      map(responses =>
-        responses.map(response => {
-          response["user"] = this.usersGroup.find(
-            u => u.uid == response.userId
+    this.surveyResponseList = this.service
+      .getSurveyResponses(surveyId, this.teamId)
+      .pipe(
+        map(responses =>
+          responses.map(response => {
+            response["user"] = this.usersGroup.find(
+              u => u.uid == response.userId
+            );
+            response["groupByDate"] = this.getGroupByDate(response.createdAt);
+            return response;
+          })
+        ),
+        flatMap(recordings => {
+          let r = of(recordings).pipe(
+            flatMap(r => r),
+            groupBy(sr => sr["groupByDate"]),
+            flatMap(obs =>
+              obs.pipe(
+                toArray(),
+                map(r => ({ date: r[0]["groupByDate"], responses: r }))
+              )
+            ),
+            toArray()
           );
-          response["groupByDate"] = this.getGroupByDate(response.createdAt);
-          return response;
-        })
-      ),
-      flatMap(recordings => {
-        let r = of(recordings).pipe(
-          flatMap(r => r),
-          groupBy(sr => sr["groupByDate"]),
-          flatMap(obs =>
-            obs.pipe(
-              toArray(),
-              map(r => ({ date: r[0]["groupByDate"], responses: r }))
-            )
-          ),
-          toArray()
-        );
-        return combineLatest(r, rr => {
-          return rr;
-        });
-      }),
-      tap(responses => (this.surveyResponseListLength = responses.length)),
-      share()
-    );
+          return combineLatest(r, rr => {
+            return rr;
+          });
+        }),
+        tap(responses => (this.surveyResponseListLength = responses.length)),
+        share()
+      );
   }
 
   /* Builds date without time to group by and display */
@@ -140,7 +145,7 @@ export class SurveyComponent implements OnInit, OnDestroy {
 
   /* Not used currently */
   deleteSurvey(survey) {
-    this.service.deleteSurvey(survey).then(() => {
+    this.service.deleteSurvey(survey, this.teamId).then(() => {
       this.survey = null;
       let snackbar = this.snackbar.open("survey deleted", null, {
         duration: 3000
@@ -168,7 +173,7 @@ export class SurveyComponent implements OnInit, OnDestroy {
     this.survey.active = active;
     delete this.survey["user"];
     delete this.survey.id;
-    this.service.updateSurvey(this.survey);
+    this.service.updateSurvey(this.survey, this.teamId);
   }
 
   public goBack(): void {

@@ -127,7 +127,7 @@ export class DashboardComponent implements AfterViewInit {
         surveys.map(survey => {
           const date = survey.runDate;
           const mc = this.myContent.find(
-            mc => mc.articleId == survey.oshaArticleId
+            mc => mc.articleId == survey.articleId
           );
           const articleName = mc ? mc.articleName : null;
           const articleId = mc ? mc.articleId : null;

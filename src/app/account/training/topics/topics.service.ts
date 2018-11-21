@@ -3,7 +3,7 @@ import { Observable, throwError } from "rxjs";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { AngularFireStorage } from "@angular/fire/storage";
 import { catchError, flatMap, takeLast, map, take } from "rxjs/operators";
-import { TrainingService, Topic } from "../training.service";
+import { Topic } from "../training.service";
 
 @Injectable({
   providedIn: "root"
@@ -11,16 +11,21 @@ import { TrainingService, Topic } from "../training.service";
 export class TopicsService {
   constructor(
     public db: AngularFirestore,
-    private storage: AngularFireStorage,
-    private trainingService: TrainingService
+    private storage: AngularFireStorage
   ) {}
 
-  public createTopic(topic: Topic): Promise<Topic> {
-    return this.db
-      .collection("topic")
-      .add({ ...topic })
-      .then(document => {
-        topic.id = document.id;
+  /* If the article is created by one of us, add to the article collection
+  else add to team/article collection. This should also be favorited */
+  public createTopic(topic: Topic, teamId, isGlobal): Promise<Topic> {
+    const ref = isGlobal
+      ? this.db.collection("topic")
+      : this.db.collection(`team/${teamId}/topic`);
+    const id = isGlobal ? ref.ref.doc().id : `${teamId}_${ref.ref.doc().id}`;
+    return ref
+      .doc(id)
+      .set({ ...topic })
+      .then(() => {
+        topic.id = id;
         return topic;
       })
       .catch(error => {
@@ -29,23 +34,30 @@ export class TopicsService {
       });
   }
 
-  public editTopic(topic): Promise<Topic> {
-    const id = topic.id;
-    delete topic.id;
-    return this.db
-      .collection("topic")
-      .doc(id)
+  public updateTopic(topic: Topic, teamId): Promise<any> {
+    let top = { ...topic };
+    const id = top.id;
+    delete top.id;
+    const ref = id.includes(teamId)
+      ? this.db.collection(`team/${teamId}/topic`)
+      : this.db.collection("topic");
+    return ref
+      .doc(topic.id)
       .update({ ...topic })
       .then(() => topic)
       .catch(error => {
         console.error(`Error updating topic ${topic.name}`, topic, error);
-        throw error;
+        alert(
+          `Error updating article ${topic.name}, falling back to original.`
+        );
       });
   }
 
-  public deleteTopic(topic): Promise<void> {
-    return this.db
-      .collection("topic")
+  public deleteTopic(topic: Topic, teamId): Promise<any> {
+    const ref = topic.id.includes(teamId)
+      ? this.db.collection(`team/${teamId}/topic`)
+      : this.db.collection("topic");
+    return ref
       .doc(topic.id)
       .delete()
       .catch(error => {
@@ -54,9 +66,9 @@ export class TopicsService {
       });
   }
 
-  public uploadImage(image): Observable<string> {
+  public uploadImage(image, teamId): Observable<string> {
     const date = new Date().getTime();
-    let filePath = `topicImages/${date}`;
+    let filePath = `${teamId}/topicImages/${date}`;
     let ref = this.storage.ref(filePath);
     let task = this.storage.upload(filePath, image);
     return task.snapshotChanges().pipe(

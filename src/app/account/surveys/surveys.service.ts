@@ -19,8 +19,8 @@ export class SurveysService {
   /* Should I cache these? */
   public getSurveys(teamId): Observable<Survey[]> {
     return this.db
-      .collection("survey", ref =>
-        ref.where("teamId", "==", teamId).orderBy("createdAt", "desc")
+      .collection(`team/${teamId}/survey`, ref =>
+        ref.orderBy("createdAt", "desc")
       )
       .snapshotChanges()
       .pipe(
@@ -44,11 +44,11 @@ export class SurveysService {
       );
   }
 
-  public getSurvey(surveyId): Observable<Survey> {
+  public getSurvey(surveyId, teamId): Observable<Survey> {
     return this.survey && this.survey.id == surveyId
       ? of(this.survey)
       : this.db
-          .collection("survey")
+          .collection(`team/${teamId}/survey`)
           .doc(surveyId)
           .snapshotChanges()
           .pipe(
@@ -64,9 +64,9 @@ export class SurveysService {
           );
   }
 
-  public getSurveyResponses(surveyId): Observable<SurveyResponse[]> {
+  public getSurveyResponses(surveyId, teamId): Observable<SurveyResponse[]> {
     return this.db
-      .collection("survey-response", ref =>
+      .collection(`team/${teamId}/survey-response`, ref =>
         ref.where("surveyId", "==", surveyId).orderBy("createdAt", "desc")
       )
       .snapshotChanges()
@@ -87,12 +87,12 @@ export class SurveysService {
       );
   }
 
-  public updateSurvey(survey: Survey): Promise<void> {
+  public updateSurvey(survey: Survey, teamId): Promise<void> {
     const id = survey.id;
     delete survey["user"];
     delete survey.id;
     return this.db
-      .collection("survey")
+      .collection(`team/${teamId}/survey`)
       .doc(id)
       .update({ ...survey })
       .then(data => {
@@ -105,9 +105,9 @@ export class SurveysService {
       });
   }
 
-  public createSurvey(survey: Survey): Promise<DocumentReference> {
+  public createSurvey(survey: Survey, teamId): Promise<DocumentReference> {
     return this.db
-      .collection("survey")
+      .collection(`team/${teamId}/survey`)
       .add({ ...survey })
       .then(data => {
         return data;
@@ -119,9 +119,9 @@ export class SurveysService {
       });
   }
 
-  public deleteSurvey(surveyId: string): Promise<void> {
+  public deleteSurvey(surveyId: string, teamId): Promise<void> {
     return this.db
-      .collection("survey")
+      .collection(`team/${teamId}/survey`)
       .doc(surveyId)
       .delete()
       .catch(error => {

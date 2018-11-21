@@ -151,34 +151,33 @@ export class TrainingService {
         );
   }
 
-  /* could be in team/article or article collection, merge both */
+  /* if the article id contains the teamId, pull from team/article collection */
   public getArticle(articleId, teamId): Observable<Article> {
-    const article = this.articles.find(a => a.id == articleId);
-    return article
-      ? of(article)
-      : this.getMyContent(teamId).pipe(
-          mergeMap(mYContent =>
-            this.db
-              .collection("article")
-              .doc(articleId)
-              .snapshotChanges()
-              .pipe(
-                take(1),
-                map(article => {
-                  const data = article["payload"].data();
-                  const id = article["payload"].id;
-                  const myContent = mYContent.find(mc => mc.articleId == id);
-                  const favorited = myContent ? !myContent.disabled : false;
-                  return { ...data, id, myContent, favorited };
-                }),
-                catchError(error => {
-                  console.error(`Error loading article ${articleId}. ${error}`);
-                  alert(`Error loading article ${articleId}`);
-                  return of(null);
-                })
-              )
+    const ref = articleId.includes(teamId)
+      ? this.db.collection(`team/${teamId}/article`)
+      : this.db.collection("article");
+    return this.getMyContent(teamId).pipe(
+      mergeMap(mYContent =>
+        ref
+          .doc(articleId)
+          .snapshotChanges()
+          .pipe(
+            take(1),
+            map(article => {
+              const data = <Article>article.payload.data();
+              const id = article.payload.id;
+              const myContent = mYContent.find(mc => mc.articleId == id);
+              const favorited = myContent ? !myContent.disabled : false;
+              return { ...data, id, myContent, favorited };
+            }),
+            catchError(error => {
+              console.error(`Error loading article. ${error}`);
+              alert(`Error loading article`);
+              return of(null);
+            })
           )
-        );
+      )
+    );
   }
 
   /* Gets entire collection, stores in local cache */
@@ -187,7 +186,10 @@ export class TrainingService {
       ? of(this.myContent)
       : this.db
           .collection(`team/${teamId}/my-training-content`, ref =>
-            ref.where("disabled", "==", false)
+            ref
+              .where("disabled", "==", false)
+              .where("trainingMinutes", ">=", 0)
+              .orderBy("trainingMinutes", "asc")
           )
           .snapshotChanges()
           .pipe(
@@ -278,10 +280,9 @@ export class TrainingService {
     articleId
   ): Observable<Date[]> {
     return this.db
-      .collection("survey", ref =>
+      .collection(`team/${teamId}/survey`, ref =>
         ref
-          .where("teamId", "==", teamId)
-          .where("OSHAArticleId", "==", articleId)
+          .where("articleId", "==", articleId)
           .where("inAttendance", "array-contains", userId)
           .orderBy("inAttendance")
           .orderBy("createdAt", "desc")
@@ -306,10 +307,9 @@ export class TrainingService {
   ): Observable<Survey[]> {
     console.log(teamId, userId, articleId);
     return this.db
-      .collection("survey", ref =>
+      .collection(`team/${teamId}/survey`, ref =>
         ref
-          .where("teamId", "==", teamId)
-          .where("OSHAArticleId", "==", articleId)
+          .where("articleId", "==", articleId)
           .where("inAttendance", "array-contains", userId)
           .orderBy("createdAt", "desc")
       )
@@ -332,11 +332,8 @@ export class TrainingService {
 
   public getTrainingHistoryByArticle(teamId, articleId): Observable<Survey[]> {
     return this.db
-      .collection("survey", ref =>
-        ref
-          .where("teamId", "==", teamId)
-          .where("oshaArticleId", "==", articleId)
-          .orderBy("createdAt", "desc")
+      .collection(`team/${teamId}/survey`, ref =>
+        ref.where("articleId", "==", articleId).orderBy("createdAt", "desc")
       )
       .snapshotChanges()
       .pipe(
@@ -353,8 +350,8 @@ export class TrainingService {
 
   public getTrainingHistory(teamId): Observable<Survey[]> {
     return this.db
-      .collection("survey", ref =>
-        ref.where("teamId", "==", teamId).orderBy("createdAt", "desc")
+      .collection(`team/${teamId}/survey`, ref =>
+        ref.orderBy("createdAt", "desc")
       )
       .snapshotChanges()
       .pipe(
@@ -456,18 +453,25 @@ export class TrainingService {
       });
   }
 
-  public getTopic(topicId, teamId): Observable<any[]> {
-    console.log(topicId, teamId);
-    return combineLatest(
-      this.db
-        .collection("topic")
-        .doc(topicId)
-        .valueChanges(),
-      this.db
-        .collection(`team/${teamId}/topic`)
-        .doc(topicId)
-        .valueChanges()
-    ).pipe(map(topics => topics.filter(t => t)));
+  public getTopic(topicId, teamId): Observable<Topic> {
+    const ref = topicId.includes(teamId)
+      ? this.db.collection(`team/${teamId}/topic`)
+      : this.db.collection("topic");
+    return ref
+      .doc(topicId)
+      .valueChanges()
+      .pipe(
+        take(1),
+        map(topic => {
+          topic["id"] = topicId;
+          return topic;
+        }),
+        catchError(error => {
+          console.error(`Error loading topic ${topicId}. ${error}`);
+          alert(`Error loading topic ${topicId}`);
+          return of(null);
+        })
+      );
   }
 }
 
