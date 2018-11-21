@@ -57,7 +57,7 @@ export class TakeSelfInspectionComponent {
   }
 
   deleteSelfInspection() {
-    this.selfInspectionsService.deleteSelfInspection().then(() => {
+    this.selfInspectionsService.deleteSelfInspectionInspection().then(() => {
       this.router.navigate(["/account/self-inspections"]);
       this.selfInspectionsService.selfInspection = null;
     })

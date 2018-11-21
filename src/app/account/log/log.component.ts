@@ -38,14 +38,11 @@ export class LogComponent implements OnDestroy {
   filterUsers: string[] = [];
 
   logs: any = [];
-  lastLog; // for pagination
+  limit: number = 50; // for pagination
   days = [];
 
   lat: number;
   long: number;
-
-
-
 
   now: any = moment().format("MMM");
 
@@ -61,13 +58,13 @@ export class LogComponent implements OnDestroy {
   getLogs() {
     this.searchStr = this.accountService.searchForHelper; //sucks
     this.getTimeLogs().subscribe(logs => {
-      if (logs.length == 0) return;
-      this.logs = this.logs.concat(logs);
+      if (logs.length == 0 && this.logs.length > 0) return;
+      this.logs = logs;
       if (this.logs.length == 0) {
         this.accountService.showHelper = true;
         return;
       }
-      this.lastLog = logs[logs.length - 1];
+      this.limit = this.limit + 50;
       this.logs.forEach(log => {
         log.user = this.accountService.teamUsers.find(
           user => user.id == log.userId
@@ -85,20 +82,7 @@ export class LogComponent implements OnDestroy {
 
   public getTimeLogs(): Observable<any> {
     return this.accountService.db
-      .collection("log", ref => {
-        if (!this.lastLog) {
-          return ref
-            .where("teamId", "==", this.accountService.aTeam.id)
-            .orderBy("createdAt", "desc")
-            .limit(50);
-        } else {
-          return ref
-            .where("teamId", "==", this.accountService.aTeam.id)
-            .orderBy("createdAt", "desc")
-            .limit(20)
-            .startAfter(this.lastLog.createdAt);
-        }
-      })
+      .collection(`team/${this.accountService.aTeam.id}/log`, ref => ref.orderBy("createdAt", "desc").limit(this.limit))
       .snapshotChanges()
       .pipe(
         map(actions => {
@@ -214,7 +198,7 @@ export class LogComponent implements OnDestroy {
           log.updatedBy = this.accountService.user.name;
           log.updatedId = this.accountService.user.id;
           this.accountService.db
-            .collection("log")
+            .collection(`team/${this.accountService.aTeam.id}/log`)
             .doc(log.id)
             .update({ ...log });
         } else {
@@ -222,7 +206,7 @@ export class LogComponent implements OnDestroy {
           log.teamId = this.accountService.aTeam.id;
           log.userId = this.accountService.user.id;
           this.accountService.db
-            .collection("log")
+            .collection(`team/${this.accountService.aTeam.id}/log`)
             .add({ ...log })
             .then(snapshot => {
               log.id = snapshot.id;
@@ -244,7 +228,7 @@ export class LogComponent implements OnDestroy {
 export class CreateEditLogDialog {
   constructor(
     public dialogRef: MatDialogRef<CreateEditLogDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    @Inject(MAT_DIALOG_DATA) public data: Log,
     public accountService: AccountService
   ) {}
 
@@ -254,7 +238,7 @@ export class CreateEditLogDialog {
 
   delete() {
     this.accountService.db
-      .collection("log")
+      .collection(`team/${this.accountService.aTeam.id}/log`)
       .doc(this.data.id)
       .delete()
       .then(() => this.dialogRef.close());

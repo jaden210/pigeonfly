@@ -64,9 +64,9 @@ export class TimeComponent implements OnInit, OnDestroy {
     this.timeService
       .getTimeLogs(this.accountService.aTeam.id)
       .subscribe(logs => {
-        if (logs.length == 0) return;
-        this.timeClocks = this.timeClocks.concat(logs);
-        this.timeService.lastLog = logs[logs.length - 1];
+        if (logs.length == 0 && this.timeClocks.length > 0) return;
+        this.timeClocks = logs;
+        this.timeService.limit = this.timeService.limit + 50;
         if (this.timeClocks.length == 0) {
           this.accountService.showHelper = true;
           return;
@@ -279,7 +279,7 @@ export class TimeComponent implements OnInit, OnDestroy {
         time.updatedId = this.accountService.user.id;
         if (time.id) {
           this.accountService.db
-            .collection("timeclock")
+            .collection(`team/${this.accountService.aTeam.id}/timeclock`)
             .doc(time.id)
             .update({ ...time })
             .then(() => {
@@ -288,7 +288,7 @@ export class TimeComponent implements OnInit, OnDestroy {
         } else {
           time.teamId = this.accountService.aTeam.id;
           this.accountService.db
-            .collection("timeclock")
+            .collection(`team/${this.accountService.aTeam.id}/timeclock`)
             .add({ ...time })
             .then(snapshot => {
               time.id = snapshot.id;
@@ -436,7 +436,7 @@ export class CreateEditTimeDialog {
 
   delete() {
     this.accountService.db
-      .collection("timeclock")
+      .collection(`team/${this.accountService.aTeam.id}/timeclock`)
       .doc(this.data.id)
       .delete()
       .then(() => this.dialogRef.close());

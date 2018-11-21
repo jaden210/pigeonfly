@@ -60,6 +60,7 @@ mat-sidenav-content {
 
 #body {
   width: calc(100vw - 100px);
+  position: relative;
 }
 
 a {

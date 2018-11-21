@@ -35,7 +35,7 @@ export class IncidentReportsComponent implements OnInit {
     this.accountService.helper = this.accountService.helperProfiles.incidentReport;
     this.accountService.aTeamObservable.subscribe(team => {
       if (team) {
-        let assesmentCollection = this.accountService.db.collection("incident-report", ref => ref.where("teamId", "==", this.accountService.aTeam.id).orderBy("createdAt", "desc"));
+        let assesmentCollection = this.accountService.db.collection(`team/${this.accountService.aTeam.id}/incident-report`, ref => ref.orderBy("createdAt", "desc"));
         assesmentCollection.snapshotChanges().pipe(
           map(actions => {
             return actions.map(a => {
@@ -73,7 +73,7 @@ export class IncidentReportsComponent implements OnInit {
       });
       snackbar.afterDismissed().subscribe(action => {
         if (!action.dismissedByAction) {
-          this.accountService.db.doc("incident-report/" + this.aReport.id).delete().then(() => this.aReport = null);
+          this.accountService.db.doc(`team/${this.accountService.aTeam.id}/incident-report/${this.aReport.id}`).delete().then(() => this.aReport = null);
         } else {
           this.aReport = null;
         }

@@ -67,18 +67,16 @@ export class EventComponent {
   }
 
   public getEvents(): Observable<any> {
-    return this.accountService.db.collection("event", ref => {
+    return this.accountService.db.collection(`team/${this.accountService.aTeam.id}/event`, ref => {
       if (!this.lastLog) {
         return (
           ref
-          .where("teamId", "==", this.accountService.aTeam.id)
           .orderBy("createdAt", "desc")
           .limit(50)
           )
       } else {
         return (   
           ref
-          .where("teamId", "==", this.accountService.aTeam.id)
           .orderBy("createdAt", "desc")
           .limit(50)
           .startAfter(this.lastLog.createdAt)

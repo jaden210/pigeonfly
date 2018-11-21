@@ -9,17 +9,10 @@ import * as moment from "moment";
 
 @Injectable()
 export class TimeService {
-  private _loading = new BehaviorSubject(false);
-  private todaysDatePiped: string = this.datePipe.transform(
-    new Date(),
-    "MMM d"
-  );
-  private workers: any[] = [];
-  public loading: Observable<boolean> = this._loading.asObservable();
   public lastLoadLength: number;
 
 
-  lastLog;
+  limit:number = 50;
 
   constructor(
     private afs: AngularFirestore,
@@ -30,29 +23,13 @@ export class TimeService {
   public getTimeLogs(
     teamId: string
     ): Observable<any> {
-      return this.afs.collection("timeclock", ref => {
-        if (!this.lastLog) {
-          return (
-            ref
-            .where("teamId", "==", teamId)
-            .where("clockOut", "<=", new Date())
-            .orderBy("clockOut", "desc")
-            .limit(50)
-            )
-          } else {
-            return (
-              ref
-              .where("teamId", "==", teamId)
-              .where("clockOut", "<=", new Date())
-              .orderBy("clockOut", "desc")
-              .limit(20)
-              .startAfter(this.lastLog.clockOut)
-              );
-            }
-          })
+      return this.afs.collection(`team/${this.accountService.aTeam.id}/timeclock`, ref => 
+      ref.where("clockOut", "<=", new Date())
+        .orderBy("clockOut", "desc")
+        .limit(this.limit)
+      )
       .snapshotChanges()
       .pipe(
-        take(1),
         map(logs => {
           return logs.map(log => {
             let data: any = log.payload.doc.data();

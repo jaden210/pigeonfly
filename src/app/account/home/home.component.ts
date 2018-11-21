@@ -42,9 +42,8 @@ export class HomeComponent {
         );
         this.users = [];
         this.accountService.teamUsers.forEach((user: User) => {
-          let userClocks = this.accountService.db.collection("timeclock", ref => ref
+          let userClocks = this.accountService.db.collection(`team/${this.accountService.aTeam.id}/timeclock`, ref => ref
             .where("userId", "==", user.id)
-            .where("teamId", "==", this.accountService.aTeam.id)
             .orderBy("clockIn", "desc").limit(1));
           userClocks.snapshotChanges().pipe(
             map(actions => {

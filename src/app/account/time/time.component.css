@@ -1,33 +1,3 @@
-#search {
-flex: 1;
-font-size: 15px;
-background: #ffffff;
-border: none;
-outline: none;
-color: #212121;
-padding: 12px;
-border-radius: 12px;
-border: 1px solid #41535B;
-box-sizing: border-box;
-}
-
-::-webkit-input-placeholder {
-  /* Chrome/Opera/Safari */
-  color: #666666;
-}
-::-moz-placeholder {
-  /* Firefox 19+ */
-  color: #666666;
-}
-:-ms-input-placeholder {
-  /* IE 10+ */
-  color: #666666;
-}
-:-moz-placeholder {
-  /* Firefox 18- */
-  color: #666666;
-}
-
 .filter {
   margin: 0 24px;
 }
@@ -82,6 +52,7 @@ box-sizing: border-box;
 .date {
   font-size: 32px;
   color: #212121;
+  cursor: pointer;
 }
 
 .dow {

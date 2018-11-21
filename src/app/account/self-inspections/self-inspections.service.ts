@@ -18,7 +18,7 @@ export class SelfInspectionsService {
   ) {}
 
   getSelfInspections(): Observable<SelfInspection[]> {
-    let assesmentCollection = this.accountService.db.collection<SelfInspection[]>("self-inspection", ref => ref.where("teamId", "==", this.accountService.aTeam.id).orderBy("createdAt", "desc"));
+    let assesmentCollection = this.accountService.db.collection<SelfInspection[]>(`team/${this.accountService.aTeam.id}/self-inspection`, ref => ref.orderBy("createdAt", "desc"));
     return assesmentCollection.snapshotChanges().pipe(
       map(actions => {
         return actions.map(a => {
@@ -34,7 +34,7 @@ export class SelfInspectionsService {
   }
 
   getInspections(): Observable<Inspection[]> {
-    let inspectionsCollection = this.accountService.db.collection<Inspection[]>("self-inspection").doc(this.selfInspection.id).collection("inspections")
+    let inspectionsCollection = this.accountService.db.collection<Inspection[]>(`team/${this.accountService.aTeam.id}/self-inspection`).doc(this.selfInspection.id).collection("inspections")
     return inspectionsCollection.snapshotChanges().pipe(
       map(actions => {
         return actions.map(a => {
@@ -95,11 +95,11 @@ export class SelfInspectionsService {
     });
     this.selfInspection.baseQuestions = baseQuestions;
     if (this.selfInspection.id) {
-      return this.db.collection("self-inspection").doc(this.selfInspection.id).set({...this.selfInspection});
+      return this.db.collection(`team/${this.accountService.aTeam.id}/self-inspection`).doc(this.selfInspection.id).set({...this.selfInspection});
     } else {
       this.selfInspection.teamId = this.accountService.aTeam.id;
       this.selfInspection.createdAt = new Date();
-      return this.accountService.db.collection("self-inspection").add({...this.selfInspection});
+      return this.accountService.db.collection(`team/${this.accountService.aTeam.id}/self-inspection`).add({...this.selfInspection});
     }
   }
 
@@ -110,7 +110,7 @@ export class SelfInspectionsService {
       promises.push(i);
     })
     return Promise.all(promises).then(() => {
-      return this.accountService.db.doc("self-inspection/" + this.selfInspection.id).delete();
+      return this.accountService.db.collection(`team/${this.accountService.aTeam.id}/self-inspection`).doc(this.selfInspection.id).delete();
     });
   }
   
@@ -118,7 +118,7 @@ export class SelfInspectionsService {
     let inspection = new Inspection();
     inspection.createdAt = new Date();
     inspection.categories = this.selfInspection.baseQuestions;
-    return this.accountService.db.doc("self-inspection/" + this.selfInspection.id).collection('inspections').add({...inspection}).then(snapshot => {
+    return this.accountService.db.collection(`team/${this.accountService.aTeam.id}/self-inspection`).doc(this.selfInspection.id).collection('inspections').add({...inspection}).then(snapshot => {
       inspection.id = snapshot.id;
       return inspection;
     });
@@ -126,7 +126,7 @@ export class SelfInspectionsService {
   
   deleteSelfInspectionInspection(inspection?) {
     return this.accountService.db
-    .collection("self-inspection")
+    .collection(`team/${this.accountService.aTeam.id}/self-inspection`)
     .doc(this.selfInspection.id)
     .collection("inspections")
     .doc(inspection || this.takeInspection.id).delete();
@@ -141,7 +141,7 @@ export class SelfInspectionsService {
 
   saveSelfInspection(): Promise<any> {
     return this.accountService.db
-    .collection("self-inspection")
+    .collection(`team/${this.accountService.aTeam.id}/self-inspection`)
     .doc(this.selfInspection.id)
     .collection("inspections")
     .doc(this.takeInspection.id)

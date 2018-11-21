@@ -216,7 +216,7 @@ export class Log {
   teamId: string;
   userId: string;
   description: string;
-  images: any[];
+  images: any[] = [];
   surveySubject?: string;
   surveyQuestion?: string;
   LatPos: number;
