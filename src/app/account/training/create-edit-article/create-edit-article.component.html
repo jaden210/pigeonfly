@@ -7,7 +7,7 @@
   <toolbar-helper></toolbar-helper>
 </mat-toolbar>
 
-<div id="body">
+<div class="window">
   <div id="editor">
     <div style="display: flex; margin-top: 8px;">
       <mat-form-field appearance="outline" style="flex: 2; margin-right: 24px;">
@@ -45,12 +45,22 @@
         {{ submitButton }}
       </button>
       <button mat-button (click)="goBack()">CANCEL</button>
-      <mat-slide-toggle
-        *ngIf="isDev"
+
+      <button
+        *ngIf="isDev && !isEdit"
         style="margin-left: auto;"
-        [(ngModel)]="isGlobalArticle"
-        >Is Global</mat-slide-toggle
+        mat-icon-button
+        id="global-icon"
+        [matTooltip]="
+          !isGlobalArticle
+            ? 'Make this article public'
+            : 'Make this article private'
+        "
+        (click)="isGlobalArticle = !isGlobalArticle"
       >
+        <mat-icon [class.global]="isGlobalArticle">public</mat-icon>
+      </button>
+
       <button
         mat-icon-button
         (click)="deleteArticle()"

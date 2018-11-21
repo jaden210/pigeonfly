@@ -43,6 +43,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
   /* Template variable to iterate over objects */
   objectKeys = Object.keys;
   title: string;
+  isMyArticle: boolean;
 
   constructor(
     private router: Router,
@@ -63,6 +64,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
           const articleId = params.get("article");
           this.teamId = team.id;
           this.service.getArticle(articleId, team.id).subscribe(article => {
+            this.isMyArticle = articleId.includes(team.id);
             this.title = article.name;
             this.article = article;
             this.setIndustryId(params.get("industry"));

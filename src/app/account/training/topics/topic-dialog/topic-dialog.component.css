@@ -61,3 +61,11 @@ mat-progress-bar {
 .scoot-up {
   margin-top: -18px;
 }
+
+#global-icon {
+  margin-left: auto;
+}
+
+.global {
+  color: #4caf50;
+}

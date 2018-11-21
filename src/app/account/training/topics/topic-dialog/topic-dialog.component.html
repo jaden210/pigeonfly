@@ -54,6 +54,17 @@
   </button>
   <button mat-button mat-dialog-close>CANCEL</button>
   <button
+    *ngIf="isDev && !isEdit"
+    mat-icon-button
+    id="global-icon"
+    [matTooltip]="
+      !isGlobal ? 'Make this topic public' : 'Make this topic private'
+    "
+    (click)="isGlobal = !isGlobal"
+  >
+    <mat-icon [class.global]="isGlobal">public</mat-icon>
+  </button>
+  <button
     mat-icon-button
     id="delete-topic"
     (click)="deleteTopic()"

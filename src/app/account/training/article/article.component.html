@@ -7,7 +7,7 @@
   <toolbar-helper></toolbar-helper>
 </mat-toolbar>
 
-<div id="body">
+<div class="window">
   <div id="content" *ngIf="article">
     <div id="toolbar">
       <button mat-flat-button color="primary" (click)="startTraining()">
@@ -27,7 +27,7 @@
         </button>
       </mat-menu>
       <button
-        *ngIf="isDev"
+        *ngIf="isMyArticle || isDev"
         mat-icon-button
         (click)="editArticle()"
         matTooltip="Edit Article"
