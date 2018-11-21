@@ -47,7 +47,7 @@ export class DashboardComponent implements AfterViewInit {
         this.teamId = team.id;
         this.getMyContent();
         this.users = this.accountService.teamUsersObservable;
-        this.getHistory();
+        setTimeout(() => this.getHistory(), 1);
       }
     });
   }
@@ -58,7 +58,7 @@ export class DashboardComponent implements AfterViewInit {
       let totalTrainings = 0;
       let compliantTrainings = 0;
       myContent.forEach(mc => {
-        const srt = Object.keys(mc.trainees).length;
+        const srt = Object.keys(mc.shouldReceiveTraining).length;
         const nt = mc.needsTraining.length;
         totalTrainings += srt;
         compliantTrainings += srt - nt;

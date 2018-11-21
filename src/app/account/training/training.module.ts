@@ -15,9 +15,8 @@ import { ProgressIndicatorComponent } from "./shared/progress-indicator/progress
 import { AddTraineeDialog } from "./article/add-trainee.dialog";
 import { AttendanceDialog } from "./article/attendance.dialog";
 import { TopicDialogComponent } from "./topics/topic-dialog/topic-dialog.component";
-import { UserHistoryDialog } from "./article/user-history.dialog";
 import { TrainingHistoryComponent } from "./training-history/training-history.component";
-import { NeedsTrainingDialog } from "./article/needs-training.dialog";
+import { TrainingStatusDialog } from "./shared/training-status.dialog";
 import { DashboardComponent } from "./dashboard/dashboard.component";
 import { ReceivedTrainingDialog } from "./training-history/received-training.dialog";
 import { MyContentSearchPipe } from "./my-content/search.pipe";
@@ -66,9 +65,8 @@ const routes: Routes = [
     AddTraineeDialog,
     TopicDialogComponent,
     AttendanceDialog,
-    UserHistoryDialog,
     TrainingHistoryComponent,
-    NeedsTrainingDialog,
+    TrainingStatusDialog,
     DashboardComponent,
     ReceivedTrainingDialog,
     MyContentComponent,
@@ -81,8 +79,7 @@ const routes: Routes = [
     AddTraineeDialog,
     TopicDialogComponent,
     AttendanceDialog,
-    UserHistoryDialog,
-    NeedsTrainingDialog,
+    TrainingStatusDialog,
     ReceivedTrainingDialog,
     MyContentFiltersDialog,
     HelpDialog

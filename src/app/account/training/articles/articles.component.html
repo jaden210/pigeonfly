@@ -17,10 +17,11 @@
       (click)="routeTo(article)"
     >
       <progress-indicator
-        *ngIf="article.favorited"
+        *ngIf="article.favorited && article.myContent"
         [myContent]="article.myContent"
       ></progress-indicator>
       <button
+        class="heart"
         mat-icon-button
         class="heart"
         color="warn"

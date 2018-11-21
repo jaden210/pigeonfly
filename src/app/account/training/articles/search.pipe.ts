@@ -26,11 +26,13 @@ export class ArticlesSearchPipe implements PipeTransform {
       if (people.length > 0) {
         for (let person of people) {
           for (let article of articles) {
-            Object.keys(article.myContent.trainees).forEach(key => {
-              if (key == person) {
-                rv.push(article);
+            Object.keys(article.myContent.shouldReceiveTraining).forEach(
+              key => {
+                if (key == person) {
+                  rv.push(article);
+                }
               }
-            });
+            );
           }
         }
         return rv;
