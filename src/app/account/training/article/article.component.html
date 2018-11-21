@@ -65,12 +65,20 @@
         id="current-btn"
         (click)="openNeedsTrainingDialog()"
       >
-        <mat-icon *ngIf="article.myContent.complianceLevel < 100" color="warn"
-          >warning</mat-icon
-        >{{ currentBtn }}
+        <mat-icon
+          *ngIf="article.myContent.complianceLevel < 100; else: good"
+          color="warn"
+          >error_outline</mat-icon
+        >
+        <ng-template #good>
+          <mat-icon id="good">check_circle_outline</mat-icon>
+        </ng-template>
+        {{ currentBtn }}
       </button>
     </div>
     <h3>{{ article.name }}</h3>
   </div>
   <div id="article" #dataContainer></div>
 </div>
+
+check_circle_outline

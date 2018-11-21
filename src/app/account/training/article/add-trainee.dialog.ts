@@ -11,7 +11,11 @@ import { AccountService } from "../../account.service";
       <p style="margin-top: 0; color: #757575">
         Who should receive this training regularly?
       </p>
-      <mat-selection-list dense [(ngModel)]="trainees" style="outline: none;">
+      <mat-selection-list
+        dense
+        [(ngModel)]="shouldReceiveTraining"
+        style="outline: none;"
+      >
         <mat-list-option
           *ngFor="let user of (users | async)"
           [value]="user.uid"
@@ -33,7 +37,7 @@ import { AccountService } from "../../account.service";
 })
 export class AddTraineeDialog {
   users: BehaviorSubject<User[]>;
-  trainees: string[] = [];
+  shouldReceiveTraining: string[] = [];
 
   constructor(
     private accountService: AccountService,
@@ -41,10 +45,10 @@ export class AddTraineeDialog {
     @Inject(MAT_DIALOG_DATA) public data
   ) {
     this.users = this.accountService.teamUsersObservable;
-    this.trainees = Object.keys(data);
+    this.shouldReceiveTraining = Object.keys(data);
   }
 
   save(): void {
-    this.dialogRef.close(this.trainees);
+    this.dialogRef.close(this.shouldReceiveTraining);
   }
 }

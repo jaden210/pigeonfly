@@ -3,10 +3,14 @@ mat-toolbar {
   background: white !important;
 }
 
-progress-shield {
-  margin: 0 12px;
+progress-indicator {
+  margin: 0 8px;
 }
 
 #create-btn {
   margin: 24px 32px;
+}
+
+.heart:hover {
+  background: white;
 }

@@ -200,7 +200,7 @@ export class TrainingService {
                 const id = content.payload.doc.id;
                 const needsTraining = this.getExpiredTrainees(data);
                 const complianceLevel = this.getComplianceLevel(
-                  data.trainees,
+                  data.shouldReceiveTraining,
                   needsTraining
                 );
                 return { ...data, id, needsTraining, complianceLevel };
@@ -238,7 +238,7 @@ export class TrainingService {
       expirationDate = new Date(
         expirationDate.setDate(expirationDate.getDate() + plusMoreDays)
       );
-    const trainees = myContent.trainees || {};
+    const trainees = myContent.shouldReceiveTraining || {};
     let expiredTrainees = [];
     Object.keys(trainees).forEach(trainee => {
       const lastTrainedDate = new Date(trainees[trainee]);
@@ -436,7 +436,7 @@ export class TrainingService {
       .doc(id)
       .set({ ...myContent })
       .then(() => {
-        const needsTraining = Object.keys(myContent.trainees);
+        const needsTraining = Object.keys(myContent.shouldReceiveTraining);
         const complianceLevel = 0;
         const mc = { ...myContent, needsTraining, complianceLevel, id };
         this.myContent.push(mc);
@@ -511,7 +511,7 @@ export class Article {
 export class MyContent {
   constructor(
     public articleId: string,
-    public trainees: object,
+    public shouldReceiveTraining: object,
     public teamId: string,
     public articleName: string,
     public articleNameEs: string = null,

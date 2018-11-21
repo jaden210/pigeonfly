@@ -63,7 +63,7 @@ canvas {
   background: white;
   padding: 12px;
   box-sizing: border-box;
-  width: 400px;
+  width: 420px;
   display: flex;
   align-items: center;
 }
@@ -72,6 +72,7 @@ canvas {
   color: #bdbdbd;
   margin-left: auto;
   cursor: pointer;
+  padding-left: 8px;
 }
 
 .help:hover {

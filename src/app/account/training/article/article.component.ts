@@ -10,18 +10,16 @@ import { ActivatedRoute, ParamMap, Router } from "@angular/router";
 import {
   TrainingService,
   Article,
-  MyContent,
   TrainingExpiration
 } from "../training.service";
-import { Subscription, BehaviorSubject, Observable, forkJoin } from "rxjs";
+import { Subscription, BehaviorSubject, forkJoin } from "rxjs";
 import { AccountService, User } from "../../account.service";
 import { AddTraineeDialog } from "./add-trainee.dialog";
 import { AttendanceDialog } from "./attendance.dialog";
 import { tap } from "rxjs/operators";
 import { SurveysService } from "../../surveys/surveys.service";
 import { Survey } from "../../surveys/survey/survey";
-import { UserHistoryDialog } from "./user-history.dialog";
-import { NeedsTrainingDialog } from "./needs-training.dialog";
+import { TrainingStatusDialog } from "../shared/training-status.dialog";
 import { Location } from "@angular/common";
 
 @Component({
@@ -90,7 +88,8 @@ export class ArticleComponent implements OnInit, OnDestroy {
   currentBtn: string;
   private buildButtons() {
     if (this.article.myContent) {
-      const srt = Object.keys(this.article.myContent.trainees).length;
+      const srt = Object.keys(this.article.myContent.shouldReceiveTraining)
+        .length;
       const nt = this.article.myContent.needsTraining.length;
       const tail = `should receive this training regularly`;
       this.srtBtn =
@@ -132,27 +131,27 @@ export class ArticleComponent implements OnInit, OnDestroy {
   }
 
   public addTrainee(): void {
-    /* mutating trainees by reference to an easier key */
-    let trainees = this.article.myContent.trainees || {};
+    /* mutating shouldReceiveTraining by reference to an easier key */
+    let srt = this.article.myContent.shouldReceiveTraining || {};
     let dialogRef = this.dialog.open(AddTraineeDialog, {
-      data: trainees
+      data: srt
     });
     let expDate = this.service.getTrainingExpirationDate(
       this.article.myContent.trainingExpiration
     );
     dialogRef.afterClosed().subscribe((traineeIds: string[]) => {
       if (traineeIds) {
-        /* Delete from trainees */
-        Object.keys(trainees).forEach(id => {
+        /* Delete from srt */
+        Object.keys(srt).forEach(id => {
           if (traineeIds.indexOf(id) == -1) {
-            delete trainees[id];
+            delete srt[id];
             let needsTraining = this.article.myContent.needsTraining;
             const i = needsTraining.indexOf(id);
             if (i > -1) needsTraining.splice(i, 1);
           }
         });
-        /* Add to trainees */
-        let t = traineeIds.filter(id => !(id in trainees));
+        /* Add to srt */
+        let t = traineeIds.filter(id => !(id in srt));
         if (t.length) {
           forkJoin(
             t.map(id =>
@@ -166,7 +165,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
                   tap(lastTrainedDate => {
                     if (!lastTrainedDate[0] || lastTrainedDate[0] < expDate)
                       this.article.myContent.needsTraining.push(id);
-                    trainees[id] = lastTrainedDate[0];
+                    srt[id] = lastTrainedDate[0];
                   })
                 )
             )
@@ -183,7 +182,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
   }
 
   public removeTrainee(trainee): void {
-    delete this.article.myContent.trainees[trainee];
+    delete this.article.myContent.shouldReceiveTraining[trainee];
     this.service.updateMyContent(this.article.myContent, this.teamId);
     let needsTraining = this.article.myContent.needsTraining;
     const i = needsTraining.indexOf(trainee);
@@ -206,22 +205,12 @@ export class ArticleComponent implements OnInit, OnDestroy {
       });
   }
 
-  public viewHistoryByTrainee(trainee): void {
-    this.dialog.open(UserHistoryDialog, {
-      data: {
-        user: this.accountService.teamUsers.find(user => user.uid == trainee),
-        teamId: this.teamId,
-        articleId: this.article.id
-      }
-    });
-  }
-
   public startTraining(): void {
-    let trainees = this.article.myContent
-      ? this.article.myContent.trainees
+    let srt = this.article.myContent
+      ? this.article.myContent.shouldReceiveTraining
       : {};
     let dialogRef = this.dialog.open(AttendanceDialog, {
-      data: trainees
+      data: srt
     });
     dialogRef.afterClosed().subscribe((traineeIds: string[]) => {
       if (traineeIds) {
@@ -245,17 +234,14 @@ export class ArticleComponent implements OnInit, OnDestroy {
 
   /* Called from template, if article.myContent */
   public openNeedsTrainingDialog(): void {
-    let needsTrainingObj = {};
-    let trainees = this.article.myContent.trainees || {};
-    this.article.myContent.needsTraining.forEach(userId => {
-      needsTrainingObj[userId] = trainees[userId];
-    });
-    let dialogRef = this.dialog.open(NeedsTrainingDialog, {
-      data: { needsTrainingObj }
+    const srtObj = this.article.myContent.shouldReceiveTraining || {};
+    const needsTraining = this.article.myContent.needsTraining;
+    const dialogRef = this.dialog.open(TrainingStatusDialog, {
+      data: { srtObj, needsTraining }
     });
     dialogRef.afterClosed().subscribe(showHistory => {
       if (showHistory) {
-        // go to history
+        this.viewHistory();
       }
     });
   }
