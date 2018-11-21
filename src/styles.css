@@ -78,13 +78,21 @@ mat-toolbar {
     padding: 12px;
     box-sizing: border-box;
     box-shadow: 0 2px 2px 0 rgba(0,0,0,0.36), 0 0 0 1px rgba(0,0,0,0.08);
+    transition: all 500ms;
+}
+
+.helper-vis {
+    position: absolute !important;
+    right: 48px;
+    top: 8px;
+    color: #666666 !important;
 }
 
 .helper-close {
     position: absolute !important;
     right: 8px;
     top: 8px;
-    color: #ffffff !important;
+    color: #666666 !important;
 }
 
 .helper-name {
@@ -98,7 +106,7 @@ mat-toolbar {
     font-size: 15px;
     font-weight: 300;
     color: #ffffff;
-    max-width: 380px;
+    max-width: 500px;
 }
 
 .helper-input {

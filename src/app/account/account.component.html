@@ -37,14 +37,11 @@
   </mat-sidenav>
   <mat-sidenav-content>
     <!-- ***** HELPER ***** -->
-    <div class="helper" *ngIf="accountService.showHelper" [@helper]>
-      <button mat-icon-button class="helper-close" (click)="closeHelper()">
-        <mat-icon>cancel</mat-icon>
-      </button>
-      <div class="helper-name">{{ accountService.helper?.name }}</div>
-      <div class="helper-description">
-        {{ accountService.helper?.description }}
-      </div>
+    <div class="helper" id="helper-color" *ngIf="accountService.showHelper" [@helper]>
+      <button mat-icon-button (click)="contrastHelper()" class="helper-vis"><mat-icon>visibility</mat-icon></button>
+      <button mat-icon-button class="helper-close" (click)="closeHelper()"><mat-icon>cancel</mat-icon></button>
+      <div class="helper-name" id="helper-name-color">{{ accountService.helper?.name }}</div>
+      <div class="helper-description" id="helper-description-color" [innerHTML]="accountService.helper?.description"></div>
     </div>
     <div class="helper" *ngIf="accountService.showFeedback" [@helper]>
       <button mat-icon-button class="helper-close" (click)="accountService.showFeedback = false"><mat-icon>cancel</mat-icon></button>

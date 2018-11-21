@@ -51,6 +51,7 @@ mat-sidenav-content {
   transition: all 250ms;
   cursor: pointer;
   outline: none;
+  user-select: none;
 }
 
 .side-button:hover {

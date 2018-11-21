@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { trigger, style, transition, animate } from "@angular/animations";
 import { AccountService, User, Team, InviteToTeam } from './account.service';
 import { AngularFireAuth } from '@angular/fire/auth';
@@ -25,9 +25,10 @@ declare var gtag: Function;
     ])
   ]
 })
-export class AccountComponent implements OnInit {
+export class AccountComponent {
 
-  bShowAccountInfo: boolean = false; // temp var
+  bShowAccountInfo: boolean = false; // template var
+  helperContrast: boolean = false; // template var
 
   constructor( 
     public accountService: AccountService,
@@ -139,12 +140,21 @@ export class AccountComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    
-  }
-
   closeHelper() {
     this.accountService.showHelper = false;
+  }
+
+  contrastHelper() {
+    this.helperContrast = !this.helperContrast;
+    if (this.helperContrast) {
+      document.getElementById('helper-color').style.backgroundColor = "#ffffff";
+      document.getElementById('helper-name-color').style.color = "#212121";
+      document.getElementById('helper-description-color').style.color = "#666666";
+    } else {
+      document.getElementById('helper-color').style.backgroundColor = "#ff9100";
+      document.getElementById('helper-name-color').style.color = "#FFFFFF";
+      document.getElementById('helper-description-color').style.color = "#FFFFFF";
+    }
   }
 
   submitFeedback() {
