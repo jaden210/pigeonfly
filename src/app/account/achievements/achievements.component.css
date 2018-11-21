@@ -1,3 +1,88 @@
+.window {
+    display: flex;
+}
+#badges {
+    flex: 2;
+    height: 100%;
+    overflow: scroll;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.info {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+}
+#info {
+    margin: 24px;
+    padding: 12px;
+    font-size: 17px;
+    opacity: .87;
+    font-weight: 400;
+    border: 1px solid rgba(0,0,0,.14);
+    border-radius: 8px;
+}
+.badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 24px;
+    width: calc(50% - 48px);
+    font-size: 15px;
+    color: #666666;
+    font-weight: 600;
+}
+.badge:nth-child(3n){
+    width: 100%;
+}
+.badge-image {
+    height: 100px;
+}
+.fill {
+    height: 50px;
+    width: 100%;
+    margin: 24px;
+}
+.fillbar {
+    height: 24px;
+    margin: auto;
+    width: 40%;
+    background-color: #a9a9a9;
+    border-radius: 12px;
+    box-sizing: border-box;
+    position: relative;
+}
+.filltext {
+    position: absolute;
+    top: 0;
+    text-align: center;
+    z-index: 12;
+    width: 100%;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 700;
+}
+.fillcolor {
+    transition: all 500ms 500ms;
+    height: 100%;
+    background-color: #ffd740;
+    border-radius: 12px;
+    position: absolute;
+    top: 0;
+}
+
+
+
+
+
+
+
+
+
 .side {
     flex: 1;
 }
@@ -14,12 +99,6 @@
     font-weight: 600;
 }
 
-#info {
-    margin: 8px 24px 48px;
-    font-size: 17px;
-    opacity: .87;
-    font-weight: 400;
-}
 
 #h-progress {
     opacity: .87;
@@ -45,17 +124,6 @@
     cursor: pointer;
     transition: all 250ms;
     min-width: calc(50vw - 250px);
-}
-
-.fill {
-    height: 10%;
-    width: 0px;
-    transition: all 600ms;
-    position: absolute;
-    background-color: #BBDEFB;
-    margin-left: -10px;
-    border-radius: 5px;
-    bottom: -2px;
 }
 
 .achievement:hover {

@@ -1,11 +1,11 @@
 .ml {
-  color: #000000;
-  opacity: .54;
+  color: #000000 !important;
+  opacity: .87;
   transition: all 250ms;
 }
 
 .ml:hover {
-  opacity: .98 !important;
+  opacity: 1 !important;
 }
 
 #new-inspection {
@@ -151,4 +151,10 @@
 .sm-icon {
   height: 20px;
   font-size: 20px;
+  margin-bottom: 4px;
+}
+
+#helper {
+  margin-right: 12px;
+  vertical-align: middle;
 }

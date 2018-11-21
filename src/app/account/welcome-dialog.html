@@ -1,6 +1,11 @@
-<h2 mat-dialog-title style="font-size: 36px !important;">Welcome!</h2>
 <mat-dialog-content>
-  <div id="d-content">We need three final items for your account to be ready to use</div>
+  <div id="welcome">
+    <img id="chimp" src="/assets/chimp.png">
+    <div id="box">
+      <div id="title">Welcome to Compliancechimp!</div>
+      <div id="info">We're pleased to introduce you to your account. We need three final items for your account to be ready to use</div>
+    </div>
+  </div>
   <mat-form-field>
     <input matInput type="text" placeholder="your name" [(ngModel)]="data.name">
   </mat-form-field>
@@ -17,5 +22,5 @@
 
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button color="accent" [disabled]="!data.name && !data.businessName && !data.industryId" (click)="close()">DONE</button>
+  <button mat-button color="accent" [disabled]="!data.name && !data.businessName && !data.industryId" (click)="close()">GO TO MY ACCOUNT</button>
 </mat-dialog-actions>

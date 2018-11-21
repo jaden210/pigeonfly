@@ -11,6 +11,7 @@ export class AchievementsComponent implements OnInit {
 
   achievements;
   completedCount: number;
+  orderings = [{ordering: 0, achievements: [], completed: 0, completedPercent: ""}];
 
   @ViewChild("myCanvas")
   canvas: ElementRef;
@@ -24,7 +25,7 @@ export class AchievementsComponent implements OnInit {
     this.accountService.helper = this.accountService.helperProfiles.achievement;
     this.accountService.teamUsersObservable.subscribe(users => {
       if (users) {
-        let achievementsCollection = this.accountService.db.collection("achievement", ref => ref.orderBy("category"));
+        let achievementsCollection = this.accountService.db.collection("achievement", ref => ref.orderBy("ordering"));
         achievementsCollection.snapshotChanges().pipe(
           map(actions => actions.map(a => { //better way
             const data = a.payload.doc.data() as Achievements;
@@ -43,21 +44,48 @@ export class AchievementsComponent implements OnInit {
               ).subscribe(completedAchievement => {
                 this.completedCount = 0;
                 achievements.forEach(achievement => {
-                  achievement.progress = completedAchievement[0][achievement.key];
-                  if (achievement.progress >= achievement.completedValue) { //already achieved
-                    achievement.complete = true;
-                    this.completedCount ++;
-                    achievement.fill = '100%';
+                  let order = this.orderings.find(order => order.ordering == achievement.ordering);
+                  if (!order) {
+                    order = {ordering: achievement.ordering, achievements: [], completed: 0, completedPercent: ""};
+                    order.achievements.push(achievement);
+                    this.orderings.push(order);
                   } else {
-                    achievement.fill = ((achievement.progress / achievement.completedValue) * 100).toString() + "%";
+                    order.achievements.push(achievement);
                   }
                 });
+                this.orderings.forEach(ordering => {
+                  ordering.achievements.forEach(oachievement => {
+                    oachievement.progress = completedAchievement[0][oachievement.key];
+                    if (oachievement.progress >= oachievement.completedValue || oachievement.progress == true) { //already achieved
+                      oachievement.complete = true;
+                      this.completedCount ++;
+                      oachievement.fill = '100%';
+                      ordering.completed = ordering.completed + 100;
+                    } else {
+                      if (oachievement.progress !== false) {
+                        oachievement.fill = ((oachievement.progress / oachievement.completedValue) * 100).toString() + "%";
+                        ordering.completed = ordering.completed + ((oachievement.progress / oachievement.completedValue) * 100);
+                      }
+                    }
+                  });
+                  ordering.completed = ordering.completed / ordering.achievements.length;
+                  ordering.completedPercent = ordering.completed + "%";
+                  console.log(ordering.completed);
+                  console.log(ordering.completedPercent);
+                  
+                })
               })
             
           });
       }
     });
   }  
+
+  counter(i: number) {
+    return new Array(i);
+}
+
+
 }
 
 
@@ -67,6 +95,7 @@ export class Achievements {
   name: string;
   completedValue: number;
   key: string
+  ordering: number;
 
   complete: boolean;
   progress?: any;

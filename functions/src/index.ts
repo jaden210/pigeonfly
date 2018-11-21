@@ -193,19 +193,14 @@ exports.updateTeam = functions.firestore.document("team/{teamId}").onUpdate((cha
 exports.userCreated = functions.firestore.document("user/{userId}").onCreate(snapshot => {
   let user = snapshot.data();
 
-  return logAsEvent(EventType.member, EventAction.created, snapshot.id, user.id, "Was added to the system", user.teams[0] || null)
-  .then(() => console.log("created user complete"));
+  return null;
 })
 
 exports.userChange = functions.firestore.document("user/{userId}").onUpdate((change, context) => {
   let oldUser = change.before.data();
   let newUser = change.after.data();
   
-  /* profileUrl achievement */
-  if (newUser.accountType == "owner" && (!oldUser.profileUrl && newUser.profileUrl)) {
-   return updateCompletedAchievement(newUser.teamId, "hasOwnerProfileUrl", true)
-   .then(() => console.log("updated user complete"));
-  } else return null;
+  return null;
 });
 
 
@@ -241,10 +236,14 @@ exports.modifiedTimeclock = functions.firestore.document("team/{teamId}/timecloc
 
 exports.createdInvitation = functions.firestore.document("invitation/{id}").onCreate(snapshot => {
   let invitation = snapshot.data();
+  let promises = [];
+
+  promises.push(logAsEvent(EventType.member, EventAction.created, snapshot.id, invitation.invitedBy, "Was invited to the system", invitation.teamId || null));
+  
 
   /* total invites achievement */
-  return updateCompletedAchievement(invitation.teamId, "invitedUsers", 1, true)
-  .then(() => console.log("created invitation complete"));
+   promises.push(updateCompletedAchievement(invitation.teamId, "invitedUsers", 1, true));
+  return Promise.all(promises).then(() => console.log("created invitation complete"));
 });
 
 /* ----- SELF INSPECTION ----- */

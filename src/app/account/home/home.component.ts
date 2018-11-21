@@ -116,6 +116,7 @@ export class HomeComponent {
       if (data) {
         data.companyName = this.accountService.aTeam.name;
         data.teamId = this.accountService.aTeam.id;
+        data.invitedBy = this.accountService.user.id;
         this.accountService.db.collection("invitation").add({... data});
         gtag("event", "user_invited", {
           event_category: "user Invited",

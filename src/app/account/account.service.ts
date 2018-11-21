@@ -135,7 +135,9 @@ export class AccountService {
       this.isTrialVersion = true;
       let snackbar = this.snackbar.open(
         `${this.trialDaysLeft} days left in your free trial`,
-        "enter billing info"
+        "enter billing info", {
+          horizontalPosition: 'right'
+        }
       );
       snackbar.onAction().subscribe(() => {
         this.router.navigate(["account/account"]);
@@ -252,6 +254,7 @@ export class InviteToTeam {
   teamId: string;
   status: string = "invited";
   isAdmin: boolean = false;
+  invitedBy: string;
 }
 
 export class Event {

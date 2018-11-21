@@ -20,7 +20,7 @@ export class StatsComponent implements OnInit {
   ngOnInit() {
     this.accountService.teamUsersObservable.subscribe(users => {
       if (users) {
-        let supportCollection = this.accountService.db.collection("support", ref => ref.orderBy("createdAt"));
+        let supportCollection = this.accountService.db.collection("support", ref => ref.orderBy("createdAt", "desc"));
         supportCollection.snapshotChanges().pipe(
           map(actions => {
             return actions.map(a => {
@@ -42,7 +42,7 @@ export class StatsComponent implements OnInit {
             }
           });
         });
-        let feedbackCollection = this.accountService.db.collection("feedback", ref => ref.orderBy("createdAt"));
+        let feedbackCollection = this.accountService.db.collection("feedback", ref => ref.orderBy("createdAt", "desc"));
         this.feedbackItems = feedbackCollection.snapshotChanges().pipe(
           map(actions => {
             return actions.map(a => {

@@ -40,3 +40,8 @@
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
+<div class="loading" *ngIf="appService.firstTimeUser">
+  <img id="loading-chimp" src="/assets/chimp.png">
+  <div id="loading-text">Hold tight while we finish setting things up.</div>
+  <mat-progress-bar id="loading-bar" mode="indeterminate"></mat-progress-bar>
+</div>

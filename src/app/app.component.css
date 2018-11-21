@@ -73,3 +73,33 @@
         background-size: contain;
     }
   }
+
+.loading {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background: white;
+    z-index: 100000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#loading-chimp {
+    height: 250px;
+    margin-top: -70px;
+}
+
+#loading-text {
+    margin: 24px;
+    font-size: 17px;
+    font-weight: 600;
+    opacity: .87;
+}
+
+#loading-bar {
+    width: 40vw;
+}

@@ -1,8 +1,8 @@
 <mat-toolbar>
   <button mat-icon-button (click)="leave()">
-    <mat-icon>arrow_back</mat-icon>
+    <mat-icon style="color:#757575">arrow_back</mat-icon>
   </button>
-  {{selfInspectionsService.selfInspection?.title}}
+  <div class="toolbar-title">{{selfInspectionsService.selfInspection?.title}}</div>
   <div class="flex"></div>
   <button mat-icon-button class="ml" matTooltip="delete this self-inspection" (click)="deleteSelfInspection()"><mat-icon>delete</mat-icon></button>
 </mat-toolbar>
@@ -14,9 +14,9 @@
   <div class="inspections" *ngIf="inProgressInspections?.length > 0">
     <div class="info-title">In Progress</div>
     <ng-container *ngFor="let inspection of inProgressInspections">
-      <div class="row" *ngIf="!inspection.completedAt">
+      <div class="row" [matTooltip]="getCompletePercent(inspection)" matTooltipShowDelay="600">
         <h2>{{inspection?.createdAt | date: 'longDate'}}</h2>
-        <div class="fill" [matTooltip]="getCompletePercent(inspection)" [ngStyle]="{'width':(inspection.completedPercent*100)+'%'}"></div>
+        <div class="fill" [ngStyle]="{'width':(inspection.completedPercent*100)+'%'}"></div>
         <div class="flex"></div>
         <button mat-button color="primary" (click)="resumeSelfInspection(inspection)">CONTINUE INSPECTION</button>
       </div>
@@ -25,9 +25,9 @@
   <div class="inspections" *ngIf="completedInspections?.length > 0">
     <div class="info-title">Completed Inspections</div>
     <ng-container *ngFor="let inspection of completedInspections">
-      <div class="row" *ngIf="inspection.completedAt">
+      <div class="row" [matTooltip]="getCompliantPercent(inspection)" matTooltipShowDelay="600">
         <h2>{{inspection?.createdAt | date: 'longDate'}}</h2>
-        <div class="fill" [matTooltip]="getCompliantPercent(inspection)" [ngStyle]="{'width':(inspection.compliantPercent*100)+'%'}"></div>
+        <div class="fill" [ngStyle]="{'width':(inspection.compliantPercent*100)+'%'}"></div>
         <div class="flex"></div>
         <button mat-button color="primary" (click)="export(inspection)">EXPORT TO PDF</button>
       </div>

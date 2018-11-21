@@ -91,6 +91,7 @@ export class AccountComponent {
       });
     });
     if (this.appService.firstTimeUser) {
+      this.appService.firstTimeUser = false;
       this.welcomeDialog();
     }
     this.accountService.setActiveTeam(Object.keys(this.accountService.user.teams)[0]);
@@ -190,7 +191,7 @@ export class WelcomeDialog {
   constructor(
     public dialogRef: MatDialogRef<WelcomeDialog>,
     @Inject(MAT_DIALOG_DATA) public data: any, public accountService: AccountService) {
-      let accountTypesCollection = this.accountService.db.collection("industries"); //thinking this will never be a large call, but check with nested collections to see later.
+      let accountTypesCollection = this.accountService.db.collection("industry"); //thinking this will never be a large call, but check with nested collections to see later.
       accountTypesCollection.snapshotChanges().pipe(
         map((actions:any) => actions.map(a => {
           const data = a.payload.doc.data();

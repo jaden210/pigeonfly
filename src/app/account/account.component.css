@@ -264,3 +264,26 @@ a:hover {
 .timage {
   height: 32px;
 }
+
+
+/*   WELCOME DIALOG   */
+#welcome {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+#chimp {
+  height: 200px;
+}
+#title {
+  margin-top: 24px;
+  font-size: 35px;
+  font-weight: 500;
+  font-family: 'co-headline';
+}
+#info {
+  opacity: .87;
+  font-size: 16px;
+  padding: 24px;
+  max-width: 470px;
+}

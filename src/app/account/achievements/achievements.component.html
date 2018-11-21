@@ -6,18 +6,20 @@
     <toolbar-helper></toolbar-helper>
   </mat-toolbar>
   <div class="window">
-    <div id="info">Completing achievements will put you on the path to using Compliancechimp to its potential, and help you understand the value it can bring to your business. Complete them all and we'll send you some sweet Compliancechimp swag as a reward!</div>
-    <div class="achievements">
-      <div class="achievement" *ngFor="let achievement of achievements" [ngClass]="{'complete': achievement.complete}" [routerLink]="achievement.routerLink">
-        <div class="fill" [ngStyle]="{'width':achievement.fill}"></div>
-        <img class="trophy" [src]="'/assets/achievements/' + achievement.category + '.png'" alt="Compliancechimp">
-        <div class="box">
-          <div class="row">
-            <div class="cat">{{achievement.category}}</div>
+    <div id="badges">
+      <ng-container *ngFor="let ordering of orderings; index as i">
+        <ng-container *ngFor="let badge of achievements">
+          <div class="badge" *ngIf="badge.ordering == i">
+            <img class="badge-image" [src]="'/assets/achievements/' + badge.category + '.png'" alt="Compliancechimp">
+            {{badge.name}}
           </div>
-          <div class="name">{{achievement.name}}</div>
-          <div class="progress">{{achievement.completedValue.toString() != 'true' ? achievement.progress + '/' + achievement.completedValue : achievement.progress == true ? 'complete' : 'incomplete'}}</div>
-        </div>
-      </div>
+        </ng-container>
+        <div class="fill"><div class="fillbar"><div class="filltext">Checkpoint Passed</div><div class="fillcolor" [ngStyle]="{'width':ordering.completedPercent}"></div></div></div>
+      </ng-container>
     </div>
+    <div class="info">
+      <div id="info">Completing achievements will put you on the path to using Compliancechimp to its potential, and help you understand the value it can bring to your business. Complete them all and we'll send you some sweet Compliancechimp swag as a reward!</div>
+
+    </div>
+    
   </div>
