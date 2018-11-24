@@ -13,7 +13,7 @@
       </div>
       <ng-container *ngFor="let ordering of orderings; index as i">
         <ng-container *ngFor="let badge of achievements">
-          <div class="badge" *ngIf="badge.ordering == i">
+          <div class="badge" *ngIf="badge.ordering == i" [ngClass]="{'color': badge.fill > 0}">
             <div class="badge-img">
                 <mat-progress-spinner style="position:absolute" color="accent" mode="determinate" [value]="badge.fill" strokeWidth="6"></mat-progress-spinner>
               <img class="badge-image" [src]="'/assets/achievements/' + badge.category + '.png'" alt="Compliancechimp">

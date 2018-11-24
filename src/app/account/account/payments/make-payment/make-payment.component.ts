@@ -49,6 +49,7 @@ export class MakePaymentComponent implements AfterViewInit {
         errorElement.textContent = result.error.message;
       } else {
         this.accountService.db.doc(`team/${this.accountService.aTeam.id}`).update({cardToken: result.token}).then(() => {
+          this.accountService.isTrialVersion = false;
           this.dialogRef.close();
         }).catch(() => errorElement.textContent = "error saving card details, try again later.")
       }

@@ -28,10 +28,9 @@
     flex: 1;
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    align-items: flex-start;
     margin-right: 36px;
     margin-top: 24px;
+    flex-direction: column;
 }
 #info {
     padding: 12px;
@@ -41,6 +40,7 @@
     border-radius: 8px;
     background-color: #ffffff;
     box-shadow: 2px 2px 7px -1px;
+    margin-bottom: 24px;
 }
 .badge {
     display: flex;
@@ -55,6 +55,9 @@
     filter: grayscale(80%);
     cursor: pointer;
     transition: all 250ms;
+}
+.color {
+    filter: grayscale(0%);
 }
 .badge:hover {
     filter: grayscale(0%);

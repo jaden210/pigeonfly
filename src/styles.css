@@ -22,6 +22,10 @@
     padding: 0px 12px !important;
 }
 
+.raise-fab {
+    bottom: 88px;
+}
+
 .toolbar-logo {
     height: 46px;
 }

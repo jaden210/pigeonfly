@@ -35,6 +35,6 @@
       <div class="map-icon" *ngIf="user.timeclock?.outLongPos" matTooltip="View last logged location" matTooltipShowDelay="300" (click)="$event.stopPropagation();showMap(user)"><mat-icon class="map">location_on</mat-icon></div>
     </div>
   </ng-container>
-  <button mat-mini-fab class="fab" color="accent" (click)="inviteToTeam()"><mat-icon>person</mat-icon>New Team Member</button>
+  <button mat-mini-fab class="fab" color="accent" [ngClass]="{'raise-fab': accountService.isTrialVersion}" (click)="inviteToTeam()"><mat-icon>person</mat-icon>New Team Member</button>
 </div>
     

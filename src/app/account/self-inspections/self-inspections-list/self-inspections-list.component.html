@@ -12,4 +12,4 @@
     </mat-list-item>
   </mat-nav-list>
 </div>
-<button class="fab" mat-mini-fab color="accent" (click)="startNewSelfInspection()"><mat-icon>find_replace</mat-icon>New Self-Inspection</button>
+<button class="fab" mat-mini-fab color="accent"  [ngClass]="{'raise-fab': accountService.isTrialVersion}" (click)="startNewSelfInspection()"><mat-icon>find_replace</mat-icon>New Self-Inspection</button>
