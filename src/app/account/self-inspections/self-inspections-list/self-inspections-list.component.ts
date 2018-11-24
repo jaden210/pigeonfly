@@ -18,7 +18,7 @@ export class SelfInspectionsListComponent {
     public router: Router,
     public route: ActivatedRoute,
     private selfInspectionsService: SelfInspectionsService,
-    private accountService: AccountService,
+    public accountService: AccountService,
   ) {
     this.accountService.helper = this.accountService.helperProfiles.selfInspection;
     this.accountService.aTeamObservable.subscribe(team => {
