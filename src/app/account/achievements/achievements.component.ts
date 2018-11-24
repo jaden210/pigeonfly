@@ -59,11 +59,11 @@ export class AchievementsComponent implements OnInit {
                     if (oachievement.progress >= oachievement.completedValue || oachievement.progress == true) { //already achieved
                       oachievement.complete = true;
                       this.completedCount ++;
-                      oachievement.fill = '100%';
+                      oachievement.fill = 50;
                       ordering.completed = ordering.completed + 100;
                     } else {
                       if (oachievement.progress !== false) {
-                        oachievement.fill = ((oachievement.progress / oachievement.completedValue) * 100).toString() + "%";
+                        oachievement.fill = ((oachievement.progress / oachievement.completedValue) * 100);
                         ordering.completed = ordering.completed + ((oachievement.progress / oachievement.completedValue) * 100);
                       }
                     }

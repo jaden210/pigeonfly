@@ -2,24 +2,32 @@
   <img class="toolbar-logo" src="/assets/ccLogoDark.png">
   <div class="toolbar-title">Badges</div>
   <div class="flex"></div>
-  <div id="h-progress">{{completedCount}}/{{achievements?.length}}</div>
-    <toolbar-helper></toolbar-helper>
-  </mat-toolbar>
-  <div class="window">
+  <toolbar-helper></toolbar-helper>
+</mat-toolbar>
+<div class="window">
+  <div class="scroll">
     <div id="badges">
+      <div class="row">
+        <div id="title">Badges</div>
+        <div id="h-progress">{{completedCount}}/{{achievements?.length}}</div>
+      </div>
       <ng-container *ngFor="let ordering of orderings; index as i">
         <ng-container *ngFor="let badge of achievements">
           <div class="badge" *ngIf="badge.ordering == i">
-            <img class="badge-image" [src]="'/assets/achievements/' + badge.category + '.png'" alt="Compliancechimp">
+            <div class="badge-img">
+                <mat-progress-spinner style="position:absolute" color="accent" mode="determinate" [value]="badge.fill" strokeWidth="6"></mat-progress-spinner>
+              <img class="badge-image" [src]="'/assets/achievements/' + badge.category + '.png'" alt="Compliancechimp">
+            </div>
             {{badge.name}}
           </div>
         </ng-container>
-        <div class="fill"><div class="fillbar"><div class="filltext">Checkpoint Passed</div><div class="fillcolor" [ngStyle]="{'width':ordering.completedPercent}"></div></div></div>
+        <div class="fill"><div class="fillbar"><div class="filltext">Checkpoint Progress</div><div class="fillcolor" [ngStyle]="{'width':ordering.completedPercent}"></div></div></div>
       </ng-container>
     </div>
-    <div class="info">
-      <div id="info">Completing achievements will put you on the path to using Compliancechimp to its potential, and help you understand the value it can bring to your business. Complete them all and we'll send you some sweet Compliancechimp swag as a reward!</div>
-
-    </div>
-    
   </div>
+  <div class="info">
+    <div id="info">Level</div>
+    <div id="info">Completing achievements will put you on the path to using Compliancechimp to its potential, and help you understand the value it can bring to your business.</div>
+  </div>
+  
+</div>
