@@ -15,13 +15,15 @@
     mat-icon-button
     style="margin-right: 12px;"
     matTooltip="Filter Results"
-    matBadge="!"
-    [matBadgeHidden]="!complianceType"
-    matBadgeSize="small"
-    matBadgeColor="accent"
     (click)="openFiltersDialog()"
   >
-    <mat-icon>filter_list</mat-icon>
+    <mat-icon
+      matBadge="!"
+      [matBadgeHidden]="!complianceType"
+      matBadgeSize="small"
+      matBadgeColor="warn"
+      >filter_list</mat-icon
+    >
   </button>
   <toolbar-helper></toolbar-helper>
 </mat-toolbar>

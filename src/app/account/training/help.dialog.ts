@@ -3,7 +3,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 
 @Component({
   template: `
-    <h1 mat-dialog-title>Huh?</h1>
     <div mat-dialog-content [innerHtml]="data"></div>
     <div mat-dialog-actions align="end">
       <button mat-button mat-dialog-close>GOT IT</button>

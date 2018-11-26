@@ -66,7 +66,7 @@ export class TrainingService {
             )
             .snapshotChanges(),
           this.db
-            .collection(`team/${teamId}/topics`, ref =>
+            .collection(`team/${teamId}/topic`, ref =>
               ref.where("industryId", "==", industryId)
             )
             .snapshotChanges()

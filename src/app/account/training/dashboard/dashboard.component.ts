@@ -231,25 +231,22 @@ export class DashboardComponent implements AfterViewInit {
   public help(helpTopic: string): void {
     const helpContent =
       helpTopic == "myArticles"
-        ? `Clicking the 💜 button on a training-article places that article in your own custom-training-articles collection. Once here 
-    ComplianceChimp can track compliance, by user, for each article. The training-article to employee relationship is defined as a personal training. In your team's case
-    there are an average of ${(
-      this.totalTrainings / this.myContent.length
-    ).toFixed(1)} employees per training or ${
-            this.totalTrainings
-          } personal-trainings to keep track of.`
+        ? `When you click on CUSTOMIZE MY TRAINING, you’ll navigate to a host of pre-curated training articles. Clicking the 💜 button on a training article places that article in your collection. 
+        Once articles are in your collection, we track compliance, by user, for each article. We call every article that is applicable to an employee a personal training. As an example, if you have 
+        a team of 20, and you select two articles that apply to your entire team, we count that as 40 personal trainings that need to stay current in order for your team to be compliant. In other words, 
+        there are 40 one-to-one relationships between employees and articles. Based on your team so far, we are tracking ${
+          this.totalTrainings
+        } personal trainings.`
         : helpTopic == "inCompliance"
-        ? `Great! Your team is current on ${
+        ? `Your team is current on ${
             this.compliantTrainings
-          } personal trainings! A personal training is defined as an employee's relation to a training article.
-     For example, if 2 employees should receive training on the "How to remove pizza from a hot oven" training article, you would have 2 personal trainings to keep track of. Is Annie
-     current on this training? Is Joe current on this training? This is how ComplianceChimp can keep a thorough record of who is in compliance with yours' and OSHA's safety standards.`
+          } personal trainings. A personal training is defined as the one-to-one relationship between an employee and a training article. Is Annie current on training X? 
+        Is Jim current on training Y? Compliancechimp easily keeps a thorough record of training compliance, down to the personal level. To remain at Level 3 Compliance, this number needs to remain at 100%.`
         : `Let's get training! ${this.totalTrainings -
             this
-              .compliantTrainings} personal trainings are out of compliance. This means there are x number of employees times x number of 
-     training-articles that have never been trained on, or, the last training date falls outside of the compliance timeframe set on the training-article. Lets say you have a training-article
-     "How to remove pizza from a hot oven". This article requires that 2 people, Annie and Joe stay trained on this article. In this scenario you have 2 personal-trainings to keep track of:
-     Annie's training on "How to remove pizza from a hot oven" and Joes training on the same article.This is how ComplianceChimp can keep a thorough record of who is in compliance with yours' and OSHA's safety standards.`;
+              .compliantTrainings} personal trainings are out of compliance. This means there are training articles that have never been trained on, or, the last training date falls outside of the compliance timeframe set 
+        on the training-article. Training is super easy. Gather your team together, open up the training article in the app, or here on the web, and click START TRAINING. This will send a first-person survey to every team 
+        member you have selected. When they respond to the survey question, your compliance stats will be updated.`;
     this.dialog.open(HelpDialog, {
       data: helpContent,
       maxWidth: "50vw"

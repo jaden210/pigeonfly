@@ -30,6 +30,7 @@ export class TopicDialogComponent implements OnInit {
     this.topic = this.data.topic;
     this.teamId = this.data.teamId;
     this.isDev = this.data.isDev;
+    this.isGlobal = this.isDev ? true : false;
     this.industryId = this.data.industryId;
     this.isEdit = this.topic.id ? true : false;
   }
