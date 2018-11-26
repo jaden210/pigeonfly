@@ -1,0 +1,90 @@
+<span id="title" mat-dialog-title
+  ><button
+    mat-icon-button
+    (click)="back()"
+    *ngIf="title != 'Filter History Results'"
+  >
+    <mat-icon>arrow_back</mat-icon></button
+  >{{ title }}
+</span>
+
+<mat-dialog-content [ngSwitch]="title">
+  <ng-container *ngSwitchCase="'Filter History Results'">
+    <mat-form-field appearance="outline">
+      <mat-label>Training Date</mat-label>
+      <input
+        matInput
+        [matDatepicker]="picker"
+        disabled
+        [(ngModel)]="filterParams.trainingDate"
+        placeholder="MM/DD/YYYY"
+      />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker disabled="false"></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field appearance="outline" style="margin-top: -4px;">
+      <mat-label>Article Name</mat-label>
+      <input
+        matInput
+        placeholder="Article Name"
+        [(ngModel)]="filterParams.articleName"
+      />
+    </mat-form-field>
+    <div class="btn" (click)="selectTrainingBy()">
+      <span class="placeholder">{{ TrainingByTitle || "Training By" }}</span>
+      <span class="label" *ngIf="filterParams.trainingBy.length"
+        >Training By</span
+      >
+      <mat-icon>chevron_right</mat-icon>
+    </div>
+    <div class="btn" (click)="selectReceivedTraining()">
+      <span class="placeholder">{{
+        ReceivedTrainingTitle || "Received Training"
+      }}</span>
+      <span class="label" *ngIf="filterParams.receivedTraining.length"
+        >Received Training</span
+      >
+      <mat-icon>chevron_right</mat-icon>
+    </div>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'Received Training'">
+    <mat-selection-list
+      dense
+      [(ngModel)]="filterParams.receivedTraining"
+      style="outline: none;"
+    >
+      <mat-list-option *ngFor="let user of (users | async)" [value]="user">
+        <img
+          matListAvatar
+          [src]="user.profileUrl"
+          onerror="src='/assets/face.png'"
+        />
+        <h3 matLine>{{ user.name }}</h3>
+      </mat-list-option>
+    </mat-selection-list>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'Training By'">
+    <mat-selection-list
+      dense
+      [(ngModel)]="filterParams.trainingBy"
+      style="outline: none;"
+    >
+      <mat-list-option *ngFor="let user of (users | async)" [value]="user">
+        <img
+          matListAvatar
+          [src]="user.profileUrl"
+          onerror="src='/assets/face.png'"
+        />
+        <h3 matLine>{{ user.name }}</h3>
+      </mat-list-option>
+    </mat-selection-list>
+  </ng-container>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>CANCEL</button>
+  <button mat-button (click)="clear()">CLEAR</button>
+  <button color="primary" mat-raised-button (click)="apply()">APPLY</button>
+</mat-dialog-actions>

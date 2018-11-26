@@ -2,11 +2,13 @@ import { Component, AfterViewInit, ViewChild, ElementRef } from "@angular/core";
 import { TrainingService, MyContent } from "../training.service";
 import { AccountService, User } from "../../account.service";
 import { Observable, BehaviorSubject } from "rxjs";
-import { map, tap } from "rxjs/operators";
+import { map, tap, publishReplay } from "rxjs/operators";
 import { MatDialog } from "@angular/material";
 import { Router } from "@angular/router";
 import { ReceivedTrainingDialog } from "../training-history/received-training.dialog";
 import { HelpDialog } from "../help.dialog";
+import { FilterDialog, FilterParams } from "./filter-dialog/filter.dialog";
+import { DatePipe } from "@angular/common";
 
 @Component({
   selector: "app-dashboard",
@@ -27,15 +29,20 @@ export class DashboardComponent implements AfterViewInit {
   users: BehaviorSubject<User[]>;
   noHistory: boolean;
   myContent: MyContent[];
+  filterParams: FilterParams = new FilterParams();
 
   displayedColumns: string[] = ["date", "articleName", "trainer", "attendees"];
-  dataSource: Observable<TableData[]>;
+  history: iTableData[];
+  dataSource: iTableData[];
+  isFiltered: boolean;
+  loading: boolean;
 
   constructor(
     private trainingService: TrainingService,
     private accountService: AccountService,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private date: DatePipe
   ) {}
 
   ngAfterViewInit() {
@@ -122,31 +129,39 @@ export class DashboardComponent implements AfterViewInit {
   }
 
   private getHistory(): void {
-    this.dataSource = this.trainingService.getTrainingHistory(this.teamId).pipe(
-      map(surveys =>
-        surveys.map(survey => {
-          const date = survey.runDate;
-          const mc = this.myContent.find(
-            mc => mc.articleId == survey.articleId
-          );
-          const articleName = mc ? mc.articleName : null;
-          const articleId = mc ? mc.articleId : null;
-          const trainer = survey.userId;
-          const trainees = Object.keys(survey.userSurvey);
-          const inAttendance = survey.receivedTraining;
-          return {
-            date,
-            articleName,
-            trainer,
-            trainees,
-            inAttendance,
-            articleId
-          };
-        })
-      ),
-      map(surveys => surveys.filter(s => s.articleId)),
-      tap(surveys => (this.noHistory = surveys.length ? false : true))
-    );
+    this.loading = true;
+    this.trainingService
+      .getTrainingHistory(this.teamId)
+      .pipe(
+        map(surveys =>
+          surveys.map(survey => {
+            const date = survey.runDate;
+            const mc = this.myContent.find(
+              mc => mc.articleId == survey.articleId
+            );
+            const articleName = mc ? mc.articleName : null;
+            const articleId = mc ? mc.articleId : null;
+            const trainer = survey.userId;
+            const trainees = Object.keys(survey.userSurvey);
+            const inAttendance = survey.receivedTraining;
+            return {
+              date,
+              articleName,
+              trainer,
+              trainees,
+              inAttendance,
+              articleId
+            };
+          })
+        ),
+        map(surveys => surveys.filter(s => s.articleId)),
+        tap(surveys => (this.noHistory = surveys.length ? false : true))
+      )
+      .subscribe(history => {
+        this.history = history;
+        this.dataSource = history;
+        this.loading = false;
+      });
   }
 
   public routeToMyContent(complianceType: string): void {
@@ -163,6 +178,54 @@ export class DashboardComponent implements AfterViewInit {
     this.dialog.open(ReceivedTrainingDialog, {
       data: { people: survey.inAttendance }
     });
+  }
+
+  public filter(): void {
+    this.dialog
+      .open(FilterDialog, {
+        data: {
+          filterParams: this.filterParams
+        },
+        disableClose: true
+      })
+      .afterClosed()
+      .subscribe((params: FilterParams) => {
+        if (params) {
+          this.filterParams = params;
+          if (
+            params.articleName ||
+            params.receivedTraining.length ||
+            params.trainingBy.length ||
+            params.trainingDate
+          ) {
+            this.isFiltered = true;
+            this.dataSource = this.history.filter(h => {
+              if (params.trainingDate) {
+                const t1 = this.date.transform(params.trainingDate);
+                const t2 = this.date.transform(h.date);
+                if (t1 == t2) return true;
+              }
+              for (let tb of params.trainingBy) {
+                if (tb.id == h.trainer) return true;
+              }
+              for (let rt of params.receivedTraining) {
+                if (h.trainees.includes(rt.id)) return true;
+              }
+              const searchTerms: string[] = params.articleName
+                ? params.articleName.trim().split(/\s+/)
+                : [];
+              for (let f of searchTerms) {
+                // for value of filter array, built from arguments passed in
+                if (h.articleName.toLowerCase().includes(f.toLowerCase()))
+                  return true;
+              }
+            });
+          } else {
+            this.dataSource = this.history;
+            this.isFiltered = false;
+          }
+        }
+      });
   }
 
   public help(helpTopic: string): void {
@@ -192,9 +255,62 @@ export class DashboardComponent implements AfterViewInit {
       maxWidth: "50vw"
     });
   }
+
+  public downloadCSV(): void {
+    const date = new Date().toDateString();
+    let data, filename, link;
+    let csv = this.convertHistoryToCSV();
+    if (csv === null) return;
+    filename = `training_history_${date}.csv`;
+    if (!csv.match(/^data:text\/csv/i)) {
+      csv = "data:text/csv;charset=utf-8," + csv;
+    }
+    data = encodeURI(csv);
+    link = document.createElement("a");
+    link.setAttribute("href", data);
+    link.setAttribute("download", filename);
+    link.click();
+  }
+
+  private getUserName(userId): string {
+    const user = this.accountService.teamUsers.find(u => u.id == userId);
+    return user ? user.name : null;
+  }
+
+  private convertHistoryToCSV(): string {
+    const headerMap = {
+      date: "Date",
+      articleName: "Article",
+      trainer: "Training By",
+      attendees: "Received Training"
+    };
+    if (!this.dataSource) return null;
+    const columnDelimiter = ",";
+    const lineDelimiter = "\n";
+    const displayedColumns = this.displayedColumns.filter(c => headerMap[c]);
+    let headers = "";
+    displayedColumns.forEach(key => {
+      headers += headerMap[key];
+      headers += columnDelimiter;
+    });
+    let result = "";
+    result += headers;
+    result += lineDelimiter;
+    this.dataSource.forEach(training => {
+      const date = `"${this.date.transform(training.date)}"`;
+      const article = `"${training.articleName}"`;
+      const trainingBy = `"${this.getUserName(training.trainer)}"`;
+      training.inAttendance.forEach(emp => {
+        const empName = `"${this.getUserName(emp)}"`;
+        result += [date, article, trainingBy, empName].join(columnDelimiter);
+        result += lineDelimiter;
+      });
+    });
+    return result;
+  }
 }
 
-interface TableData {
+export interface iTableData {
   date: Date;
   articleName: string;
   trainer: string;

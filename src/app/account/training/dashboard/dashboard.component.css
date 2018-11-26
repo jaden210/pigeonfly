@@ -79,8 +79,14 @@ canvas {
   color: #757575;
 }
 
+#table-title {
+  display: flex;
+  align-items: center;
+  margin: 0 12px;
+}
+
 h3 {
-  margin: 16px 24px;
+  margin: 16px 12px;
 }
 
 table {

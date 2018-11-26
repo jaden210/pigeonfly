@@ -1,5 +1,5 @@
 <mat-toolbar>
-  <img class="toolbar-logo" src="/assets/ccLogoDark.png">
+  <img class="toolbar-logo" src="/assets/ccLogoDark.png" />
   <div class="toolbar-title">Training</div>
   <div class="flex"></div>
   <button mat-stroked-button id="cmt-btn" routerLink="industries">
@@ -60,7 +60,19 @@
     </div>
   </div>
 
-  <h3>Training History</h3>
+  <div id="table-title">
+    <h3>Training History</h3>
+    <button mat-icon-button style="margin-left: auto;" (click)="filter()">
+      <mat-icon
+        matBadge="!"
+        [matBadgeHidden]="!isFiltered"
+        matBadgeColor="warn"
+        matBadgeSize="small"
+        >filter_list</mat-icon
+      >
+    </button>
+    <button mat-button (click)="downloadCSV()">EXPORT</button>
+  </div>
 
   <table mat-table [dataSource]="dataSource">
     <!--
@@ -118,7 +130,10 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
 
-  <span *ngIf="noHistory" id="no-history"
-    ><p>There is no training history for this article</p></span
-  >
+  <span id="no-history" *ngIf="!loading">
+    <p *ngIf="noHistory">There is no training history</p>
+    <p *ngIf="!dataSource?.length && !noHistory">No results</p>
+  </span>
+
+  <mat-spinner style="margin: auto;" *ngIf="loading"></mat-spinner>
 </div>

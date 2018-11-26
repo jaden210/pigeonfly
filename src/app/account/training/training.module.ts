@@ -23,6 +23,7 @@ import { MyContentSearchPipe } from "./my-content/search.pipe";
 import { MyContentFiltersDialog } from "./my-content/my-content-filters.dialog";
 import { HelpDialog } from "./help.dialog";
 import { ArticlesSearchPipe } from "./articles/search.pipe";
+import { FilterDialog } from "./dashboard/filter-dialog/filter.dialog";
 
 const routes: Routes = [
   {
@@ -73,7 +74,8 @@ const routes: Routes = [
     MyContentSearchPipe,
     MyContentFiltersDialog,
     HelpDialog,
-    ArticlesSearchPipe
+    ArticlesSearchPipe,
+    FilterDialog
   ],
   entryComponents: [
     AddTraineeDialog,
@@ -82,7 +84,8 @@ const routes: Routes = [
     TrainingStatusDialog,
     ReceivedTrainingDialog,
     MyContentFiltersDialog,
-    HelpDialog
+    HelpDialog,
+    FilterDialog
   ],
   providers: [TrainingService, PendingChangesGuard]
 })
