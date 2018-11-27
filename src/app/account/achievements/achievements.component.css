@@ -4,6 +4,7 @@
 }
 .level {
     display: flex;
+    justify-content: center;
 }
 .card {
     flex: 2;
@@ -14,6 +15,7 @@
     padding: 24px;
     display: flex;
     flex-wrap: wrap;
+    max-width: 550px;
 }
 .card-title {
     width: 100%;
@@ -41,6 +43,7 @@
     filter: grayscale(80%);
     cursor: pointer;
     transition: all 250ms;
+    text-align: center;
 }
 .color {
     filter: grayscale(0%);
@@ -81,6 +84,7 @@
     color: #ffffff;
     font-size: 18px;
     font-weight: 700;
+    user-select: none;
 }
 .fillcolor {
     transition: all 500ms 500ms;
@@ -93,8 +97,6 @@
 
 .stats {
     width: 400px;
-    position: relative;
-    margin-top: 338px;
 }
 
 .info {
@@ -110,7 +112,6 @@
 }
 
 .rank {
-    position: absolute;
     border-radius: 8px;
     background-color: #ffffff;
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
@@ -119,11 +120,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    top: 0;
-    right: 0;
-    z-index: 200;
-    width: 352px;
-    box-sizing: border-box;
 }
 
 .r-img-cont {

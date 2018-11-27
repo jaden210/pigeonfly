@@ -11,7 +11,7 @@
       <div class="checkpoint" *ngFor="let checkpoint of level.checkpoints">
         <div class="badge" *ngFor="let badge of checkpoint.achievements" [ngClass]="{'color': badge.fill > 0}" (click)="routeOrPop(badge)">
           <div class="badge-img" [matTooltip]="badge.fill + '%'" matTooltipPosition="right">
-            <mat-progress-spinner style="position:absolute;left: 3px;top: 2px;stroke:#ffd740 !important" mode="determinate" [value]="badge.fill" diameter="94" strokeWidth="10"></mat-progress-spinner>
+            <mat-progress-spinner style="position:absolute;left: 0px;top: -1px;stroke:#ffd740 !important" mode="determinate" [value]="badge.fill" diameter="100" strokeWidth="6"></mat-progress-spinner>
             <img class="badge-image" [src]="'/assets/achievements/' + badge.category + '.png'" alt="Compliancechimp">
           </div>
           {{badge.name}}
@@ -20,16 +20,16 @@
       </div>
     </div>
     <div class="stats">
+      <div class="rank" *ngIf="level.level == 0">
+        <div class="card-title r-center">Badges Earned</div>
+        <div class="r-img-cont">
+          <img class="r-img" src="/assets/achievements/tCount.png">
+          <div class="r-count">{{completedCount}}</div>
+        </div>
+        <div class="card-title r-center">Your Compliance Level</div>
+        <div class="r-level">{{complianceLevel}}</div>
+      </div>
       <div class="info" [innerHTML]="level.info"></div>
     </div>
-  </div>
-  <div class="rank">
-    <div class="card-title r-center">Badges Earned</div>
-    <div class="r-img-cont">
-      <img class="r-img" src="/assets/achievements/tCount.png">
-      <div class="r-count">{{completedCount}}</div>
-    </div>
-    <div class="card-title r-center">Your Compliance Level</div>
-    <div class="r-level">{{complianceLevel}}</div>
   </div>
 </div>
