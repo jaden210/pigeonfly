@@ -88,47 +88,39 @@ export class SelfInspectionComponent {
       unit: 'in',
       format: [8.5, 11]
     });
-    doc.setFontSize(14);
     const startOfPage = 0.75;
     const endOfPage = 10.25;
     const lineSpace = 0.2;
     const maxChars = 95;
     const x = 0.5;
     let y = startOfPage;
-
+    
+    doc.setFontSize(15);
+    doc.setFont("courier", "bold");
     doc.text(this.selfInspectionsService.selfInspection.title, x, y);
     y += (1.5 * lineSpace);
-    if (y > endOfPage) {
-      doc.addPage();
-      y = startOfPage;
-    }
-
     doc.text(si.completedAt.toString(), x, y);
     y += lineSpace;
-    if (y > endOfPage) {
-      doc.addPage();
-      y = startOfPage;
-    }
-
-    doc.setFont('courier');
+    doc.setFont('courier', "normal");
     si.categories.forEach(category => {
-      doc.setFontSize(12);
+      doc.setFontSize(13);
       y += (1.5 * lineSpace);
       if (y > endOfPage) {
         doc.addPage();
         y = startOfPage;
       }
-
+      
       doc.text(category.subject, x, y);
       y += (1.5 * lineSpace);
       if (y > endOfPage) {
         doc.addPage();
         y = startOfPage;
       }
-
-      doc.setFontSize(9);
+      
       category.questions.forEach(question => {
+        doc.setFontSize(9);
         let buffer = question.name;
+        doc.setFont('courier', "normal");
         while (buffer.length > 0) {
           if (buffer.length <= maxChars) {
             doc.text(buffer, x, y);
@@ -154,12 +146,57 @@ export class SelfInspectionComponent {
             }
           }
         }
-
-        if (question.answer === undefined) {
-          doc.text('undefined', x, y);
-        } else {
-          doc.text(question.answer.valueOf() + " - " + question.comment, x, y);
+        y += lineSpace;
+        if (y > endOfPage) {
+          doc.addPage();
+          y = startOfPage;
         }
+        doc.setFontSize(12);
+        if (question.answer === undefined) {
+          doc.text('No answer given', x, y);
+        } else {
+          doc.setFont("courier", "bold");
+          if (!question.answer) {
+            doc.setTextColor("#ff5252");
+          }
+          doc.text(question.answer ? "YES" : "NO", x, y);y += lineSpace;
+          doc.setTextColor("#000000");
+          if (y > endOfPage) {
+            doc.addPage();
+            y = startOfPage;
+          }
+          if (question.comment) {
+            let comment = question.comment;
+            doc.setFontSize(8);
+            while (comment.length > 0) {
+              if (comment.length <= maxChars) {
+                doc.text(comment, x, y);
+                y += lineSpace;
+                if (y > endOfPage) {
+                  doc.addPage();
+                  y = startOfPage;
+                }
+                comment = '';
+              } else {
+                const lastChar = comment.substring(0, maxChars).lastIndexOf(' ');
+                if (lastChar === -1) {
+                  doc.text(comment.substring(0, maxChars), x, y);
+                  comment = comment.substring(maxChars);
+                } else {
+                  doc.text(comment.substring(0, lastChar), x, y);
+                  comment = comment.substring(lastChar + 1);
+                }
+                y += lineSpace;
+                if (y > endOfPage) {
+                  doc.addPage();
+                  y = startOfPage;
+                }
+              }
+            }
+          } 
+        }
+        y += lineSpace;
+        y += lineSpace;
         y += lineSpace;
         if (y > endOfPage) {
           doc.addPage();

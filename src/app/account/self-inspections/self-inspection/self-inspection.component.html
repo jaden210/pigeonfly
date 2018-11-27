@@ -25,7 +25,7 @@
   <div class="inspections" *ngIf="completedInspections?.length > 0">
     <div class="info-title">Completed Inspections</div>
     <ng-container *ngFor="let inspection of completedInspections">
-      <div class="row" [matTooltip]="getCompliantPercent(inspection)" matTooltipShowDelay="600">
+      <div class="row">
         <h2>{{inspection?.createdAt | date: 'longDate'}}</h2>
         <div class="flex"></div>
         <p>{{inspection.compliantPercent*100}}% compliant</p>
