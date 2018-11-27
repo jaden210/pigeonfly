@@ -1,8 +1,9 @@
-import { Injectable } from "@angular/core";
+import { Injectable, Component } from "@angular/core";
 import { Observable } from "rxjs";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { map, tap, take, mergeMap } from "rxjs/operators";
 import { AccountService } from "../account.service";
+import { MatDialogRef } from "@angular/material";
 
 @Injectable({
   providedIn: "root"
@@ -184,4 +185,24 @@ export class Question {
   selected?: boolean;
   answer?: boolean;
   comment?: string;
+}
+
+@Component({
+  selector: "app-map-dialog",
+  template: `
+  <h2 mat-dialog-title>Are you sure?</h2>
+  <mat-dialog-content>Are you sure you want to delete this self-inspection? All data related to this self-inspection will be lost.</mat-dialog-content>
+  <mat-dialog-actions style="margin-top:12px" align="end"><button mat-button color="primary" style="margin-right:8px" (click)="close(false)">CANCEL</button>
+  <button mat-raised-button color="warn" (click)="close(true)">DELETE</button>
+  </mat-dialog-actions>
+  `
+})
+export class DeleteInspectionDialog {
+  constructor(
+    public dialogRef: MatDialogRef<DeleteInspectionDialog>
+  ) {}
+
+  close(shouldDelete) {
+    this.dialogRef.close(shouldDelete);
+  }
 }

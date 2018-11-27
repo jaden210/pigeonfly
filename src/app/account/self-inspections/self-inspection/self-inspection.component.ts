@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
-import { SelfInspectionsService, Inspection } from "../self-inspections.service";
-import { MatSnackBar } from "@angular/material";
+import { SelfInspectionsService, Inspection, DeleteInspectionDialog } from "../self-inspections.service";
+import { MatSnackBar, MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import * as jsPDF from 'jspdf';
 import { Location } from "@angular/common";
@@ -21,6 +21,7 @@ export class SelfInspectionComponent {
     private location: Location,
     private router: Router,
     private route: ActivatedRoute,
+    public dialog: MatDialog
   ) {
     if (!this.selfInspectionsService.selfInspection) {
       this.location.back();
@@ -53,15 +54,20 @@ export class SelfInspectionComponent {
   }
 
   deleteSelfInspection() {
-    this.selfInspectionsService.deleteSelfInspection().then(() => {
-      this.leave();
+    let dialog = this.dialog.open(DeleteInspectionDialog);
+    dialog.afterClosed().subscribe(bDelete => {
+      if (bDelete) {
+        this.selfInspectionsService.deleteSelfInspection().then(() => {
+          this.leave();
+        })
+        .catch(error => {
+          let snackbar = this.snackbar.open("error deleting Self Inspection...", null, {
+            duration: 3000
+          });
+          console.log(error);
+        });
+      }
     })
-    .catch(error => {
-      let snackbar = this.snackbar.open("error deleting Self Inspection...", null, {
-        duration: 3000
-      });
-      console.log(error);
-    });
   }
 
   leave() {

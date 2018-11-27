@@ -56,7 +56,7 @@
 .dot {
   height: 12px;
   width: 12px;
-  background-color: #e57373;
+  background-color: #ff8a65;
   margin-right: 4px;
   border-radius: 50%;
 }
@@ -134,9 +134,7 @@
 }
 
 #send {
-  position: absolute;
-  bottom: 35px;
-  right: 8px;
+  margin-left: 8px;
 }
 
 #counter {

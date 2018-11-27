@@ -137,7 +137,19 @@ export class AccountComponent {
       startedTrainings: 0,
       startedSelfAssesments: 0,
       completedSelfAssesments: 0,
-      injuryReports: 0
+      injuryReports: 0,
+      trainingSurveyResponseCount: 0,
+      isInviteEntireTeam: null,
+      customTrainingArticleCount: 0,
+      isAllSelfInspections: null,
+      isTeamSubmitInjuryReport: null,
+      isTeamCreateLogs: null,
+      isTrainingDashboardComplete: null,
+      isCurrentOnSelfInspections: null,
+      isCorrectedSelfInspections: null,
+      isAccidentsReported: null,
+      isAccidentVisible: null,
+      isInvitesCurrent: null
     });
   }
 

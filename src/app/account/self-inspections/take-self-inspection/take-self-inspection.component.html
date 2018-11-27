@@ -32,11 +32,11 @@
         <mat-icon id="helper" matTooltip="you can hit enter after selecting an answer to move onto the next question" matTooltipShowDelay="650">help_outline</mat-icon>
         <button mat-stroked-button color="primary" (keyup.enter)="nextQuestion()" [ngClass]="{'highlight': aQuestion.answer == false}" (click)="answerQuestion(false)"><mat-icon class="sm-icon">highlight_off</mat-icon>NO</button>
         <button mat-stroked-button color="primary" (keyup.enter)="nextQuestion()" [ngClass]="{'highlight': aQuestion.answer}" style="margin-left: 8px" (click)="answerQuestion(true)"><mat-icon class="sm-icon">check_circle</mat-icon>YES</button>
+        <button mat-icon-button color="primary" id="send" (click)="nextQuestion()"><mat-icon>send</mat-icon></button>
       </div>
       <mat-form-field appearance="outline" class="textarea">
         <textarea matInput [(ngModel)]="aQuestion.comment" matTextareaAutosize matAutosizeMinRows=8 placeholder="optional comments for the question"></textarea>
       </mat-form-field>
-        <button mat-icon-button color="primary" id="send" (click)="nextQuestion()"><mat-icon>send</mat-icon></button>
     </div>
   </div>
 </div>

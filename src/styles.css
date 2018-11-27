@@ -156,6 +156,10 @@ agm-map {
     margin: 0 4px !important;
 }
 
+.mat-progress-spinner circle, .mat-spinner circle { /* for progress bar in badges. will change all spiiner color */
+    stroke: #ffd740 !important;
+}
+
 @media screen and (max-width: 785px) {
     .hwindow {
         height: calc(100vh - 56px);

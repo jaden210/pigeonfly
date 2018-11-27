@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { SelfInspectionsService, Question, Categories } from "../self-inspections.service";
+import { SelfInspectionsService, Question, Categories, DeleteInspectionDialog } from "../self-inspections.service";
 import { MatSnackBar, MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Location, DatePipe } from "@angular/common";
@@ -19,7 +19,8 @@ export class TakeSelfInspectionComponent {
     public selfInspectionsService: SelfInspectionsService,
     private snackbar: MatSnackBar,
     private router: Router,
-    public location: Location
+    public location: Location,
+    public dialog: MatDialog
   ) {
     !this.selfInspectionsService.selfInspection ? this.router.navigate(['account/self-inspections']) : null;
     this.aCategory = this.selfInspectionsService.takeInspection.categories[0];
@@ -57,16 +58,21 @@ export class TakeSelfInspectionComponent {
   }
 
   deleteSelfInspection() {
-    this.selfInspectionsService.deleteSelfInspectionInspection().then(() => {
-      this.router.navigate(["/account/self-inspections"]);
-      this.selfInspectionsService.selfInspection = null;
+    let dialog = this.dialog.open(DeleteInspectionDialog);
+    dialog.afterClosed().subscribe(bDelete => {
+      if (bDelete) {
+        this.selfInspectionsService.deleteSelfInspectionInspection().then(() => {
+          this.router.navigate(["/account/self-inspections"]);
+          this.selfInspectionsService.selfInspection = null;
+        })
+        .catch(error => {
+          let snackbar = this.snackbar.open("error deleting Self Inspection...", null, {
+            duration: 3000
+          });
+          console.log(error);
+        });
+      }
     })
-    .catch(error => {
-      let snackbar = this.snackbar.open("error deleting Self Inspection...", null, {
-        duration: 3000
-      });
-      console.log(error);
-    });
   }
 
   answerQuestion(value) {

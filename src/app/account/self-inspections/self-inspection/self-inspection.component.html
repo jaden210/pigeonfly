@@ -27,8 +27,8 @@
     <ng-container *ngFor="let inspection of completedInspections">
       <div class="row" [matTooltip]="getCompliantPercent(inspection)" matTooltipShowDelay="600">
         <h2>{{inspection?.createdAt | date: 'longDate'}}</h2>
-        <div class="fill" [ngStyle]="{'width':(inspection.compliantPercent*100)+'%'}"></div>
         <div class="flex"></div>
+        <p>{{inspection.compliantPercent*100}}% compliant</p>
         <button mat-button color="primary" (click)="export(inspection)">EXPORT TO PDF</button>
       </div>
     </ng-container>

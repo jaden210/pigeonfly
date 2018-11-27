@@ -28,12 +28,13 @@ import { NoAccessDialog } from "./account.service";
 import { ImagesDialogComponent } from "./images-dialog/images-dialog.component";
 import { TrainingModule } from "./training/training.module";
 import { SharedModule } from "../shared-module";
-import { AchievementsComponent } from "./achievements/achievements.component";
+import { AchievementsComponent, ConfirmCompleteDialog } from "./achievements/achievements.component";
 import { StatsComponent } from "./stats/stats.component";
 import { AngularEditorModule } from "@kolkov/angular-editor";
 import { AssesComponent } from "./stats/ases/make-osha.component";
 import { MakePaymentComponent } from "./account/payments/make-payment/make-payment.component";
 import { PeopleDialogComponent } from "./people-dialog.component";
+import { DeleteInspectionDialog } from "./self-inspections/self-inspections.service";
 
 @NgModule({
   imports: [
@@ -73,7 +74,9 @@ import { PeopleDialogComponent } from "./people-dialog.component";
     AssesComponent,
     MakePaymentComponent,
     PeopleDialogComponent,
-    DeleteAccountDialog
+    DeleteAccountDialog,
+    ConfirmCompleteDialog,
+    DeleteInspectionDialog
   ],
   exports: [MaterialModule, TrainingModule, SurveysModule],
   entryComponents: [
@@ -87,7 +90,9 @@ import { PeopleDialogComponent } from "./people-dialog.component";
     WelcomeDialog,
     MakePaymentComponent,
     PeopleDialogComponent,
-    DeleteAccountDialog
+    DeleteAccountDialog,
+    ConfirmCompleteDialog,
+    DeleteInspectionDialog
   ],
   providers: [DatePipe]
 })

@@ -1,6 +1,10 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { AccountService } from '../account.service';
+import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
+import * as moment from "moment";
+import { Router } from '@angular/router';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
   selector: 'app-achievements',
@@ -9,83 +13,97 @@ import { map } from 'rxjs/operators';
 })
 export class AchievementsComponent implements OnInit {
 
-  achievements;
-  completedCount: number;
-  orderings = [{ordering: 0, achievements: [], completed: 0, completedPercent: ""}];
-
-  @ViewChild("myCanvas")
-  canvas: ElementRef;
-  context;
-
-  progress = 0;
-
-  constructor(public accountService: AccountService) { }
+  complianceLevel: number = 0;
+  completedCount: number = 0;
+  levels = [];
+  completedAchievementsDocId;
+ 
+  constructor(public accountService: AccountService, public router: Router, public dialog: MatDialog) { }
 
   ngOnInit() {
     this.accountService.helper = this.accountService.helperProfiles.achievement;
     this.accountService.teamUsersObservable.subscribe(users => {
       if (users) {
-        let achievementsCollection = this.accountService.db.collection("achievement", ref => ref.orderBy("ordering"));
-        achievementsCollection.snapshotChanges().pipe(
-          map(actions => actions.map(a => { //better way
-            const data = a.payload.doc.data() as Achievements;
-            const id = a.payload.doc.id;
-            return { id, ...data };
-          }))
-          ).subscribe(achievements => {
-            this.achievements = achievements;
-            let completedCollection = this.accountService.db.collection("completed-achievement", ref => ref.where("teamId", "==", this.accountService.aTeam.id));
-            completedCollection.snapshotChanges().pipe(
-              map(actions => actions.map(a => { //better way
-                const data = a.payload.doc.data() as CompletedAchievements;
-                const id = a.payload.doc.id;
-                return { id, ...data };
-              }))
-              ).subscribe(completedAchievement => {
-                this.completedCount = 0;
-                achievements.forEach(achievement => {
-                  let order = this.orderings.find(order => order.ordering == achievement.ordering);
-                  if (!order) {
-                    order = {ordering: achievement.ordering, achievements: [], completed: 0, completedPercent: ""};
-                    order.achievements.push(achievement);
-                    this.orderings.push(order);
-                  } else {
-                    order.achievements.push(achievement);
+        combineLatest(this.getAchievements(), this.getCompletedAchievements()).subscribe(results => {
+          this.levels = results[0];
+          this.completedAchievementsDocId =  results[1][0].id;
+          results[0].forEach(level => {
+            level.completedAchievementsCount = 0;
+            level.possibleAchievementsCount = 0;
+            level.checkpoints.forEach(checkpoint => {
+              checkpoint.progress = 0;
+              checkpoint.achievements.forEach(achievement => {
+                achievement.progress = results[1][0][achievement.key] || 0;
+                level.possibleAchievementsCount = level.possibleAchievementsCount + 1;
+                if (achievement.progress >= achievement.completedValue || achievement.progress == true) { //already achieved
+                  achievement.complete = true;
+                  achievement.fill = 100; // circle value
+                  checkpoint.progress = checkpoint.progress + 100;
+                  level.completedAchievementsCount = level.completedAchievementsCount + 1;
+                  this.completedCount = this.completedCount + 1;
+                } else if (achievement.progress.constructor.name == "Timestamp") { // this covers the badges users have to complete
+                  let date = moment(achievement.progress.toDate());
+                  if (moment().diff(date, 'days') <= achievement.completedValue) {
+                    achievement.complete = true;
+                    achievement.fill = 100; // circle value
+                    checkpoint.progress = checkpoint.progress + 100;
+                    level.completedAchievementsCount = level.completedAchievementsCount + 1;
+                    this.completedCount = this.completedCount + 1;
                   }
-                });
-                this.orderings.forEach(ordering => {
-                  ordering.achievements.forEach(oachievement => {
-                    oachievement.progress = completedAchievement[0][oachievement.key];
-                    if (oachievement.progress >= oachievement.completedValue || oachievement.progress == true) { //already achieved
-                      oachievement.complete = true;
-                      this.completedCount ++;
-                      oachievement.fill = 50;
-                      ordering.completed = ordering.completed + 100;
-                    } else {
-                      if (oachievement.progress !== false) {
-                        oachievement.fill = ((oachievement.progress / oachievement.completedValue) * 100);
-                        ordering.completed = ordering.completed + ((oachievement.progress / oachievement.completedValue) * 100);
-                      }
-                    }
-                  });
-                  ordering.completed = ordering.completed / ordering.achievements.length;
-                  ordering.completedPercent = ordering.completed + "%";
-                  console.log(ordering.completed);
-                  console.log(ordering.completedPercent);
-                  
-                })
-              })
-            
-          });
-      }
-    });
-  }  
-
-  counter(i: number) {
-    return new Array(i);
+                } else {
+                  if (achievement.progress !== false) {
+                    let progress = ((achievement.progress / achievement.completedValue) * 100)
+                    achievement.fill = progress; // circle value
+                    checkpoint.progress = checkpoint.progress + progress;
+                  }
+                }
+              });
+              checkpoint.progress = (checkpoint.progress / checkpoint.achievements.length) + '%';
+            });
+            if (level.completedAchievementsCount == level.possibleAchievementsCount) this.complianceLevel = this.complianceLevel + 1;
+        })
+      });
+    }
+  });
 }
 
+routeOrPop(badge) {
+  if (badge.routerLink) {
+    this.router.navigate([badge.routerLink]);
+  } else {
+    let dialog = this.dialog.open(ConfirmCompleteDialog, {
+      data: badge
+    });
+    dialog.afterClosed().subscribe(key => {
+      if (key) { // save the date to completedAchievements
+        let date = new Date();
+        this.accountService.db.collection("completed-achievement").doc(this.completedAchievementsDocId).update({[key]: date});
+      }
+    })
+  }
+}
 
+getAchievements() {
+  let achievementsCollection = this.accountService.db.collection("achievement", ref => ref.orderBy("level"));
+    return achievementsCollection.snapshotChanges().pipe(
+      map(actions => actions.map(a => { //better way
+        const data = a.payload.doc.data() as Achievements;
+        const id = a.payload.doc.id;
+        return { id, ...data };
+      }))
+    )
+}
+
+getCompletedAchievements() {
+  let completedCollection = this.accountService.db.collection("completed-achievement", ref => ref.where("teamId", "==", this.accountService.aTeam.id));
+    return completedCollection.snapshotChanges().pipe(
+      map(actions => actions.map(a => { //better way
+        const data = a.payload.doc.data() as CompletedAchievements;
+        const id = a.payload.doc.id;
+        return { id, ...data };
+      }))
+    )
+  }
 }
 
 
@@ -95,11 +113,11 @@ export class Achievements {
   name: string;
   completedValue: number;
   key: string
-  ordering: number;
-
-  complete: boolean;
-  progress?: any;
+  completedAchievementsCount: number;
+  possibleAchievementsCount: number;
   fill;
+  level;
+  checkpoints;
 }
 
 export class CompletedAchievements {
@@ -107,4 +125,29 @@ export class CompletedAchievements {
   teamId: string;
   achievementId: string;
   createdAt: Date;
+}
+
+
+@Component({
+  selector: "app-map-dialog",
+  template: `
+  <h2 mat-dialog-title>Confirm Completion?</h2>
+  <mat-dialog-content>
+  This is a self-assesment badge. If you feel like this complete, click yes.
+  </mat-dialog-content>
+  <mat-dialog-actions style="margin-top:12px" align="end">
+  <button mat-button color="primary" style="margin-right:8px" (click)="close(false)">CANCEL</button>
+  <button mat-raised-button color="accent" style="color:#ffffff" (click)="close(true)">YES</button>
+  </mat-dialog-actions>
+  `
+})
+export class ConfirmCompleteDialog {
+  constructor(
+    public dialogRef: MatDialogRef<ConfirmCompleteDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
+
+  close(save) {
+    save ? this.dialogRef.close(this.data.key) : this.dialogRef.close();
+  }
 }
