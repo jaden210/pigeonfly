@@ -41,8 +41,8 @@ export class TakeSelfInspectionComponent {
       });
     });
     this.count = answeredQuestions + '/' + totalQuestions;
-    this.selfInspectionsService.takeInspection.completedPercent = answeredQuestions/totalQuestions;
-    this.selfInspectionsService.takeInspection.compliantPercent = compliantAnswers/totalQuestions;
+    this.selfInspectionsService.takeInspection.completedPercent = Math.round((answeredQuestions/totalQuestions)*100);
+    this.selfInspectionsService.takeInspection.compliantPercent = Math.round((compliantAnswers/totalQuestions)*100);
   }
 
   finishAndLeave() {

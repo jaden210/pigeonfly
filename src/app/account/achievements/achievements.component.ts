@@ -13,8 +13,8 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 })
 export class AchievementsComponent implements OnInit {
 
-  complianceLevel: number = 0;
-  completedCount: number = 0;
+  complianceLevel: number;
+  completedCount: number;
   levels = [];
   completedAchievementsDocId;
  
@@ -25,6 +25,8 @@ export class AchievementsComponent implements OnInit {
     this.accountService.teamUsersObservable.subscribe(users => {
       if (users) {
         combineLatest(this.getAchievements(), this.getCompletedAchievements()).subscribe(results => {
+          this.completedCount = 0;
+          this.complianceLevel = 0;
           this.levels = results[0];
           this.completedAchievementsDocId =  results[1][0].id;
           results[0].forEach(level => {

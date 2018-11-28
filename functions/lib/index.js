@@ -153,29 +153,26 @@ exports.updateTeam = functions.firestore.document("team/{teamId}").onUpdate((cha
     if (!oldTeam.cardToken && newTeam.cardToken) {
         billing = updateCompletedAchievement(newTeam.id, "hasBillingInfo", true);
     }
+    let address;
+    if (!oldTeam.street && newTeam.street) {
+        address = updateCompletedAchievement(context.params.teamId, "hasContactInfo", true);
+    }
     /* logoUrl achievement */
     let logo;
     if (!oldTeam.logoUrl && newTeam.logoUrl) {
         logo = updateCompletedAchievement(newTeam.id, "hasCompanyLogo", true);
     }
-    Promise.all([billing, logo]).then(() => console.log('update team complete'));
+    Promise.all([billing, logo, address]).then(() => console.log('update team complete'));
 });
 /* ----- USER ----- */
 exports.userCreated = functions.firestore.document("user/{userId}").onCreate(snapshot => {
     let user = snapshot.data();
-    return logAsEvent(EventType.member, EventAction.created, snapshot.id, user.id, "Was added to the system", user.teams[0] || null)
-        .then(() => console.log("created user complete"));
+    return null;
 });
 exports.userChange = functions.firestore.document("user/{userId}").onUpdate((change, context) => {
     let oldUser = change.before.data();
     let newUser = change.after.data();
-    /* profileUrl achievement */
-    if (newUser.accountType == "owner" && (!oldUser.profileUrl && newUser.profileUrl)) {
-        return updateCompletedAchievement(newUser.teamId, "hasOwnerProfileUrl", true)
-            .then(() => console.log("updated user complete"));
-    }
-    else
-        return null;
+    return null;
 });
 /* ----- TIMECLOCKS ----- */
 exports.createdTimeclock = functions.firestore.document("team/{teamId}/timeclock/{id}").onCreate((snapshot, context) => {
@@ -201,9 +198,11 @@ exports.modifiedTimeclock = functions.firestore.document("team/{teamId}/timecloc
 /* ----- INVITATIONS ----- */
 exports.createdInvitation = functions.firestore.document("invitation/{id}").onCreate(snapshot => {
     let invitation = snapshot.data();
+    let promises = [];
+    promises.push(logAsEvent(EventType.member, EventAction.created, snapshot.id, invitation.invitedBy, "Was invited to the system", invitation.teamId || null));
     /* total invites achievement */
-    return updateCompletedAchievement(invitation.teamId, "invitedUsers", 1, true)
-        .then(() => console.log("created invitation complete"));
+    promises.push(updateCompletedAchievement(invitation.teamId, "invitedUsers", 1, true));
+    return Promise.all(promises).then(() => console.log("created invitation complete"));
 });
 /* ----- SELF INSPECTION ----- */
 exports.createdSelfInspection = functions.firestore.document("team/{teamId}/self-inspection/{id}").onCreate((snapshot, context) => {
@@ -251,8 +250,15 @@ exports.deletedSurvey = functions.firestore.document("team/{teamId}/survey/{logI
 /* ----- SURVEY RESPONSE ----- */
 exports.createdSurveyResponse = functions.firestore.document("team/{teamId}/survey-response/{id}").onCreate((snapshot, context) => {
     let surveyResponse = snapshot.data();
-    return logAsEvent(EventType.surveyResponse, EventAction.repsond, surveyResponse.surveyId, surveyResponse.userId, surveyResponse.shortAnswer || '' + ' ' + surveyResponse.longAnser || '', context.params.teamId)
-        .then(() => console.log("created survey response complete"));
+    const trainingSurveyResponse = updateCompletedAchievement(context.params.teamId, "trainingSurveyResponseCount", 1, true);
+    const trainingLog = logAsEvent(EventType.surveyResponse, EventAction.repsond, surveyResponse.surveyId, surveyResponse.userId, surveyResponse.shortAnswer || '' + ' ' + surveyResponse.longAnser || '', context.params.teamId);
+    return Promise.all([trainingLog, trainingSurveyResponse]).then(() => console.log("created survey response complete"));
+});
+/* ----- CUSTOM ARTICLE ----- */
+exports.createdCustomTrainingArticle = functions.firestore.document("team/{teamId}/article/{id}").onCreate((snapshot, context) => {
+    let article = snapshot.data();
+    const trainingSurveyResponse = updateCompletedAchievement(context.params.teamId, "customTrainingArticleCount", 1, true);
+    return Promise.all([trainingSurveyResponse]).then(() => console.log("created survey response complete"));
 });
 /*  ---------- Achievements ----------  */
 function updateCompletedAchievement(teamId, mapKey, value, sum) {
@@ -291,6 +297,7 @@ var EventType;
     EventType["selfInspection"] = "Self Inspection";
     EventType["training"] = "Training";
     EventType["member"] = "Member";
+    EventType["customContent"] = "Custom training article";
 })(EventType || (EventType = {}));
 var EventAction;
 (function (EventAction) {

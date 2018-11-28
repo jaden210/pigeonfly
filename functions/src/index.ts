@@ -179,13 +179,18 @@ exports.updateTeam = functions.firestore.document("team/{teamId}").onUpdate((cha
   if (!oldTeam.cardToken && newTeam.cardToken) {
     billing = updateCompletedAchievement(newTeam.id, "hasBillingInfo", true);
   }
+
+  let address;
+  if (!oldTeam.street && newTeam.street) {
+    address = updateCompletedAchievement(context.params.teamId, "hasContactInfo", true);
+  }
   
   /* logoUrl achievement */
   let logo;
   if (!oldTeam.logoUrl && newTeam.logoUrl) {
     logo = updateCompletedAchievement(newTeam.id, "hasCompanyLogo", true)
   }
-  Promise.all([billing, logo]).then(() => console.log('update team complete'));
+  Promise.all([billing, logo, address]).then(() => console.log('update team complete'));
 });
 
 /* ----- USER ----- */

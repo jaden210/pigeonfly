@@ -39,9 +39,7 @@ export class TimeComponent implements OnInit, OnDestroy {
   timeClocks: any = [];
   days = [];
 
-  lat: number;
-  long: number;
-
+  timeLength = 0;
   now: any = moment().format("MMM");
 
   constructor(
@@ -61,17 +59,16 @@ export class TimeComponent implements OnInit, OnDestroy {
   }
 
   private getLogs(): void {
-    this.timeService
-      .getTimeLogs(this.accountService.aTeam.id)
-      .subscribe(logs => {
-        if (logs.length == 0 && this.timeClocks.length > 0) return;
-        this.timeClocks = logs;
+    this.timeService.getTimeLogs().subscribe(timeclocks => {
+      if ((timeclocks.length == this.timeLength) && timeclocks.length > 0) return;
+        this.timeLength = timeclocks.length;
+        this.timeClocks = timeclocks;
         this.timeService.limit = this.timeService.limit + 50;
-        if (this.timeClocks.length == 0) {
+        if (timeclocks.length == 0) {
           this.accountService.showHelper = true;
           return;
         }
-        this.buildCalendar();
+        this.buildCalendar(timeclocks);
         this.onScroll();
       });
   }
@@ -94,7 +91,7 @@ export class TimeComponent implements OnInit, OnDestroy {
     }
   }
 
-  private buildCalendar(): void {
+  private buildCalendar(timeclocks): void {
     this.days = [];
     let now: any = new Date();
     let total_days = moment(now).diff(
@@ -106,7 +103,7 @@ export class TimeComponent implements OnInit, OnDestroy {
       let month = date.format("MMM");
       let day = date.format("DD");
       let dOW = date.format("ddd");
-      let timeClocks = this.getClocksByDate(date, this.timeClocks);
+      let timeClocks = this.getClocksByDate(date, timeclocks);
       this.days.push({
         id: i + 1,
         date,
@@ -162,6 +159,53 @@ export class TimeComponent implements OnInit, OnDestroy {
     });
   }
 
+  createEditTime(day, timeclock?) {
+    if (!timeclock) {
+      timeclock = new Timeclock();
+      timeclock.clockIn = day.date;
+      timeclock.clockOut = day.date;
+      timeclock.userId = this.accountService.user.id;
+    }
+    let dialog = this.dialog.open(CreateEditTimeDialog, {
+      data: timeclock,
+      disableClose: true
+    });
+    dialog.afterClosed().subscribe((time: Timeclock) => {
+      timeclock.bShowDetails = false;
+      if (time) {
+        let tempUser = time["user"];
+        delete time["bShowDetails"];
+        delete time["querySelectorId"];
+        delete time["user"];
+        delete time["loggedHours"];
+        delete time["loggedMinutes"];
+        time.updatedAt = new Date();
+        time.updatedBy = this.accountService.user.name;
+        time.updatedId = this.accountService.user.id;
+        if (time.id) {
+          this.accountService.db
+          .collection(`team/${this.accountService.aTeam.id}/timeclock`)
+          .doc(time.id)
+          .update({ ...time })
+          .then(() => {
+            time["user"] = tempUser;
+          });
+        } else {
+          time.teamId = this.accountService.aTeam.id;
+          this.accountService.db
+          .collection(`team/${this.accountService.aTeam.id}/timeclock`)
+          .add({ ...time })
+          .then(snapshot => {
+            time.id = snapshot.id;
+            this.getLogs();
+          });
+        }
+      } else {
+        this.getLogs();
+      }
+    });
+  }
+  
   public exportCSV(): void {
     this.downloadCSV(
       { filename: `timelog- ${this.Date} + .csv` },
@@ -230,14 +274,14 @@ export class TimeComponent implements OnInit, OnDestroy {
     logs.forEach(log => {
       map.forEach(col => {
         result +=
-          '"' + (log[col.key] || log[col.key] == 0 ? log[col.key] : "") + '"';
+        '"' + (log[col.key] || log[col.key] == 0 ? log[col.key] : "") + '"';
         result += columnDelimiter;
       });
       result += lineDelimiter;
     });
     return result;
   }
-
+  
   downloadCSV(args, logs) {
     let data, filename, link;
     let csv = this.convertOrderHeaderToCSV({});
@@ -254,52 +298,6 @@ export class TimeComponent implements OnInit, OnDestroy {
     link.click();
   }
 
-  createEditTime(day, timeclock?) {
-    if (!timeclock) {
-      timeclock = new Timeclock();
-      timeclock.clockIn = day.date;
-      timeclock.clockOut = day.date;
-      timeclock.userId = this.accountService.user.id;
-    }
-    let dialog = this.dialog.open(CreateEditTimeDialog, {
-      data: timeclock,
-      disableClose: true
-    });
-    dialog.afterClosed().subscribe((time: Timeclock) => {
-      timeclock.bShowDetails = false;
-      if (time) {
-        let tempUser = time["user"];
-        delete time["bShowDetails"];
-        delete time["querySelectorId"];
-        delete time["user"];
-        delete time["loggedHours"];
-        delete time["loggedMinutes"];
-        time.updatedAt = new Date();
-        time.updatedBy = this.accountService.user.name;
-        time.updatedId = this.accountService.user.id;
-        if (time.id) {
-          this.accountService.db
-            .collection(`team/${this.accountService.aTeam.id}/timeclock`)
-            .doc(time.id)
-            .update({ ...time })
-            .then(() => {
-              time["user"] = tempUser;
-            });
-        } else {
-          time.teamId = this.accountService.aTeam.id;
-          this.accountService.db
-            .collection(`team/${this.accountService.aTeam.id}/timeclock`)
-            .add({ ...time })
-            .then(snapshot => {
-              time.id = snapshot.id;
-              this.getLogs();
-            });
-        }
-      } else {
-        this.getLogs();
-      }
-    });
-  }
   ngOnDestroy() {
     this.accountService.searchForHelper = '';
   }

@@ -137,6 +137,7 @@ export class EventComponent {
   }
 
   routeToEventOrigin(event: Event) {
+    console.log(event.type);
     switch (event.type) {
       case EventType.log:
       this.accountService.searchForHelper = event.documentId;
@@ -154,7 +155,7 @@ export class EventComponent {
       this.router.navigate(['account/incident-reports']);
       return;
       case EventType.selfInspection:
-      this.router.navigate(['account/self-inspection']);
+      this.router.navigate(['account/self-inspections']);
       return;
       case EventType.survey:
       console.log(event.documentId);

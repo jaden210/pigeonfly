@@ -26,7 +26,7 @@ export class HelperService {
         "Using the app, anyone on your team can track their time. Each time event is recorded here so that you have a historical record. Time can be exported at any time, for anyone, which makes entering payroll a breeze. The administrator of this account can adjust time as necessary by clicking on any time log and editing it. Forget paperwork and workers trying to rely on memory. Use the time clock instead."
     },
     log: {
-      name: "Log",
+      name: "Logs",
       description:
         "Using the app, any member of your team can create a worksite log, including pictures and text. Location is also captured each time a log is created. Worksite logs can and should include everything from periodic progress and work accomplished, to client change orders and project updates, to incidents, injuries, near misses, safety concerns, or other noteworthy happenings. Worksite logs build the historical record which is called upon in the event of an OSHA audit or inspection. Aside from that, worksite logs create a living journal of the work your business accomplishes over time, all in one central place."
     },
@@ -48,7 +48,7 @@ export class HelperService {
     selfInspection: {
       name: "Self-Inspection",
       description:
-        "The most important preventive measure any business takes to protect its workers, is ensuring the workplace itself is safe. No amount of training can compensate for an unsafe work environment. Our self-inspection process helps you identify risks, and address them. Click the plus button to the right to begin your first self inspection. And you can create as many self-inspections as you’d like - covering any number of different locations or worksites, etc."
+        "The most important preventive measure any business takes to protect its workers, is ensuring the workplace itself is safe. No amount of training can compensate for an unsafe work environment. Our self-inspection process helps you identify risks, and address them. Click the 'New Self-Inspection' button to the right to begin your first self inspection. And you can create as many self-inspections as you’d like - covering any number of different locations or worksites, etc."
     },
     osha: {
       name: "OSHA Self-Inspection",
@@ -71,9 +71,9 @@ export class HelperService {
         "Selecting a company type will help us show the right infomation to your users in the app. put better stuff here."
     },
     achievement: {
-      name: "Achievements",
+      name: "Badges",
       description:
-        "This page was designed specifically to help you gain the benefits of Compliancechimp as quickly as possible. Compliancechimp is a thorough and powerful platform which improves safety and protects businesses. But those benefits only come if it gets used. Get started on earning every trophy, today. Your compliance coincides with earning these trophies. When you’ve earned them all, we’ll send along some fun Compliancechimp merch as a reward."
+        "This page was designed specifically to help you gain the benefits of Compliancechimp as quickly as possible. Compliancechimp is a thorough and powerful platform which improves safety and protects businesses. But those benefits only come if it gets used. Get started on earning every trophy, today. Your compliance coincides with earning these trophies."
     },
     training: {
       name: "Training",

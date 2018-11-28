@@ -36,6 +36,8 @@
                   <div class="block" (click)="log.bShowDetails == true ? log.bShowDetails = false : log.bShowDetails = true">
                     <div class="type">{{log.user?.name}} -&nbsp;</div>
                     <div class="title">{{log.description}}</div>
+                    <div class="flex"></div>
+                    <div class="map-icon" *ngIf="log.bShowDetails && log.LatPos" matTooltip="view log location" matTooltipShowDelay="300" (click)="$event.stopPropagation();showMap(log)"><mat-icon class="map">location_on</mat-icon></div>
                   </div>
                   <div class="details" [@expand] *ngIf="log.bShowDetails">
                     <div class="image-row">

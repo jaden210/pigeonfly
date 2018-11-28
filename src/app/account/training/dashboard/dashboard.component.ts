@@ -46,6 +46,7 @@ export class DashboardComponent implements AfterViewInit {
   ) {}
 
   ngAfterViewInit() {
+    this.accountService.helper = this.accountService.helperProfiles.training;
     this.context = this.canvas.nativeElement.getContext("2d");
     this.scale = window.devicePixelRatio || 1;
     this.context.scale(2, 2);

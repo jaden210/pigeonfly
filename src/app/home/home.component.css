@@ -19,16 +19,8 @@
   position: relative;
 }
 
-#home-chimp {
-  height: 350px;
-  position: absolute;
-  top: 190px;
-}
-
-#home-fade {
-  position: absolute;
-  height: 390px;
-  top: 100px;
+#new-c {
+  height: 500px;
 }
 
 .pt {
@@ -249,14 +241,7 @@
 }
 
 #mobile-chimp {
-  height: 84%;
-  position: absolute;
-  bottom: 0;
-}
-
-#mobile-fade {
-  height: 89%;
-  position: absolute;
+  height: 100%;
 }
 
 @media screen and (max-width: 1200px) {
@@ -337,8 +322,4 @@
     min-height: 24px;
     font-size: 12px;
 }
-}
-
-#new-c {
-  height: 500px;
 }

@@ -28,6 +28,8 @@ export class SelfInspectionComponent {
       return;
     };
     this.selfInspectionsService.getInspections().subscribe(inspections => {
+      this.inProgressInspections = [];
+      this.completedInspections = [];
       inspections.forEach(inspection => {
         if (inspection.completedAt) {
           this.completedInspections.push(inspection);
@@ -73,13 +75,6 @@ export class SelfInspectionComponent {
   leave() {
     this.location.back();
     this.selfInspectionsService.selfInspection = null;
-  }
-
-  getCompliantPercent(inspection): string {
-    return (Math.round(inspection.compliantPercent*100))+'% compliant';
-  }
-  getCompletePercent(inspection): string {
-    return (Math.round(inspection.completedPercent*100))+'% complete';
   }
 
   export(si: Inspection) {

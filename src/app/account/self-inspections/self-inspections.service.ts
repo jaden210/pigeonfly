@@ -130,7 +130,7 @@ export class SelfInspectionsService {
     .collection(`team/${this.accountService.aTeam.id}/self-inspection`)
     .doc(this.selfInspection.id)
     .collection("inspections")
-    .doc(inspection || this.takeInspection.id).delete();
+    .doc(inspection.id || this.takeInspection.id).delete();
   }
 
   finishSelfInspection(): Promise<any> {

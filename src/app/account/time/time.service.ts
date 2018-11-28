@@ -9,10 +9,8 @@ import * as moment from "moment";
 
 @Injectable()
 export class TimeService {
-  public lastLoadLength: number;
 
-
-  limit:number = 50;
+  limit: number = 50;
 
   constructor(
     private afs: AngularFirestore,
@@ -20,9 +18,7 @@ export class TimeService {
     private accountService: AccountService
   ) {}
 
-  public getTimeLogs(
-    teamId: string
-    ): Observable<any> {
+  public getTimeLogs(): Observable<any> {
       return this.afs.collection(`team/${this.accountService.aTeam.id}/timeclock`, ref => 
       ref.where("clockOut", "<=", new Date())
         .orderBy("clockOut", "desc")

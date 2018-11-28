@@ -17,10 +17,10 @@
         <mat-panel-description>{{getLength(subject.questions)}}/{{subject?.questions?.length || 0}}</mat-panel-description>
       </mat-expansion-panel-header>
       <mat-list #questions>
-        <mat-list-item *ngFor="let question of subject.questions">
+        <mat-list-item *ngFor="let question of subject.questions" (click)="question.selected ? question.selected = false : question.selected = true">
           {{question.name}}
           <div class="flex"></div>
-          <mat-checkbox [(ngModel)]="question.selected"></mat-checkbox>
+          <mat-checkbox style="margin-left: 8px" (click)="$event.stopPropagation()" [(ngModel)]="question.selected"></mat-checkbox>
         </mat-list-item>
         <mat-list-item>
           <mat-form-field style="width: 100%" floatLabel="never">

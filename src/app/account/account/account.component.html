@@ -39,6 +39,24 @@
     <mat-form-field>
       <input matInput color="primary" placeholder="phone" type="tel" [(ngModel)]="accountService.aTeam.phone" (change)="saveTeam()">
     </mat-form-field>
+    <mat-form-field>
+      <input matInput color="primary" placeholder="address" type="text" [(ngModel)]="accountService.aTeam.street" (change)="saveTeam()">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput color="primary" placeholder="address 2" type="text" [(ngModel)]="accountService.aTeam.street2" (change)="saveTeam()">
+    </mat-form-field>
+    <div class="row">
+
+      <mat-form-field>
+        <input matInput color="primary" placeholder="city" type="text" [(ngModel)]="accountService.aTeam.city" (change)="saveTeam()">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput color="primary" placeholder="state" type="text" [(ngModel)]="accountService.aTeam.state" (change)="saveTeam()">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput color="primary" placeholder="zip" type="text" [(ngModel)]="accountService.aTeam.zip" (change)="saveTeam()">
+      </mat-form-field>
+    </div>
     <div id="ctype">
       <div id="cti">Company Type<mat-icon style="color: #666666; cursor: pointer; margin:0 8px" (click)="helper('companyType')">help</mat-icon></div>
       <mat-radio-group class="radio-group" [(ngModel)]="accountService.aTeam.type" (change)="saveTeam()">

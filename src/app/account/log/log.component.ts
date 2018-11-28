@@ -14,6 +14,8 @@ import { ImagesDialogComponent } from "../images-dialog/images-dialog.component"
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 import { Observable } from "rxjs";
 import { PeopleDialogComponent } from "../people-dialog.component";
+import { MapDialogComponent } from "../map-dialog/map-dialog.component";
+import { LogService } from "./log.service";
 
 @Component({
   selector: "app-log",
@@ -30,23 +32,20 @@ import { PeopleDialogComponent } from "../people-dialog.component";
         animate("400ms ease-in-out", style({ height: 0 }))
       ])
     ])
-  ]
+  ],
+  providers: [LogService]
 })
 export class LogComponent implements OnDestroy {
   searchStr: string; // template variable
   searchVisible: boolean = true;
   filterUsers: string[] = [];
 
-  logs: any = [];
-  limit: number = 50; // for pagination
+  logsLength = 0;
   days = [];
-
-  lat: number;
-  long: number;
 
   now: any = moment().format("MMM");
 
-  constructor(public accountService: AccountService, public dialog: MatDialog) {
+  constructor(public accountService: AccountService, public dialog: MatDialog, private logService: LogService) {
     this.accountService.helper = this.accountService.helperProfiles.log;
     this.accountService.teamUsersObservable.subscribe(aTeam => {
       if (aTeam) {
@@ -57,46 +56,20 @@ export class LogComponent implements OnDestroy {
 
   getLogs() {
     this.searchStr = this.accountService.searchForHelper; //sucks
-    this.getTimeLogs().subscribe(logs => {
-      if (logs.length == 0 && this.logs.length > 0) return;
-      this.logs = logs;
-      if (this.logs.length == 0) {
+    this.logService.getLogs().subscribe(logs => {
+      if ((logs.length == this.logsLength) && logs.length > 0) return; // no more from pagination
+      this.logsLength = logs.length
+      if (logs.length == 0) { // no logs yet
         this.accountService.showHelper = true;
         return;
       }
-      this.limit = this.limit + 50;
-      this.logs.forEach(log => {
-        log.user = this.accountService.teamUsers.find(
-          user => user.id == log.userId
-        );
-        if (!this.lat && log.LatPos) {
-          // gives scope to the google map plugin
-          this.lat = log.LatPos;
-          this.long = log.LongPos;
-        }
+      this.logService.limit = this.logService.limit + 50; // bump results for pagination
+      logs.forEach(log => {
+        log.user = this.accountService.teamUsers.find(user => user.id == log.userId);
       });
-      this.buildCalendar();
+      this.buildCalendar(logs);
       this.onScroll();
     });
-  }
-
-  public getTimeLogs(): Observable<any> {
-    return this.accountService.db
-      .collection(`team/${this.accountService.aTeam.id}/log`, ref => ref.orderBy("createdAt", "desc").limit(this.limit))
-      .snapshotChanges()
-      .pipe(
-        map(actions => {
-          return actions.map(a => {
-            let data: any = a.payload.doc.data();
-            return <Log>{
-              ...data,
-              id: a.payload.doc.id,
-              createdAt: data["createdAt"].toDate(),
-              updatedAt: data["updatedAt"] ? data["updatedAt"].toDate() : null
-            };
-          });
-        })
-      );
   }
 
   @HostListener("scroll", ["$event"])
@@ -117,49 +90,27 @@ export class LogComponent implements OnDestroy {
     }
   }
 
-  buildCalendar() {
+  buildCalendar(logs) {
     this.days = [];
     let now: any = new Date();
     let total_days = moment(now).diff(
-      this.logs[this.logs.length - 1].createdAt,
+      logs[logs.length - 1].createdAt,
       "days"
     );
     for (let i = 0; i <= total_days; i++) {
       let date = moment().subtract(i, "days");
       let month = date.format("MMM");
-      let displayMonth = moment()
-        .subtract(i, "days")
-        .subtract(1, "month")
-        .format("MMM");
       let day = date.format("DD");
       let dOW = date.format("ddd");
-      let logs = this.getLogsByDate(date);
       this.days.push({
         id: i + 1,
         date,
         month,
-        displayMonth,
         day,
         dOW,
-        logs: logs.logs,
-        loggers: logs.loggers
+        logs: logs.filter(log => moment(log.createdAt).isSame(date, "day"))
       });
     }
-  }
-
-  getLogsByDate(date) {
-    let users = [];
-    let logsOnDate: Log[] = this.logs.filter(log =>
-      moment(log.createdAt).isSame(date, "day")
-    );
-    logsOnDate.forEach((day: Log) => {
-      if (users.length > 0 && !users.find(user => user.id == day.userId)) {
-        users.push(
-          this.accountService.teamUsers.find(user => user.id == day.userId)
-        );
-      }
-    });
-    return { logs: logsOnDate, loggers: users };
   }
 
   showImages(images) {
@@ -191,6 +142,7 @@ export class LogComponent implements OnDestroy {
     });
     dialog.afterClosed().subscribe((log: Log) => {
       if (log) {
+        const user = log["user"];
         delete log["bShowDetails"];
         delete log["user"];
         if (log.id) {
@@ -200,7 +152,7 @@ export class LogComponent implements OnDestroy {
           this.accountService.db
             .collection(`team/${this.accountService.aTeam.id}/log`)
             .doc(log.id)
-            .update({ ...log });
+            .update({...log}).then(() => log["user"] = user);
         } else {
           log.createdAt = new Date(log.createdAt);
           log.teamId = this.accountService.aTeam.id;
@@ -215,6 +167,16 @@ export class LogComponent implements OnDestroy {
       }
     });
   }
+
+  showMap(log) {
+    this.dialog.open(MapDialogComponent, {
+      data: {
+        longPos: log.LongPos,
+        latPos: log.LatPos
+      }
+    });
+  }
+
   ngOnDestroy() {
     this.accountService.searchForHelper = '';
   }

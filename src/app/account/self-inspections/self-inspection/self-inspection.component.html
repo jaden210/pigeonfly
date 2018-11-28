@@ -14,9 +14,9 @@
   <div class="inspections" *ngIf="inProgressInspections?.length > 0">
     <div class="info-title">In Progress</div>
     <ng-container *ngFor="let inspection of inProgressInspections">
-      <div class="row" [matTooltip]="getCompletePercent(inspection)" matTooltipShowDelay="600">
+      <div class="row" [matTooltip]="inspection.completedPercent + '% completed'" matTooltipShowDelay="600">
         <h2>{{inspection?.createdAt | date: 'longDate'}}</h2>
-        <div class="fill" [ngStyle]="{'width':(inspection.completedPercent*100)+'%'}"></div>
+        <div class="fill" [ngStyle]="{'width':(inspection.completedPercent)+'%'}"></div>
         <div class="flex"></div>
         <button mat-button color="primary" (click)="resumeSelfInspection(inspection)">CONTINUE INSPECTION</button>
       </div>
@@ -28,7 +28,7 @@
       <div class="row">
         <h2>{{inspection?.createdAt | date: 'longDate'}}</h2>
         <div class="flex"></div>
-        <p>{{inspection.compliantPercent*100}}% compliant</p>
+        <p style="margin-right:8px">{{inspection.compliantPercent}}% compliant</p>
         <button mat-button color="primary" (click)="export(inspection)">EXPORT TO PDF</button>
       </div>
     </ng-container>

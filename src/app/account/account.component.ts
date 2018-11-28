@@ -149,7 +149,8 @@ export class AccountComponent {
       isCorrectedSelfInspections: null,
       isAccidentsReported: null,
       isAccidentVisible: null,
-      isInvitesCurrent: null
+      isInvitesCurrent: null,
+      hasContactInfo: null
     });
   }
 

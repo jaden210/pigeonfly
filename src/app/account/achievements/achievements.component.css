@@ -34,7 +34,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     margin: 24px;
     width: calc(50% - 48px);
     font-size: 15px;
