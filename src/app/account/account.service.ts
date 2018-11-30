@@ -93,6 +93,7 @@ export class AccountService {
             )
             .subscribe(users => {
               // why is this being hit twice???????
+              users.sort((a, b) => a.name.localeCompare(b.name)); // sort
               this.teamUsers = users;
               this.teamUsersObservable.next(users);
             });
@@ -259,10 +260,10 @@ export class InviteToTeam {
 
 export class Event {
   id?: string;
-  type: string; // survey, survey response, timeclock, log, injury report, supervisor report, self assesment
-  documentId: string;
-  userId: string;
-  title: string;
+  action: any;
   createdAt: any;
-  teamId: string;
+  description: string;
+  documentId: string;
+  type: string; // survey, survey response, timeclock, log, injury report, supervisor report, self assesment
+  userId: string;
 }

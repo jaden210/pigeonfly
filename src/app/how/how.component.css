@@ -10,6 +10,11 @@
   
   .h {
     display: flex;
+    flex-wrap: wrap;
+  }
+
+  .reverse {
+    flex-wrap: wrap-reverse !important;
   }
   
   .pt {
@@ -134,13 +139,24 @@
   
   .col {
     flex: 1;
+    min-width: 500px;
   }
   
-  #lady {
+  .pic {
     flex: 1;
     object-fit: contain;
-    height: 400px;
-    margin-left: 24px;
+    height: 300px;
+    margin: 48px 0;
+  }
+  
+  .left {
+    object-position: 0;
+    align-self: center;
+  }
+  
+  .right {
+    object-position: 100;
+    align-self: center;
   }
 
   .center {

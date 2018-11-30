@@ -16,14 +16,12 @@ import {
   WelcomeDialog
 } from "./account.component";
 import { FormsModule } from "@angular/forms";
-import { AgmCoreModule } from "@agm/core";
 import { MomentModule } from "ngx-moment";
 import { SearchPipe } from "./log/search.pipe";
 import { MapDialogComponent } from "./map-dialog/map-dialog.component";
 import { DatePipe } from "@angular/common";
 import { IncidentReportsComponent } from "./incident-reports/incident-reports.component";
 import { EventComponent } from "./event/event.component";
-import { EventSearchPipe } from "./event/search.pipe";
 import { NoAccessDialog } from "./account.service";
 import { ImagesDialogComponent } from "./images-dialog/images-dialog.component";
 import { TrainingModule } from "./training/training.module";
@@ -35,6 +33,9 @@ import { AssesComponent } from "./stats/ases/make-osha.component";
 import { MakePaymentComponent } from "./account/payments/make-payment/make-payment.component";
 import { PeopleDialogComponent } from "./people-dialog.component";
 import { DeleteInspectionDialog } from "./self-inspections/self-inspections.service";
+import { AgmCoreModule } from "@agm/core";
+import { EventsFilterDialog } from "./event/filter-dialog/filter.dialog";
+import { LogsFilterDialog } from "./log/filter-dialog/filter.dialog";
 
 @NgModule({
   imports: [
@@ -50,6 +51,7 @@ import { DeleteInspectionDialog } from "./self-inspections/self-inspections.serv
     AgmCoreModule.forRoot({
       apiKey: "AIzaSyAsIwXbCi4l__VoFLdru1EC3bLxmcZQOZI"
     })
+    
   ],
   declarations: [
     AccountComponent,
@@ -62,7 +64,6 @@ import { DeleteInspectionDialog } from "./self-inspections/self-inspections.serv
     EditUserDialog,
     NoAccessDialog,
     SearchPipe,
-    EventSearchPipe,
     MapDialogComponent,
     IncidentReportsComponent,
     ImagesDialogComponent,
@@ -76,7 +77,9 @@ import { DeleteInspectionDialog } from "./self-inspections/self-inspections.serv
     PeopleDialogComponent,
     DeleteAccountDialog,
     ConfirmCompleteDialog,
-    DeleteInspectionDialog
+    DeleteInspectionDialog,
+    EventsFilterDialog,
+    LogsFilterDialog
   ],
   exports: [MaterialModule, TrainingModule, SurveysModule],
   entryComponents: [
@@ -92,7 +95,9 @@ import { DeleteInspectionDialog } from "./self-inspections/self-inspections.serv
     PeopleDialogComponent,
     DeleteAccountDialog,
     ConfirmCompleteDialog,
-    DeleteInspectionDialog
+    DeleteInspectionDialog,
+    EventsFilterDialog,
+    LogsFilterDialog
   ],
   providers: [DatePipe]
 })

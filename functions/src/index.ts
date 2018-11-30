@@ -18,7 +18,7 @@ exports.inviteNewUser = functions.firestore.document("invitation/{invitationId}"
   mailOptions.subject = 'You have been invited to join ' + info.companyName + ' at Compliancechimp';
     mailOptions.html = `Hi ${info.inviteName}<br><br>
     ${info.companyName} is using Compliancechimp to manage safety training, worksite logs, record keeping, and more, as part of an ongoing commitment to safety and compliance. You've been invited to the team using ${info.inviteEmail}. Please visit the App Store or Goolge Play Store to download the free app and join your team today. Feel free to contact us at support@compliancechimp.com with any questions, and welcome!
-    <br><br> <a style="height:30px" href='https://play.google.com/store/apps/details?id=com.betterspace.complianceChimp&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
+    <br><br> <a href='https://play.google.com/store/apps/details?id=com.betterspace.complianceChimp&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img style="height:55px" alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
     <br> <a href="https://inviteme.me/account" target="_blank">LETS GET STARTED</a>
     <br><br>Sincerely,
     <br><br>Alan, Client Success Team
@@ -288,12 +288,23 @@ exports.createdInjuryReport = functions.firestore.document("team/{teamId}/injury
   return Promise.all([event, achievement]).then(() => console.log("created injury report complete"));
 });
 
+/* ----- LIKED TRAINING ----- */
+
+exports.createdSurvey = functions.firestore.document("team/{teamId}/my-training-content/{id}").onCreate((snapshot, context) => {
+  let survey = snapshot.data();
+  const achievement = updateCompletedAchievement(context.params.teamId, "likedTrainingContent", 1, true);
+  
+  return Promise.all([achievement]).then(() => console.log("created injury report complete"));
+});
+
 /* ----- SURVEY ----- */
 
 exports.createdSurvey = functions.firestore.document("team/{teamId}/survey/{id}").onCreate((snapshot, context) => {
   let survey = snapshot.data();
-  return logAsEvent(EventType.survey, EventAction.created, snapshot.id, survey.userId, survey.title, context.params.teamId)
-  .then(() => console.log("created survey complete"));
+  const log = logAsEvent(EventType.survey, EventAction.created, snapshot.id, survey.userId, survey.title, context.params.teamId)
+  const achievement = updateCompletedAchievement(context.params.teamId, "startedTrainings", 1, true);
+  
+  return Promise.all([log, achievement]).then(() => console.log("created survey complete"));
 });
 
 exports.modifiedSurvey = functions.firestore.document("team/{teamId}/survey/{surveyId}").onUpdate((change, context) => {
@@ -314,7 +325,7 @@ exports.createdSurveyResponse = functions.firestore.document("team/{teamId}/surv
   let surveyResponse = snapshot.data();
 
   const trainingSurveyResponse = updateCompletedAchievement(context.params.teamId, "trainingSurveyResponseCount", 1, true);
-  const trainingLog = logAsEvent(EventType.surveyResponse, EventAction.repsond, surveyResponse.surveyId, surveyResponse.userId, surveyResponse.shortAnswer || '' + ' ' + surveyResponse.longAnser || '', context.params.teamId)
+  const trainingLog = logAsEvent(EventType.surveyResponse, EventAction.repsond, surveyResponse.surveyId, surveyResponse.userId, surveyResponse.shortAnswer.toString() || '' + ' ' + surveyResponse.longAnser || '', context.params.teamId)
 
   return Promise.all([trainingLog, trainingSurveyResponse]).then(() => console.log("created survey response complete"));
 });

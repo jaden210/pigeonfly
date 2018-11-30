@@ -6,12 +6,12 @@
     <button mat-icon-button (click)="searchVisible = !searchVisible">
       <mat-icon>search</mat-icon>
     </button>
-    <input [(ngModel)]="searchStr" placeholder="Category | Question" />
+    <input [(ngModel)]="searchStr" placeholder="Category | Question" (keyup)="filterEvents()" />
     </div>
     <button
     mat-icon-button
     style="margin-right: 12px;"
-    (click)="filterByPeople()"
+    (click)="filter()"
     matTooltip="Filter by people"
     [matBadge]="filterUsers.length"
     [matBadgeHidden]="!filterUsers.length"
@@ -22,9 +22,9 @@
   <toolbar-helper></toolbar-helper>
 </mat-toolbar>
    <div class="window" id="window" (scroll)="onScroll($event)">
-     <div id="body">
+     <div id="bbody">
        <div class="month">{{now}}</div>
-       <ng-container *ngFor="let day of days | search: searchStr : filterUsers; index as i">
+       <ng-container *ngFor="let day of days; index as i">
          <div class="day-box">
            <div class="day" (click)="aDay ? aDay = null : aDay = day.id">
              <div class="date box" (click)="createEditLog(day)">

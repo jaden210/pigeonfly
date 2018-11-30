@@ -1,40 +1,29 @@
-import { Component, OnInit, ViewChild, HostListener , Inject} from '@angular/core';
-import { trigger, style, transition, animate } from "@angular/animations";
-import { Timeclock, AccountService, Log, Event } from "../account.service";
-import { map, tap } from "rxjs/operators";
+import { Component, HostListener} from '@angular/core';
+import { AccountService, Event } from "../account.service";
+import { map, take } from "rxjs/operators";
 import * as moment from "moment";
 import { MatDialog } from "@angular/material";
-import { ImagesDialogComponent } from "../images-dialog/images-dialog.component";
 import { Observable } from "rxjs";
 import { Router } from '@angular/router';
+import { EventsFilterDialog } from './filter-dialog/filter.dialog';
 
 @Component({
   selector: "app-event",
   templateUrl: "./event.component.html",
-  styleUrls: ["./event.component.css"],
-  animations: [
-    trigger("expand", [
-      transition("void => *", [
-        style({ height: 0 }),
-        animate("400ms ease-in-out", style({}))
-      ]),
-      transition("* => void", [
-        style({}),
-        animate("400ms ease-in-out", style({ height: 0 }))
-      ])
-    ])
-  ]
+  styleUrls: ["./event.component.css"]
 })
 export class EventComponent {
+  searchVisible = true;
   searchStr; // template variable
-  filterUsers; // template variable
-  filterTypes; // template variable
+  filterUsers = []; // template variable
+  filterTypes = []; // template variable
 
-  events: any = [];
-  eventTypes;
+  eventTypes = [];
   days = [];
+  calendarDays = [];
 
-  lastLog; // for pagination
+  resultsLimit: number = 0; // for pagination
+  lastLength: number = 0; // for pagination
 
   now: any = moment().format('MMM');
 
@@ -48,92 +37,75 @@ export class EventComponent {
   }
 
   getLogs() {
+    this.resultsLimit = this.resultsLimit + 50;
     this.getEvents().subscribe(events => {
-      if (events.length == 0 && !this.lastLog) {
+      if (events.length == 0) {
         this.accountService.showHelper = true;
         return;
       };
-      if (events.length == 0) return;
-      this.events = this.events.concat(events);
-      this.lastLog = events[events.length - 1];
-      this.eventTypes = [];
-      this.events.forEach(event => {
+      if (events.length == this.lastLength) return;
+      this.lastLength = events.length;
+      events.forEach(event => {
         event.user = this.accountService.teamUsers.find(user => user.id == event.userId);
         if (!this.eventTypes.find(type => type == event.type)) this.eventTypes.push(event.type);
       });
-        this.buildCalendar();
-        this.onScroll();
+      this.buildCalendar(events);
       });  
   }
 
   public getEvents(): Observable<any> {
-    return this.accountService.db.collection(`team/${this.accountService.aTeam.id}/event`, ref => {
-      if (!this.lastLog) {
-        return (
-          ref
-          .orderBy("createdAt", "desc")
-          .limit(50)
-          )
-      } else {
-        return (   
-          ref
-          .orderBy("createdAt", "desc")
-          .limit(50)
-          .startAfter(this.lastLog.createdAt)
-          );
-        }
+    return this.accountService.db.collection<Event[]>(`team/${this.accountService.aTeam.id}/event`, ref => 
+      ref.orderBy("createdAt", "desc").limit(this.resultsLimit)
+    ).snapshotChanges().pipe(
+      map(actions => {
+        return actions.map(a => {
+          let data:any = a.payload.doc.data();
+          return {
+            ...data,
+            id: a.payload.doc.id,
+            createdAt: data["createdAt"].toDate()
+          };
+        });
       })
-      .snapshotChanges().pipe(
-        map(actions => {
-          return actions.map(a => {
-            let data:any = a.payload.doc.data();
-            return <Event>{
-              ...data,
-              id: a.payload.doc.id,
-              createdAt: data["createdAt"].toDate()
-            };
-          });
-        })
-      )
+    )
   }
 
   @HostListener('scroll', ['$event'])
   onScroll(event?: any) {
     if (!event) {
-      if (document.getElementById('body').clientHeight < document.getElementById('window').clientHeight) this.getLogs(); // if there isn't enough results to pass the fold, load more
-      return;
-    }
-    if (event.target.offsetHeight + event.target.scrollTop >= event.target.scrollHeight) {
-      this.getLogs();
+      if (document.getElementById('bbody').clientHeight < document.getElementById('window').clientHeight) {
+        this.getLogs(); // if there isn't enough results to pass the fold, load more
+        return;
+      } 
+    } else {
+      if (event.target.offsetHeight + event.target.scrollTop + 1 >= event.target.scrollHeight) {
+        this.getLogs();
+      }
     }
   }
   
-  buildCalendar() {
-    this.days = [];
-    let now: any = new Date();
-    let total_days = moment(now).diff(this.events[this.events.length -1].createdAt, 'days');
+  buildCalendar(events) {
+    this.calendarDays = [];
+    let total_days = moment().diff(events[events.length -1].createdAt, 'days') + 7; //buffer week
     for (let i = 0; i <= total_days; i++) {
       let date = moment().subtract(i, "days");
       let month = date.format("MMM");
       let day = date.format("DD");
       let dOW = date.format("ddd");
-      let events = this.getEventsByDate(date);
-      this.days.push({
+      let dayEvents = events.filter(event => moment(event.createdAt).isSame(date, "day"));
+      this.calendarDays.push({
         id: i + 1,
         date,
         month,
         day,
         dOW,
-        events: events.events
+        events: dayEvents
       });
     }
-  }
-
-  getEventsByDate(date) {
-    let eventsOnDate: Event[] = this.events.filter(event =>
-      moment(event.createdAt).isSame(date, "day")
-    );
-    return { events: eventsOnDate };
+    this.filterEvents();
+    setTimeout(() => {
+      this.onScroll();
+    }, 1000);
   }
 
   routeToEventOrigin(event: Event) {
@@ -168,6 +140,50 @@ export class EventComponent {
       return;
     }
   }
+
+  filter(): void {
+    this.dialog.open(EventsFilterDialog, {
+      data: {
+        eventTypes: this.eventTypes,
+        filterUsers: this.filterUsers,
+        filterTypes: this.filterTypes
+      },
+      disableClose: true
+    })
+    .afterClosed()
+    .subscribe((data) => {
+      if (data) {
+        this.filterUsers = data.filterUsers;
+        this.filterTypes = data.filterTypes;
+        this.filterEvents();
+      }
+    });
+  }
+
+  filterEvents(): void {
+    if (this.searchStr && this.searchStr != "" || this.filterUsers.length > 0 || this.filterTypes.length > 0) {
+      let filter: string[] = [].concat(
+        this.searchStr ? this.searchStr.trim().split(/\s+/) : [],
+        this.filterUsers,
+        this.filterTypes
+      );
+      let results = JSON.parse(JSON.stringify(this.calendarDays));
+      this.days = results.filter(day => {
+        day.events = day.events.filter((event: Event) => {
+          let eventFiltersFound = 0;
+          for (let f of filter) {
+            event.documentId.toLowerCase().includes(f.toLowerCase()) ? eventFiltersFound ++ : null;
+            event.description.toLowerCase().includes(f.toLowerCase()) ? eventFiltersFound ++ : null;
+            event.action.toLowerCase().includes(f.toLowerCase()) ? eventFiltersFound ++ : null;
+            event.type.toLowerCase().includes(f.toLowerCase()) ? eventFiltersFound ++ : null;
+            event['user'].name.toLowerCase().includes(f.toLowerCase()) ? eventFiltersFound ++ : null;
+          };
+          return eventFiltersFound >= filter.length ?  true : false;
+        });
+        return day.events.length;
+      })
+    } else this.days = this.calendarDays;
+  }
 }
 
 enum EventType {
@@ -180,3 +196,28 @@ enum EventType {
   training = "Training",
   member = "Member"
 }
+
+// if (this.searchStr) {
+//   let newDays = this.calendarDays.filter(day => {
+//     let filter: string[] = this.searchStr ? this.searchStr.trim().split(/\s+/) : null;
+//     let fFound = 0;
+//     filter.forEach(f => {
+//       day.day.includes(f) ? fFound ++ : null;
+//       day.month.toLowerCase().includes(f) ? fFound ++ : null;
+//       day.dOW.toLowerCase().includes(f) ? fFound ++ : null;
+//     });
+//     day.events.filter(event => {
+//       console.log(event)
+//       let ret = false;
+//       filter.forEach(f => {
+//         if (event.description.includes(f)) {
+//           fFound ++;
+//           ret = true;
+//         }
+//       });
+//       return ret
+//     })
+//     return fFound >= filter.length ? true : false;
+//   });
+//   this.days = newDays;
+// } else this.days = this.calendarDays;

@@ -72,8 +72,9 @@
         <div class="side-button" routerLinkActive="bactive" routerLink="self-inspections"><mat-icon>import_contacts</mat-icon>Inspections</div>
         <div class="side-button" routerLinkActive="bactive" routerLink="log"><mat-icon>assignment</mat-icon>Logs</div>
         <div class="side-button" routerLinkActive="bactive" routerLink="time"><mat-icon>schedule</mat-icon>Time</div>
+        <div class="side-button appear" (click)="sidenav.open()"><mat-icon>more_horiz</mat-icon>more</div>
         <div class="flex"></div>
-        <div class="side-button" routerLinkActive="bactive" (click)="accountService.showFeedback=false;accountService.showHelper=true"><mat-icon>help_outline</mat-icon>Help</div>
+        <div class="side-button" routerLinkActive="bactive" (click)="accountService.showFeedback=false;accountService.showHelper = true"><mat-icon>help_outline</mat-icon>Help</div>
       </div>
       <div id="body">
         <router-outlet></router-outlet>

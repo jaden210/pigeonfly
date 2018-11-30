@@ -12,10 +12,9 @@ import { map, tap, finalize } from "rxjs/operators";
 import * as moment from "moment";
 import { ImagesDialogComponent } from "../images-dialog/images-dialog.component";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
-import { Observable } from "rxjs";
-import { PeopleDialogComponent } from "../people-dialog.component";
 import { MapDialogComponent } from "../map-dialog/map-dialog.component";
 import { LogService } from "./log.service";
+import { LogsFilterDialog } from "./filter-dialog/filter.dialog";
 
 @Component({
   selector: "app-log",
@@ -40,8 +39,9 @@ export class LogComponent implements OnDestroy {
   searchVisible: boolean = true;
   filterUsers: string[] = [];
 
-  logsLength = 0;
   days = [];
+  calendarDays = [];
+  lastLength = 50;
 
   now: any = moment().format("MMM");
 
@@ -55,43 +55,38 @@ export class LogComponent implements OnDestroy {
   }
 
   getLogs() {
+    this.logService.limit = this.logService.limit + 50; // bump results for pagination
     this.searchStr = this.accountService.searchForHelper; //sucks
     this.logService.getLogs().subscribe(logs => {
-      if ((logs.length == this.logsLength) && logs.length > 0) return; // no more from pagination
-      this.logsLength = logs.length
       if (logs.length == 0) { // no logs yet
         this.accountService.showHelper = true;
         return;
       }
-      this.logService.limit = this.logService.limit + 50; // bump results for pagination
+      if (logs.length == this.lastLength) return; // no more from pagination
+      this.lastLength = logs.length;
       logs.forEach(log => {
         log.user = this.accountService.teamUsers.find(user => user.id == log.userId);
       });
       this.buildCalendar(logs);
-      this.onScroll();
     });
   }
 
   @HostListener("scroll", ["$event"])
   onScroll(event?: any) {
     if (!event) {
-      if (
-        document.getElementById("body").clientHeight <
-        document.getElementById("window").clientHeight
-      )
+      if (document.getElementById('bbody').clientHeight < document.getElementById('window').clientHeight) {
         this.getLogs(); // if there isn't enough results to pass the fold, load more
-      return;
-    }
-    if (
-      event.target.offsetHeight + event.target.scrollTop >=
-      event.target.scrollHeight
-    ) {
-      this.getLogs();
+        return;
+      } 
+    } else {
+      if (event.target.offsetHeight + event.target.scrollTop + 1 >= event.target.scrollHeight) {
+        this.getLogs();
+      }
     }
   }
 
   buildCalendar(logs) {
-    this.days = [];
+    this.calendarDays = [];
     let now: any = new Date();
     let total_days = moment(now).diff(
       logs[logs.length - 1].createdAt,
@@ -102,7 +97,7 @@ export class LogComponent implements OnDestroy {
       let month = date.format("MMM");
       let day = date.format("DD");
       let dOW = date.format("ddd");
-      this.days.push({
+      this.calendarDays.push({
         id: i + 1,
         date,
         month,
@@ -111,6 +106,10 @@ export class LogComponent implements OnDestroy {
         logs: logs.filter(log => moment(log.createdAt).isSame(date, "day"))
       });
     }
+    this.filterEvents();
+    setTimeout(() => {
+      this.onScroll();
+    }, 1000);
   }
 
   showImages(images) {
@@ -119,16 +118,7 @@ export class LogComponent implements OnDestroy {
       data: images
     });
   }
-
-  public filterByPeople(): void {
-    let dialogRef = this.dialog.open(PeopleDialogComponent, {
-      data: this.filterUsers
-    });
-    dialogRef.afterClosed().subscribe((people: string[]) => {
-      this.filterUsers = people ? people : this.filterUsers;
-    });
-  }
-
+  
   export() {}
 
   createEditLog(day, log?) {
@@ -175,6 +165,49 @@ export class LogComponent implements OnDestroy {
         latPos: log.LatPos
       }
     });
+  }
+
+  filter(): void {
+    this.dialog.open(LogsFilterDialog, {
+      data: {
+        filterUsers: this.filterUsers
+      },
+      disableClose: true
+    })
+    .afterClosed()
+    .subscribe((data) => {
+      console.log(data);
+      if (data) {
+        this.filterUsers = data.filterUsers;
+        console.log('hit');
+        
+        this.filterEvents();
+      }
+    });
+  }
+
+  filterEvents(): void {
+    if (this.searchStr && this.searchStr != "" || this.filterUsers.length > 0) {
+      let filter: string[] = [].concat(
+        this.searchStr ? this.searchStr.trim().split(/\s+/) : [],
+        this.filterUsers
+      );
+      let results = JSON.parse(JSON.stringify(this.calendarDays));
+      this.days = results.filter(day => {
+        day.logs = day.logs.filter((log: Log) => {
+          let eventFiltersFound = 0;
+          for (let f of filter) {
+            console.log(log);
+            
+            log.description.toLowerCase().includes(f.toLowerCase()) ? eventFiltersFound ++ : null;
+            log.id.toLowerCase().includes(f.toLowerCase()) ? eventFiltersFound ++ : null;
+            log['user'].name.toLowerCase().includes(f.toLowerCase()) ? eventFiltersFound ++ : null;
+          };
+          return eventFiltersFound >= filter.length ?  true : false;
+        });
+        return day.logs.length;
+      })
+    } else this.days = this.calendarDays;
   }
 
   ngOnDestroy() {

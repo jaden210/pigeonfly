@@ -2,24 +2,28 @@
     <img class="toolbar-logo" src="/assets/ccLogoDark.png">
     <div class="toolbar-title">Events</div>
     <div class="flex"></div>
-  <input id="search" placeholder="search" type="text" [(ngModel)]="searchStr">
-  <mat-form-field class="filter">
-    <mat-select placeholder="People" [(ngModel)]="filterUsers" multiple>
-      <mat-option *ngFor="let user of accountService.teamUsers" [value]="user.id">{{user.name}}</mat-option>
-    </mat-select>
-  </mat-form-field>
-  <mat-form-field class="filter">
-    <mat-select placeholder="Event type" [(ngModel)]="filterTypes" multiple>
-      <mat-option *ngFor="let type of eventTypes" [value]="type">{{type}}</mat-option>
-    </mat-select>
-  </mat-form-field>
-  <div class="flex"></div>
+    <div id="search-box" [class.expand]="searchVisible">
+      <button mat-icon-button (click)="searchVisible = !searchVisible">
+        <mat-icon>search</mat-icon>
+      </button>
+      <input [(ngModel)]="searchStr" placeholder="search events" (keyup)="filterEvents()" />
+      </div>
+      <button
+      mat-icon-button
+      style="margin-right: 12px;"
+      (click)="filter()"
+      matTooltip="Filter by people"
+      [matBadge]="filterUsers.length + filterTypes.length"
+      [matBadgeHidden]="!filterUsers.length"
+      matBadgeSize="small">
+      <mat-icon>filter_list</mat-icon>
+    </button>
   <toolbar-helper></toolbar-helper>
 </mat-toolbar>
 <div class="window" id="window" (scroll)="onScroll($event)">
-  <div id="body">
+  <div id="bbody">
     <div class="month">{{now}}</div>
-    <ng-container *ngFor="let day of days | eventSearch: searchStr : filterUsers: filterTypes; index as i">
+    <ng-container *ngFor="let day of days; index as i">
       <div class="day-box">
         <div class="day" (click)="aDay ? aDay = null : aDay = day.id">
           <div class="date box">

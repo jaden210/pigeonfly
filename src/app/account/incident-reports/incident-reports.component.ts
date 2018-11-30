@@ -33,7 +33,7 @@ export class IncidentReportsComponent implements OnInit {
     public snackbar: MatSnackBar
   ) {
     this.accountService.helper = this.accountService.helperProfiles.incidentReport;
-    this.accountService.aTeamObservable.subscribe(team => {
+    this.accountService.teamUsersObservable.subscribe(team => {
       if (team) {
         let assesmentCollection = this.accountService.db.collection(`team/${this.accountService.aTeam.id}/incident-report`, ref => ref.orderBy("createdAt", "desc"));
         assesmentCollection.snapshotChanges().pipe(
@@ -50,6 +50,9 @@ export class IncidentReportsComponent implements OnInit {
         ).subscribe(incidentReports => {
           if (incidentReports.length == 0) this.accountService.showHelper = true;
           this.incidentReports = incidentReports;
+          incidentReports.forEach(report => {
+            report.user = this.accountService.teamUsers.find(user => user.id == report.submittedBy);
+          });
         });
       }
     });
@@ -60,6 +63,11 @@ export class IncidentReportsComponent implements OnInit {
   
   selectReport(assesment) {
     this.aReport = assesment;
+    if (this.aReport.submittedBy) {
+      this.accountService.db.collection(`team/${this.accountService.aTeam.id}/incident-report`, ref => ref.where("submittedBy", "==", this.aReport.submittedBy)).valueChanges().subscribe(allReports => {
+        this.aReport.previousReports = allReports;
+      })
+    }
   }
 
   cancel() {
@@ -91,8 +99,8 @@ export class IncidentReportsComponent implements OnInit {
       format: [8.5, 11]
     });
 
-    doc.setFont('courier');
-    doc.setFontSize(9);
+    doc.setFontSize(15);
+    doc.setFont("courier", "bold");
 
     const type = this.aReport.type;
     const createdAt = this.aReport.createdAt.toString();
@@ -112,6 +120,8 @@ export class IncidentReportsComponent implements OnInit {
     y += (lineSpace + lineSpace + sectionGap);
 
     this.aReport.questions.forEach(function(item, index) {
+      doc.setFont('courier', "normal");
+      doc.setFontSize(9);
       let buffer = item.description;
       let prefix = (index + 1 <= 9 ? ' ' : '') + (index + 1) + '. ';
       while (buffer.length > 0) {
@@ -141,9 +151,9 @@ export class IncidentReportsComponent implements OnInit {
           }
         }
       }
-
+      
       if (item.value.constructor === Array) {
-        if (item.type === 'Photots') {
+        if (item.type === 'Photos') {
           item.value.forEach(function (value) {
             doc.addImage(value.imageUrl, 'PNG', x, y, 3, 3);
             if (x === 0.5) {
@@ -168,9 +178,11 @@ export class IncidentReportsComponent implements OnInit {
         }
       } else {
         buffer = item.value;
+        doc.setFont('courier', "bold");
         while (buffer.length > 0) {
           if (buffer.length <= maxChars) {
             doc.text(prefix + buffer, x, y);
+            y += lineSpace;
             y += lineSpace;
             if (y > endOfPage) {
               doc.addPage();
