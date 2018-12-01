@@ -239,6 +239,9 @@
       font-size: 15px;
       padding: 12px;
     }
+    .col {
+      min-width: auto;
+    }
     .left {
       text-align: left !important;
     }
