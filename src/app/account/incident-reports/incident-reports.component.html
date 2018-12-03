@@ -43,7 +43,7 @@
               <div *ngIf="q.type == 'Text Reply'" id="answer" class="title">{{q.value}}</div>
               <div *ngIf="q.type == 'Options'" id="answer" class="title">{{q.value}}</div>
               <div *ngIf="q.type == 'Date'" id="answer" class="title">{{q.value.toDate() | date: 'medium'}}</div>
-              <img *ngIf="q.type == 'Signature'" id="sig" src={{q.value}} onerror = "src = '/assets/face.png'" alt="Compliancechimp">
+              <img *ngIf="q.type == 'Signature'" id="sig" src={{q.value}} onerror = "src = '/assets/lost.png'" alt="Compliancechimp">
               <ng-container *ngIf="q.type == 'Photos'"><img *ngFor="let image of q.value" class="images" src={{image.imageUrl}} alt="Compliancechimp"></ng-container>
             </div>
           </div>

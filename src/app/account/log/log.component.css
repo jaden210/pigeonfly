@@ -146,3 +146,12 @@ mat-dialog-content {
     color: #666666;
     opacity: .5;
 }
+
+.map-icon {
+    margin: 0px 12px;
+    cursor: pointer;
+  }
+  
+  .map {
+    color: #666666;
+  }

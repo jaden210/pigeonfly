@@ -231,6 +231,10 @@
   margin: 0px 16px;
 }
 
+a {
+  color: white;
+}
+
 #mobile-img {
   height: 40vh;
   position: relative;

@@ -1,7 +1,7 @@
 <mat-dialog-content style="position:relative">
   <ng-container *ngFor="let image of data; index as i">
     <div class="image" *ngIf="i == active">
-      <img src={{image.imageUrl}} alt="Compliancechimp">
+      <img src={{image.imageUrl}} onerror="src = '/assets/lost.png'" alt="Compliancechimp">
     </div>
   </ng-container>
   <div class="index"><div class="dot" *ngFor="let image of data; index as i" [ngClass]="{'active-dot': i == active}" (click)="active = i"></div></div>
