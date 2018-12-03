@@ -150,7 +150,9 @@ export class AccountComponent {
       isAccidentsReported: null,
       isAccidentVisible: null,
       isInvitesCurrent: null,
-      hasContactInfo: null
+      hasContactInfo: null,
+      isPosterDisplayed: null,
+      isEquipmentProvided: null
     });
   }
 
