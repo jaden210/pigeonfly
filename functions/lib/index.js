@@ -232,8 +232,7 @@ exports.createdInjuryReport = functions.firestore.document("team/{teamId}/injury
     return Promise.all([event, achievement]).then(() => console.log("created injury report complete"));
 });
 /* ----- LIKED TRAINING ----- */
-exports.createdSurvey = functions.firestore.document("team/{teamId}/my-training-content/{id}").onCreate((snapshot, context) => {
-    let survey = snapshot.data();
+exports.likedTraining = functions.firestore.document("team/{teamId}/my-training-content/{id}").onCreate((snapshot, context) => {
     const achievement = updateCompletedAchievement(context.params.teamId, "likedTrainingContent", 1, true);
     return Promise.all([achievement]).then(() => console.log("created injury report complete"));
 });
