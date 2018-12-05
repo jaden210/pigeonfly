@@ -52,6 +52,10 @@
       <mat-tab label="Self-Inspection template">
         <app-make-osha></app-make-osha>
       </mat-tab>
+      <mat-tab label="Create a Blog">
+        <app-view-blogs *ngIf="!statsService.makeBlog"></app-view-blogs>
+        <app-make-blog *ngIf="statsService.makeBlog"></app-make-blog>
+      </mat-tab>
       <mat-tab label="statistics">
           <table mat-table matSort [dataSource]="teams">
               <ng-container matColumnDef="name">

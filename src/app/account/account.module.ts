@@ -36,6 +36,8 @@ import { DeleteInspectionDialog } from "./self-inspections/self-inspections.serv
 import { AgmCoreModule } from "@agm/core";
 import { EventsFilterDialog } from "./event/filter-dialog/filter.dialog";
 import { LogsFilterDialog } from "./log/filter-dialog/filter.dialog";
+import { BlogComponent, BlogTopicDialog } from "./stats/blog/make-blog.component";
+import { BlogsComponent } from "./stats/blogs/view-blogs.component";
 
 @NgModule({
   imports: [
@@ -73,6 +75,9 @@ import { LogsFilterDialog } from "./log/filter-dialog/filter.dialog";
     WelcomeDialog,
     StatsComponent,
     AssesComponent,
+    BlogComponent,
+    BlogsComponent,
+    BlogTopicDialog,
     MakePaymentComponent,
     PeopleDialogComponent,
     DeleteAccountDialog,
@@ -97,7 +102,8 @@ import { LogsFilterDialog } from "./log/filter-dialog/filter.dialog";
     ConfirmCompleteDialog,
     DeleteInspectionDialog,
     EventsFilterDialog,
-    LogsFilterDialog
+    LogsFilterDialog,
+    BlogTopicDialog
   ],
   providers: [DatePipe]
 })

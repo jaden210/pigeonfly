@@ -4,6 +4,7 @@ import { map } from 'rxjs/operators';
 import { User } from '../../app.service';
 import { Observable } from 'rxjs';
 import { MatSort, MatTableDataSource } from '@angular/material';
+import { StatsService } from './stats.service';
 
 @Component({
   selector: 'app-stats',
@@ -20,7 +21,7 @@ export class StatsComponent implements OnInit {
   displayedColumns: string[] = ["name","users", "logs"];
   datasource = new MatTableDataSource(this.teams)
 
-  constructor(public accountService: AccountService) { }
+  constructor(public accountService: AccountService, public statsService: StatsService) { }
 
   ngOnInit() {
     this.datasource.sort = this.sort;

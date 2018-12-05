@@ -12,5 +12,20 @@ service cloud.firestore {
     match /team/{teamId} {
       allow write: if resource.data.ownerId == request.auth.uid;
     }
-  }
+    match /topic/{topicId} {
+      allow read;
+    }
+    match /industry/{industryId} {
+      allow read;
+    }
+    match /article/{articleId} {
+      allow read;
+    }
+    match /blog/{blogId} {
+      allow read;
+    }
+    match /blog-topic/{blogId} {
+      allow read;
+    }
+    }
 }

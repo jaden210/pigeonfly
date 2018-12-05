@@ -1,0 +1,57 @@
+<div class="window">
+  <div id="editor">
+    <div style="display: flex; margin-top: 8px;">
+      <mat-form-field appearance="outline" style="flex: 2; margin-right: 24px;">
+        <mat-label>Blog Title</mat-label>
+        <input
+          matInput
+          placeholder="Enter Blog Name"
+          required
+          [(ngModel)]="blog.name"
+        />
+      </mat-form-field>
+      <mat-form-field appearance="outline" style="flex: 1">
+        <mat-label>Link Name</mat-label>
+        <input matInput [(ngModel)]="blog.linkName">
+      </mat-form-field>
+      <mat-form-field appearance="outline" style="flex: 1">
+        <mat-label>Topic</mat-label>
+        <mat-select placeholder="Topic" required [(ngModel)]="blog.topicId">
+          <mat-option
+            *ngFor="let topic of (topics | async)"
+            [value]="topic?.id"
+          >
+            {{ topic.name }}
+          </mat-option>
+          <mat-option (click)="newTopic()">
+            New Topic
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <angular-editor
+      [(ngModel)]="blog.content"
+      [config]="editorConfig"
+    ></angular-editor>
+    <div style="display: flex; margin-top: 24px;">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="submit()"
+        [disabled]="!blog.name || !blog.content || !blog.topicId"
+      >
+        {{ blog.id ? 'EDIT' : 'CREATE' }}
+      </button>
+      <button mat-button (click)="goBack()">CANCEL</button>
+      <button
+        mat-icon-button
+        (click)="deleteBlog()"
+        *ngIf="blog?.id"
+        style="margin-left: auto"
+      >
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+    <mat-spinner *ngIf="loading"></mat-spinner>
+  </div>
+</div>
