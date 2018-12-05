@@ -22,6 +22,8 @@ export class BlogComponent implements OnInit {
   blog = new Blog();
   topics: Observable<any>;
 
+  loading: boolean = false;
+
   public editorConfig: AngularEditorConfig = {
     editable: true,
     spellcheck: true,
@@ -70,12 +72,12 @@ export class BlogComponent implements OnInit {
     let dialog = this.dialog.open(BlogTopicDialog)
     dialog.afterClosed().subscribe(data => {
       if (data) {
-        let blog = {
+        let blogTopic = {
           name: data.name,
           createdAt: new Date(),
         }
         let id = data.name.split(' ').join('-').toLowerCase();
-        this.accountService.db.collection("blog-topic").doc(id).set({...blog}).then(() => {
+        this.accountService.db.collection("blog-topic").doc(id).set({...blogTopic}).then(() => {
           this.blog.topicId = id;
         }, error => {
           console.error("Topic name is already created.");
@@ -83,6 +85,10 @@ export class BlogComponent implements OnInit {
         });
       }
     })
+  }
+
+  cancel() {
+    this.statsService.makeBlog = false;
   }
 
 }
@@ -102,7 +108,7 @@ export class BlogComponent implements OnInit {
   `
 })
 export class BlogTopicDialog {
-  topic = {};
+  topic = new BlogTopic();
   constructor(
     public dialogRef: MatDialogRef<BlogTopicDialog>
   ) {}
@@ -121,4 +127,9 @@ export class Blog {
   topicId: string;
   id?: string;
   linkName?: string;
+}
+
+export class BlogTopic {
+  name?: string;
+  createdAt?: any;
 }
