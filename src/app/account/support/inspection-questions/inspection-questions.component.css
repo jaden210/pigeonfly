@@ -1,18 +1,12 @@
 .full {
-    height: calc(100vh - 113px);
-    display: flex;
-    flex-direction: column;
+    height: calc(100vh - 52px);
     background-color: white;
+    display: flex;
 }
 
 .list {
     height: 100%;
     overflow: scroll;
-}
-
-#bottom {
-    display: flex;
-    flex-grow: 2;
 }
 
 .active {

@@ -6,8 +6,10 @@ import { CreateEditArticleService } from "./create-edit-article.service";
 import { Observable, Subscription } from "rxjs";
 import { Location } from "@angular/common";
 import { ComponentCanDeactivate } from "./pending-changes.guard";
-import { MatSnackBar } from "@angular/material";
+import { MatSnackBar, MatDialog } from "@angular/material";
 import { AccountService } from "../../account.service";
+import { ArticleMetaDescriptionDialog } from "./article-meta-description/article-meta-description.component";
+import { ArticlePhotoDialog } from "./article-photo-upload/article-photo-upload.component";
 
 @Component({
   selector: "app-create-edit-article",
@@ -46,7 +48,8 @@ export class CreateEditArticleComponent
     private trainingService: TrainingService,
     private location: Location,
     private snackbar: MatSnackBar,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -118,6 +121,20 @@ export class CreateEditArticleComponent
       this.popSnackbar("Created", this.article.name);
       this.trainingService.wipeArticles();
       this.goBack();
+    });
+  }
+
+  addMetaDescription() {
+    this.dialog.open(ArticleMetaDescriptionDialog, {
+      data: this.article,
+      disableClose: true
+    });
+  }
+
+  addPhoto() {
+    this.dialog.open(ArticlePhotoDialog, {
+      data: this.article,
+      disableClose: true
     });
   }
 

@@ -24,6 +24,8 @@ import { MyContentFiltersDialog } from "./my-content/my-content-filters.dialog";
 import { HelpDialog } from "./help.dialog";
 import { ArticlesSearchPipe } from "./articles/search.pipe";
 import { FilterDialog } from "./dashboard/filter-dialog/filter.dialog";
+import { ArticleMetaDescriptionDialog } from "./create-edit-article/article-meta-description/article-meta-description.component";
+import { ArticlePhotoDialog } from "./create-edit-article/article-photo-upload/article-photo-upload.component";
 
 const routes: Routes = [
   {
@@ -62,6 +64,8 @@ const routes: Routes = [
     ArticlesComponent,
     ArticleComponent,
     CreateEditArticleComponent,
+    ArticleMetaDescriptionDialog,
+    ArticlePhotoDialog,
     ProgressIndicatorComponent,
     AddTraineeDialog,
     TopicDialogComponent,
@@ -85,7 +89,9 @@ const routes: Routes = [
     ReceivedTrainingDialog,
     MyContentFiltersDialog,
     HelpDialog,
-    FilterDialog
+    FilterDialog,
+    ArticleMetaDescriptionDialog,
+    ArticlePhotoDialog
   ],
   providers: [TrainingService, PendingChangesGuard]
 })

@@ -8,7 +8,6 @@ import { TimeComponent } from "./time/time.component";
 import { IncidentReportsComponent } from "./incident-reports/incident-reports.component";
 import { EventComponent } from "./event/event.component";
 import { AchievementsComponent } from "./achievements/achievements.component";
-import { StatsComponent } from "./stats/stats.component";
 import { AuthGuard } from "./auth.gaurd";
 
 const routes: Routes = [
@@ -24,8 +23,8 @@ const routes: Routes = [
       { path: "incident-reports", component: IncidentReportsComponent },
       { path: "achievements", component: AchievementsComponent },
       {
-        path: "overvieww",
-        component: StatsComponent,
+        path: "support",
+        loadChildren: "./support/support.module#SupportModule",
         canActivate: [AuthGuard]
       },
       {

@@ -26,17 +26,13 @@ import { ImagesDialogComponent } from "./images-dialog/images-dialog.component";
 import { TrainingModule } from "./training/training.module";
 import { SharedModule } from "../shared-module";
 import { AchievementsComponent, ConfirmCompleteDialog } from "./achievements/achievements.component";
-import { StatsComponent } from "./stats/stats.component";
 import { AngularEditorModule } from "@kolkov/angular-editor";
-import { AssesComponent } from "./stats/ases/make-osha.component";
 import { MakePaymentComponent } from "./account/payments/make-payment/make-payment.component";
 import { PeopleDialogComponent } from "./people-dialog.component";
 import { DeleteInspectionDialog } from "./self-inspections/self-inspections.service";
 import { AgmCoreModule } from "@agm/core";
 import { EventsFilterDialog } from "./event/filter-dialog/filter.dialog";
 import { LogsFilterDialog } from "./log/filter-dialog/filter.dialog";
-import { BlogComponent, BlogTopicDialog, BlogPhotoDialog, BlogVideoDialog, BlogMetaDescriptionDialog } from "./stats/blog/make-blog.component";
-import { BlogsComponent } from "./stats/blogs/view-blogs.component";
 
 @NgModule({
   imports: [
@@ -70,14 +66,6 @@ import { BlogsComponent } from "./stats/blogs/view-blogs.component";
     CreateEditLogDialog,
     AchievementsComponent,
     WelcomeDialog,
-    StatsComponent,
-    AssesComponent,
-    BlogComponent,
-    BlogsComponent,
-    BlogTopicDialog,
-    BlogPhotoDialog,
-    BlogVideoDialog,
-    BlogMetaDescriptionDialog,
     MakePaymentComponent,
     PeopleDialogComponent,
     DeleteAccountDialog,
@@ -101,11 +89,7 @@ import { BlogsComponent } from "./stats/blogs/view-blogs.component";
     ConfirmCompleteDialog,
     DeleteInspectionDialog,
     EventsFilterDialog,
-    LogsFilterDialog,
-    BlogTopicDialog,
-    BlogPhotoDialog,
-    BlogVideoDialog,
-    BlogMetaDescriptionDialog
+    LogsFilterDialog
   ],
   providers: [DatePipe]
 })

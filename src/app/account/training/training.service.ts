@@ -507,6 +507,8 @@ export class Article {
   myContent?: MyContent;
   favorited?: boolean;
   slugName?: string;
+  metaDescription?: string;
+  imageUrl?: string;
 }
 
 export class MyContent {
