@@ -43,6 +43,10 @@ export class AppComponent {
     this.open = false;
     this.router.navigate([link]);
   }
+
+  goToBlog() {
+    window.open("https://blog.compliancechimp.com");
+  }
   
   routeLogin() {
     this.open = false;
