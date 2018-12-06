@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { of, Observable } from "rxjs";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { map, catchError } from "rxjs/operators";
+import { map, catchError, take, tap } from "rxjs/operators";
 import { Article, TrainingService } from "../training.service";
 
 @Injectable()
@@ -81,6 +81,19 @@ export class CreateEditArticleService {
           `Error updating article ${article.name}, falling back to original.`
         );
       });
+  }
+
+  public checkSlugIsValid(article): Observable<boolean> {
+    return this.db.collection("article", ref => ref.where("slugName", "==", article.slugName))
+    .valueChanges()
+    .pipe(map((r: any) => {
+      if (r.length) {
+        return (r.length == 1 && r[0].id == article.id) ? true : false;
+      } else {
+        return true;
+      } 
+    }
+    ));
   }
 
   /* If article is deleted, set myContent.disabled, wipe articles */

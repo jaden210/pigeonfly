@@ -506,6 +506,7 @@ export class Article {
   id?: string;
   myContent?: MyContent;
   favorited?: boolean;
+  slugName?: string;
 }
 
 export class MyContent {

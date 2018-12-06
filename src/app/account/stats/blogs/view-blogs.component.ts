@@ -1,8 +1,6 @@
 import { Component, OnInit, Pipe } from '@angular/core';
 import { AccountService } from '../../account.service';
 import { map } from "rxjs/operators";
-import { AngularEditorConfig } from '@kolkov/angular-editor';
-import { DomSanitizer, SafeHtml, SafeStyle, SafeUrl, SafeScript, SafeResourceUrl } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
 import { StatsService } from '../stats.service';
 
@@ -26,6 +24,7 @@ export class BlogsComponent implements OnInit {
         actions.map(a => {
           const data = a.payload.doc.data() as any;
           const id = a.payload.doc.id;
+          data['createdAt'] = data.createdAt.toDate();
           return { id, ...data };
         })
       )
@@ -34,6 +33,11 @@ export class BlogsComponent implements OnInit {
 
   newBlog() {
     this.statsService.makeBlog = true;
+  }
+
+  editBlog(blog) {
+    this.statsService.makeBlog = true;
+    this.statsService.blog = blog;
   }
 
 }

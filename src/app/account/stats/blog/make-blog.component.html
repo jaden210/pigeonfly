@@ -11,12 +11,13 @@
         />
       </mat-form-field>
       <mat-form-field appearance="outline" style="flex: 1">
-        <mat-label>Link Name</mat-label>
-        <input matInput [(ngModel)]="blog.linkName">
+        <mat-label>Slug-Name</mat-label>
+        <input matInput [readonly]="blog.createdAt" [(ngModel)]="blog.id">
+        <mat-hint style="color:red">{{slugError}}</mat-hint>
       </mat-form-field>
       <mat-form-field appearance="outline" style="flex: 1">
         <mat-label>Topic</mat-label>
-        <mat-select placeholder="Topic" required [(ngModel)]="blog.topicId">
+        <mat-select placeholder="Topic" required [(ngModel)]="blog.topic">
           <mat-option
             *ngFor="let topic of (topics | async)"
             [value]="topic?.id"
@@ -28,6 +29,7 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
+      <button mat-icon-button color="primary" (click)="blogPhoto()"><mat-icon>camera_alt</mat-icon></button>
     </div>
     <angular-editor
       [(ngModel)]="blog.content"
@@ -38,9 +40,9 @@
         mat-raised-button
         color="primary"
         (click)="submit()"
-        [disabled]="!blog.name || !blog.content || !blog.topicId"
+        [disabled]="!blog.name || !blog.content || !blog.topic || !blog.id"
       >
-        {{ blog.id ? 'EDIT' : 'CREATE' }}
+        {{ blog.createdAt ? 'EDIT' : 'CREATE' }}
       </button>
       <button mat-button (click)="cancel()">CANCEL</button>
       <button

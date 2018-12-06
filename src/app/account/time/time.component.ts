@@ -29,7 +29,7 @@ export class TimeComponent implements OnInit, OnDestroy {
   private teamId: string;
   public searchStr: string; // template variable
   public searchVisible: boolean = true;
-  private filterUsers: string[] = [];
+  public filterUsers: string[] = [];
   private timeClocks: Timeclock[] = [];
   public days: Day[] = [];
   public aDayId: number;

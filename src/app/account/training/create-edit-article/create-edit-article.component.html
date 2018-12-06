@@ -20,6 +20,11 @@
         />
       </mat-form-field>
       <mat-form-field appearance="outline" style="flex: 1">
+        <mat-label>Slug-Name</mat-label>
+        <input matInput [(ngModel)]="article.slugName">
+        <mat-hint style="color:red">{{slugNameError}}</mat-hint>
+      </mat-form-field>
+      <mat-form-field appearance="outline" style="flex: 1">
         <mat-label>Topic</mat-label>
         <mat-select placeholder="Topic" required [(ngModel)]="article.topicId">
           <mat-option

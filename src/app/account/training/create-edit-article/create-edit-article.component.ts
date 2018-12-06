@@ -28,6 +28,7 @@ export class CreateEditArticleComponent
   public topics: Observable<Topic[]>;
   public isGlobalArticle: boolean;
   public isDev: boolean;
+  public slugNameError: string;
   @HostListener("window:beforeunload")
   public editorConfig: AngularEditorConfig = {
     editable: true,
@@ -92,12 +93,21 @@ export class CreateEditArticleComponent
   }
 
   private updateArticle(): void {
-    this.service.updateArticle(this.article, this.teamId).then(() => {
-      this.deactivate = true;
-      this.popSnackbar("Updated", this.article.name);
-      this.trainingService.wipeArticles();
-      this.goBack();
-    });
+    this.slugNameError = '';
+    this.article.slugName = this.article.slugName.split(' ').join('-').toLowerCase()
+    this.service.checkSlugIsValid(this.article).subscribe(bool => {
+      if (bool) {
+        this.service.updateArticle(this.article, this.teamId).then(() => {
+          this.deactivate = true;
+          this.popSnackbar("Updated", this.article.name);
+          this.trainingService.wipeArticles();
+          this.goBack();
+        });
+      } else {
+        this.loading = false;
+        this.slugNameError = 'slug is already in use';
+      }
+    })
   }
 
   private createArticle(): void {

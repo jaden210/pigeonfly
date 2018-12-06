@@ -1,11 +1,12 @@
-import { Component, OnInit, Pipe } from '@angular/core';
+import { Component, OnInit, Pipe, Inject} from '@angular/core';
 import { AccountService } from '../../account.service';
-import { map } from "rxjs/operators";
+import { map, takeLast, flatMap, catchError } from "rxjs/operators";
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 import { DomSanitizer, SafeHtml, SafeStyle, SafeUrl, SafeScript, SafeResourceUrl } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { StatsService } from '../stats.service';
+import { AngularFireStorage } from '@angular/fire/storage';
 
 @Component({
   selector: 'app-make-blog',
@@ -19,10 +20,11 @@ export class BlogComponent implements OnInit {
   list;
   listId;
 
-  blog = new Blog();
+  blog: Blog;
   topics: Observable<any>;
 
   loading: boolean = false;
+  slugError: string;
 
   public editorConfig: AngularEditorConfig = {
     editable: true,
@@ -41,6 +43,7 @@ export class BlogComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.statsService.blog ? this.blog = this.statsService.blog : this.blog = new Blog();
     this.topics = this.accountService.db.collection("blog-topic").snapshotChanges().pipe(
       map(actions =>
         actions.map(a => {
@@ -53,19 +56,36 @@ export class BlogComponent implements OnInit {
   }
 
   submit() {
-    if (this.blog.id) { //edit
+    this.slugError = '';
+    if (this.blog.createdAt) { //edit
       this.accountService.db.doc(`blog/${this.blog.id}`).update({...this.blog}).then(() => {
-        this.blog = new Blog();
+        this.statsService.blog = new Blog();
         this.statsService.makeBlog = false;
       })
     } else {
-      this.blog.createdAt = new Date();
-      const id = this.blog.linkName ? this.blog.linkName.split(' ').join('-').toLowerCase() : this.blog.name.split(' ').join('-').toLowerCase();
-      this.accountService.db.collection("blog").doc(id).set({...this.blog}).then(() => {
-        this.blog = new Blog();
-        this.statsService.makeBlog = false;
-      }, error => console.error("link name is already taken: " + error));
+      this.blog.id = this.blog.id ? this.blog.id.split(' ').join('-').toLowerCase() : this.blog.name.split(' ').join('-').toLowerCase();
+      this.accountService.db.doc(`blog/${this.blog.id}`).valueChanges().subscribe(blog => {
+        if (!blog) {
+          this.blog.createdAt = new Date();
+          this.accountService.db.collection("blog").doc(this.blog.id).set({...this.blog}).then(() => {
+            this.statsService.blog = new Blog();
+            this.statsService.makeBlog = false;
+          }, error => console.error(error));
+        } else {
+          this.slugError = "That name is already taken";
+        }
+      })
     }
+  }
+
+  blogPhoto() {
+    let dialog = this.dialog.open(BlogPhotoDialog, {
+      data: this.blog
+    });
+    dialog.afterClosed().subscribe(data => {
+      console.log(data);
+      
+    })
   }
 
   newTopic() {
@@ -77,17 +97,18 @@ export class BlogComponent implements OnInit {
           createdAt: new Date(),
         }
         let id = data.name.split(' ').join('-').toLowerCase();
-        this.accountService.db.collection("blog-topic").doc(id).set({...blogTopic}).then(() => {
-          this.blog.topicId = id;
+        this.accountService.db.collection("blog-topic").add({...blogTopic}).then(() => {
+          this.blog.topic = blogTopic.name;
         }, error => {
           console.error("Topic name is already created.");
-          this.blog.topicId = id;
+          this.blog.topic = blogTopic.name;
         });
       }
     })
   }
 
   cancel() {
+    this.statsService.blog = new Blog();
     this.statsService.makeBlog = false;
   }
 
@@ -118,15 +139,92 @@ export class BlogTopicDialog {
   }
 }
 
+@Component({
+  selector: "app-topic-dialog",
+  template: `
+  <h2 mat-dialog-title>Blog Photo</h2>
+  <mat-dialog-content>
+    <div style="height: 0px; width: 0px; overflow:hidden">
+      <input type="file" id="image-input" accept=".png, .jpg" (change)="setImage($event)"/>
+    </div>
+    <div class="card">
+      <div class="img-cont">
+        <img src={{previewImg}} onerror="src = '/assets/lost.png'">
+        <button mat-icon-button color="primary" id="pbutton" (click)="getImage()"><mat-icon>add_a_photo</mat-icon></button>
+      </div>
+      <div class="title">{{data.name}}</div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions style="margin-top:12px" align="end"><button mat-button color="primary" style="margin-right:8px" (click)="dialogRef.close()">CANCEL</button>
+  <button mat-raised-button color="warn" (click)="close()">CREATE</button>
+  </mat-dialog-actions>
+  `,
+  styleUrls: ['./make-blog.component.css']
+})
+export class BlogPhotoDialog {
+  topic = new BlogTopic();
+  previewImg;
+  image;
+
+  constructor(
+    public dialogRef: MatDialogRef<BlogPhotoDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private storage: AngularFireStorage
+  ) {
+    this.previewImg = this.data.imageUrl || null;
+  }
+
+  public getImage(): void {
+    document.getElementById("image-input").click();
+  }
+
+  public setImage(event): void {
+    // callback from view
+    if (event.target.files && event.target.files[0]) {
+      var reader = new FileReader();
+      reader.onload = (event: ProgressEvent) => {
+        this.previewImg = (<FileReader>event.target).result;
+      };
+      reader.readAsDataURL(event.target.files[0]);
+      this.image = event.target.files[0];
+    } else {
+      this.previewImg = undefined; // broken image
+      this.image = undefined;
+    }
+  }
+
+  public uploadImage(): Observable<string> {
+    const date = new Date().getTime();
+    let filePath = `BlogImages/${date}`;
+    let ref = this.storage.ref(filePath);
+    let task = this.storage.upload(filePath, this.image);
+    return task.snapshotChanges().pipe(
+      takeLast(1),
+      flatMap(() => ref.getDownloadURL()),
+      catchError(error => {
+        console.error(`Error saving image for topic`, error);
+        return (error);
+      })
+    );
+  }
+
+  close() {
+    this.uploadImage().subscribe(imageUrl => {
+      this.data.imageUrl = imageUrl;
+    })
+    this.dialogRef.close(this.data);
+  }
+}
+
 export class Blog {
   content: string;
   contentEs: string;
   createdAt: any;
   name: string;
   nameEs: string;
-  topicId: string;
+  topic: string;
   id?: string;
-  linkName?: string;
+  imageUrl: string;
 }
 
 export class BlogTopic {
