@@ -1,17 +1,12 @@
-import {
-  Component,
-  OnInit,
-  Inject,
-  HostListener,
-  OnDestroy
-} from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { trigger, style, transition, animate } from "@angular/animations";
-import { Timeclock, AccountService } from "../account.service";
+import { AccountService, User } from "../account.service";
 import * as moment from "moment";
-import { TimeService } from "./time.service";
+import { TimeService, Timeclock, Event } from "./time.service";
 import { DatePipe } from "@angular/common";
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from "@angular/material";
+import { MatDialog } from "@angular/material";
 import { PeopleDialogComponent } from "../people-dialog.component";
+import { CreateEditShiftDialog } from "./create-edit-shift/create-edit-shift.dialog";
 
 @Component({
   selector: "app-time",
@@ -28,126 +23,100 @@ import { PeopleDialogComponent } from "../people-dialog.component";
         animate("400ms ease-in-out", style({ height: 0 }))
       ])
     ])
-  ],
-  providers: [TimeService]
+  ]
 })
 export class TimeComponent implements OnInit, OnDestroy {
-  searchStr: string; // template variable
-  searchVisible: boolean = true;
-  filterUsers: string[] = [];
-
-  timeClocks: any = [];
-  days = [];
-
-  timeLength = 0;
-  now: any = moment().format("MMM");
+  private teamId: string;
+  public searchStr: string; // template variable
+  public searchVisible: boolean = true;
+  private filterUsers: string[] = [];
+  private timeClocks: Timeclock[] = [];
+  public days: Day[] = [];
+  public aDayId: number;
+  public now: string = moment().format("MMM");
 
   constructor(
-    public accountService: AccountService,
+    private accountService: AccountService,
     private datePipe: DatePipe,
     private timeService: TimeService,
-    public dialog: MatDialog
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {
-    /// NOTE: MAYBE CHANGE SO A USER ONLY SHOWS ONCE FOR A DAY AND EXPANDING SHOWS ALL INS AND OUTS
-    this.searchStr = this.accountService.searchForHelper; //sucks
     this.accountService.helper = this.accountService.helperProfiles.time;
-    this.accountService.teamUsersObservable.subscribe(aTeam => {
-      if (aTeam) this.getLogs();
+    this.accountService.teamUsersObservable.subscribe(users => {
+      if (users) {
+        this.teamId = this.accountService.aTeam.id;
+        this.getTimeclocks();
+      }
     });
   }
 
-  private getLogs(): void {
-    this.timeService.getTimeLogs().subscribe(timeclocks => {
-      if ((timeclocks.length == this.timeLength) && timeclocks.length > 0) return;
-        this.timeLength = timeclocks.length;
-        this.timeClocks = timeclocks;
-        this.timeService.limit = this.timeService.limit + 50;
-        if (timeclocks.length == 0) {
-          this.accountService.showHelper = true;
-          return;
-        }
-        this.buildCalendar(timeclocks);
-        this.onScroll();
-      });
+  private getTimeclocks(): void {
+    this.timeService.getTimeclocks(this.teamId).subscribe(clocks => {
+      if (clocks.length == 0 && this.timeClocks.length > 0) return;
+      this.timeClocks = clocks;
+      if (this.timeClocks.length == 0) {
+        this.accountService.showHelper = true;
+        return;
+      }
+      this.buildCalendar();
+    });
   }
 
-  @HostListener("scroll", ["$event"])
-  onScroll(event?: any) {
-    if (!event) {
-      if (
-        document.getElementById("body").clientHeight <
-        document.getElementById("window").clientHeight
-      )
-        this.getLogs(); // if there isn't enough results to pass the fold, load more
-      return;
-    }
-    if (
-      event.target.offsetHeight + event.target.scrollTop >=
-      event.target.scrollHeight
-    ) {
-      this.getLogs();
-    }
-  }
-
-  private buildCalendar(timeclocks): void {
+  private buildCalendar(): void {
     this.days = [];
-    let now: any = new Date();
-    let total_days = moment(now).diff(
-      this.timeClocks[this.timeClocks.length - 1].clockIn,
+    const now = new Date();
+    const totalDays = moment(now).diff(
+      moment(this.timeService.backTillDate),
       "days"
     );
-    for (let i = 0; i <= total_days; i++) {
+    for (let i = 0; i <= totalDays; i++) {
       let date = moment().subtract(i, "days");
-      let month = date.format("MMM");
+      let month = date.format("MMMM");
       let day = date.format("DD");
       let dOW = date.format("ddd");
-      let timeClocks = this.getClocksByDate(date, timeclocks);
+      let shiftsByUser = this.getShiftsByUserByDate(date);
       this.days.push({
         id: i + 1,
         date,
         month,
         day,
         dOW,
-        loggedHours: timeClocks.loggedHours,
-        loggedMinutes: timeClocks.loggedMinutes,
-        timeLogs: timeClocks.logs
+        shiftsByUser
       });
     }
   }
 
-  getClocksByDate(date, logs) {
-    let loggedHours = 0;
-    let loggedMinutes = 0;
-    let timeClocksOnDate: Timeclock[] = logs.filter(day => moment(day.clockIn).isSame(date, "day"));
-    timeClocksOnDate.forEach((timeclock: Timeclock) => {
-      let ci = moment(timeclock.clockIn);
-      let co = moment(timeclock.clockOut);
-      let duration: any = moment.duration(co.diff(ci));
-      timeclock.loggedHours = parseInt(duration.asHours());
-      timeclock.loggedMinutes = parseInt(duration.asMinutes()) % 60;
-      loggedHours = loggedHours + parseInt(duration.asHours());
-      loggedMinutes = loggedMinutes + (parseInt(duration.asMinutes()) % 60);
-      if (loggedMinutes > 60) {
-        loggedMinutes = loggedMinutes - 60;
-        loggedHours = loggedHours + 1;
+  private getShiftsByUserByDate(date): ShiftsByUser[] {
+    let shiftsByPeople = {};
+    this.timeClocks.forEach(shift => {
+      if (moment(shift.shiftStarted).isSame(date, "day")) {
+        if (shiftsByPeople[shift.userId]) {
+          shiftsByPeople[shift.userId].shifts.push(shift);
+        } else
+          shiftsByPeople[shift.userId] = {
+            shifts: [shift],
+            totalSecondsWorked: shift.secondsWorked
+          };
+        if (!shift.shiftEnded) shiftsByPeople[shift.userId].badShift = true;
+        shiftsByPeople[shift.userId].totalSecondsWorked += shift.secondsWorked;
       }
     });
-    return {
-      loggedHours,
-      loggedMinutes,
-      logs: timeClocksOnDate
-    };
-  }
-
-  getDiff(time) {
-    let ci = moment(time.clockIn).startOf('minutes');
-    let co = moment(time.clockOut);
-    let duration: any = moment.duration(co.diff(ci));
-    let lh = parseInt(duration.asHours());
-    let lm = parseInt(duration.asMinutes()) % 60;
-    return lh + "h " + lm + "m";
+    return Object.keys(shiftsByPeople).map(userId => {
+      let user = this.getEmployee(userId);
+      const tsw = shiftsByPeople[userId].totalSecondsWorked;
+      let daysLoggedMinutes = Math.ceil((tsw % 3600) / 60);
+      let daysLoggedHours = Math.floor(tsw / 3600);
+      let badShift = shiftsByPeople[userId].badShift;
+      return {
+        user,
+        shifts: shiftsByPeople[userId].shifts,
+        daysLoggedMinutes,
+        daysLoggedHours,
+        badShift
+      };
+    });
   }
 
   public filterByPeople(): void {
@@ -159,53 +128,37 @@ export class TimeComponent implements OnInit, OnDestroy {
     });
   }
 
-  createEditTime(day, timeclock?) {
-    if (!timeclock) {
-      timeclock = new Timeclock();
-      timeclock.clockIn = day.date;
-      timeclock.clockOut = day.date;
-      timeclock.userId = this.accountService.user.id;
-    }
-    let dialog = this.dialog.open(CreateEditTimeDialog, {
-      data: timeclock,
+  private getEmployee(userId): any {
+    return this.accountService.teamUsers.find(user => user.id == userId);
+  }
+
+  public createShift(date?: moment.Moment, userId?): void {
+    let shift = new Timeclock();
+    shift.userId = userId;
+    shift.shiftStarted = date ? date.toDate() : new Date();
+    shift.shiftEnded = date ? date.toDate() : new Date();
+    let dialog = this.dialog.open(CreateEditShiftDialog, {
+      data: shift,
       disableClose: true
     });
-    dialog.afterClosed().subscribe((time: Timeclock) => {
-      timeclock.bShowDetails = false;
-      if (time) {
-        let tempUser = time["user"];
-        delete time["bShowDetails"];
-        delete time["querySelectorId"];
-        delete time["user"];
-        delete time["loggedHours"];
-        delete time["loggedMinutes"];
-        time.updatedAt = new Date();
-        time.updatedBy = this.accountService.user.name;
-        time.updatedId = this.accountService.user.id;
-        if (time.id) {
-          this.accountService.db
-          .collection(`team/${this.accountService.aTeam.id}/timeclock`)
-          .doc(time.id)
-          .update({ ...time })
-          .then(() => {
-            time["user"] = tempUser;
-          });
-        } else {
-          time.teamId = this.accountService.aTeam.id;
-          this.accountService.db
-          .collection(`team/${this.accountService.aTeam.id}/timeclock`)
-          .add({ ...time })
-          .then(snapshot => {
-            time.id = snapshot.id;
-            this.getLogs();
-          });
-        }
-      } else {
-        this.getLogs();
-      }
+    dialog.afterClosed().subscribe((shift: Timeclock) => {
+      if (shift) this.getTimeclocks();
     });
   }
-  
+
+  public editShift(shift: Timeclock): void {
+    this.dialog.open(CreateEditShiftDialog, {
+      data: shift,
+      disableClose: true
+    });
+  }
+
+  public loadMore(): void {
+    let date = this.timeService.backTillDate;
+    this.timeService.backTillDate = new Date(date.setDate(date.getDate() - 14));
+    this.getTimeclocks();
+  }
+
   public exportCSV(): void {
     this.downloadCSV(
       { filename: `timelog- ${this.Date} + .csv` },
@@ -274,14 +227,14 @@ export class TimeComponent implements OnInit, OnDestroy {
     logs.forEach(log => {
       map.forEach(col => {
         result +=
-        '"' + (log[col.key] || log[col.key] == 0 ? log[col.key] : "") + '"';
+          '"' + (log[col.key] || log[col.key] == 0 ? log[col.key] : "") + '"';
         result += columnDelimiter;
       });
       result += lineDelimiter;
     });
     return result;
   }
-  
+
   downloadCSV(args, logs) {
     let data, filename, link;
     let csv = this.convertOrderHeaderToCSV({});
@@ -299,144 +252,24 @@ export class TimeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.accountService.searchForHelper = '';
+    this.accountService.searchForHelper = "";
   }
 }
 
-@Component({
-  selector: "create-edit-time-dialog",
-  templateUrl: "create-edit-time-dialog.html",
-  styleUrls: ["./time.component.css"]
-})
-export class CreateEditTimeDialog {
-  clockInHour;
-  clockInMinute;
-  clockOutHour;
-  clockOutMinute;
-  hours = [
-    { name: "1 AM", value: "1" },
-    { name: "2 AM", value: "2" },
-    { name: "3 AM", value: "3" },
-    { name: "4 AM", value: "4" },
-    { name: "5 AM", value: "5" },
-    { name: "6 AM", value: "6" },
-    { name: "7 AM", value: "7" },
-    { name: "8 AM", value: "8" },
-    { name: "9 AM", value: "9" },
-    { name: "10 AM", value: "10" },
-    { name: "11 AM", value: "11" },
-    { name: "12 PM", value: "12" },
-    { name: "1 PM", value: "13" },
-    { name: "2 PM", value: "14" },
-    { name: "3 PM", value: "15" },
-    { name: "4 PM", value: "16" },
-    { name: "5 PM", value: "17" },
-    { name: "6 PM", value: "18" },
-    { name: "7 PM", value: "19" },
-    { name: "8 PM", value: "20" },
-    { name: "9 PM", value: "21" },
-    { name: "10 PM", value: "22" },
-    { name: "11 PM", value: "23" },
-    { name: "12 AM", value: "24" }
-  ];
-  minutes = [
-    "01",
-    "02",
-    "03",
-    "04",
-    "05",
-    "06",
-    "07",
-    "08",
-    "09",
-    "10",
-    "11",
-    "12",
-    "13",
-    "14",
-    "15",
-    "16",
-    "17",
-    "18",
-    "19",
-    "20",
-    "21",
-    "22",
-    "23",
-    "24",
-    "25",
-    "26",
-    "27",
-    "28",
-    "29",
-    "30",
-    "31",
-    "32",
-    "33",
-    "34",
-    "35",
-    "36",
-    "37",
-    "38",
-    "39",
-    "40",
-    "41",
-    "42",
-    "43",
-    "44",
-    "45",
-    "46",
-    "47",
-    "48",
-    "49",
-    "50",
-    "51",
-    "52",
-    "53",
-    "54",
-    "55",
-    "56",
-    "57",
-    "58",
-    "59"
-  ];
+class Day {
+  id: number;
+  date: moment.Moment;
+  month: string;
+  day: string;
+  dOW: string;
+  shiftsByUser: ShiftsByUser[];
+}
 
-  constructor(
-    public dialogRef: MatDialogRef<CreateEditTimeDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    public accountService: AccountService
-  ) {
-    this.clockInHour = moment(this.data.clockIn)
-      .format("HH")
-      .toString();
-    this.clockInMinute = moment(this.data.clockIn)
-      .format("mm")
-      .toString();
-    this.clockOutHour = moment(this.data.clockOut)
-      .format("HH")
-      .toString();
-    this.clockOutMinute = moment(this.data.clockOut)
-      .format("mm")
-      .toString();
-  }
-
-  close(time?): void {
-    this.data.clockIn = moment(this.data.clockIn)
-      .set("hour", +this.clockInHour)
-      .set("minute", +this.clockInMinute)
-      .toDate();
-    this.data.clockOut = moment(this.data.clockOut)
-      .set("hour", +this.clockOutHour)
-      .set("minute", +this.clockOutMinute)
-      .toDate();
-    this.dialogRef.close(time);
-  }
-
-  delete() {
-    this.accountService.db
-      .collection(`team/${this.accountService.aTeam.id}/timeclock`)
-      .doc(this.data.id)
-      .delete()
-      .then(() => this.dialogRef.close());
-  }
+class ShiftsByUser {
+  user: User;
+  shifts: Timeclock[];
+  daysLoggedMinutes: number;
+  daysLoggedHours: number;
+  badShift: boolean;
+  bShowDetails?: boolean;
 }

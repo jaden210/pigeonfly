@@ -38,15 +38,26 @@
 .block {
   display: flex;
   cursor: pointer;
+  align-items: center;
 }
 
 .type {
   font-weight: 600;
-  opacity: .87;
+  opacity: 0.87;
 }
 
 .title {
-  opacity: .78;
+  opacity: 0.78;
+}
+
+.title.bad-shift {
+  display: flex;
+  align-items: center;
+  color: #f44336;
+}
+
+.title.bad-shift mat-icon {
+  margin-right: 4px;
 }
 
 .date {
@@ -70,12 +81,13 @@
 
 .details {
   overflow: hidden;
+  margin: 8px;
 }
 
 .time-detail {
   display: flex;
   margin: 8px 0;
-  opacity: .87;
+  opacity: 0.87;
   user-select: none;
 }
 
@@ -87,7 +99,7 @@
 
 .small {
   font-size: 17px !important;
-  opacity: .54;
+  opacity: 0.54;
 }
 
 .hide {
@@ -103,17 +115,17 @@
 .createdAt {
   font-size: 13px;
   font-weight: 700;
-  opacity: .67;
+  opacity: 0.67;
 }
 
 .last-changed {
   margin-left: 4px;
   font-size: 13px;
-  opacity: .67;
+  opacity: 0.67;
 }
 
 .edit {
-  opacity: .67;
+  opacity: 0.67;
   cursor: pointer;
 }
 
@@ -126,7 +138,7 @@ mat-dialog-content {
 
 .label {
   font-size: 13px;
-  opacity: .87;
+  opacity: 0.87;
   font-weight: 600;
 }
 
@@ -148,5 +160,42 @@ mat-dialog-content {
 
 .delete {
   color: #666666;
-  opacity: .5;
+  opacity: 0.5;
+}
+
+/* ******** */
+
+.exp-title {
+  font-size: 14px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.exp-title mat-icon {
+  color: #757575;
+  cursor: pointer;
+}
+
+mat-list-item {
+  position: relative;
+}
+
+.edited {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+}
+
+.flexrow {
+  display: flex !important;
+}
+
+.shift-detail {
+  width: 80px;
+}
+
+#load-more {
+  margin: 24px;
 }

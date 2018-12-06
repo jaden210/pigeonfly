@@ -1,20 +1,19 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { ProfileComponent, DeleteAccountDialog } from "./account/account.component";
+import {
+  ProfileComponent,
+  DeleteAccountDialog
+} from "./account/account.component";
 import {
   HomeComponent,
   InviteDialog,
   EditUserDialog
 } from "./home/home.component";
 import { SurveysModule } from "./surveys/surveys.module";
-import { TimeComponent, CreateEditTimeDialog } from "./time/time.component";
 import { LogComponent, CreateEditLogDialog } from "./log/log.component";
 import { AccountRoutingModule } from "./account-routing.module";
 import { MaterialModule } from "../material/material.module";
-import {
-  AccountComponent,
-  WelcomeDialog
-} from "./account.component";
+import { AccountComponent, WelcomeDialog } from "./account.component";
 import { FormsModule } from "@angular/forms";
 import { MomentModule } from "ngx-moment";
 import { SearchPipe } from "./log/search.pipe";
@@ -59,7 +58,6 @@ import { BlogsComponent } from "./stats/blogs/view-blogs.component";
     AccountComponent,
     ProfileComponent,
     HomeComponent,
-    TimeComponent,
     LogComponent,
     EventComponent,
     InviteDialog,
@@ -70,7 +68,6 @@ import { BlogsComponent } from "./stats/blogs/view-blogs.component";
     IncidentReportsComponent,
     ImagesDialogComponent,
     CreateEditLogDialog,
-    CreateEditTimeDialog,
     AchievementsComponent,
     WelcomeDialog,
     StatsComponent,
@@ -94,7 +91,6 @@ import { BlogsComponent } from "./stats/blogs/view-blogs.component";
     NoAccessDialog,
     ImagesDialogComponent,
     CreateEditLogDialog,
-    CreateEditTimeDialog,
     WelcomeDialog,
     MakePaymentComponent,
     PeopleDialogComponent,

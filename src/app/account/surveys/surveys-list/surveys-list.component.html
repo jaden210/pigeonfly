@@ -1,5 +1,5 @@
 <mat-toolbar>
-  <img class="toolbar-logo" src="/assets/ccLogoDark.png">
+  <img class="toolbar-logo" src="/assets/ccLogoDark.png" />
   <div class="toolbar-title">Surveys</div>
   <div class="flex"></div>
 
@@ -23,7 +23,7 @@
   </button>
   <toolbar-helper></toolbar-helper>
 </mat-toolbar>
-<mat-nav-list dense>
+<mat-nav-list>
   <mat-list-item
     *ngFor="let survey of (surveys | async | surveySearch: searchTerm:people)"
     (click)="routeTo(survey)"
@@ -45,8 +45,15 @@
         <span class="date" *ngIf="survey.active">Active</span></span
       ></span
     >
-    <p matLine>{{ survey.title }}</p>
+    <p matLine style="max-width: 50vw">{{ survey.title }}</p>
   </mat-list-item>
 </mat-nav-list>
-<button mat-mini-fab class="fab" color="accent" [ngClass]="{'raise-fab': accountService.isTrialVersion}" (click)="createSurvey()"><mat-icon>assignment</mat-icon>New Survey</button>
-
+<button
+  mat-mini-fab
+  class="fab"
+  color="accent"
+  [ngClass]="{ 'raise-fab': accountService.isTrialVersion }"
+  (click)="createSurvey()"
+>
+  <mat-icon>assignment</mat-icon>New Survey
+</button>

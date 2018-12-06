@@ -1,5 +1,5 @@
 <mat-toolbar>
-  <img class="toolbar-logo" src="/assets/ccLogoDark.png">
+  <img class="toolbar-logo" src="/assets/ccLogoDark.png" />
   <div class="toolbar-title">Time</div>
   <div class="flex"></div>
   <div id="search-box" [class.expand]="searchVisible">
@@ -7,8 +7,8 @@
       <mat-icon>search</mat-icon>
     </button>
     <input [(ngModel)]="searchStr" placeholder="Category | Question" />
-    </div>
-    <button
+  </div>
+  <button
     mat-icon-button
     style="margin-right: 12px;"
     (click)="filterByPeople()"
@@ -16,45 +16,103 @@
     [matBadge]="filterUsers.length"
     [matBadgeHidden]="!filterUsers.length"
     matBadgeSize="small"
-    >
+  >
     <mat-icon>filter_list</mat-icon>
   </button>
-  <button class="toolbar-button" (click)="exportCSV()" mat-button>EXPORT</button>
+  <button
+    class="toolbar-button"
+    disabled="true"
+    (click)="exportCSV()"
+    mat-button
+  >
+    EXPORT
+  </button>
   <toolbar-helper></toolbar-helper>
 </mat-toolbar>
-  <div class="window" id="window" (scroll)="onScroll($event)">
-    <div id="body">
-      <div class="month">{{now}}</div>
-      <ng-container *ngFor="let day of days | search: searchStr : filterUsers; index as i">
-        <div class="day-box">
-          <div class="day" (click)="aDay ? aDay = null : aDay = day.id">
-            <div class="date box" (click)="createEditTime(day)">
-              <div class="date" matTooltip="Add time" matTooltipPosition="right" matTooltipShowDelay="600" [ngClass]="{'small': day.timeLogs.length == 0}">{{day.day}}</div>
-              <div class="dow" [ngClass]="{'hide': day.timeLogs.length == 0}">{{day.dOW}}</div>
+<div class="window">
+  <div>
+    <div class="month">{{ now }}</div>
+    <ng-container *ngFor="let day of days; index as i">
+      <!-- | search: searchStr : filterUsers -->
+      <div class="day-box">
+        <div class="day" (click)="aDayId ? (aDayId = null) : (aDayId = day.id)">
+          <div class="date box" (click)="createShift(day.date)">
+            <div
+              class="date"
+              matTooltip="Add time"
+              matTooltipPosition="right"
+              matTooltipShowDelay="600"
+              [ngClass]="{ small: day.shiftsByUser.length == 0 }"
+            >
+              {{ day.day }}
             </div>
-            <div class="row">
-              <div class="event" *ngFor="let log of day.timeLogs">
-                <div class="block" (click)="log.bShowDetails == true ? log.bShowDetails = false : log.bShowDetails = true">
-                  <div class="type">{{log.user?.name}} -&nbsp;</div>
-                  <div class="title">{{getDiff(log)}}</div>
+            <div class="dow" [ngClass]="{ hide: day.shiftsByUser.length == 0 }">
+              {{ day.dOW }}
+            </div>
+          </div>
+          <div class="row">
+            <div class="event" *ngFor="let shifts of day.shiftsByUser">
+              <div
+                class="block"
+                (click)="shifts.bShowDetails = !shifts.bShowDetails"
+              >
+                <div class="type">{{ shifts.user?.name }} -&nbsp;</div>
+                <div class="title" *ngIf="!shifts.badShift; else: badShift">
+                  {{ shifts.daysLoggedHours }}h {{ shifts.daysLoggedMinutes }}m
                 </div>
-                <div class="details" [@expand] *ngIf="log.bShowDetails">
-                  <div class="time-detail">
-                    <div class="time-item"><mat-icon>hourglass_empty</mat-icon>{{log.clockIn | date: 'h:mm a'}}</div>
-                    <div class="time-item" *ngIf="log.clockOut"><mat-icon>hourglass_full</mat-icon>{{log.clockOut | date: 'h:mm a'}}</div>
-                    <div class="time-item" *ngIf="log.clockOut"><mat-icon>access_time</mat-icon>{{getDiff(log)}}</div>
+                <ng-template #badShift>
+                  <div class="title bad-shift">
+                    <mat-icon>error</mat-icon>
+                    Incomplete shift
                   </div>
-                  <div class="info">
-                    <mat-icon (click)="createEditTime(day, log)" class="edit">edit</mat-icon>
-                    <div class="last-changed" *ngIf="log.updatedAt">changed by {{log.updatedBy}} {{log.updatedAt | date: 'short'}}</div>
-                    <div class="flex"></div>
-                  </div>
+                </ng-template>
+              </div>
+              <div class="details" [@expand] *ngIf="shifts.bShowDetails">
+                <div class="exp-title">
+                  <span>Shifts</span>
+                  <mat-icon
+                    matTooltip="Add a new shift"
+                    (click)="createShift(day.date, shifts.user)"
+                    >add_circle_outline</mat-icon
+                  >
                 </div>
+                <mat-nav-list dense>
+                  <mat-list-item
+                    *ngFor="let shift of shifts.shifts"
+                    matTooltip="Click to view/edit shift"
+                    matTooltipShowDelay="800"
+                    (click)="editShift(shift)"
+                  >
+                    <span matLine class="flexrow">
+                      <span class="shift-detail">In</span>
+                      <span>{{ shift.shiftStarted | date: "shortTime" }}</span>
+                    </span>
+                    <span matLine class="flexrow">
+                      <span class="shift-detail">Out</span>
+                      <span>{{ shift.shiftEnded | date: "shortTime" }}</span>
+                    </span>
+                    <span matLine class="flexrow">
+                      <span class="shift-detail">Total</span>
+                      <span
+                        >{{ shift.loggedHours }}h
+                        {{ shift.loggedMinutes }}m</span
+                      >
+                    </span>
+                    <span class="edited" *ngIf="shift.updatedBy"
+                      >* Modified by {{ shift.updatedBy }}
+                      {{ shift.updatedAt | date: "short" }}</span
+                    >
+                  </mat-list-item>
+                </mat-nav-list>
               </div>
             </div>
           </div>
         </div>
-        <div class="month" *ngIf="day.day == 1">{{days[i + 1]?.month}}</div>
-      </ng-container>
-    </div>
+      </div>
+      <div class="month" *ngIf="day.day == 1">{{ days[i + 1]?.month }}</div>
+    </ng-container>
+    <button id="load-more" mat-stroked-button color="secondary">
+      LOAD MORE
+    </button>
   </div>
+</div>

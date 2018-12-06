@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule } from "@angular/common";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
@@ -33,7 +33,7 @@ import { TermsOfUseComponent } from "./terms-of-use/terms-of-use.component";
 import { PrivacyPolicyComponent } from "./privacy-policy/privacy-policy.component";
 import { CustomerAgreementComponent } from "./customer-agreement/customer-agreement.component";
 import { VideoDialogComponent } from "./video-dialog/video-dialog.component";
-import { TeamDisabledDialog } from './account/account.service';
+import { TeamDisabledDialog } from "./account/account.service";
 
 @NgModule({
   declarations: [
@@ -57,7 +57,7 @@ import { TeamDisabledDialog } from './account/account.service';
     VideoDialogComponent,
     TeamDisabledDialog
   ],
-  imports:[
+  imports: [
     BrowserModule,
     BrowserAnimationsModule,
     MaterialModule,
@@ -71,7 +71,12 @@ import { TeamDisabledDialog } from './account/account.service';
     HttpClientModule,
     SharedModule.forRoot()
   ],
-  entryComponents: [PreviewDialogComponent, TopicDialogComponent, VideoDialogComponent, TeamDisabledDialog],
+  entryComponents: [
+    PreviewDialogComponent,
+    TopicDialogComponent,
+    VideoDialogComponent,
+    TeamDisabledDialog
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })

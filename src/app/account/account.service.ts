@@ -136,8 +136,9 @@ export class AccountService {
       this.isTrialVersion = true;
       let snackbar = this.snackbar.open(
         `${this.trialDaysLeft} days left in your free trial`,
-        "enter billing info", {
-          horizontalPosition: 'right'
+        "enter billing info",
+        {
+          horizontalPosition: "right"
         }
       );
       snackbar.onAction().subscribe(() => {
@@ -230,22 +231,18 @@ export class Log {
 }
 
 export class Timeclock {
-  id?: string;
   userId: string;
-  teamId: string;
-  clockIn: any;
-  clockOut?: any;
-  time?: string;
-  overriddenBy?: string;
+  shiftStarted: Date = new Date();
+  actions: any = {};
+  locations: any = {};
+  shiftEnded: Date = null;
+  secondsWorked: number = 0; // set on shiftEnded
+  updatedAt: Date;
+  updatedBy: string;
+  updatedId: string;
+  id?: string;
   loggedHours?: number;
   loggedMinutes?: number;
-  inLatPos?: any;
-  inLongPos?: any;
-  outLatPos?: any;
-  outLongPos?: any;
-  updatedId: string;
-  updatedBy: string;
-  updatedAt: Date;
 }
 
 export class InviteToTeam {

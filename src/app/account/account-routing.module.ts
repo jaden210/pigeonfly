@@ -20,11 +20,14 @@ const routes: Routes = [
       { path: "dashboard", component: HomeComponent },
       { path: "account", component: ProfileComponent },
       { path: "log", component: LogComponent },
-      { path: "time", component: TimeComponent },
       { path: "event", component: EventComponent },
       { path: "incident-reports", component: IncidentReportsComponent },
       { path: "achievements", component: AchievementsComponent },
-      { path: "overvieww", component: StatsComponent, canActivate: [AuthGuard] },
+      {
+        path: "overvieww",
+        component: StatsComponent,
+        canActivate: [AuthGuard]
+      },
       {
         path: "training",
         loadChildren: "./training/training.module#TrainingModule"
@@ -34,8 +37,13 @@ const routes: Routes = [
         loadChildren: "./surveys/surveys.module#SurveysModule"
       },
       {
+        path: "time",
+        loadChildren: "./time/time.module#TimeModule"
+      },
+      {
         path: "self-inspections",
-        loadChildren: "./self-inspections/self-inspections.module#SelfInspectionsModule"
+        loadChildren:
+          "./self-inspections/self-inspections.module#SelfInspectionsModule"
       },
       { path: "**", redirectTo: "dashboard" }
     ]
