@@ -11,7 +11,7 @@
         />
       </mat-form-field>
       <mat-form-field appearance="outline" style="flex: 1">
-        <mat-label>Slug-Name</mat-label>
+        <mat-label>slug-name</mat-label>
         <input matInput [readonly]="blog.createdAt" [(ngModel)]="blog.id">
         <mat-hint style="color:red">{{slugError}}</mat-hint>
       </mat-form-field>
@@ -30,6 +30,7 @@
         </mat-select>
       </mat-form-field>
       <button mat-icon-button color="primary" (click)="blogPhoto()"><mat-icon>camera_alt</mat-icon></button>
+      <button mat-icon-button color="primary" (click)="blogVideo()"><mat-icon>videocam</mat-icon></button>
     </div>
     <angular-editor
       [(ngModel)]="blog.content"
@@ -42,9 +43,10 @@
         (click)="submit()"
         [disabled]="!blog.name || !blog.content || !blog.topic || !blog.id"
       >
-        {{ blog.createdAt ? 'EDIT' : 'CREATE' }}
+        {{ blog.createdAt ? 'SAVE' : 'CREATE' }}
       </button>
       <button mat-button (click)="cancel()">CANCEL</button>
+      <button style="margin-left:12px;" mat-button (click)="blogMetaDescription()">META DESCRIPTION</button>
       <button
         mat-icon-button
         (click)="deleteBlog()"

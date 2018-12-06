@@ -88,6 +88,26 @@ export class BlogComponent implements OnInit {
     })
   }
 
+  blogVideo() {
+    let dialog = this.dialog.open(BlogVideoDialog, {
+      data: this.blog
+    });
+    dialog.afterClosed().subscribe(data => {
+      console.log(data);
+      
+    })
+  }
+
+  blogMetaDescription() {
+    let dialog = this.dialog.open(BlogMetaDescriptionDialog, {
+      data: this.blog
+    });
+    dialog.afterClosed().subscribe(data => {
+      console.log(data);
+      
+    })
+  }
+
   newTopic() {
     let dialog = this.dialog.open(BlogTopicDialog)
     dialog.afterClosed().subscribe(data => {
@@ -124,7 +144,7 @@ export class BlogComponent implements OnInit {
   </mat-form-field>
   </mat-dialog-content>
   <mat-dialog-actions style="margin-top:12px" align="end"><button mat-button color="primary" style="margin-right:8px" (click)="dialogRef.close()">CANCEL</button>
-  <button mat-raised-button color="warn" (click)="close(topic)">CREATE</button>
+  <button mat-raised-button color="accent" (click)="close(topic)">CREATE</button>
   </mat-dialog-actions>
   `
 })
@@ -136,6 +156,34 @@ export class BlogTopicDialog {
 
   close(topic) {
     this.dialogRef.close(topic);
+  }
+}
+
+@Component({
+  selector: "app-topic-dialog",
+  template: `
+  <h2 mat-dialog-title>Meta Description</h2>
+  <mat-dialog-content style="width:50vw">
+  <mat-form-field style="width:100%">
+    <textarea matInput rows="8" placeholder="description" [(ngModel)]="data.metaDescription"></textarea>
+    <mat-hint [ngClass]="{red: data.metaDescription.length > 300}">{{data.metaDescription.length}}/300</mat-hint>
+  </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions style="margin-top:12px" align="end">
+  <button mat-raised-button color="accent" (click)="close()">SET</button>
+  </mat-dialog-actions>
+  `,
+  styleUrls: ['./make-blog.component.css']
+})
+export class BlogMetaDescriptionDialog {
+  topic = new BlogTopic();
+  constructor(
+    public dialogRef: MatDialogRef<BlogMetaDescriptionDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+  ) {}
+
+  close() {
+    this.dialogRef.close(this.data);
   }
 }
 
@@ -156,7 +204,7 @@ export class BlogTopicDialog {
     </div>
   </mat-dialog-content>
   <mat-dialog-actions style="margin-top:12px" align="end"><button mat-button color="primary" style="margin-right:8px" (click)="dialogRef.close()">CANCEL</button>
-  <button mat-raised-button color="warn" (click)="close()">CREATE</button>
+  <button mat-raised-button color="accent" (click)="close()">CREATE</button>
   </mat-dialog-actions>
   `,
   styleUrls: ['./make-blog.component.css']
@@ -212,6 +260,82 @@ export class BlogPhotoDialog {
     this.uploadImage().subscribe(imageUrl => {
       this.data.imageUrl = imageUrl;
     })
+    this.dialogRef.close(this.data);
+  }
+}
+
+@Component({
+  selector: "app-topic-dialog",
+  template: `
+  <h2 mat-dialog-title>Blog Video</h2>
+  <mat-dialog-content style="display:flex;flex-direction:column; align-items:center;width:500px">
+    <div style="height: 0px; width: 0px; overflow:hidden">
+      <input type="file" id="image-input" accept=".mp4" (change)="setVideo($event)"/>
+    </div>
+    <button mat-icon-button color="primary" (click)="getVideo()"><mat-icon>video_call</mat-icon></button>
+    <mat-progress-bar mode="determinate" [value]="(uploadProgress | async)" style="width:50%;"></mat-progress-bar>
+    <mat-form-field style="margin-top:24px;width: 100%">
+      <input matInput [(ngModel)]="data.videoUrl" placeholder="or video url">
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions style="margin-top:12px" align="end"><button mat-button color="primary" style="margin-right:8px" (click)="dialogRef.close()">CANCEL</button>
+  <button mat-raised-button color="accent" (click)="close()">CREATE</button>
+  </mat-dialog-actions>
+  `,
+  styleUrls: ['./make-blog.component.css']
+})
+export class BlogVideoDialog {
+  previewImg;
+  image;
+  uploadProgress;
+
+  constructor(
+    public dialogRef: MatDialogRef<BlogPhotoDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private storage: AngularFireStorage
+  ) {
+  }
+
+  public getVideo(): void {
+    document.getElementById("image-input").click();
+  }
+
+  public setVideo(event): void {
+    // callback from view
+    if (event.target.files && event.target.files[0]) {
+      var reader = new FileReader();
+      reader.onload = (event: ProgressEvent) => {
+        this.previewImg = (<FileReader>event.target).result;
+      };
+      reader.readAsDataURL(event.target.files[0]);
+      this.image = event.target.files[0];
+      this.uploadVideo().subscribe(videoUrl => {
+        this.data.videoUrl = videoUrl;
+      })
+    } else {
+      this.previewImg = undefined; // broken image
+      this.image = undefined;
+    }
+  }
+
+  public uploadVideo(): Observable<string> {
+    const date = new Date().getTime();
+    let filePath = `BlogVideos/${date}`;
+    let ref = this.storage.ref(filePath);
+    let task = this.storage.upload(filePath, this.image);
+    this.uploadProgress = task.snapshotChanges()
+    .pipe(map(s => (s.bytesTransferred / s.totalBytes) * 100));
+    return task.snapshotChanges().pipe(
+      takeLast(1),
+      flatMap(() => ref.getDownloadURL()),
+      catchError(error => {
+        console.error(`Error saving image for topic`, error);
+        return (error);
+      })
+    );
+  }
+
+  close() {
     this.dialogRef.close(this.data);
   }
 }
