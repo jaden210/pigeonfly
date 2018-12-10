@@ -23,37 +23,39 @@
   </button>
   <toolbar-helper></toolbar-helper>
 </mat-toolbar>
-<mat-nav-list>
-  <mat-list-item
-    *ngFor="let survey of (surveys | async | surveySearch: searchTerm:people)"
-    (click)="routeTo(survey)"
+<div class="window">
+  <mat-nav-list>
+    <mat-list-item
+      *ngFor="let survey of (surveys | async | surveySearch: searchTerm:people)"
+      (click)="routeTo(survey)"
+    >
+      <div
+        class="count"
+        matListAvatar
+        matTooltip="Number of contacts"
+        matTooltipShowDelay="500"
+      >
+        {{ objectKeys(survey.userSurvey).length }}
+      </div>
+      <span matLine
+        ><span class="top-line"
+          ><h4>{{ survey.category }}</h4>
+          <span class="date" *ngIf="!survey.active">{{
+            survey.createdAt | date
+          }}</span>
+          <span class="date" *ngIf="survey.active">Active</span></span
+        ></span
+      >
+      <p matLine style="max-width: 50vw">{{ survey.title }}</p>
+    </mat-list-item>
+  </mat-nav-list>
+  <button
+    mat-mini-fab
+    class="fab"
+    color="accent"
+    [ngClass]="{ 'raise-fab': accountService.isTrialVersion }"
+    (click)="createSurvey()"
   >
-    <div
-      class="count"
-      matListAvatar
-      matTooltip="Number of contacts"
-      matTooltipShowDelay="500"
-    >
-      {{ objectKeys(survey.userSurvey).length }}
-    </div>
-    <span matLine
-      ><span class="top-line"
-        ><h4>{{ survey.category }}</h4>
-        <span class="date" *ngIf="!survey.active">{{
-          survey.createdAt | date
-        }}</span>
-        <span class="date" *ngIf="survey.active">Active</span></span
-      ></span
-    >
-    <p matLine style="max-width: 50vw">{{ survey.title }}</p>
-  </mat-list-item>
-</mat-nav-list>
-<button
-  mat-mini-fab
-  class="fab"
-  color="accent"
-  [ngClass]="{ 'raise-fab': accountService.isTrialVersion }"
-  (click)="createSurvey()"
->
-  <mat-icon>assignment</mat-icon>New Survey
-</button>
+    <mat-icon>assignment</mat-icon>New Survey
+  </button>
+</div>

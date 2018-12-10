@@ -111,6 +111,12 @@ export class BlogComponent implements OnInit {
     this.supportService.makeBlog = false;
   }
 
+  deleteBlog() {
+    this.supportService.db.doc(`blog/${this.blog.id}`).delete().then(() => {
+      this.cancel();
+    });
+  }
+
 }
 
 

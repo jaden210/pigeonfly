@@ -97,7 +97,7 @@ export class CreateEditArticleComponent
 
   private updateArticle(): void {
     this.slugNameError = '';
-    this.article.slugName = this.article.slugName.split(' ').join('-').toLowerCase()
+    this.article.slugName = this.article.slugName ? this.article.slugName.split(' ').join('-').toLowerCase() : null;
     this.service.checkSlugIsValid(this.article).subscribe(bool => {
       if (bool) {
         this.service.updateArticle(this.article, this.teamId).then(() => {
@@ -116,12 +116,20 @@ export class CreateEditArticleComponent
   private createArticle(): void {
     const isGlobal =
       this.accountService.user.isDev && this.isGlobalArticle ? true : false;
-    this.service.createArticle(this.article, this.teamId, isGlobal).then(id => {
-      this.deactivate = true;
-      this.popSnackbar("Created", this.article.name);
-      this.trainingService.wipeArticles();
-      this.goBack();
-    });
+    this.article.slugName = this.article.slugName ? this.article.slugName.split(' ').join('-').toLowerCase() : null;
+    this.service.checkSlugIsValid(this.article).subscribe(bool => {
+    if (bool) {  
+      this.service.createArticle(this.article, this.teamId, isGlobal).then(id => {
+        this.deactivate = true;
+        this.popSnackbar("Created", this.article.name);
+        this.trainingService.wipeArticles();
+        this.goBack();
+      });
+    } else {
+      this.loading = false;
+      this.slugNameError = "error saving";
+    }
+  })
   }
 
   addMetaDescription() {

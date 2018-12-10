@@ -84,7 +84,8 @@ export class CreateEditArticleService {
   }
 
   public checkSlugIsValid(article): Observable<boolean> {
-    return this.db.collection("article", ref => ref.where("slugName", "==", article.slugName))
+    return !article.slugName ? of(true) : 
+    this.db.collection("article", ref => ref.where("slugName", "==", article.slugName))
     .valueChanges()
     .pipe(map((r: any) => {
       if (r.length) {

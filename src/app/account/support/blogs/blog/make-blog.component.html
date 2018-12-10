@@ -20,7 +20,7 @@
         <mat-select placeholder="Topic" required [(ngModel)]="blog.topic">
           <mat-option
             *ngFor="let topic of (topics | async)"
-            [value]="topic?.id"
+            [value]="topic?.name"
           >
             {{ topic.name }}
           </mat-option>

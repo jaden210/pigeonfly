@@ -27,5 +27,8 @@ service cloud.firestore {
     match /blog-topic/{blogId} {
       allow read;
     }
+    match /blog-response/{blogId} {
+      allow read, write;
+    }
     }
 }
