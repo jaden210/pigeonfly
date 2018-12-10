@@ -63,6 +63,7 @@ export class TimeService {
   }
 
   public createShift(shift: Timeclock, teamId): Promise<string> {
+    this.setSecondsWorked(shift);
     return this.db
       .collection(`team/${teamId}/timeclock`)
       .add({ ...shift })

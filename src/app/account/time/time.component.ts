@@ -88,7 +88,7 @@ export class TimeComponent implements OnInit, OnDestroy {
     }
   }
 
-  private getShiftsByUserByDate(date): ShiftsByUser[] {
+  private getShiftsByUserByDate(date: moment.Moment): ShiftsByUser[] {
     let shiftsByPeople = {};
     this.timeClocks.forEach(shift => {
       if (moment(shift.shiftStarted).isSame(date, "day")) {

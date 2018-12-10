@@ -155,7 +155,7 @@ export class CreateEditShiftDialog implements OnInit {
             eventsError = "Date required on one or more events";
             break;
           }
-          if ((outT > outT2 && outT < inT2) || (inT < inT2 && inT < outT2)) {
+          if ((outT > outT2 && outT < inT2) || (inT > outT2 && inT < inT2)) {
             eventsError = "One or more events overlap";
             break;
           }
@@ -217,7 +217,6 @@ export class CreateEditShiftDialog implements OnInit {
           type: e.type
         };
       });
-    this.timeService.setSecondsWorked(this.shift);
   }
 }
 
