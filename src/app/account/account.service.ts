@@ -6,7 +6,9 @@ import {
   MatDialog,
   MatDialogRef,
   MatSnackBar,
-  MAT_DIALOG_DATA
+  MAT_DIALOG_DATA,
+  MatSnackBarConfig,
+  MatSnackBarRef
 } from "@angular/material";
 import { AngularFireAuth } from "@angular/fire/auth";
 import { Router } from "@angular/router";
@@ -30,7 +32,9 @@ export class AccountService {
   bShowProfile: boolean = false; // template var
   searchForHelper: string; // template var to assist event system;
 
+
   isTrialVersion: boolean = false;
+  trialSnackbar: MatSnackBarRef<any>;
   trialDaysLeft: number;
 
   helperProfiles = this.helperService.helperProfiles;
@@ -75,7 +79,7 @@ export class AccountService {
           return;
         } else {
           this.aTeam = team;
-          this.checkFreeTrial();
+          this.checkFreeTrial(team);
           this.aTeamObservable.next(team);
           this.db
             .collection("user", ref => ref.where(`teams.${team.id}`, ">=", 0))
@@ -127,24 +131,31 @@ export class AccountService {
     });
   }
 
-  checkFreeTrial(): void {
-    if (!this.aTeam.cardToken) {
+  checkFreeTrial(team): void {
+    if (!team.cardToken) {
       this.trialDaysLeft =
         30 - moment().diff(this.aTeam.createdAt, "days") < 0
           ? 0
           : 30 - moment().diff(this.aTeam.createdAt, "days");
       this.isTrialVersion = true;
-      let snackbar = this.snackbar.open(
+      this.trialSnackbar = this.snackbar.open(
         `${this.trialDaysLeft} days left in your free trial`,
         "enter billing info",
         {
           horizontalPosition: "right"
         }
       );
-      snackbar.onAction().subscribe(() => {
+      this.trialSnackbar.onAction().subscribe(() => {
         this.router.navigate(["account/account"]);
       });
+    } else {
+      this.isTrialVersion = false;
+      this.closeSnackbar();
     }
+  }
+
+  closeSnackbar() {
+    this.trialSnackbar.dismiss();
   }
 
   logout(): void {

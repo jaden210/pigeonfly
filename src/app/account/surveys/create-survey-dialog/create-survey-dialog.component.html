@@ -51,7 +51,7 @@
     <button mat-button *ngIf="step > 1" (click)="back()">BACK</button>
     <button
       mat-button
-      *ngIf="step < 4"
+      *ngIf="step !== 3"
       color="primary"
       (click)="next()"
       [disabled]="!survey.category || !survey.title"

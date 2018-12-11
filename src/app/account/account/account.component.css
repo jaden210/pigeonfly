@@ -106,3 +106,35 @@ mat-form-field {
   max-width: 750px;
   margin: auto;
 }
+
+.card {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 3px 4px 1px rgba(0, 0, 0, 0.1);
+  margin: 12px;
+  padding: 24px;
+}
+
+.f-image {
+  height: 60px;
+  width: 100px;
+}
+
+#f-img {
+  height: 100%;
+}
+
+.s-row {
+  display: flex;
+  align-items: center;
+}
+
+.stripe-text {
+  font-weight: 600;
+  font-size: 15px;
+  opacity: .54;
+}

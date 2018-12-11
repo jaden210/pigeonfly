@@ -29,7 +29,7 @@
   <mat-tab label="Company" *ngIf="showCompany">
   <div class="column">
     <div class="image-cont">
-      <div class="image"><mat-progress-bar style="position: absolute;bottom: 0px;" *ngIf="loading" mode="indeterminate"></mat-progress-bar><img class="img" src={{accountService.aTeam?.logoUrl}} style="object-fit: contain !important;" onerror="src = '/assets/ccLogo.png'" alt="Compliancechimp"></div>
+      <div class="image"><mat-progress-bar style="position: absolute;bottom: 0px;" *ngIf="loading" mode="indeterminate"></mat-progress-bar><img class="img" src={{accountService.aTeam?.logoUrl}} style="object-fit: contain !important;" onerror="src = '/assets/lost.png'" alt="Compliancechimp"></div>
       <div style="height: 0px; width: 0px; overflow:hidden"><input type="file" id="upLogoUrl" accept=".png,.jpg,.mp4" #uploadT (change)="uploadLogoImage($event)"></div>
       <button mat-stroked-button class="image-button" color="primary" (click)="upload(false)">CHANGE COMPANY LOGO</button>
     </div>
@@ -57,29 +57,28 @@
         <input matInput color="primary" placeholder="zip" type="text" [(ngModel)]="accountService.aTeam.zip" (change)="saveTeam()">
       </mat-form-field>
     </div>
-    <div id="ctype">
-      <div id="cti">Company Type<mat-icon style="color: #666666; cursor: pointer; margin:0 8px" (click)="helper('companyType')">help</mat-icon></div>
-      <mat-radio-group class="radio-group" [(ngModel)]="accountService.aTeam.type" (change)="saveTeam()">
-        <mat-radio-button class="radio-button" *ngFor="let type of accountTypes" [value]="type.industryName">
-          {{type.industryName}}
-        </mat-radio-button>
-      </mat-radio-group>
-    </div>
     <button mat-button id="delete-account" color="warn" (click)="deleteAccount()"><mat-icon>delete</mat-icon> DELETE ACCOUNT</button>
     </div>
     </mat-tab>
     <mat-tab label="Billing" *ngIf="showCompany">
       <div id="billing">
         <ng-container *ngIf="accountService.isTrialVersion">
-          <div class="free" *ngIf="accountService.trialDaysLeft > 0">You’re in a free trial period for {{accountService.trialDaysLeft}} more days. Payment can be entered any time, but is not required until your free trial is up. You’ll be charged based on your team size, on the one month anniversary of your account creation date according to our Customer Agreement which you agreed to when setting up your account. Feel free to review the <a routerLink="/customer-agreement">Customer Agreement</a> again. Based on your current team size, you will be charged ${{teamTier}} per month, and can cancel at any time. All payments are handled securely through Stripe.</div>
-          <div class="free" *ngIf="accountService.trialDaysLeft <= 0">You’re free trial has expired. Please enter payment information to access your account. You’ll be charged based on your team size, on the one month anniversary of your account creation date according to our Customer Agreement which you agreed to when setting up your account. Feel free to review the <a routerLink="/customer-agreement">Customer Agreement</a> again. Based on your current team size, you will be charged ${{teamTier}} per month, and can cancel at any time. All payments are handled securely through Stripe.</div>
-          <button mat-raised-button color="accent" style="color:#ffffff" (click)="enterCardInfo()">ENTER PAYMENT</button>
+          <div class="card">
+            <div class="free" *ngIf="accountService.trialDaysLeft > 0">You’re in a free trial period for {{accountService.trialDaysLeft}} more days. Payment can be entered any time, but is not required until your free trial is up. You’ll be charged based on your team size, on the one month anniversary of your account creation date according to our Customer Agreement which you agreed to when setting up your account. Feel free to review the <a routerLink="/customer-agreement">Customer Agreement</a> again. Based on your current team size, you will be charged ${{teamTier}} per month, and can cancel at any time. All payments are handled securely through Stripe.</div>
+            <div class="free" *ngIf="accountService.trialDaysLeft <= 0">You’re free trial has expired. Please enter payment information to access your account. You’ll be charged based on your team size, on the one month anniversary of your account creation date according to our Customer Agreement which you agreed to when setting up your account. Feel free to review the <a routerLink="/customer-agreement">Customer Agreement</a> again. Based on your current team size, you will be charged ${{teamTier}} per month, and can cancel at any time. All payments are handled securely through Stripe.</div>
+            <button mat-raised-button color="accent" style="color:#ffffff;align-self: flex-end" (click)="enterCardInfo()">ENTER PAYMENT</button>
+          </div>
         </ng-container>
         <ng-container *ngIf="!accountService.isTrialVersion">
-          <div class="free">Thank you! Your card is on file. Click below to update or change your payment information, anytime.</div>
-          <button mat-raised-button color="accent" style="color:#ffffff" (click)="enterCardInfo()">UPDATE PAYMENT</button>
-          
+          <div class="card">
+            <div class="free">Thank you! Your card is on file and securely stored with Stripe for monthly billing. Click below to update or change your payment information, anytime.</div>
+            <button mat-raised-button color="accent" style="color:#ffffff;align-self: flex-end;" (click)="enterCardInfo()">UPDATE PAYMENT</button>
+          </div>
         </ng-container>
+        <div class="s-row">
+          <div class="stripe-text">Payments are secured by </div>
+          <div class="f-image"><img id="f-img" src="/assets/stripeName.png"></div>
+        </div>
       </div>
     </mat-tab>
   </mat-tab-group>

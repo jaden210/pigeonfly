@@ -18,7 +18,6 @@ declare var elements: any;
 })
 export class ProfileComponent implements OnInit {
   showCompany: boolean = false;
-  accountTypes;
   teamTier: number;
   loading: boolean = false;
 
@@ -38,12 +37,7 @@ export class ProfileComponent implements OnInit {
         this.accountService.helper = this.accountService.helperProfiles.account;
         if (this.accountService.aTeam.ownerId == this.accountService.user.id) {
           this.showCompany = true;
-          let accountTypesCollection = this.accountService.db.collection("osha-manual-en"); //thinking this will never be a large call, but check with nested collections to see later.
-          accountTypesCollection.valueChanges().subscribe(accountTypes => {
-            this.accountTypes = accountTypes;
-          });
         }
-
       }
     })
   }
@@ -106,11 +100,6 @@ export class ProfileComponent implements OnInit {
 
   saveTeam() {
     this.accountService.db.collection("team").doc(this.accountService.aTeam.id).update({...this.accountService.aTeam});
-  }
-
-  helper(profile) {
-    this.accountService.helper = this.accountService.helperProfiles[profile];
-    this.accountService.showHelper = true;
   }
 
   deleteAccount() {

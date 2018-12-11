@@ -37,13 +37,7 @@ export class AchievementsComponent implements OnInit {
               checkpoint.achievements.forEach(achievement => {
                 achievement.progress = results[1][0][achievement.key] || 0;
                 level.possibleAchievementsCount = level.possibleAchievementsCount + 1;
-                if (achievement.progress >= achievement.completedValue || achievement.progress == true) { //already achieved
-                  achievement.complete = true;
-                  achievement.fill = 100; // circle value
-                  checkpoint.progress = checkpoint.progress + 100;
-                  level.completedAchievementsCount = level.completedAchievementsCount + 1;
-                  this.completedCount = this.completedCount + 1;
-                } else if (achievement.progress.constructor.name == "Timestamp") { // this covers the badges users have to complete
+                if (achievement.progress.constructor.name == "Timestamp") { // this covers the badges users have to complete
                   let date = moment(achievement.progress.toDate());
                   if (moment().diff(date, 'days') <= achievement.completedValue) {
                     achievement.complete = true;
@@ -52,6 +46,12 @@ export class AchievementsComponent implements OnInit {
                     level.completedAchievementsCount = level.completedAchievementsCount + 1;
                     this.completedCount = this.completedCount + 1;
                   }
+                } else if (achievement.progress >= achievement.completedValue || achievement.progress == true) { //already achieved
+                  achievement.complete = true;
+                  achievement.fill = 100; // circle value
+                  checkpoint.progress = checkpoint.progress + 100;
+                  level.completedAchievementsCount = level.completedAchievementsCount + 1;
+                  this.completedCount = this.completedCount + 1;
                 } else {
                   if (achievement.progress !== false) {
                     let progress = ((achievement.progress / achievement.completedValue) * 100)

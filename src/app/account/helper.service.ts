@@ -65,11 +65,6 @@ export class HelperService {
       description:
         "Invite everyone on your team by clicking the orange “New Team Member” button to the right. Each person you invite will receive an email with instructions to download the app and join your team. Once joined, you’ll see all of their activity including training surveys, worksite logs, injury reports, and time if you choose to have your team track their time using the app (it’s really easy). Invite your entire team today!"
     },
-    companyType: {
-      name: "Company Type",
-      description:
-        "Selecting a company type will help us show the right infomation to your users in the app. put better stuff here."
-    },
     achievement: {
       name: "Badges",
       description:
@@ -78,7 +73,7 @@ export class HelperService {
     training: {
       name: "Training",
       description:
-        "The difference between each of your workers making it home safe tonight, or not, could be the next safety training. And the difference between passing an OSHA audit or not, is proof that the training occurred.<br><br>We’ve curated and organized OSHA safety content as the most fundamental starting point. Your opportunity is to go through the available training topics and select the ones that are relevant to your operation. When you heart a topic, it will become available to each of your workers via the app. Each training shows the estimated time to accomplish, but remember this is only an estimate. Training can go longer or shorter based on your specific needs.<br><br>And training doesn’t stop with OSHA content. We’ve opened the training platform up for you to add your own training materials as well. Use this training page to build topics and articles and make them available to your entire team. From a compliance perspective, giving safety training is key to keeping workers safe. But proving you’ve given training is the key to protecting your business in an OSHA audit. By training here, you lock down an authoritative record of what training was given, when, and to who. And it’s stored forever in one consolidated, simple place.<br><br>Compliancechimp’s training platform is powerful, and we encourage you to take full advantage of it."
+        "The difference between each of your workers making it home safe tonight, or not, could be the next safety training. And the difference between passing an OSHA audit or not, is proof that the training occurred.<br><br>We’ve curated and organized OSHA safety content as the most fundamental starting point. Your opportunity is to go through the available training articles and select the ones that are relevant to your operation. Click 'CUSTOMIZE MY TRAINING' to access all training articles. When you heart an article, it will become available to each of your workers within the app. Each training shows the estimated time to accomplish, but remember this is only an estimate. Training can go longer or shorter based on your specific needs.<br><br>And training doesn’t stop with OSHA content. We’ve opened the training platform up for you to add your own training materials as well. Use this training page to build topics and articles and make them available to your entire team. Click on any of the stats bars above to see your selected articles. From a compliance perspective, giving safety training is key to keeping workers safe. But proving you’ve given training is the key to protecting your business in an OSHA audit. By training here, you lock down an authoritative record of what training was given, when, and to who. And it’s stored forever in one consolidated, simple place.<br><br>Compliancechimp’s training platform is powerful, and we encourage you to take full advantage of it."
     }
   };
 

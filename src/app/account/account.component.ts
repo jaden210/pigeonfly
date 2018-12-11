@@ -152,7 +152,9 @@ export class AccountComponent {
       isInvitesCurrent: null,
       hasContactInfo: null,
       isPosterDisplayed: null,
-      isEquipmentProvided: null
+      isEquipmentProvided: null,
+      isAppDownload: null,
+      isSelectTrainingContent: null
     });
   }
 

@@ -156,7 +156,10 @@ export class DashboardComponent implements AfterViewInit {
           })
         ),
         map(surveys => surveys.filter(s => s.articleId)),
-        tap(surveys => (this.noHistory = surveys.length ? false : true))
+        tap(surveys => {
+          (this.noHistory = surveys.length ? false : true);
+          !surveys.length ? this.accountService.showHelper = true : null;
+        })
       )
       .subscribe(history => {
         this.history = history;
