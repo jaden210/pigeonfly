@@ -77,21 +77,16 @@ mat-toolbar {
     position: fixed;
     z-index: 1000;
     bottom: 12px;
-   left: 112px;
+    left: 112px;
+    background-color: #FFFFFF;
     border-radius: 24px;
-    background-color: #ff9100;
     padding: 12px;
     box-sizing: border-box;
     box-shadow: 0 2px 2px 0 rgba(0,0,0,0.36), 0 0 0 1px rgba(0,0,0,0.08);
     transition: all 500ms;
 }
 
-.helper-vis {
-    position: absolute !important;
-    right: 48px;
-    top: 8px;
-    color: #666666 !important;
-}
+
 
 .helper-close {
     position: absolute !important;
@@ -102,7 +97,7 @@ mat-toolbar {
 
 .helper-name {
     font-size: 27px;
-    color: #ffffff;
+    color: #ff9100;
     margin-bottom: 12px;
     margin-right: 36px;
 }
@@ -110,13 +105,12 @@ mat-toolbar {
 .helper-description {
     font-size: 15px;
     font-weight: 300;
-    color: #ffffff;
+    color: #212121;
     max-width: 500px;
 }
 
 .helper-input {
     width: 250px;
-    color: white;
 }
 
 .helper-button {

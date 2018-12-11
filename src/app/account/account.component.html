@@ -38,7 +38,6 @@
   <mat-sidenav-content>
     <!-- ***** HELPER ***** -->
     <div class="helper" id="helper-color" *ngIf="accountService.showHelper" [@helper]>
-      <button mat-icon-button (click)="contrastHelper()" class="helper-vis"><mat-icon>visibility</mat-icon></button>
       <button mat-icon-button class="helper-close" (click)="closeHelper()"><mat-icon>cancel</mat-icon></button>
       <div class="helper-name" id="helper-name-color">{{ accountService.helper?.name }}</div>
       <div class="helper-description" id="helper-description-color" [innerHTML]="accountService.helper?.description"></div>
@@ -56,8 +55,8 @@
       <button
         mat-stroked-button
         class="helper-button"
-        style="color: #ffffff;border-color:#ffffff"
         (click)="submitFeedback()"
+        color="accent"
       >
         SUBMIT
       </button>

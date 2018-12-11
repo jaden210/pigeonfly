@@ -10,6 +10,7 @@ import { MatSnackBar, MatDialog } from "@angular/material";
 import { AccountService } from "../../account.service";
 import { ArticleMetaDescriptionDialog } from "./article-meta-description/article-meta-description.component";
 import { ArticlePhotoDialog } from "./article-photo-upload/article-photo-upload.component";
+import { TopicDialogComponent } from "../topics/topic-dialog/topic-dialog.component";
 
 @Component({
   selector: "app-create-edit-article",
@@ -31,6 +32,7 @@ export class CreateEditArticleComponent
   public isGlobalArticle: boolean;
   public isDev: boolean;
   public slugNameError: string;
+  private industryId: string;
   @HostListener("window:beforeunload")
   public editorConfig: AngularEditorConfig = {
     editable: true,
@@ -58,8 +60,8 @@ export class CreateEditArticleComponent
         this.teamId = team.id;
         this.getIsDev();
         this.route.queryParams.subscribe((params: ParamMap) => {
-          const industryId = params["industryId"] || team.industryId;
-          this.topics = this.trainingService.getTopics(industryId, team.id);
+          this.industryId = params["industryId"] || team.industryId;
+          this.topics = this.trainingService.getTopics(this.industryId, team.id);
           if (params["articleId"]) {
             this.title = "Edit Article";
             this.getArticle(params["articleId"]);
@@ -130,6 +132,29 @@ export class CreateEditArticleComponent
       this.slugNameError = "error saving";
     }
   })
+  }
+
+  createTopic() {
+    this.dialog
+      .open(TopicDialogComponent, {
+        data: {
+          topic: new Topic(),
+          industryId: this.industryId,
+          teamId: this.teamId,
+          isDev: this.isDev
+        }
+      })
+      .afterClosed()
+      .subscribe(topic => {
+        if (topic) {
+          this.topics = this.trainingService.getTopics(this.industryId, this.teamId, true);
+          this.article.topicId = topic.id;
+        };
+      });
+    
+  }
+
+  public launchTopicDialog(topic: Topic): void {
   }
 
   addMetaDescription() {

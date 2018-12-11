@@ -1,3 +1,10 @@
+.scroll {
+    overflow-y: scroll;
+    height: calc(100vh - 48px);
+    padding-bottom: 64px;
+    box-sizing: border-box;
+}
+
 .support-items {
     border-bottom: 1px solid #000000;
 }

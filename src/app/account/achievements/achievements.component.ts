@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import * as moment from "moment";
 import { Router } from '@angular/router';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Timestamp } from 'rxjs/internal/operators/timestamp';
 
 @Component({
   selector: 'app-achievements',
@@ -37,7 +38,7 @@ export class AchievementsComponent implements OnInit {
               checkpoint.achievements.forEach(achievement => {
                 achievement.progress = results[1][0][achievement.key] || 0;
                 level.possibleAchievementsCount = level.possibleAchievementsCount + 1;
-                if (achievement.progress.constructor.name == "Timestamp") { // this covers the badges users have to complete
+                if (Object.prototype.toString.call(achievement.progress) === "[object Object]") { // this covers the badges users have to complete
                   let date = moment(achievement.progress.toDate());
                   if (moment().diff(date, 'days') <= achievement.completedValue) {
                     achievement.complete = true;
@@ -63,6 +64,7 @@ export class AchievementsComponent implements OnInit {
               checkpoint.progress = (checkpoint.progress / checkpoint.achievements.length) + '%';
             });
             if (level.completedAchievementsCount == level.possibleAchievementsCount) this.complianceLevel = this.complianceLevel + 1;
+            if (this.completedCount == 0) this.accountService.showHelper = true;
         })
       });
     }

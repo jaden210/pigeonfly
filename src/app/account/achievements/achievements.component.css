@@ -39,7 +39,7 @@
     font-size: 15px;
     color: #666666;
     font-weight: 600;
-    filter: grayscale(80%);
+    filter: grayscale(100%);
     cursor: pointer;
     transition: all 250ms;
     text-align: center;

@@ -115,8 +115,6 @@ export class AccountComponent {
       this.accountService.aTeam.industryId = data.industryId;
       this.accountService.db.collection("team").doc(this.accountService.aTeam.id).update({...this.accountService.aTeam});
       this.router.navigate(['/account/achievements']);
-      this.accountService.helperProfiles.achievement;
-      this.accountService.showHelper = true;
       gtag("event", "account_created", {
         event_category: "info added",
         event_label: "info was added to the account"
@@ -162,20 +160,8 @@ export class AccountComponent {
     this.accountService.showHelper = false;
   }
 
-  contrastHelper() {
-    this.helperContrast = !this.helperContrast;
-    if (this.helperContrast) {
-      document.getElementById('helper-color').style.backgroundColor = "#ffffff";
-      document.getElementById('helper-name-color').style.color = "#212121";
-      document.getElementById('helper-description-color').style.color = "#666666";
-    } else {
-      document.getElementById('helper-color').style.backgroundColor = "#ff9100";
-      document.getElementById('helper-name-color').style.color = "#FFFFFF";
-      document.getElementById('helper-description-color').style.color = "#FFFFFF";
-    }
-  }
-
   submitFeedback() {
+    let fbtext = JSON.parse(JSON.stringify(this.accountService.helperProfiles.feedback));
     this.accountService.feedback.name = "Thanks for your feedback!"
     setTimeout(() => {
       this.accountService.showFeedback = false;
@@ -190,7 +176,8 @@ export class AccountComponent {
         isClosed: false,
         createdAt: new Date()
       }).then(() => {
-        this.accountService.feedback = this.accountService.helperProfiles.feedback;
+        this.accountService.feedback = fbtext;
+        this.accountService.feedback.description = '';
       });
     }, 2000);
   }

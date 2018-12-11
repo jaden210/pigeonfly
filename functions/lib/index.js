@@ -51,7 +51,7 @@ exports.newTeamEmail = functions.firestore.document("team/{teamId}").onUpdate((c
         <br> <a href="https://inviteme.me/account" target="_blank">LETS GET STARTED</a>
         <br><br>Don't hesitate to contact us with any questions at support@compliancechimp.com, and enjoy!
         <br><br>Sincerely,
-        <br><br>alan, Client Success Team
+        <br><br>Alan, Client Success Team
         <br>Compliancechimp
         <br>support@compliancechimp.com`;
             return mailTransport.sendMail(mailOptions)
