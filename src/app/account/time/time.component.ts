@@ -2,11 +2,12 @@ import { Component, OnInit, OnDestroy } from "@angular/core";
 import { trigger, style, transition, animate } from "@angular/animations";
 import { AccountService, User } from "../account.service";
 import * as moment from "moment";
-import { TimeService, Timeclock, Event } from "./time.service";
+import { TimeService, Timeclock } from "./time.service";
 import { DatePipe } from "@angular/common";
 import { MatDialog } from "@angular/material";
-import { PeopleDialogComponent } from "../people-dialog.component";
+import { SearchDialog, SearchParams } from "./search-dialog/search.dialog";
 import { CreateEditShiftDialog } from "./create-edit-shift/create-edit-shift.dialog";
+import { Observable } from "rxjs";
 
 @Component({
   selector: "app-time",
@@ -27,10 +28,12 @@ import { CreateEditShiftDialog } from "./create-edit-shift/create-edit-shift.dia
 })
 export class TimeComponent implements OnInit, OnDestroy {
   private teamId: string;
+  private searchParams: SearchParams;
+  public isFiltered: boolean;
   public searchStr: string; // template variable
   public searchVisible: boolean = true;
   public filterUsers: string[] = [];
-  private timeClocks: Timeclock[] = [];
+  private shifts: Timeclock[] = [];
   public days: Day[] = [];
   public aDayId: number;
   public now: string = moment().format("MMM");
@@ -43,36 +46,56 @@ export class TimeComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.searchParams = new SearchParams();
     this.accountService.helper = this.accountService.helperProfiles.time;
     this.accountService.teamUsersObservable.subscribe(users => {
       if (users) {
         this.teamId = this.accountService.aTeam.id;
-        this.getTimeclocks();
+        this.getShifts().subscribe(shifts => {
+          if (!shifts.length) this.accountService.showHelper = true;
+          this.shifts = this.filterShifts(shifts);
+          this.buildCalendar();
+        });
       }
     });
   }
 
-  private getTimeclocks(): void {
-    this.timeService.getTimeclocks(this.teamId).subscribe(clocks => {
-      if (clocks.length == 0 && this.timeClocks.length > 0) return;
-      this.timeClocks = clocks;
-      if (this.timeClocks.length == 0) {
-        this.accountService.showHelper = true;
-        return;
-      }
-      this.buildCalendar();
-    });
+  private getShifts(startDate?: Date, endDate?: Date): Observable<Timeclock[]> {
+    startDate = startDate || this.searchParams.startDate;
+    endDate = endDate || this.searchParams.endDate;
+    return this.timeService.getTimeclocks(this.teamId, startDate, endDate);
+  }
+
+  private filterShifts(shifts: Timeclock[]): Timeclock[] {
+    shifts = shifts || [];
+    this.isFiltered = false;
+    const params = this.searchParams || new SearchParams();
+    if (params.employees.length) {
+      this.isFiltered = true;
+      return shifts.filter(tc => {
+        for (let e of params.employees) {
+          if (e.id != tc.userId) return false;
+        }
+      });
+    } else {
+      if (
+        this.datePipe.transform(params.endDate) !=
+        this.datePipe.transform(new Date())
+      )
+        this.isFiltered = true;
+      return shifts;
+    }
   }
 
   private buildCalendar(): void {
     this.days = [];
-    const now = new Date();
-    const totalDays = moment(now).diff(
-      moment(this.timeService.backTillDate),
+    const endDate = this.searchParams.endDate;
+    const totalDays = moment(endDate).diff(
+      moment(this.searchParams.startDate),
       "days"
     );
     for (let i = 0; i <= totalDays; i++) {
-      let date = moment().subtract(i, "days");
+      let date = moment(endDate).subtract(i, "days");
       let month = date.format("MMMM");
       let day = date.format("DD");
       let dOW = date.format("ddd");
@@ -90,7 +113,7 @@ export class TimeComponent implements OnInit, OnDestroy {
 
   private getShiftsByUserByDate(date: moment.Moment): ShiftsByUser[] {
     let shiftsByPeople = {};
-    this.timeClocks.forEach(shift => {
+    this.shifts.forEach(shift => {
       if (moment(shift.shiftStarted).isSame(date, "day")) {
         if (shiftsByPeople[shift.userId]) {
           shiftsByPeople[shift.userId].shifts.push(shift);
@@ -119,13 +142,22 @@ export class TimeComponent implements OnInit, OnDestroy {
     });
   }
 
-  public filterByPeople(): void {
-    let dialogRef = this.dialog.open(PeopleDialogComponent, {
-      data: this.filterUsers
-    });
-    dialogRef.afterClosed().subscribe((people: string[]) => {
-      this.filterUsers = people ? people : this.filterUsers;
-    });
+  public search(): void {
+    this.dialog
+      .open(SearchDialog, {
+        data: { searchParams: this.searchParams },
+        disableClose: true
+      })
+      .afterClosed()
+      .subscribe((params: SearchParams) => {
+        if (params) {
+          this.searchParams = params;
+          this.getShifts().subscribe(shifts => {
+            this.shifts = this.filterShifts(shifts);
+            this.buildCalendar();
+          });
+        }
+      });
   }
 
   private getEmployee(userId): any {
@@ -142,7 +174,7 @@ export class TimeComponent implements OnInit, OnDestroy {
       disableClose: true
     });
     dialog.afterClosed().subscribe((shift: Timeclock) => {
-      if (shift) this.getTimeclocks();
+      if (shift) this.getShifts();
     });
   }
 
@@ -154,16 +186,25 @@ export class TimeComponent implements OnInit, OnDestroy {
   }
 
   public loadMore(): void {
-    let date = this.timeService.backTillDate;
-    this.timeService.backTillDate = new Date(date.setDate(date.getDate() - 14));
-    this.getTimeclocks();
+    let date = this.searchParams.startDate;
+    this.searchParams.startDate = new Date(date.setDate(date.getDate() - 14));
+    this.getShifts();
   }
 
   public exportCSV(): void {
-    this.downloadCSV(
-      { filename: `timelog- ${this.Date} + .csv` },
-      this.timeClocks[0]
-    );
+    this.dialog
+      .open(SearchDialog, {
+        data: { searchParams: this.searchParams, isExport: true },
+        disableClose: true
+      })
+      .afterClosed()
+      .subscribe((params: SearchParams) => {
+        if (params) {
+          this.getShifts(params.startDate, params.endDate).subscribe(shifts =>
+            this.downloadCSV(params.startDate, params.endDate, shifts)
+          );
+        }
+      });
   }
 
   private get Date(): string {
@@ -174,73 +215,12 @@ export class TimeComponent implements OnInit, OnDestroy {
     return `${mm}-${dd}-${yyyy}`;
   }
 
-  convertOrderHeaderToCSV(args) {
-    let keys = [
-      { columnName: "Company Name Here", value: null },
-      { columnName: "Date Range", value: "07/27/2018 - 08/04/2018" },
-      { columnName: "Payroll Export", value: null }
-    ];
-    let result, columnDelimiter, lineDelimiter;
-    columnDelimiter = args.columnDelimiter || ",";
-    lineDelimiter = args.lineDelimiter || "\n";
-    result = "";
-    keys.forEach(key => {
-      result += key.columnName;
-      result += columnDelimiter;
-      result += key.value;
-      result += lineDelimiter;
-    });
-    result += lineDelimiter;
-    return result;
-  }
-
-  convertOrderLinesToCSV(args, logs) {
-    let map = [
-      { key: "userName", columnName: "Employee" },
-      { key: "date", columnName: "Date" },
-      { key: "clockIn", columnName: "Clock-In" },
-      { key: "clockOut", columnName: "Clock-Out" },
-      { key: "hours", columnName: "Hours" }
-    ];
-    logs = logs.map(log => {
-      return {
-        ...log,
-        userName: log.user.name,
-        date: this.datePipe.transform(log.clockIn, "MM/dd/yyyy"),
-        clockIn: this.datePipe.transform(log.clockIn, "h:mm a"),
-        clockOut: this.datePipe.transform(log.clockOut, "h:mm a"),
-        hours: log.loggedHours + "." + log.loggedMinutes
-      };
-    });
-    let result, headers, columnDelimiter, lineDelimiter;
-    if (!logs) return null;
-    columnDelimiter = args.columnDelimiter || ",";
-    lineDelimiter = args.lineDelimiter || "\n";
-    headers = "";
-    map.forEach(col => {
-      headers += col.columnName;
-      headers += columnDelimiter;
-    });
-    result = "";
-    result += headers;
-    result += lineDelimiter;
-    logs.forEach(log => {
-      map.forEach(col => {
-        result +=
-          '"' + (log[col.key] || log[col.key] == 0 ? log[col.key] : "") + '"';
-        result += columnDelimiter;
-      });
-      result += lineDelimiter;
-    });
-    return result;
-  }
-
-  downloadCSV(args, logs) {
+  private downloadCSV(startDate: Date, endDate: Date, shifts: Timeclock[]) {
     let data, filename, link;
-    let csv = this.convertOrderHeaderToCSV({});
-    csv += this.convertOrderLinesToCSV({}, logs);
+    let csv = this.convertOrderHeaderToCSV(startDate, endDate);
+    csv += this.convertOrderLinesToCSV(shifts);
     if (csv === null) return;
-    filename = args.filename || "timelog.csv";
+    filename = `timelog- ${this.Date} + .csv`;
     if (!csv.match(/^data:text\/csv/i)) {
       csv = "data:text/csv;charset=utf-8," + csv;
     }
@@ -249,6 +229,83 @@ export class TimeComponent implements OnInit, OnDestroy {
     link.setAttribute("href", data);
     link.setAttribute("download", filename);
     link.click();
+  }
+
+  convertOrderHeaderToCSV(startDate: Date, endDate: Date) {
+    let keys = [
+      this.accountService.aTeam.name,
+      `${this.datePipe.transform(startDate)} - ${this.datePipe.transform(
+        endDate
+      )}`,
+      "Payroll Export"
+    ];
+    let result, lineDelimiter;
+    lineDelimiter = "\n";
+    result = "";
+    keys.forEach(key => {
+      result += '"' + key + '"';
+      result += lineDelimiter;
+    });
+    result += lineDelimiter;
+    return result;
+  }
+
+  convertOrderLinesToCSV(shifts: Timeclock[]) {
+    let map = [
+      { key: "employee", columnName: "Employee" },
+      { key: "shiftStarted", columnName: "Shift Started" },
+      { key: "shiftEnded", columnName: "Shift Ended" },
+      { key: "hoursOnBreak", columnName: "Hours on Break" },
+      { key: "hoursWorked", columnName: "Hours Worked" }
+    ];
+    const lines = shifts
+      .map(s => {
+        if (!s.secondsWorked) this.timeService.setSecondsWorked(s);
+        let employee = this.getEmployee(s.userId);
+        employee = employee ? employee.name : null;
+        const shiftEnded = s.shiftEnded
+          ? this.datePipe.transform(s.shiftEnded, "yyyy-MM-dd HH:mm")
+          : null;
+        const shiftStarted = s.shiftStarted
+          ? this.datePipe.transform(s.shiftStarted, "yyyy-MM-dd HH:mm")
+          : null;
+        const hoursWorked = (s.secondsWorked / 3600).toFixed(2);
+        const startToEnd =
+          moment(s.shiftEnded || undefined).diff(
+            moment(s.shiftStarted || undefined),
+            "seconds"
+          ) || 0;
+        const hoursOnBreak = ((startToEnd - s.secondsWorked) / 3600).toFixed(2);
+        return {
+          employee,
+          shiftStarted,
+          shiftEnded,
+          hoursOnBreak,
+          hoursWorked
+        };
+      })
+      .filter(s => s.shiftStarted && s.shiftEnded && s.employee);
+    let result, headers, columnDelimiter, lineDelimiter;
+    if (!lines) return null;
+    columnDelimiter = ",";
+    lineDelimiter = "\n";
+    headers = "";
+    map.forEach(col => {
+      headers += col.columnName;
+      headers += columnDelimiter;
+    });
+    result = "";
+    result += headers;
+    result += lineDelimiter;
+    lines.forEach(log => {
+      map.forEach(col => {
+        result +=
+          '"' + (log[col.key] || log[col.key] == 0 ? log[col.key] : "") + '"';
+        result += columnDelimiter;
+      });
+      result += lineDelimiter;
+    });
+    return result;
   }
 
   ngOnDestroy() {

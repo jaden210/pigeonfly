@@ -6,18 +6,18 @@ import * as moment from "moment";
 
 @Injectable()
 export class TimeService {
-  backTillDate: Date;
+  constructor(public db: AngularFirestore) {}
 
-  constructor(public db: AngularFirestore) {
-    let date = new Date();
-    this.backTillDate = new Date(date.setDate(date.getDate() - 14));
-  }
-
-  public getTimeclocks(teamId): Observable<Timeclock[]> {
+  public getTimeclocks(
+    teamId,
+    startDate: Date,
+    endDate: Date
+  ): Observable<Timeclock[]> {
     return this.db
       .collection(`team/${teamId}/timeclock`, ref =>
         ref
-          .where("shiftStarted", ">=", this.backTillDate)
+          .where("shiftStarted", ">=", startDate)
+          .where("shiftStarted", "<=", endDate)
           .orderBy("shiftStarted", "desc")
       )
       .snapshotChanges()
@@ -92,8 +92,8 @@ export class TimeService {
         secondsWorked -= secondsOff;
       }
     });
-    shift.secondsWorked = secondsWorked;
-    return secondsWorked;
+    shift.secondsWorked = secondsWorked || 0;
+    return secondsWorked || 0;
   }
 }
 

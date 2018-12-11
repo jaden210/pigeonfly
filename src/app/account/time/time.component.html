@@ -2,29 +2,16 @@
   <img class="toolbar-logo" src="/assets/ccLogoDark.png" />
   <div class="toolbar-title">Time</div>
   <div class="flex"></div>
-  <div id="search-box" [class.expand]="searchVisible">
-    <button mat-icon-button (click)="searchVisible = !searchVisible">
-      <mat-icon>search</mat-icon>
-    </button>
-    <input [(ngModel)]="searchStr" placeholder="Category | Question" />
-  </div>
-  <button
-    mat-icon-button
-    style="margin-right: 12px;"
-    (click)="filterByPeople()"
-    matTooltip="Filter by people"
-    [matBadge]="filterUsers.length"
-    [matBadgeHidden]="!filterUsers.length"
-    matBadgeSize="small"
-  >
-    <mat-icon>filter_list</mat-icon>
+  <button mat-icon-button (click)="search()">
+    <mat-icon
+      matBadge="!"
+      [matBadgeHidden]="!isFiltered"
+      matBadgeColor="warn"
+      matBadgeSize="small"
+      >search</mat-icon
+    >
   </button>
-  <button
-    class="toolbar-button"
-    disabled="true"
-    (click)="exportCSV()"
-    mat-button
-  >
+  <button class="toolbar-button" (click)="exportCSV()" mat-button>
     EXPORT
   </button>
   <toolbar-helper></toolbar-helper>

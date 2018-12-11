@@ -40,7 +40,7 @@ export class FilterDialog implements OnInit {
   }
 
   public back(): void {
-    this.title = "Search History";
+    this.title = "Filter History Results";
   }
 
   public clear(): void {

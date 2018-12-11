@@ -32,7 +32,6 @@ export class AccountService {
   bShowProfile: boolean = false; // template var
   searchForHelper: string; // template var to assist event system;
 
-
   isTrialVersion: boolean = false;
   trialSnackbar: MatSnackBarRef<any>;
   trialDaysLeft: number;

@@ -3,8 +3,6 @@ import { Routes, RouterModule } from "@angular/router";
 import { HomeComponent } from "./home/home.component";
 import { AccountComponent } from "./account.component";
 import { ProfileComponent } from "./account/account.component";
-import { LogComponent } from "./log/log.component";
-import { TimeComponent } from "./time/time.component";
 import { IncidentReportsComponent } from "./incident-reports/incident-reports.component";
 import { EventComponent } from "./event/event.component";
 import { AchievementsComponent } from "./achievements/achievements.component";
@@ -18,7 +16,6 @@ const routes: Routes = [
       { path: "", redirectTo: "dashboard", pathMatch: "full" },
       { path: "dashboard", component: HomeComponent },
       { path: "account", component: ProfileComponent },
-      { path: "log", component: LogComponent },
       { path: "event", component: EventComponent },
       { path: "incident-reports", component: IncidentReportsComponent },
       { path: "achievements", component: AchievementsComponent },
@@ -38,6 +35,10 @@ const routes: Routes = [
       {
         path: "time",
         loadChildren: "./time/time.module#TimeModule"
+      },
+      {
+        path: "log",
+        loadChildren: "./log/log.module#LogModule"
       },
       {
         path: "self-inspections",

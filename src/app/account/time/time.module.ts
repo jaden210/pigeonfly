@@ -4,8 +4,8 @@ import { SharedModule } from "../../shared-module";
 import { TimeComponent } from "./time.component";
 import { TimeService } from "./time.service";
 import { CreateEditShiftDialog } from "./create-edit-shift/create-edit-shift.dialog";
-import { NgxMaterialTimepickerModule } from "ngx-material-timepicker";
 import { DragDropModule } from "@angular/cdk/drag-drop";
+import { SearchDialog } from "./search-dialog/search.dialog";
 
 const routes: Routes = [
   {
@@ -15,14 +15,9 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [
-    SharedModule,
-    DragDropModule,
-    RouterModule.forChild(routes),
-    NgxMaterialTimepickerModule.forRoot()
-  ],
-  declarations: [TimeComponent, CreateEditShiftDialog],
-  entryComponents: [CreateEditShiftDialog],
+  imports: [SharedModule, DragDropModule, RouterModule.forChild(routes)],
+  declarations: [TimeComponent, CreateEditShiftDialog, SearchDialog],
+  entryComponents: [CreateEditShiftDialog, SearchDialog],
   providers: [TimeService]
 })
 export class TimeModule {}
