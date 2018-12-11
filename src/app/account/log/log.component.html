@@ -13,6 +13,7 @@
   </button>
   <toolbar-helper></toolbar-helper>
 </mat-toolbar>
+
 <div class="window" #window>
   <div id="logs" #logs [class.hidden]="!showView">
     <div id="load-btn-container">
@@ -23,16 +24,18 @@
     <p *ngIf="!(logsGroup | async)?.length">
       No results{{ isSearch ? " for search parameters." : "." }}
     </p>
+
     <ng-container *ngFor="let group of (logsGroup | async)">
       <div id="date">
         <span>{{ group.date }}</span>
       </div>
       <div
         class="chat-line-wrapper"
+        [class.is-me]="authorGroup.isMe"
         *ngFor="let authorGroup of group.logsByAuthor; last as lastAuthorGroup"
       >
         <div class="chat-line">
-          <div class="circle-container" *ngIf="!authorGroup.isMe">
+          <div class="circle-container">
             <div
               class="circle"
               [ngStyle]="{ background: authorGroup.author?.color }"
@@ -47,47 +50,51 @@
           </div>
           <div
             class="bubbles-container"
-            [class.response-bubble]="authorGroup.isMe"
             (click)="authorGroup.showTime = !authorGroup.showTime"
           >
-            <span *ngIf="!authorGroup.isMe" class="name">{{
-              authorGroup.author?.name
-            }}</span>
+            <span class="name">{{ authorGroup.author?.name }}</span>
             <div
-              class="question chat-bubble"
-              [class.response]="authorGroup.isMe"
-              [class.is-image]="log.imageUrl"
-              (mousedown)="longPressStart(log)"
-              (mouseup)="longPressEnd()"
-              [matMenuTriggerFor]="appMenu"
-              [matMenuTriggerData]="{ log: log }"
+              class="bubble-wrapper"
               *ngFor="
                 let log of authorGroup.logs;
                 first as isFirst;
                 last as isLast
               "
-              [ngClass]="
-                authorGroup.logs.length > 1
-                  ? isFirst
-                    ? 'top'
-                    : isLast
-                    ? 'bottom'
-                    : 'middle'
-                  : null
-              "
             >
-              <p *ngIf="log?.description">{{ log?.description }}</p>
-              <img
-                *ngIf="log.imageUrl"
-                [src]="log.imageUrl"
-                onerror="this.style.display='none'"
-              />
+              <div
+                class="chat-bubble"
+                [class.is-image]="log.imageUrl"
+                [ngClass]="
+                  authorGroup.logs.length > 1
+                    ? isFirst
+                      ? 'top'
+                      : isLast
+                      ? 'bottom'
+                      : 'middle'
+                    : null
+                "
+              >
+                <p *ngIf="log?.description">{{ log?.description }}</p>
+                <img
+                  *ngIf="log.imageUrl"
+                  [src]="log.imageUrl"
+                  onerror="this.style.display='none'"
+                />
+              </div>
+              <button
+                mat-icon-button
+                class="more-button"
+                (click)="$event.stopPropagation()"
+                [matMenuTriggerFor]="appMenu"
+                [matMenuTriggerData]="{ log: log }"
+              >
+                <mat-icon>more_vert</mat-icon>
+              </button>
             </div>
           </div>
         </div>
         <div
           class="time"
-          [class.time-right]="authorGroup.isMe"
           [ngStyle]="{
             maxHeight:
               (lastGroup && lastAuthorGroup) || authorGroup.showTime
@@ -99,14 +106,13 @@
         </div>
       </div>
     </ng-container>
-    <div class="chat-line-wrapper">
+
+    <!-- For temporary response logs -->
+    <div class="chat-line-wrapper is-me">
       <div class="chat-line">
-        <div
-          class="bubbles-container response-bubble"
-          style="margin-left: auto;"
-        >
+        <div class="bubbles-container">
           <div
-            class="response chat-bubble"
+            class="chat-bubble"
             *ngFor="let rl of responseLogs; first as isFirst; last as isLast"
             [class.is-image]="rl.imageUrl"
             [ngClass]="
@@ -132,8 +138,12 @@
         </div>
       </div>
     </div>
+    <!-- End temporary logs -->
+
     <div id="sending" *ngIf="sending">Sending...</div>
+    <!-- For proper scrolling, added blank div with height -->
     <div id="buffer" #buffer></div>
+    <!-- End Buffer -->
   </div>
 
   <div id="actions">
@@ -171,6 +181,7 @@
   *ngIf="loading || sending"
 ></mat-progress-bar>
 
+<!-- Image input -->
 <div style="height: 0px; width: 0px; overflow:hidden">
   <input
     type="file"
@@ -179,6 +190,7 @@
     (change)="uploadImage($event)"
   />
 </div>
+<!-- End image input -->
 
 <mat-menu #appMenu="matMenu">
   <ng-template matMenuContent let-log="log">
@@ -188,6 +200,13 @@
       (click)="viewImage(log.imageUrl)"
     >
       View Image
+    </button>
+    <button
+      mat-menu-item
+      *ngIf="log.LatPos && log.LongPos"
+      (click)="showMap(log)"
+    >
+      View Location
     </button>
     <button mat-menu-item (click)="deleteLog(log)">Delete Log</button>
   </ng-template>

@@ -7,50 +7,49 @@ import { MapDialogComponent } from "../map-dialog/map-dialog.component";
 import { LogService, Log } from "./log.service";
 import { Observable, forkJoin, of } from "rxjs";
 import { DatePipe } from "@angular/common";
-import { MatMenuTrigger } from "@angular/material";
 import { SearchDialog, SearchParams } from "./search-dialog/search.dialog";
 
 @Component({
   selector: "app-log",
   templateUrl: "./log.component.html",
-  styleUrls: ["./log.component.css"],
-  providers: [LogService]
+  styleUrls: ["./log.component.css"]
 })
+
+/* This is a pretty complex piece of code, make sure you understand what is
+going on before you modify this class */
 export class LogComponent implements OnInit, OnDestroy {
+  /* Stored on client for searching */
+  private logs: Log[];
+  /* Logs grouped by date, author and time */
+  public logsGroup: Observable<LogsGroup[]>;
+  /* Temporary logs while log is sending */
+  public responseLogs;
+  /* Params passed to and from search dialog */
   private searchParams: SearchParams;
-  searchStr: string; // template variable
-  searchVisible: boolean = true;
-  filterUsers: string[] = [];
-  sending: boolean;
-  showView: boolean;
-  scrollPosition: number = 0;
-  limit: number = 0;
-  allowLoad: boolean = true;
-  loading: boolean;
-
-  @ViewChild("window") window;
-  @ViewChild("logs") contentArea;
-  @ViewChild("myInput") myInput;
-  @ViewChild("textbox") textbox;
-  @ViewChild("buffer") buffer;
-  @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
-
-  /* temporary logs while log is sending */
-  public responseLogs = [];
-
-  /* user clicks to resend log on error */
+  /* If active search, for icon and new loads */
+  public isSearch: boolean;
+  /* Controlling view, shows after initial load */
+  public showView: boolean;
+  /* Shows ...sending in view */
+  public sending: boolean;
+  /* Shows progress bar in view */
+  public loading: boolean;
+  /* Keep track of scroll position on fetch more */
+  private scrollPosition: number = 0;
+  private limit: number = 0;
+  /* Only show Load More button if there are more */
+  public allowLoad: boolean = true;
+  /* Shows if sending error, click to retry */
   public errorIcon: boolean;
-
-  /* description of log */
-
+  /* From textarea, to create new log */
   public description: string;
-
-  /* group is greated to group by date */
-  public logsGroup: Observable<any[]>;
-
+  /* Temp container for images, to create new log */
+  public images: { previewImage; imgFile }[] = [];
+  /* Reference to todays date, set onInit */
   private todaysDatePiped: string;
   private teamId: string;
   public users: User[];
+  /* Colors used to create author icon */
   private colors = [
     "#FF6F00",
     "#880E4F",
@@ -63,12 +62,14 @@ export class LogComponent implements OnInit, OnDestroy {
     "#4A148C",
     "#006064"
   ];
-
-  /* temp container for images, previews etc */
-  public images: any[] = [];
-
-  logs: Log[];
-  isSearch: boolean;
+  /* Handle to read and modify scroll position */
+  @ViewChild("logs") contentArea;
+  /* Handle to read and modify height */
+  @ViewChild("myInput") myInput;
+  /* Handle to read and modify height */
+  @ViewChild("textbox") textbox;
+  /* Handle to read and modify buffer height */
+  @ViewChild("buffer") buffer;
 
   constructor(
     private service: LogService,
@@ -109,16 +110,22 @@ export class LogComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.limit += 40;
     this.service.getLogs(this.teamId, this.limit).subscribe(logs => {
+      /* Since this is an open socket, do not allow a change to this
+      observable to override their current search */
       if (!this.isSearch) {
         this.logs = logs.reverse();
+        /* Hides load more button in the view */
         if (logs.length < this.limit) this.allowLoad = false;
-        if (this.logSending) this.checkIfShouldWipeLogSending(logs);
-        this.buildLogGroups();
+        /* If the new log saved successfully, our observable will 
+        update with that new log, if so clear out responseLogs */
+        if (this.logBeingSent) this.checkIfShouldWipeLogSending(logs);
+        this.buildLogsGroup();
       }
     });
   }
 
-  private buildLogGroups(): void {
+  /* Method used to build view, groups by day, then time, then author */
+  private buildLogsGroup(): void {
     this.logsGroup = of(this.logs).pipe(
       map(logs => {
         let map = {};
@@ -135,14 +142,10 @@ export class LogComponent implements OnInit, OnDestroy {
           let images = log.images || [];
           /* creating pseudo log for images to show in own bubble */
           images.forEach(image => {
-            let pseudoLog = new Log();
-            pseudoLog.createdAt = log.createdAt;
-            pseudoLog.userId = log.userId;
-            pseudoLog.imageUrl = image;
-            pseudoLog.id = log.id;
-            map[gbd][log.userId + "-" + gbt].push(pseudoLog);
+            map[gbd][log.userId + "-" + gbt].push(new PseudoLog(log, image));
           });
-          if (log.description) map[gbd][log.userId + "-" + gbt].push(log);
+          if (log.description)
+            map[gbd][log.userId + "-" + gbt].push(new PseudoLog(log));
         });
         let n = Object.keys(map).map(key => {
           let date = key;
@@ -165,22 +168,25 @@ export class LogComponent implements OnInit, OnDestroy {
     );
   }
 
-  /* if id coming in from getLogs == the id of the log we're sending
+  /* If ID coming in from getLogs == the id of the log we're sending
   then wipe out the temporary response logs and clear sending flag */
   private checkIfShouldWipeLogSending(logs: Log[]): void {
-    let i = logs.findIndex(log => log.id == this.logSending.id);
+    let i = logs.findIndex(log => log.id == this.logBeingSent.id);
     if (i > -1) {
       this.sending = false;
       this.responseLogs = [];
-      this.logSending = null;
+      this.logBeingSent = null;
     }
   }
 
+  /* Scroll to bottom if new log, keep position if fetching more */
   private scrollToPosition(): void {
+    /* Setting timeout to wait for ngFor to finish rendering */
     setTimeout(() => {
       this.contentArea.nativeElement.scrollTop =
         this.contentArea.nativeElement.scrollHeight - this.scrollPosition;
       this.loading = false;
+      /* Shows view on initial load */
       this.showView = true;
     }, 250);
   }
@@ -192,11 +198,14 @@ export class LogComponent implements OnInit, OnDestroy {
     return ds;
   }
 
+  /* Attaching user to authorGroup */
   private getAuthor(userId): User {
     return this.users.find(user => user.id == userId);
   }
 
-  /* Meh, not super efficient */
+  /* On search, grab entire logs collection so we can do a text
+  search, this won't work in the future when there are thousands
+  of logs, at that point we will need to figure something else out */
   public search(): void {
     this.dialog
       .open(SearchDialog, {
@@ -205,8 +214,10 @@ export class LogComponent implements OnInit, OnDestroy {
       })
       .afterClosed()
       .subscribe((params: SearchParams) => {
+        /* They didn't cancel out of the dialog */
         if (params) {
           this.searchParams = params;
+          /* They want to search by something */
           if (
             params.employees.length ||
             params.date ||
@@ -214,20 +225,22 @@ export class LogComponent implements OnInit, OnDestroy {
             params.imagesOnly
           ) {
             this.loading = true;
+            /* Show the user they have an active search */
             this.isSearch = true;
             this.service.getAllLogs(this.teamId).subscribe(logs => {
+              /* Setting logs to build logsGroup from */
               this.logs = logs
                 .filter(log => {
                   if (params.employees.length)
                     return params.employees.includes(log.userId);
                   if (params.date) {
+                    /* Floor it to day only, disregard time */
                     const pd = this.datePipe.transform(params.date);
                     const ld = this.datePipe.transform(log.createdAt);
                     return pd == ld;
                   }
                   if (params.string) {
                     let filter: string[] = params.string.trim().split(/\s+/);
-                    let match;
                     for (let f of filter) {
                       if (
                         log.description &&
@@ -240,7 +253,7 @@ export class LogComponent implements OnInit, OnDestroy {
                   if (params.imagesOnly) return log.imageUrl ? true : false;
                 })
                 .reverse();
-              this.buildLogGroups();
+              this.buildLogsGroup();
             });
           } else {
             this.isSearch = false;
@@ -250,7 +263,7 @@ export class LogComponent implements OnInit, OnDestroy {
       });
   }
 
-  /* resizes the input box */
+  /* Resizes the input box */
   public resize(): void {
     const sh = this.myInput.nativeElement.scrollHeight;
     this.myInput.nativeElement.style.height = "28px";
@@ -258,32 +271,26 @@ export class LogComponent implements OnInit, OnDestroy {
       sh > 90 ? "90px" : this.myInput.nativeElement.scrollHeight - 14 + "px";
   }
 
+  /* User initiated click to grab an image */
   public getImage(): void {
     document.getElementById("upfile").click();
   }
 
+  /* Called from change on upFile, hidden in view */
   public uploadImage(event) {
     if (event.target.files && event.target.files[0]) {
-      const file = event.target.files[0];
+      const imgFile = event.target.files[0];
+      /* Build preview image */
       var reader = new FileReader();
       reader.onload = (event: any) => {
         const previewImage = event.target.result;
-        this.setImage({ previewImage, file });
+        this.setImage({ previewImage, imgFile });
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(imgFile);
     }
   }
 
-  public removeImage(image): void {
-    let i = this.images.indexOf(image);
-    this.images.splice(i, 1);
-    setTimeout(() => {
-      const teh = this.textbox.nativeElement.clientHeight;
-      this.buffer.nativeElement.style.height = `${teh}px`;
-      this.scrollToPosition();
-    }, 0);
-  }
-
+  /* Sets the image on a new log */
   public setImage(imageObj): void {
     this.images.push(imageObj);
     setTimeout(() => {
@@ -294,24 +301,28 @@ export class LogComponent implements OnInit, OnDestroy {
     }, 0);
   }
 
+  /* Removes image from the new log */
+  public removeImage(image): void {
+    let i = this.images.indexOf(image);
+    this.images.splice(i, 1);
+    /* Shrink textarea, reset bottom of page */
+    setTimeout(() => {
+      const teh = this.textbox.nativeElement.clientHeight;
+      this.buffer.nativeElement.style.height = `${teh}px`;
+      this.scrollToPosition();
+    }, 0);
+  }
+
+  /* Called from template to preview image */
   public viewImage(imageUrl): void {
     this.dialog.open(ImagesDialogComponent, {
       data: [{ imageUrl }]
     });
   }
 
-  longPressTimer;
-  public longPressStart(): void {
-    this.longPressTimer = setTimeout(() => {
-      this.trigger.openMenu();
-    }, 1000);
-  }
-
-  public longPressEnd(): void {
-    if (this.longPressTimer) clearTimeout(this.longPressTimer);
-  }
-
+  /* Called onclick of send button in view */
   public createLog(): void {
+    /* Build temporary logs to show while sending */
     this.buildResponseLogs();
     this.sending = true;
     let log = new Log();
@@ -319,6 +330,7 @@ export class LogComponent implements OnInit, OnDestroy {
     log.userId = this.accountService.user.id;
     log.description = this.description;
     log.images = [...this.images];
+    /* Reset textarea */
     this.description = null;
     this.images = [];
     this.persistLog(log);
@@ -326,19 +338,21 @@ export class LogComponent implements OnInit, OnDestroy {
 
   /* temporary logs shown while sending */
   private buildResponseLogs(): void {
+    this.responseLogs = [];
     if (this.description)
       this.responseLogs.push({ description: this.description });
     let responseImages = this.images.map(imgObj => imgObj.previewImage);
     responseImages.forEach(imageUrl => this.responseLogs.push({ imageUrl }));
+    /* Scroll to bottom of page */
     this.scrollPosition = 0;
-    setTimeout(() => this.scrollToPosition(), 10);
+    this.scrollToPosition();
   }
 
-  /* back up log to retry on fail */
-  private logSending: Log;
+  /* Back-up log to retry if it fails to send */
+  private logBeingSent: Log;
   private persistLog(log: Log): void {
     log.id = this.service.generateLogId(this.teamId);
-    this.logSending = log;
+    this.logBeingSent = JSON.parse(JSON.stringify(log));
     this.persistImages(log.images).subscribe(
       images => {
         log.images = images;
@@ -351,21 +365,24 @@ export class LogComponent implements OnInit, OnDestroy {
     );
   }
 
+  /* Save each image to firestorage before saving log */
   private persistImages(images): Observable<any[]> {
     return images.length
       ? forkJoin(
           images.map(imgObj =>
-            this.service.uploadImage(imgObj.file, this.teamId)
+            this.service.uploadImage(imgObj.imgFile, this.teamId)
           )
         )
       : of([]);
   }
 
+  /* Called by user if log fails and they want to retry */
   public resendLog(): void {
-    this.persistLog(this.logSending);
+    this.persistLog(this.logBeingSent);
   }
 
-  showMap(log) {
+  /* Not used, maybe we should stick it in */
+  public showMap(log: PseudoLog) {
     this.dialog.open(MapDialogComponent, {
       data: {
         longPos: log.LongPos,
@@ -374,17 +391,26 @@ export class LogComponent implements OnInit, OnDestroy {
     });
   }
 
-  loadMore() {
+  /* From Load More button at top of scroll */
+  public loadMore() {
     this.scrollPosition = this.contentArea.nativeElement.scrollHeight;
     this.getLogs();
   }
 
+  /* This method is a little weird, since we break each log into
+  pseudo logs, the user might thing each displayed pseudo log is 
+  it's own log. Because of this we only want to delete the thing 
+  the user thinks they are deleting. We need to find the original 
+  log, remove from it the thing they are wanting to delete, then if
+  there is nothing left of the log, delete the log. Else, update the
+  log */
   deleteLog(pseudoLog: Log) {
     const log = this.logs.find(l => l.id == pseudoLog.id);
+    /* If they change their mind about the delete */
     const recoverLog = JSON.parse(JSON.stringify(log));
     const recoverPseudoLog = { ...pseudoLog };
+    /* True if they want to undo the delete */
     let action;
-
     if (pseudoLog.description) {
       log.description = null;
     } else if (pseudoLog.imageUrl) {
@@ -392,6 +418,7 @@ export class LogComponent implements OnInit, OnDestroy {
       log.images.splice(i, 1);
     }
     if (!log.description && !log.images.length) {
+      /* Nothing left of the log, delete it instead of updating it */
       this.service.deleteLog(log.id, this.teamId).then(() => {
         let sbr = this.snackBar.open("Successfully deleted log", "UNDO", {
           duration: 5000
@@ -404,10 +431,12 @@ export class LogComponent implements OnInit, OnDestroy {
         });
         sbr.afterDismissed().subscribe(() => {
           if (!action && recoverPseudoLog.imageUrl)
+            /* Wipe image from our storage database */
             this.service.removeImage(recoverPseudoLog.imageUrl);
         });
       });
     } else {
+      /* Only deleted a part of the log, update the log */
       this.service.updateLog(log, this.teamId).then(() => {
         let sbr = this.snackBar.open("Successfully deleted log", "UNDO", {
           duration: 5000
@@ -420,6 +449,7 @@ export class LogComponent implements OnInit, OnDestroy {
         });
         sbr.afterDismissed().subscribe(() => {
           if (!action && recoverPseudoLog.imageUrl)
+            /* Wipe image from our storage database */
             this.service.removeImage(recoverPseudoLog.imageUrl);
         });
       });
@@ -428,5 +458,38 @@ export class LogComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.accountService.searchForHelper = "";
+  }
+}
+
+class LogsGroup {
+  date: string;
+  logsByAuthor: LogsByAuthor[];
+}
+
+class LogsByAuthor {
+  author: User;
+  logs: PseudoLog[];
+  time: string;
+  isMe: boolean;
+}
+
+/* This is the object that makes up the view, each log is split into 
+one or more "logs", each image becomes its own log */
+class PseudoLog {
+  createdAt: Date;
+  userId: string;
+  id: string;
+  description: string;
+  imageUrl: string;
+  LatPos: number;
+  LongPos: number;
+  constructor(log: Log, imageUrl = null) {
+    this.createdAt = log.createdAt;
+    this.userId = log.userId;
+    this.id = log.id;
+    this.description = imageUrl ? null : log.description;
+    this.imageUrl = imageUrl;
+    this.LatPos = log.LatPos;
+    this.LongPos = log.LongPos;
   }
 }
