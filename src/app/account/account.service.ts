@@ -154,7 +154,7 @@ export class AccountService {
   }
 
   closeSnackbar() {
-    this.trialSnackbar.dismiss();
+    if (this.trialSnackbar) this.trialSnackbar.dismiss();
   }
 
   logout(): void {
