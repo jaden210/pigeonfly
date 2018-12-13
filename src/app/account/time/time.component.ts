@@ -78,11 +78,7 @@ export class TimeComponent implements OnInit, OnDestroy {
         }
       });
     } else {
-      if (
-        this.datePipe.transform(params.endDate) !=
-        this.datePipe.transform(new Date())
-      )
-        this.isFiltered = true;
+      if (this.datePipe.transform(params.endDate) != this.datePipe.transform(new Date())) this.isFiltered = true;
       return shifts;
     }
   }

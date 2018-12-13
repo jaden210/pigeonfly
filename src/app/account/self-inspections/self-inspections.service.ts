@@ -5,12 +5,11 @@ import { map, tap, take, mergeMap } from "rxjs/operators";
 import { AccountService } from "../account.service";
 import { MatDialogRef } from "@angular/material";
 
-@Injectable({
-  providedIn: "root"
-})
+@Injectable()
 export class SelfInspectionsService {
 
   selfInspection: SelfInspection;
+  selfInspectionInspections: Inspection[];
   takeInspection: Inspection;
 
   constructor(
@@ -35,7 +34,7 @@ export class SelfInspectionsService {
   }
 
   getInspections(): Observable<Inspection[]> {
-    let inspectionsCollection = this.accountService.db.collection<Inspection[]>(`team/${this.accountService.aTeam.id}/self-inspection`).doc(this.selfInspection.id).collection("inspections")
+    let inspectionsCollection = this.accountService.db.collection<Inspection[]>(`team/${this.accountService.aTeam.id}/self-inspection/${this.selfInspection.id}/inspections`);
     return inspectionsCollection.snapshotChanges().pipe(
       map(actions => {
         return actions.map(a => {
@@ -106,7 +105,7 @@ export class SelfInspectionsService {
 
   deleteSelfInspection(): Promise<any> {
     let promises = [];
-    this.selfInspection.inspections.forEach((inspection) => {
+    this.selfInspectionInspections.forEach((inspection) => {
       let i = this.deleteSelfInspectionInspection(inspection);
       promises.push(i);
     })
@@ -125,18 +124,20 @@ export class SelfInspectionsService {
     });
   }
   
-  deleteSelfInspectionInspection(inspection?) {
+  deleteSelfInspectionInspection(inspection) {
     return this.accountService.db
     .collection(`team/${this.accountService.aTeam.id}/self-inspection`)
     .doc(this.selfInspection.id)
     .collection("inspections")
-    .doc(inspection.id || this.takeInspection.id).delete();
+    .doc(inspection.id).delete();
   }
 
   finishSelfInspection(): Promise<any> {
     this.takeInspection.completedAt = new Date();
     this.takeInspection.teamId = this.accountService.aTeam.id;
     this.takeInspection.completedBy = this.accountService.user.id;
+    this.selfInspection.lastCompletedAt = new Date();
+    this.db.doc(`team/${this.accountService.aTeam.id}/self-inspection/${this.selfInspection.id}`).update({...this.selfInspection});
     return this.saveSelfInspection();
   }
 
@@ -153,10 +154,11 @@ export class SelfInspectionsService {
 export class SelfInspection {
   id?: string;
   teamId: string;
-  createdAt: Date;
+  createdAt: any;
   title: string;
   baseQuestions: Categories[] = [];
-  inspections: Inspection[] = [];
+  inspectionExpiration?: string;
+  lastCompletedAt?: any;
 }
 
 export class Inspection {
@@ -187,8 +189,14 @@ export class Question {
   comment?: string;
 }
 
+export enum ExperationTimeFrame {
+  Anually = "Anually",
+  SemiAnually = "Semi-Anually",
+  Quarterly = "Quarterly",
+  Montly = "Monthly"
+}
+
 @Component({
-  selector: "app-map-dialog",
   template: `
   <h2 mat-dialog-title>Are you sure?</h2>
   <mat-dialog-content>Are you sure you want to delete this self-inspection? All data related to this self-inspection will be lost.</mat-dialog-content>

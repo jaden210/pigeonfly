@@ -34,10 +34,6 @@ export class SelfInspectionsListComponent {
 
   selectSelfInspection(inspection) {
     this.selfInspectionsService.selfInspection = inspection;
-    this.selfInspectionsService.selfInspection.inspections.forEach(inspection => {
-      inspection.createdAt ? inspection.createdAt = inspection.createdAt.toDate() : null;
-      inspection.completedAt ? inspection.completedAt = inspection.completedAt.toDate() : null;
-    });
     this.router.navigate([inspection.id], { relativeTo: this.route });
   }
 

@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { SelfInspectionsService } from "../self-inspections.service";
+import { SelfInspectionsService, ExperationTimeFrame } from "../self-inspections.service";
 import { MatSnackBar } from "@angular/material";
 import { Router } from "@angular/router";
 import { Location } from "@angular/common";
@@ -60,5 +60,9 @@ export class CreateEditSelfInspectionComponent {
       selected: true
     });
     this.newQuestionText = '';
+  }
+
+  public get timeFrame(): string[] {
+    return Object.keys(ExperationTimeFrame).map(key => ExperationTimeFrame[key]);
   }
 }

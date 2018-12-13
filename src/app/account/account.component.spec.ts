@@ -15,8 +15,6 @@ import { SurveyComponent } from './surveys/survey/survey.component';
 import { TimeComponent } from './time/time.component';
 import { ToolbarHelperComponent } from './toolbar-helper/toolbar-helper.component';
 import { TrainingComponent } from './training/training.component';
-import { StatsComponent } from './stats/stats.component';
-import { AssesComponent } from './stats/ases/make-osha.component';
 
 describe('AccountComponent', () => {
   let component: AccountComponent;

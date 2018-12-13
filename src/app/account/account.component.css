@@ -60,7 +60,7 @@ mat-sidenav-content {
 }
 
 .appear {
-  opacity: 0;
+  opacity: 1;
   transition: opacity 250ms ease-out 0ms;
 }
 

@@ -37,7 +37,7 @@ export class AccountService {
   trialDaysLeft: number;
 
   helperProfiles = this.helperService.helperProfiles;
-  helper: Helper = this.helperProfiles.newTeam;
+  helper: Helper;
   feedback: Helper = this.helperProfiles.feedback;
 
   constructor(
@@ -132,18 +132,22 @@ export class AccountService {
 
   checkFreeTrial(team): void {
     if (!team.cardToken) {
-      this.trialDaysLeft =
-        30 - moment().diff(this.aTeam.createdAt, "days") < 0
-          ? 0
-          : 30 - moment().diff(this.aTeam.createdAt, "days");
+      this.trialDaysLeft = 30 - moment().diff(this.aTeam.createdAt, "days") < 0 ? 0 : 30 - moment().diff(this.aTeam.createdAt, "days");
       this.isTrialVersion = true;
-      this.trialSnackbar = this.snackbar.open(
-        `${this.trialDaysLeft} days left in your free trial`,
-        "enter billing info",
-        {
-          horizontalPosition: "right"
-        }
-      );
+      let shouldOpen: boolean = false;
+      if (this.trialDaysLeft == 30) shouldOpen = true;
+      if (this.trialDaysLeft == 20) shouldOpen = true;
+      if (this.trialDaysLeft == 10) shouldOpen = true;
+      if (this.trialDaysLeft <= 5) shouldOpen = true;
+      if (shouldOpen) {
+        this.trialSnackbar = this.snackbar.open(
+          `${this.trialDaysLeft} days left in your free trial`,
+          "enter billing info",
+          {
+            horizontalPosition: "right"
+          }
+        );
+      }
       this.trialSnackbar.onAction().subscribe(() => {
         this.router.navigate(["account/account"]);
       });
@@ -153,6 +157,36 @@ export class AccountService {
     }
   }
 
+  checkStripePlan() {
+    this.teamUsersObservable.subscribe(async users => {
+      if (users) {
+        let plan;
+        let q = 1;
+        if (this.teamUsers.length <= 10) {
+          plan = 'small-teams';
+        } else if (11 < this.teamUsers.length && this.teamUsers.length <= 100) {
+          plan = 'large-teams';
+        } else {
+          plan = 'enterprise';
+          q = this.teamUsers.length;
+        }
+        if ((this.aTeam.stripePlanId !== plan) && this.aTeam.cardToken) {
+          const res = await fetch("https://teamlog-2d74c.cloudfunctions.net/setStripePlan", {
+            method: 'POST',
+            body: JSON.stringify({
+              stripeSubscriptionId: this.aTeam.stripeSubscriptionId,
+              quantity: q,
+              plan
+            }),
+          });
+          const data = await res.json();
+          data.body = JSON.parse(data.body);
+          return data;
+        }
+      }
+    })
+  }
+      
   closeSnackbar() {
     if (this.trialSnackbar) this.trialSnackbar.dismiss();
   }
@@ -219,9 +253,12 @@ export class Team {
   logoUrl?: string;
   phone?: string;
   industryId?: string;
-  cardToken: any;
+  cardToken?: any;
   disabled: boolean = false;
-  disabledAt: any;
+  disabledAt?: any;
+  stripeSubscriptionId?: string;
+  stripePlanId?: string;
+  stripeCustomerId?: string;
 }
 
 export class Log {

@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { SelfInspectionsService, Inspection, DeleteInspectionDialog } from "../self-inspections.service";
+import { SelfInspectionsService, Inspection, DeleteInspectionDialog, ExperationTimeFrame } from "../self-inspections.service";
 import { MatSnackBar, MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import * as jsPDF from 'jspdf';
@@ -28,6 +28,7 @@ export class SelfInspectionComponent {
       return;
     };
     this.selfInspectionsService.getInspections().subscribe(inspections => {
+      this.selfInspectionsService.selfInspectionInspections = inspections;
       this.inProgressInspections = [];
       this.completedInspections = [];
       inspections.forEach(inspection => {

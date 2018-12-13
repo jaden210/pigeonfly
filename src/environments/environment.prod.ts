@@ -9,7 +9,7 @@ export const environment = {
     messagingSenderId: "800172058622"
   },
   stripe: {
-    publishable: "pk_test_xQTLf7GJIEhTX1tz1AVeJaea",
-    secret: "sk_test_eBRntjsgqdxvMjQptP3TnZo2"
+    publishable: "pk_live_r9CMgitgEmMOHbkAqL5QblcT",
+    secret: "sk_live_TQ9inG1nDFwQ3mnbA0nZc53G"
   }
 };

@@ -5,36 +5,136 @@
   <toolbar-helper></toolbar-helper>
 </mat-toolbar>
 <div class="window">
-  <div class="day" *ngFor="let user of invitedUsers | async">
-    <div class="heads">
-      <div class="head"><img class="head-img" src="/assets/face.png" alt="Compliancechimp"></div>
-    </div>
-    <div class="box">
-      <div class="row">
-        <div class="active-dot inactive"></div>
-        <div class="user-name">{{user.inviteName}} - {{user.status}}</div>
-      </div>
-      <div class="active-text">{{user.inviteEmail}} has been invited to join your team!</div>
-    </div>
-    <div class="flex"></div>
-    <button mat-icon-button id="delete" (click)="deleteInvite(user)"><mat-icon>delete</mat-icon></button>
-  </div>
-  <ng-container *ngFor="let user of users">
-    <div class="day pointer" (click)="editUser(user)">
-      <div class="heads">
-       <div class="head"><img class="head-img" src={{user.user.profileUrl}} onerror="src = 'assets/face.png'" alt="Compliancechimp"></div>
-      </div>
-      <div class="box">
-        <div class="row">
-          <div class="active-dot" [ngClass]="{'uactive': user.statusColor == 'active', 'busy': user.statusColor == 'busy', 'inactive': user.statusColor == 'inactive'}"></div>
-          <div class="user-name">{{user.user.name}}</div>
+  <div id="dashboard">
+    <div class="cols">
+      <div class="col">
+        <div class="card g">
+          <div class="info">
+            <div class="c-title">Training complete</div>
+            <div class="c-stat">80%</div>
+          </div>
+          <mat-icon class="c-icon">explore</mat-icon>
         </div>
-        <div class="active-text">{{user.status}}</div>
+        <div class="card g">
+          <div class="info">
+            <div class="c-title">Members needing training</div>
+            <div class="c-stat">{{activeUsers.length || 0}}</div>
+          </div>
+          <mat-icon class="c-icon">explore</mat-icon>
+        </div>
+        <div class="card g">
+          <div class="info">
+            <div class="c-title">Trainings given</div>
+            <div class="c-stat">{{achievements?.startedTrainings || 0}}</div>
+          </div>
+          <mat-icon class="c-icon">explore</mat-icon>
+        </div>
+        <div class="card g">
+          <div class="info">
+            <div class="c-title">Survey responses</div>
+            <div class="c-stat">{{achievements?.trainingSurveyResponseCount || 0}}</div>
+          </div>
+          <mat-icon class="c-icon">explore</mat-icon>
+        </div>
       </div>
-      <div class="flex"></div>
-      <div class="map-icon" *ngIf="user.timeclock?.outLongPos" matTooltip="View last logged location" matTooltipShowDelay="300" (click)="$event.stopPropagation();showMap(user)"><mat-icon class="map">location_on</mat-icon></div>
+      <div class="col">
+        <div class="card b">
+          <div class="info">
+            <div class="c-title">Self inspections</div>
+            <div class="c-stat">{{selfInspection?.current}} current | {{selfInspection?.expired}} expired</div>
+          </div>
+          <mat-icon class="c-icon">import_contacts</mat-icon>
+        </div>
+        <div class="card b">
+          <div class="info">
+            <div class="c-title">Worksite logs</div>
+            <div class="c-stat">{{achievements?.logsCount || 0}}</div>
+          </div>
+          <mat-icon class="c-icon">assignment</mat-icon>
+        </div>
+        <div class="card b" (click)="viewInvites('pending')">
+          <div class="info">
+            <div class="c-title">Badges earned</div>
+            <div class="c-stat">{{completedCount || 0}}</div>
+          </div>
+          <mat-icon class="c-icon">where_to_vote</mat-icon>
+        </div>
+        <div class="card b">
+          <div class="info">
+            <div class="c-title">Compliance level</div>
+            <div class="c-stat">{{complianceLevel || 0}} / 3</div>
+          </div>
+          <mat-icon class="c-icon">where_to_vote</mat-icon>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card p">
+          <div class="info">
+            <div class="c-title">Incident reports</div>
+            <div class="c-stat">{{achievements?.injuryReports || 0}}</div>
+          </div>
+          <mat-icon class="c-icon">assignment_late</mat-icon>
+        </div>
+        <div class="card o">
+          <div class="info">
+            <div class="c-title">Total members</div>
+            <div class="c-stat">{{users.length}}</div>
+          </div>
+          <mat-icon class="c-icon">supervisor_account</mat-icon>
+        </div>
+        <div class="card o">
+          <div class="info">
+            <div class="c-title">Active members</div>
+            <div class="c-stat">{{activeUsers.length || 0}}</div>
+          </div>
+          <mat-icon class="c-icon">supervisor_account</mat-icon>
+        </div>
+        <div class="card o" (click)="viewInvites('pending')">
+          <div class="info">
+            <div class="c-title">Pending invites</div>
+            <div class="c-stat">{{invitedUsers?.length || 0}}</div>
+          </div>
+          <mat-icon class="c-icon">supervisor_account</mat-icon>
+          <mat-icon class="edit pop">open_in_new</mat-icon>
+        </div>
+      </div>
     </div>
-  </ng-container>
-  <button mat-mini-fab class="fab" color="accent" [ngClass]="{'raise-fab': accountService.isTrialVersion}" (click)="inviteToTeam()"><mat-icon>person</mat-icon>New Team Member</button>
+  </div>
+  <table mat-table [dataSource]="users">
+    <ng-container matColumnDef="profile">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let user">
+        <div class="head">
+          <img class="head-img" src={{user.user.profileUrl}} onerror="src = 'assets/face.png'" alt="Compliancechimp">
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let user">
+        <div class="in-line">
+          <div class="active-dot" [ngClass]="{'uactive': user.statusColor == 'active', 'busy': user.statusColor == 'busy', 'inactive': user.statusColor == 'inactive'}"></div>
+          {{user.user?.name}}
+          <mat-icon class="edit fade" (click)="editUser(user)">edit</mat-icon>
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Status</th>
+      <td mat-cell *matCellDef="let user">{{user.status}}</td>
+    </ng-container>
+    <ng-container matColumnDef="training">
+      <th mat-header-cell *matHeaderCellDef>Individual compliance</th>
+      <td mat-cell *matCellDef="let user">{{user.status}}</td>
+    </ng-container>
+    <ng-container matColumnDef="location">
+      <th mat-header-cell *matHeaderCellDef>View last known location</th>
+      <td mat-cell *matCellDef="let user">
+        <div class="map-icon" *ngIf="user.timeclock?.locations" (click)="showMap(user)"><mat-icon class="map">location_on</mat-icon></div>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  <button mat-mini-fab class="fab" color="accent" [ngClass]="{'raise-fab': accountService.isTrialVersion}" (click)="viewInvites('invite')"><mat-icon>person</mat-icon>New Team Member</button>
 </div>
-    

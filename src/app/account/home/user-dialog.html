@@ -1,5 +1,5 @@
 <h2 mat-dialog-title>{{data.name}}</h2>
-<mat-dialog-content>
+<mat-dialog-content class="d-view">
   <div id="content">Changing anything here will directly reflect on the users app for their own profile.</div>
   <mat-form-field>
     <input matInput placeholder="name" [(ngModel)]="data.name">
@@ -13,7 +13,8 @@
   <mat-form-field>
     <input matInput placeholder="phone" [(ngModel)]="data.phone">
   </mat-form-field>
-  <mat-slide-toggle *ngIf="accountService.aTeam.ownerId !== accountService.user.id" [(ngModel)]="data.isAdmin">Allow admin access?</mat-slide-toggle>
+  <mat-slide-toggle *ngIf="(accountService.aTeam.ownerId == accountService.user.id) && (data.id !== accountService.aTeam.ownerId)" [(ngModel)]="data.isAdmin">Allow admin access?</mat-slide-toggle>
+  <mat-checkbox style="margin-top:24px;" *ngIf="(accountService.aTeam.ownerId == accountService.user.id) && (data.id !== accountService.aTeam.ownerId)" [(ngModel)]="data.removeFromTeam">Remove from team</mat-checkbox>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button color="accent" (click)="close()">CANCEL</button>

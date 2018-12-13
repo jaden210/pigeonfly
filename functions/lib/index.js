@@ -1,9 +1,74 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const functions = require("firebase-functions");
+const moment = require("moment");
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 admin.firestore().settings({ timestampsInSnapshots: true });
+const stripe = require('stripe')(functions.config().stripe.token);
+// When a user is created, register them with Stripe
+exports.createStripeCustomer = functions.auth.user().onCreate((user) => {
+    return stripe.customers.create({
+        email: user.email,
+        description: "new Customer"
+    }).then((customer) => {
+        return admin.firestore().collection("team").where("ownerId", "==", user.uid).get()
+            .then((querySnapshot) => {
+            querySnapshot.forEach(doc => {
+                return admin.firestore().doc("team/" + doc.id).update({ stripeCustomerId: customer.id });
+            });
+        })
+            .catch(error => {
+            return console.log("Error getting documents: ", error);
+        });
+    });
+});
+exports.customerEnteredCC = functions.firestore.document("team/{teamId}").onUpdate((change, context) => {
+    let oldT = change.before.data();
+    let newT = change.after.data();
+    if (!oldT.cardToken && newT.cardToken) { // first time card enter
+        stripe.customers.update(newT.stripeCustomerId, {
+            source: newT.cardToken.id
+        }).then(customer => {
+            const days = moment().diff(moment(newT.createdAt.toDate()), 'days');
+            stripe.subscriptions.create({
+                customer: customer.id,
+                trial_period_days: days < 0 ? 0 : days,
+                items: [
+                    { plan: "small-teams" } // small teams
+                ]
+            }).then(subscription => {
+                admin.firestore().doc(`team/${change.after.id}`).update({ stripeSubscriptionId: subscription.id, stripePlanId: "small-teams" });
+                console.log(`customer ${customer.id} subscribed to small teams`);
+            }, error => console.log(`error: ${error}`));
+        });
+    }
+    else if (oldT.cardToken !== newT.cardToken) { // updated CC
+        stripe.customers.update(newT.stripeCustomerId, {
+            source: newT.cardToken.id
+        }).then(() => console.log(`customer card updated`), error => console.log(`error: ${error}`));
+    }
+});
+exports.setStripePlan = functions.https.onRequest((req, res) => {
+    const body = req.body;
+    const newPlan = body.plan;
+    const subscriptionId = body.stripeSubscriptionId;
+    const quantity = body.stripeQuantity;
+    stripe.subscriptions.retrieve(subscriptionId).then(subscription => {
+        stripe.subscriptions.update(subscriptionId, {
+            cancel_at_period_end: false,
+            items: [{
+                    id: subscription.items.data[0].id,
+                    plan: newPlan,
+                    quantity: quantity || 1
+                }]
+        }).then(charge => {
+            res.status(200).send("Success");
+        }).catch(err => {
+            res.status(500).send(err);
+        });
+    });
+});
 exports.inviteNewUser = functions.firestore.document("invitation/{invitationId}").onCreate((snapshot) => {
     let info = snapshot.data();
     const nodemailer = require('nodemailer');
@@ -56,7 +121,7 @@ exports.newTeamEmail = functions.firestore.document("team/{teamId}").onUpdate((c
         <br>support@compliancechimp.com`;
             return mailTransport.sendMail(mailOptions)
                 .then(() => {
-                console.log(`New invitation email sent to:` + user.name);
+                console.log(`New Team email sent to:` + user.name);
             })
                 .catch((error) => {
                 console.error('There was an error while sending the email:', error);

@@ -9,7 +9,7 @@
 <div class="panel">
   <div id="new-inspection">
     <button mat-stroked-button color="primary" style="margin-right: 12px;" (click)="editSelfInspection()">MODIFY {{selfInspectionsService.selfInspection?.title | uppercase}}</button>
-    <button mat-stroked-button color="accent" (click)="startSelfInspection()">START A NEW INSPECTION</button>
+    <button mat-stroked-button color="accent" [disabled]="!selfInspectionsService.selfInspection?.baseQuestions.length" (click)="startSelfInspection()">START A NEW INSPECTION</button>
   </div>
   <div class="inspections" *ngIf="inProgressInspections?.length > 0">
     <div class="info-title">In Progress</div>

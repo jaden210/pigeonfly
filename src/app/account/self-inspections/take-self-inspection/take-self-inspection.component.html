@@ -3,7 +3,7 @@
   <div class="flex"></div>
   <button mat-button color="accent" (click)="saveAndLeave()">SAVE AND LEAVE</button>
   <button mat-raised-button [disabled]="selfInspectionsService.takeInspection.completedPercent < 100" style="color:#ffffff" (click)="finishAndLeave()" color="accent">FINISH INSPECTION</button>
-  <button mat-icon-button class="ml" matTooltip="delete this self-inspection" (click)="deleteSelfInspection()"><mat-icon>delete</mat-icon></button>
+  <button mat-icon-button class="ml" matTooltip="delete this inspection" (click)="deleteSelfInspectionInspection()"><mat-icon>delete</mat-icon></button>
 </mat-toolbar>
 <div class="window">
   <div class="panel">

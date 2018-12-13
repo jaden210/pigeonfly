@@ -57,11 +57,11 @@ export class TakeSelfInspectionComponent {
     });
   }
 
-  deleteSelfInspection() {
+  deleteSelfInspectionInspection() {
     let dialog = this.dialog.open(DeleteInspectionDialog);
     dialog.afterClosed().subscribe(bDelete => {
       if (bDelete) {
-        this.selfInspectionsService.deleteSelfInspectionInspection().then(() => {
+        this.selfInspectionsService.deleteSelfInspectionInspection(this.selfInspectionsService.takeInspection).then(() => {
           this.router.navigate(["/account/self-inspections"]);
           this.selfInspectionsService.selfInspection = null;
         })

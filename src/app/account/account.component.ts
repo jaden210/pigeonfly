@@ -65,7 +65,7 @@ export class AccountComponent {
                     user.teams[team.teamId] = team.isAdmin ? 1 : 0; // should probably document this so it isn't confusing
                     this.accountService.db.collection("invitation").doc(team.id).delete();
                   });
-                  
+                  this.accountService.checkStripePlan();
                   this.accountService.db.collection("user").doc(user.id).update({...user}).then(() => this.selectTeam());
                 } else this.selectTeam();
               });
