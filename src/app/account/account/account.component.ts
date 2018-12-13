@@ -1,4 +1,4 @@
-import { Component, OnInit , Inject, ViewChild, ElementRef, ChangeDetectorRef} from '@angular/core';
+import { Component, OnInit , OnDestroy} from '@angular/core';
 import { AccountService, User, Team } from '../account.service';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { map, finalize } from 'rxjs/operators';
@@ -8,6 +8,7 @@ import * as moment from 'moment';
 import { environment } from 'src/environments/environment';
 import { MatDialog, MatSnackBar, MatDialogRef } from '@angular/material';
 import { MakePaymentComponent } from './payments/make-payment/make-payment.component';
+import { Subscription } from 'rxjs';
 declare var Stripe: Function;
 declare var elements: any;
 
@@ -16,7 +17,8 @@ declare var elements: any;
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.css']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
+  private subscription: Subscription;
   showCompany: boolean = false;
   teamTier: number;
   loading: boolean = false;
@@ -31,7 +33,7 @@ export class ProfileComponent implements OnInit {
 
 
   ngOnInit() {
-    this.accountService.teamUsersObservable.subscribe(team => {
+    this.subscription = this.accountService.teamUsersObservable.subscribe(team => {
       if (team) {
         this.getTierInfo();
         this.accountService.helper = this.accountService.helperProfiles.account;
@@ -121,7 +123,11 @@ export class ProfileComponent implements OnInit {
         }).catch(error => console.error("cannot delete account at this time, contact us for more help. " + error));
       }
     });
-  } 
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
 }
 
 

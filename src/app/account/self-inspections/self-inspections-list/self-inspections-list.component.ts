@@ -1,8 +1,8 @@
-import { Component } from "@angular/core";
+import { Component, OnDestroy } from "@angular/core";
 import { SelfInspectionsService, SelfInspection } from "../self-inspections.service";
 import { AccountService } from "../../account.service";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Observable } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { tap } from "rxjs/operators";
 
 @Component({
@@ -10,8 +10,9 @@ import { tap } from "rxjs/operators";
   templateUrl: "./self-inspections-list.component.html",
   styleUrls: ["./self-inspections-list.component.css"]
 })
-export class SelfInspectionsListComponent {
+export class SelfInspectionsListComponent implements OnDestroy {
 
+  private subscription: Subscription;
   selfInspections: Observable<SelfInspection[]>;
 
   constructor(
@@ -21,7 +22,7 @@ export class SelfInspectionsListComponent {
     public accountService: AccountService,
   ) {
     this.accountService.helper = this.accountService.helperProfiles.selfInspection;
-    this.accountService.aTeamObservable.subscribe(team => {
+    this.subscription = this.accountService.aTeamObservable.subscribe(team => {
       if (team) {
         this.selfInspections = this.selfInspectionsService.getSelfInspections().pipe(
           tap(results => {
@@ -40,5 +41,9 @@ export class SelfInspectionsListComponent {
   startNewSelfInspection() {
     this.selfInspectionsService.selfInspection = new SelfInspection();
     this.router.navigate(['new'], { relativeTo: this.route });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }

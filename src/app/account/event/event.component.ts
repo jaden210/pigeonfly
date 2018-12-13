@@ -1,9 +1,9 @@
-import { Component, HostListener} from '@angular/core';
+import { Component, HostListener, OnDestroy} from '@angular/core';
 import { AccountService, Event } from "../account.service";
 import { map, take } from "rxjs/operators";
 import * as moment from "moment";
 import { MatDialog } from "@angular/material";
-import { Observable } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { Router } from '@angular/router';
 import { EventsFilterDialog } from './filter-dialog/filter.dialog';
 
@@ -12,7 +12,8 @@ import { EventsFilterDialog } from './filter-dialog/filter.dialog';
   templateUrl: "./event.component.html",
   styleUrls: ["./event.component.css"]
 })
-export class EventComponent {
+export class EventComponent implements OnDestroy {
+  private subscription: Subscription;
   searchVisible = true;
   searchStr; // template variable
   filterUsers = []; // template variable
@@ -29,7 +30,7 @@ export class EventComponent {
 
   constructor(public accountService: AccountService, public dialog: MatDialog, public router: Router) {
     this.accountService.helper = this.accountService.helperProfiles.event;
-    this.accountService.teamUsersObservable.subscribe(aTeam => {
+    this.subscription = this.subscription = this.accountService.teamUsersObservable.subscribe(aTeam => {
       if (aTeam) {
         this.getLogs();
       }
@@ -183,6 +184,10 @@ export class EventComponent {
         return day.events.length;
       })
     } else this.days = this.calendarDays;
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }
 

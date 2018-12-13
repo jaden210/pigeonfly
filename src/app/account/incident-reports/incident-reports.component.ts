@@ -1,9 +1,10 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { trigger, style, transition, animate } from "@angular/animations";
 import { AccountService } from "../account.service";
 import { map } from "rxjs/operators";
 import * as jsPDF from "jspdf";
 import { MatSnackBar } from "@angular/material";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "app-incident-reports",
@@ -28,7 +29,8 @@ import { MatSnackBar } from "@angular/material";
     ])
   ]
 })
-export class IncidentReportsComponent implements OnInit {
+export class IncidentReportsComponent implements OnInit, OnDestroy {
+  private subscription: Subscription;
   incidentReports: any;
   assesmentTemplate;
   aReport: any = null;
@@ -38,7 +40,7 @@ export class IncidentReportsComponent implements OnInit {
     public snackbar: MatSnackBar
   ) {
     this.accountService.helper = this.accountService.helperProfiles.incidentReport;
-    this.accountService.teamUsersObservable.subscribe(team => {
+    this.subscription = this.accountService.teamUsersObservable.subscribe(team => {
       if (team) {
         let assesmentCollection = this.accountService.db.collection(
           `team/${this.accountService.aTeam.id}/incident-report`,
@@ -246,6 +248,10 @@ export class IncidentReportsComponent implements OnInit {
     });
 
     doc.save(`${this.aReport.type}.pdf`);
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }
 

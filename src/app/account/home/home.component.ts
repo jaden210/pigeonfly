@@ -1,4 +1,4 @@
-import { Component, Inject, ViewChild } from "@angular/core";
+import { Component, Inject, ViewChild, OnDestroy } from "@angular/core";
 import {
   Timeclock,
   AccountService,
@@ -10,7 +10,7 @@ import { map } from "rxjs/operators";
 import * as moment from "moment";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatTableDataSource, MatTable } from "@angular/material";
 import { MapDialogComponent } from "../map-dialog/map-dialog.component";
-import { Observable } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { HomeService } from "./home.service";
 import { SelfInspection } from "../self-inspections/self-inspections.service";
 declare var gtag: Function;
@@ -20,8 +20,9 @@ declare var gtag: Function;
   templateUrl: "./home.component.html",
   styleUrls: ["./home.component.css"]
 })
-export class HomeComponent {
+export class HomeComponent implements OnDestroy {
   
+  private subscription: Subscription;
   invitedUsers: InviteToTeam[];
   users = [];
   activeUsers = []; // really just used for length
@@ -35,7 +36,7 @@ export class HomeComponent {
 
   constructor(public accountService: AccountService, public dialog: MatDialog, private homeService: HomeService) {
     this.accountService.helper = this.accountService.helperProfiles.team;
-    this.accountService.teamUsersObservable.subscribe(teamUsers => {
+    this.subscription = this.accountService.teamUsersObservable.subscribe(teamUsers => {
       if (teamUsers) {
         if (teamUsers.length == 1) this.accountService.showHelper = true;
         this.homeService.getInvites().subscribe(users => this.invitedUsers = users);;
@@ -230,6 +231,10 @@ export class HomeComponent {
         if (level.completedAchievementsCount == level.possibleAchievementsCount) this.complianceLevel = this.complianceLevel + 1;
       })
     });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
 }

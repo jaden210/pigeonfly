@@ -1,19 +1,19 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { AccountService } from '../account.service';
-import { combineLatest } from 'rxjs';
+import { combineLatest, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as moment from "moment";
 import { Router } from '@angular/router';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { Timestamp } from 'rxjs/internal/operators/timestamp';
 
 @Component({
   selector: 'app-achievements',
   templateUrl: './achievements.component.html',
   styleUrls: ['./achievements.component.css']
 })
-export class AchievementsComponent implements OnInit {
+export class AchievementsComponent implements OnInit, OnDestroy {
 
+  private subscription: Subscription;
   complianceLevel: number;
   completedCount: number;
   levels = [];
@@ -23,7 +23,7 @@ export class AchievementsComponent implements OnInit {
 
   ngOnInit() {
     this.accountService.helper = this.accountService.helperProfiles.achievement;
-    this.accountService.teamUsersObservable.subscribe(users => {
+    this.subscription = this.accountService.teamUsersObservable.subscribe(users => {
       if (users) {
         combineLatest(this.getAchievements(), this.getCompletedAchievements()).subscribe(results => {
           this.completedCount = 0;
@@ -107,6 +107,10 @@ getCompletedAchievements() {
         return { id, ...data };
       }))
     )
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }
 
