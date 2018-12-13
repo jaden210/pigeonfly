@@ -107,10 +107,12 @@ export class HomeComponent implements OnDestroy {
   }
 
   showMap(user) {
+    let smar = Object.keys(user.timeclock.locations).sort();
+    let location = user.timeclock.locations[smar[0]];
     this.dialog.open(MapDialogComponent, {
       data: {
-        longPos: user.timeclock.locations[0].long,
-        latPos: user.timeclock.locations[0].lat
+        longPos: location.long,
+        latPos: location.lat
       }
     });
   }

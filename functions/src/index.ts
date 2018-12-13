@@ -345,7 +345,7 @@ exports.modifySelfInspectionInspection = functions.firestore.document("team/{tea
 
 /* ----- INJURY REPORT ----- */
 
-exports.createdInjuryReport = functions.firestore.document("team/{teamId}/injury-report/{id}").onCreate((snapshot, context) => {
+exports.createdInjuryReport = functions.firestore.document("team/{teamId}/incident-report/{id}").onCreate((snapshot, context) => {
   let injuryReport = snapshot.data();
   
   /* total self inspections achievement */

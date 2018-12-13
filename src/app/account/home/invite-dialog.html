@@ -29,6 +29,6 @@
   </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-  <button mat-button color="accent" (click)="close()">CANCEL</button>
+  <button mat-button color="accent" (click)="close()">{{data.view == 'invite' ? 'CANCEL' : 'EXIT'}}</button>
   <button mat-raised-button *ngIf="data.view == 'invite'" style="color: #ffffff" color="accent" [disabled]="!data.invite.inviteName || !data.invite.inviteEmail" [mat-dialog-close]="data">INVITE</button>
 </mat-dialog-actions>
