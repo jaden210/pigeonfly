@@ -226,7 +226,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
         survey.active = true;
         survey.articleId = this.article.id;
         survey.userSurvey = userSurvey;
-        survey.userId = this.accountService.user.uid;
+        survey.userId = this.accountService.user.id;
         this.surveysService.createSurvey(survey, this.teamId);
       }
     });

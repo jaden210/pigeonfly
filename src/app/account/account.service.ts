@@ -232,17 +232,16 @@ export class TeamDisabledDialog {
 }
 
 export class User {
-  id?: string;
-  uid: string;
-  name?: string;
   email: string;
-  jobTitle?: string;
-  profileUrl?: string;
+  isDev: boolean = false;
   username?: string;
   phone?: string;
   accountType?: string;
   teams?: any[];
-  isDev: boolean = false;
+  profileUrl?: string;
+  jobTitle?: string;
+  name?: string;
+  id?: string;
 }
 
 export class Team {

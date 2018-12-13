@@ -9,10 +9,7 @@ import { AccountService } from "../../account.service";
     <h1 mat-dialog-title>Who's in Attendance?</h1>
     <div mat-dialog-content>
       <mat-selection-list dense [(ngModel)]="srt" style="outline: none;">
-        <mat-list-option
-          *ngFor="let user of (users | async)"
-          [value]="user.uid"
-        >
+        <mat-list-option *ngFor="let user of (users | async)" [value]="user.id">
           <img
             matListAvatar
             [src]="user.profileUrl"

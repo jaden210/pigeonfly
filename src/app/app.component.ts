@@ -1,16 +1,15 @@
-import { Component , Inject} from '@angular/core';
+import { Component, Inject } from "@angular/core";
 import { Router, NavigationEnd } from "@angular/router";
-import { AppService } from './app.service';
-import { AngularFireAuth } from '@angular/fire/auth';
+import { AppService } from "./app.service";
+import { AngularFireAuth } from "@angular/fire/auth";
 declare var gtag: Function;
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.css"]
 })
 export class AppComponent {
-
   open: boolean = false;
   body: HTMLElement;
 
@@ -19,22 +18,22 @@ export class AppComponent {
     public appService: AppService,
     public auth: AngularFireAuth
   ) {
-
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        gtag('config', 'UA-125391496-1', {'page_path': event.url});      
+        gtag("config", "UA-125391496-1", { page_path: event.url });
       }
       if (!(event instanceof NavigationEnd)) {
         return;
       }
-      document.getElementById('scroll').scrollTop = 0;
+      document.getElementById("scroll").scrollTop = 0;
     });
-    if(localStorage.getItem("cc-user")) { //they have been here before
+    if (localStorage.getItem("cc-user")) {
+      //they have been here before
       this.appService.isUser = true;
       this.auth.auth.onAuthStateChanged(user => {
         if (user && user.uid) {
           this.appService.isLoggedIn = true;
-        } 
+        }
       });
     }
   }
@@ -47,16 +46,15 @@ export class AppComponent {
   goToBlog() {
     window.open("https://blog.compliancechimp.com");
   }
-  
+
   routeLogin() {
     this.open = false;
     this.auth.auth.onAuthStateChanged(user => {
       if (user && user.uid) {
-        this.router.navigate(['account']);
+        this.router.navigate(["account"]);
       } else {
-        this.router.navigate(['login']);
+        this.router.navigate(["login"]);
       }
     });
   }
-  
 }

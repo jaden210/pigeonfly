@@ -16,10 +16,7 @@ import { AccountService } from "../../account.service";
         [(ngModel)]="shouldReceiveTraining"
         style="outline: none;"
       >
-        <mat-list-option
-          *ngFor="let user of (users | async)"
-          [value]="user.uid"
-        >
+        <mat-list-option *ngFor="let user of (users | async)" [value]="user.id">
           <img
             matListAvatar
             [src]="user.profileUrl"

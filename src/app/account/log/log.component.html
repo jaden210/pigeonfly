@@ -48,61 +48,63 @@
               onerror="this.style.display='none'"
             />
           </div>
-          <div
-            class="bubbles-container"
-            (click)="authorGroup.showTime = !authorGroup.showTime"
-          >
-            <span class="name">{{ authorGroup.author?.name }}</span>
+          <div class="bubbles-container">
+            <span
+              class="name"
+              [ngStyle]="{ color: authorGroup.author?.color }"
+              >{{ authorGroup.author?.name }}</span
+            >
             <div
-              class="bubble-wrapper"
+              class="bubble-time-wrapper"
+              (click)="showTime(log)"
               *ngFor="
                 let log of authorGroup.logs;
                 first as isFirst;
                 last as isLast
               "
             >
-              <div
-                class="chat-bubble"
-                [class.is-image]="log.imageUrl"
-                [ngClass]="
-                  authorGroup.logs.length > 1
-                    ? isFirst
-                      ? 'top'
-                      : isLast
-                      ? 'bottom'
-                      : 'middle'
-                    : null
-                "
-              >
-                <p *ngIf="log?.description">{{ log?.description }}</p>
-                <img
-                  *ngIf="log.imageUrl"
-                  [src]="log.imageUrl"
-                  onerror="this.style.display='none'"
-                />
+              <div class="bubble-wrapper">
+                <div
+                  class="chat-bubble"
+                  [class.is-image]="log.imageUrl"
+                  [ngClass]="
+                    authorGroup.logs.length > 1
+                      ? isFirst
+                        ? 'top'
+                        : isLast
+                        ? 'bottom'
+                        : 'middle'
+                      : null
+                  "
+                >
+                  <p *ngIf="log?.description">{{ log?.description }}</p>
+                  <img
+                    *ngIf="log.imageUrl"
+                    [src]="log.imageUrl"
+                    onerror="this.style.display='none'"
+                  />
+                </div>
+                <button
+                  mat-icon-button
+                  class="more-button"
+                  (click)="$event.stopPropagation()"
+                  [matMenuTriggerFor]="appMenu"
+                  [matMenuTriggerData]="{ log: log }"
+                >
+                  <mat-icon>more_vert</mat-icon>
+                </button>
               </div>
-              <button
-                mat-icon-button
-                class="more-button"
-                (click)="$event.stopPropagation()"
-                [matMenuTriggerFor]="appMenu"
-                [matMenuTriggerData]="{ log: log }"
+              <div
+                class="time"
+                [ngStyle]="{
+                  maxHeight:
+                    (isLast && lastAuthorGroup) || log.showTime ? '24px' : '0px'
+                }"
               >
-                <mat-icon>more_vert</mat-icon>
-              </button>
+                <p>{{ authorGroup.time | date: "shortTime" }}</p>
+              </div>
             </div>
           </div>
-        </div>
-        <div
-          class="time"
-          [ngStyle]="{
-            maxHeight:
-              (lastGroup && lastAuthorGroup) || authorGroup.showTime
-                ? '24px'
-                : '0px'
-          }"
-        >
-          <span>{{ authorGroup.time }}</span>
         </div>
       </div>
     </ng-container>
@@ -138,7 +140,7 @@
         </div>
       </div>
     </div>
-    <!-- End temporary logs -->
+    <!-- End temporary response logs -->
 
     <div id="sending" *ngIf="sending">Sending...</div>
     <!-- For proper scrolling, added blank div with height -->

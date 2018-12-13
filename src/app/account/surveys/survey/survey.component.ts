@@ -77,7 +77,7 @@ export class SurveyComponent implements OnInit, OnDestroy {
     this.service.getSurvey(surveyId, this.teamId).subscribe(survey => {
       this.title = "/ " + survey.category;
       this.getGroup(Object.keys(survey.userSurvey));
-      survey["user"] = this.users.find(u => u.uid == survey.userId);
+      survey["user"] = this.users.find(u => u.id == survey.userId);
       this.survey = survey;
       this.getSurveyResponses(surveyId);
     });
@@ -89,7 +89,7 @@ export class SurveyComponent implements OnInit, OnDestroy {
     let colorsMap = {};
     let colorsIndex = 0;
     userIds.forEach(userId => {
-      let user = this.users.find(user => user.uid == userId);
+      let user = this.users.find(user => user.id == userId);
       if (colorsMap[userId]) user["color"] = colorsMap[userId];
       else {
         user["color"] = this.colors[colorsIndex];
@@ -109,7 +109,7 @@ export class SurveyComponent implements OnInit, OnDestroy {
         map(responses =>
           responses.map(response => {
             response["user"] = this.usersGroup.find(
-              u => u.uid == response.userId
+              u => u.id == response.userId
             );
             response["groupByDate"] = this.getGroupByDate(response.createdAt);
             return response;

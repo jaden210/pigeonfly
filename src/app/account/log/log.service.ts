@@ -14,15 +14,17 @@ export class LogService {
       )
       .snapshotChanges()
       .pipe(
-        map(actions => {
-          return actions.map(a => {
-            let data: any = a.payload.doc.data();
-            return <Log>{
-              ...data,
-              id: a.payload.doc.id,
-              createdAt: data.createdAt.toDate()
-            };
-          });
+        map(actions =>
+          actions.map(a => {
+            const data = <any>a.payload.doc.data();
+            const createdAt = data.createdAt.toDate();
+            const id = a.payload.doc.id;
+            return <Log>{ ...data, createdAt, id };
+          })
+        ),
+        catchError(error => {
+          console.error(error);
+          return of([]);
         })
       );
   }
@@ -127,5 +129,4 @@ export class Log {
   images: any[];
   LatPos: number;
   LongPos: number;
-  imageUrl?: string; // for pseudo log
 }

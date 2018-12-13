@@ -5,7 +5,7 @@ import { User } from "./account/account.service";
 export class UserNamePipe implements PipeTransform {
   transform(userId: string, users: User[]): string {
     const user =
-      users && users.length ? users.find(user => user.uid == userId) : null;
+      users && users.length ? users.find(user => user.id == userId) : null;
     return user ? user.name : null;
   }
 }

@@ -321,7 +321,7 @@ export class TrainingService {
             const data = <any>action.payload.doc.data();
             const createdAt = data.createdAt.toDate();
             const user = this.accountService.teamUsers.find(
-              u => u.uid == data.userId
+              u => u.id == data.userId
             );
             const trainedBy = user ? user.name : "Anonymous";
             return { ...data, createdAt, trainedBy };
@@ -418,7 +418,7 @@ export class TrainingService {
   private createMyContent(teamId, article: Article): Promise<MyContent> {
     const trainees = {};
     this.accountService.teamUsers.forEach(user => {
-      trainees[user.uid] = null;
+      trainees[user.id] = null;
     });
     const trainingMinutes = Math.ceil(article.content.length / 480 / 5) * 5;
     const myContent = new MyContent(

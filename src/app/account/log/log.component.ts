@@ -129,23 +129,27 @@ export class LogComponent implements OnInit, OnDestroy {
     this.logsGroup = of(this.logs).pipe(
       map(logs => {
         let map = {};
+        let lastAuthor;
         logs.forEach(log => {
           /* transforming timestamp to day specific date */
           let gbd = this.getGroupByDate(log.createdAt);
           /* transforming timestamp to time */
-          let gbt = this.datePipe.transform(log.createdAt, "shortTime");
           /* grouping logs by date */
           map[gbd] = map[gbd] || {};
+          /* grouping by 2 minute timespan if consecutive author logs */
+          const gbt =
+            lastAuthor == log.userId
+              ? `${log.userId}-${Math.floor(log.createdAt.getTime() / 120000)}`
+              : `${log.userId}-${Math.floor(log.createdAt.getTime() / 1000)}`;
           /* grouping logs that are less than 1 minute apart */
-          map[gbd][log.userId + "-" + gbt] =
-            map[gbd][log.userId + "-" + gbt] || [];
+          map[gbd][gbt] = map[gbd][gbt] || [];
           let images = log.images || [];
           /* creating pseudo log for images to show in own bubble */
           images.forEach(image => {
-            map[gbd][log.userId + "-" + gbt].push(new PseudoLog(log, image));
+            map[gbd][gbt].push(new PseudoLog(log, image));
           });
-          if (log.description)
-            map[gbd][log.userId + "-" + gbt].push(new PseudoLog(log));
+          if (log.description) map[gbd][gbt].push(new PseudoLog(log));
+          lastAuthor = log.userId;
         });
         let n = Object.keys(map).map(key => {
           let date = key;
@@ -196,6 +200,10 @@ export class LogComponent implements OnInit, OnDestroy {
     let ds = this.datePipe.transform(date, "EEEE, MMM d, y");
     if (this.todaysDatePiped == ds) return "Today";
     return ds;
+  }
+
+  public showTime(log: PseudoLog): void {
+    log.showTime = !log.showTime;
   }
 
   /* Attaching user to authorGroup */
@@ -336,7 +344,7 @@ export class LogComponent implements OnInit, OnDestroy {
     this.persistLog(log);
   }
 
-  /* temporary logs shown while sending */
+  /* Temporary logs shown while sending */
   private buildResponseLogs(): void {
     this.responseLogs = [];
     if (this.description)
@@ -404,7 +412,7 @@ export class LogComponent implements OnInit, OnDestroy {
   log, remove from it the thing they are wanting to delete, then if
   there is nothing left of the log, delete the log. Else, update the
   log */
-  deleteLog(pseudoLog: Log) {
+  public deleteLog(pseudoLog: PseudoLog) {
     const log = this.logs.find(l => l.id == pseudoLog.id);
     /* If they change their mind about the delete */
     const recoverLog = JSON.parse(JSON.stringify(log));
@@ -483,6 +491,7 @@ class PseudoLog {
   imageUrl: string;
   LatPos: number;
   LongPos: number;
+  showTime?: boolean;
   constructor(log: Log, imageUrl = null) {
     this.createdAt = log.createdAt;
     this.userId = log.userId;

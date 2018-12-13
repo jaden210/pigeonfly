@@ -48,7 +48,7 @@
 }
 
 .time {
-  margin-left: 68px;
+  margin-left: 20px;
   margin-right: 12px;
   font-size: 13px;
   color: #757575;
@@ -57,18 +57,24 @@
   overflow: hidden;
 }
 
+.time p {
+  margin: 2px 0 0;
+}
+
 .chat-line {
   display: flex;
+  align-items: flex-end;
 }
 
 .circle-container {
   position: relative;
   height: 42px;
   width: 42px;
-  margin-top: auto;
+  margin-bottom: 4px;
   font-size: 24px;
   border-radius: 50%;
   overflow: hidden;
+  transition: all 250ms;
 }
 
 .circle-container .circle {
@@ -106,8 +112,13 @@
 }
 
 .name {
-  margin-left: 24px;
+  margin-left: 20px;
   font-size: 13px;
+}
+
+.bubble-time-wrapper {
+  display: flex;
+  flex-direction: column;
 }
 
 .bubble-wrapper {
