@@ -8,10 +8,6 @@ import { MatDialogRef } from "@angular/material";
 @Injectable()
 export class SelfInspectionsService {
 
-  selfInspection: SelfInspection;
-  selfInspectionInspections: Inspection[];
-  takeInspection: Inspection;
-
   constructor(
     public db: AngularFirestore,
     private accountService: AccountService
@@ -33,8 +29,32 @@ export class SelfInspectionsService {
     )
   }
 
-  getInspections(): Observable<Inspection[]> {
-    let inspectionsCollection = this.accountService.db.collection<Inspection[]>(`team/${this.accountService.aTeam.id}/self-inspection/${this.selfInspection.id}/inspections`);
+  getSelfInspection(id): Observable<SelfInspection> {
+    let selfInspectionDoc = this.accountService.db.doc(`team/${this.accountService.aTeam.id}/self-inspection/${id}`);
+    return selfInspectionDoc.snapshotChanges().pipe(
+      map((actions: any) => {
+        let data = actions.payload.data();
+        data["id"] = actions.payload.id;
+        data["createdAt"] = data.createdAt.toDate();
+        return data;
+      })
+    )
+  }
+
+  getSelfInspectionInspection(siId, iId): Observable<Inspection> {
+    let selfInspectionDoc = this.accountService.db.doc(`team/${this.accountService.aTeam.id}/self-inspection/${siId}/inspections/${iId}`);
+    return selfInspectionDoc.snapshotChanges().pipe(
+      map((actions: any) => {
+        let data = actions.payload.data();
+        data["id"] = actions.payload.id;
+        data["createdAt"] = data.createdAt.toDate();
+        return data;
+      })
+    )
+  }
+
+  getInspections(selfInspectionId): Observable<Inspection[]> {
+    let inspectionsCollection = this.accountService.db.collection<Inspection[]>(`team/${this.accountService.aTeam.id}/self-inspection/${selfInspectionId}/inspections`);
     return inspectionsCollection.snapshotChanges().pipe(
       map(actions => {
         return actions.map(a => {
@@ -50,7 +70,7 @@ export class SelfInspectionsService {
     )
   }
     
-  setSelfInspectionWithTemplate(): void {
+  setSelfInspectionWithTemplate(selfInspection?): void {
     let tempBaseQuestions = [];
     let templateDoc = this.accountService.db.collection<Categories[]>("osha-assesment-template-en", ref => ref.orderBy("order", "asc")); // get the template
     templateDoc.snapshotChanges().pipe(
@@ -59,8 +79,8 @@ export class SelfInspectionsService {
         actions.map(a => {
           const data = a.payload.doc.data() as any;
           const id = a.payload.doc.id;
-          if (this.selfInspection) {
-            let tempSubject = this.selfInspection.baseQuestions.find(category => category.subject === data.subject);
+          if (selfInspection) {
+            let tempSubject = selfInspection.baseQuestions.find(category => category.subject === data.subject);
             if (tempSubject && tempSubject.questions) {
               tempSubject.questions.forEach(question => {
                 let tQ = data.questions.find(tempQ => tempQ.name == question.name);
@@ -78,13 +98,13 @@ export class SelfInspectionsService {
         })
       )
     ).subscribe(() => {
-      this.selfInspection.baseQuestions = tempBaseQuestions;
+      selfInspection.baseQuestions = tempBaseQuestions;
     });
   }
 
-  saveOrCreateNewSelfInspection(): Promise<any> { //wish I could get this to work the other way around
+  saveOrCreateNewSelfInspection(selfInspection): Promise<any> { //wish I could get this to work the other way around
     let baseQuestions: Categories[] = [];
-    this.selfInspection.baseQuestions.forEach(category => {
+    selfInspection.baseQuestions.forEach(category => {
       let newQuestions: Question[] = [];
       category.questions.forEach(question => {
         if (question.selected)
@@ -93,61 +113,52 @@ export class SelfInspectionsService {
       if (newQuestions.length > 0)
       baseQuestions.push({subject: category.subject, questions: newQuestions});
     });
-    this.selfInspection.baseQuestions = baseQuestions;
-    if (this.selfInspection.id) {
-      return this.db.collection(`team/${this.accountService.aTeam.id}/self-inspection`).doc(this.selfInspection.id).set({...this.selfInspection});
+    selfInspection.baseQuestions = baseQuestions;
+    if (selfInspection.id) {
+      return this.db.collection(`team/${this.accountService.aTeam.id}/self-inspection`).doc(selfInspection.id).set({...selfInspection});
     } else {
-      this.selfInspection.teamId = this.accountService.aTeam.id;
-      this.selfInspection.createdAt = new Date();
-      return this.accountService.db.collection(`team/${this.accountService.aTeam.id}/self-inspection`).add({...this.selfInspection});
+      selfInspection.teamId = this.accountService.aTeam.id;
+      selfInspection.createdAt = new Date();
+      return this.accountService.db.collection(`team/${this.accountService.aTeam.id}/self-inspection`).add({...selfInspection});
     }
   }
 
-  deleteSelfInspection(): Promise<any> {
+  deleteSelfInspection(selfInspection, selfInspectionInspections): Promise<any> {
     let promises = [];
-    this.selfInspectionInspections.forEach((inspection) => {
-      let i = this.deleteSelfInspectionInspection(inspection);
+    selfInspectionInspections.forEach((inspection) => {
+      let i = this.deleteSelfInspectionInspection(inspection, selfInspection);
       promises.push(i);
     })
     return Promise.all(promises).then(() => {
-      return this.accountService.db.collection(`team/${this.accountService.aTeam.id}/self-inspection`).doc(this.selfInspection.id).delete();
+      return this.accountService.db.collection(`team/${this.accountService.aTeam.id}/self-inspection`).doc(selfInspection.id).delete();
     });
   }
   
-  startInspection(): Promise<Inspection> {
-    let inspection = new Inspection();
-    inspection.createdAt = new Date();
-    inspection.categories = this.selfInspection.baseQuestions;
-    return this.accountService.db.collection(`team/${this.accountService.aTeam.id}/self-inspection`).doc(this.selfInspection.id).collection('inspections').add({...inspection}).then(snapshot => {
-      inspection.id = snapshot.id;
-      return inspection;
+  startInspection(selfInspection): Promise<Inspection> {
+    let newInspection = new Inspection();
+    newInspection.createdAt = new Date();
+    newInspection.categories = selfInspection.baseQuestions;
+    return this.accountService.db.collection(`team/${this.accountService.aTeam.id}/self-inspection/${selfInspection.id}/inspections`).add({...newInspection}).then(snapshot => {
+      newInspection.id = snapshot.id;
+      return newInspection;
     });
   }
   
-  deleteSelfInspectionInspection(inspection) {
-    return this.accountService.db
-    .collection(`team/${this.accountService.aTeam.id}/self-inspection`)
-    .doc(this.selfInspection.id)
-    .collection("inspections")
-    .doc(inspection.id).delete();
+  deleteSelfInspectionInspection(inspection, selfInspection) {
+    return this.accountService.db.doc(`team/${this.accountService.aTeam.id}/self-inspection/${selfInspection.id}/inspections/${inspection.id}`).delete();
   }
 
-  finishSelfInspection(): Promise<any> {
-    this.takeInspection.completedAt = new Date();
-    this.takeInspection.teamId = this.accountService.aTeam.id;
-    this.takeInspection.completedBy = this.accountService.user.id;
-    this.selfInspection.lastCompletedAt = new Date();
-    this.db.doc(`team/${this.accountService.aTeam.id}/self-inspection/${this.selfInspection.id}`).update({...this.selfInspection});
-    return this.saveSelfInspection();
+  finishSelfInspection(inspection, selfInspection): Promise<any> {
+    inspection.completedAt = new Date();
+    inspection.teamId = this.accountService.aTeam.id;
+    inspection.completedBy = this.accountService.user.id;
+    selfInspection.lastCompletedAt = new Date();
+    this.db.doc(`team/${this.accountService.aTeam.id}/self-inspection/${selfInspection.id}`).update({...selfInspection});
+    return this.saveSelfInspection(inspection, selfInspection);
   }
 
-  saveSelfInspection(): Promise<any> {
-    return this.accountService.db
-    .collection(`team/${this.accountService.aTeam.id}/self-inspection`)
-    .doc(this.selfInspection.id)
-    .collection("inspections")
-    .doc(this.takeInspection.id)
-    .set({...this.takeInspection});
+  saveSelfInspection(inspection, selfInspection): Promise<any> {
+    return this.accountService.db.doc(`team/${this.accountService.aTeam.id}/self-inspection/${selfInspection.id}/inspections/${inspection.id}`).set({...inspection});
   }
 }
 

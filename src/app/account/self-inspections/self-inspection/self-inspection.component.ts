@@ -1,9 +1,11 @@
 import { Component } from "@angular/core";
-import { SelfInspectionsService, Inspection, DeleteInspectionDialog, ExperationTimeFrame } from "../self-inspections.service";
+import { SelfInspectionsService, Inspection, DeleteInspectionDialog, SelfInspection } from "../self-inspections.service";
 import { MatSnackBar, MatDialog } from "@angular/material";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, Router, ParamMap } from "@angular/router";
 import * as jsPDF from 'jspdf';
 import { Location } from "@angular/common";
+import { Subscription } from "rxjs";
+import { AccountService } from "../../account.service";
 
 @Component({
   selector: "app-self-inspection",
@@ -12,10 +14,14 @@ import { Location } from "@angular/common";
 })
 export class SelfInspectionComponent {
 
+  subscribtion: Subscription;
   inProgressInspections: Inspection[] = [];
   completedInspections: Inspection[] = [];
+  selfInspection: SelfInspection;
+  selfInspectionInspections: Inspection[];
 
   constructor(
+    private accountService: AccountService,
     public selfInspectionsService: SelfInspectionsService,
     private snackbar: MatSnackBar,
     private location: Location,
@@ -23,33 +29,39 @@ export class SelfInspectionComponent {
     private route: ActivatedRoute,
     public dialog: MatDialog
   ) {
-    if (!this.selfInspectionsService.selfInspection) {
-      this.location.back();
-      return;
-    };
-    this.selfInspectionsService.getInspections().subscribe(inspections => {
-      this.selfInspectionsService.selfInspectionInspections = inspections;
-      this.inProgressInspections = [];
-      this.completedInspections = [];
-      inspections.forEach(inspection => {
-        if (inspection.completedAt) {
-          this.completedInspections.push(inspection);
-        } else {
-          this.inProgressInspections.push(inspection);
-        }
-      });
+    this.subscribtion = this.accountService.aTeamObservable.subscribe(team => {
+      if (team) {
+        this.route.paramMap.subscribe((params: ParamMap) => {
+          let selfInspectionId = params.get("selfInspectionId");
+          this.selfInspectionsService.getSelfInspection(selfInspectionId).subscribe(selfInspection => {
+            this.selfInspection = selfInspection;
+            this.selfInspectionsService.getInspections(selfInspectionId).subscribe(inspections => {
+              this.selfInspectionInspections = inspections;
+              // for the template view
+              this.inProgressInspections = [];
+              this.completedInspections = [];
+              inspections.forEach(inspection => {
+                if (inspection.completedAt) {
+                  this.completedInspections.push(inspection);
+                } else {
+                  this.inProgressInspections.push(inspection);
+                }
+              });
+            })
+          });
+        });
+      }
     })
   }
 
   startSelfInspection() {
-    this.selfInspectionsService.startInspection().then(inspection => {
-      this.resumeSelfInspection(inspection);
+    this.selfInspectionsService.startInspection(this.selfInspection).then(newInspection => {
+      this.resumeSelfInspection(newInspection);
     });
   }
   
   resumeSelfInspection(inspection) {
-    this.selfInspectionsService.takeInspection = inspection;
-    this.router.navigate([inspection.createdAt.toLocaleTimeString()], {relativeTo: this.route});
+    this.router.navigate([inspection.id], {relativeTo: this.route});
   }
 
   editSelfInspection() {
@@ -60,7 +72,7 @@ export class SelfInspectionComponent {
     let dialog = this.dialog.open(DeleteInspectionDialog);
     dialog.afterClosed().subscribe(bDelete => {
       if (bDelete) {
-        this.selfInspectionsService.deleteSelfInspection().then(() => {
+        this.selfInspectionsService.deleteSelfInspection(this.selfInspection, this.selfInspectionInspections).then(() => {
           this.leave();
         })
         .catch(error => {
@@ -74,8 +86,8 @@ export class SelfInspectionComponent {
   }
 
   leave() {
-    this.location.back();
-    this.selfInspectionsService.selfInspection = null;
+    this.subscribtion.unsubscribe();
+    this.router.navigate([`/account/self-inspections`]);
   }
 
   export(si: Inspection) {
@@ -93,7 +105,7 @@ export class SelfInspectionComponent {
     
     doc.setFontSize(15);
     doc.setFont("courier", "bold");
-    doc.text(this.selfInspectionsService.selfInspection.title, x, y);
+    doc.text(this.selfInspection.title, x, y);
     y += (1.5 * lineSpace);
     doc.text(si.completedAt.toString(), x, y);
     y += lineSpace;
@@ -200,6 +212,6 @@ export class SelfInspectionComponent {
         }
       });
     });
-    doc.save(`self-inspection ${this.selfInspectionsService.selfInspection.title}.pdf`);
+    doc.save(`self-inspection ${this.selfInspection.title}.pdf`);
   }
 }

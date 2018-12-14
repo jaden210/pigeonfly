@@ -34,12 +34,10 @@ export class SelfInspectionsListComponent implements OnDestroy {
   }
 
   selectSelfInspection(inspection) {
-    this.selfInspectionsService.selfInspection = inspection;
     this.router.navigate([inspection.id], { relativeTo: this.route });
   }
 
   startNewSelfInspection() {
-    this.selfInspectionsService.selfInspection = new SelfInspection();
     this.router.navigate(['new'], { relativeTo: this.route });
   }
 

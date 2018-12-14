@@ -19,7 +19,7 @@ const routes: Routes = [
       { path: "new", component: CreateEditSelfInspectionComponent },
       { path: ":selfInspectionId", component: SelfInspectionComponent },
       { path: ":selfInspectionId/edit", component: CreateEditSelfInspectionComponent },
-      { path: ":selfInspectionId/:date", component: TakeSelfInspectionComponent },
+      { path: ":selfInspectionId/:inspectionId", component: TakeSelfInspectionComponent },
     ]
   }
 ];

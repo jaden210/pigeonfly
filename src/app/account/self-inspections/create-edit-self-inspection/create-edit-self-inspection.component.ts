@@ -1,8 +1,10 @@
 import { Component } from "@angular/core";
-import { SelfInspectionsService, ExperationTimeFrame } from "../self-inspections.service";
+import { SelfInspectionsService, ExperationTimeFrame, SelfInspection } from "../self-inspections.service";
 import { MatSnackBar } from "@angular/material";
-import { Router } from "@angular/router";
+import { Router, ActivatedRoute, ParamMap } from "@angular/router";
 import { Location } from "@angular/common";
+import { Subscription } from "rxjs";
+import { AccountService } from "../../account.service";
 
 @Component({
   selector: "app-create-edit-self-inspection",
@@ -11,29 +13,43 @@ import { Location } from "@angular/common";
 })
 export class CreateEditSelfInspectionComponent {
 
+  subscription: Subscription;
+  selfInspection: SelfInspection = new SelfInspection();
   newQuestionText: string; // template variable
 
   constructor(
     public router: Router,
+    public route: ActivatedRoute,
+    private accountService: AccountService,
     public selfInspectionService: SelfInspectionsService,
     public snackbar: MatSnackBar,
     private location: Location
   ) {
-    if (!this.selfInspectionService.selfInspection) {
-      this.location.back();
-      return;
-    };
-    this.selfInspectionService.setSelfInspectionWithTemplate();
+    this.subscription = this.accountService.aTeamObservable.subscribe(team => {
+      if (team) {
+        this.route.paramMap.subscribe((params: ParamMap) => {
+          let selfInspectionId = params.get("selfInspectionId");
+          if (selfInspectionId) { //edit
+            this.selfInspectionService.getSelfInspection(selfInspectionId).subscribe(selfInspection => {
+              this.selfInspection = selfInspection;
+              this.selfInspectionService.setSelfInspectionWithTemplate(selfInspection);
+            });
+          } else { //create
+            this.selfInspectionService.setSelfInspectionWithTemplate(this.selfInspection);
+          }
+        });
+      }
+    })
   }
 
-  leave() {
-    this.router.navigate(["/account/self-inspections"]);
-    this.selfInspectionService.selfInspection = null;
+  leave(snapshot) {
+    this.subscription.unsubscribe();
+    this.router.navigate([`/account/self-inspections/${this.selfInspection.id || snapshot.id}`]);
   }
 
   saveOrCreate() {
-    this.selfInspectionService.saveOrCreateNewSelfInspection().then(() => {
-      this.leave();
+    this.selfInspectionService.saveOrCreateNewSelfInspection(this.selfInspection).then(snapshot => {
+      this.leave(snapshot);
     })
     .catch(error => {
       let snackbar = this.snackbar.open("error creating Inspection...", null, {
@@ -55,7 +71,7 @@ export class CreateEditSelfInspectionComponent {
   }
 
   addQuestion(index): void {
-    this.selfInspectionService.selfInspection.baseQuestions[index].questions.push({
+    this.selfInspection.baseQuestions[index].questions.push({
       name: this.newQuestionText,
       selected: true
     });

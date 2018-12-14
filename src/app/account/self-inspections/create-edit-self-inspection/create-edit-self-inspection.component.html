@@ -1,24 +1,24 @@
 <mat-toolbar>
   <mat-form-field color="accent" id="title" floatLabel="never" style="flex:2">
-    <input matInput placeholder="name your new self-inspection" required autofocus type="text" [(ngModel)]="selfInspectionService.selfInspection.title">
+    <input matInput placeholder="name your new self-inspection" required autofocus type="text" [(ngModel)]="selfInspection.title">
   </mat-form-field>
-  <button mat-button [matMenuTriggerFor]="menu">Renew {{ selfInspectionService?.selfInspection?.inspectionExpiration }}</button>
+  <button mat-button [matMenuTriggerFor]="menu">Renew {{ selfInspection?.inspectionExpiration }}</button>
   <mat-menu #menu="matMenu">
     <button
     mat-menu-item
     *ngFor="let time of timeFrame"
-    (click)="this.selfInspectionService.selfInspection.inspectionExpiration = time;"
+    (click)="this.selfInspection.inspectionExpiration = time;"
     >Renew {{ time }}</button>
   </mat-menu>
   <div class="flex"></div>
-  <button mat-button class="ml" color="primary" *ngIf="!selfInspectionService.selfInspection.id" (click)="leave()">CANCEL</button>
-  <button mat-stroked-button class="ml" color="primary" *ngIf="!selfInspectionService.selfInspection.id" (click)="saveOrCreate()" [disabled]="!selfInspectionService.selfInspection.title">CREATE</button>
-  <button mat-stroked-button class="ml" color="primary" *ngIf="selfInspectionService.selfInspection.id" (click)="saveOrCreate()">SAVE</button>
+  <button mat-button class="ml" color="primary" *ngIf="!selfInspection.id" (click)="leave()">CANCEL</button>
+  <button mat-stroked-button class="ml" color="primary" *ngIf="!selfInspection.id" (click)="saveOrCreate()" [disabled]="!selfInspection.title">CREATE</button>
+  <button mat-stroked-button class="ml" color="primary" *ngIf="selfInspection.id" (click)="saveOrCreate()">SAVE</button>
 </mat-toolbar>
 <div class="panel">
   <div id="instructions">Select the questions that are relevant to you. Questions are grouped by their category.</div>
   <mat-accordion>
-    <mat-expansion-panel *ngFor="let subject of selfInspectionService.selfInspection.baseQuestions; let i = index">
+    <mat-expansion-panel *ngFor="let subject of selfInspection.baseQuestions; let i = index">
       <mat-expansion-panel-header>
         <mat-panel-title style="flex:20">{{subject.subject}}</mat-panel-title>
         <div class="flex"></div>
