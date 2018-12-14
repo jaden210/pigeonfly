@@ -78,7 +78,11 @@ export class TimeComponent implements OnInit, OnDestroy {
         }
       });
     } else {
-      if (this.datePipe.transform(params.endDate) != this.datePipe.transform(new Date())) this.isFiltered = true;
+      if (
+        this.datePipe.transform(params.endDate) !=
+        this.datePipe.transform(new Date())
+      )
+        this.isFiltered = true;
       return shifts;
     }
   }
@@ -116,7 +120,7 @@ export class TimeComponent implements OnInit, OnDestroy {
         } else
           shiftsByPeople[shift.userId] = {
             shifts: [shift],
-            totalSecondsWorked: shift.secondsWorked
+            totalSecondsWorked: 0
           };
         if (!shift.shiftEnded) shiftsByPeople[shift.userId].badShift = true;
         shiftsByPeople[shift.userId].totalSecondsWorked += shift.secondsWorked;
