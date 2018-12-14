@@ -183,20 +183,22 @@ export class HomeComponent implements OnDestroy {
     this.selfInspection = {expired: 0, current: 0};
     this.homeService.getSelfInspections().subscribe(selfInspections => {
       selfInspections.forEach((inspection:SelfInspection) => {
-        switch (inspection.inspectionExpiration) {
-          case "Anually":
-          this.setSelfInspectionCount(inspection, 'years');
-          return;
-          case "Semi-Anually":
-          this.setSelfInspectionCount(inspection, 'months', 6);
-          return;
-          case "Quarterly":
-          this.setSelfInspectionCount(inspection, 'months', 3);
-          return;
-          case "Monthly":
-          this.setSelfInspectionCount(inspection, 'month');
-          return;
-        }
+        if (inspection.inspectionExpiration) {
+          switch (inspection.inspectionExpiration) {
+            case "Anually":
+            this.setSelfInspectionCount(inspection, 'years');
+            return;
+            case "Semi-Anually":
+            this.setSelfInspectionCount(inspection, 'months', 6);
+            return;
+            case "Quarterly":
+            this.setSelfInspectionCount(inspection, 'months', 3);
+            return;
+            case "Monthly":
+            this.setSelfInspectionCount(inspection, 'month');
+            return;
+          }
+        } else this.selfInspection.current ++;
       })
     })
   }

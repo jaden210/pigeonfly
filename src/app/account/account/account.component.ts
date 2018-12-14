@@ -69,7 +69,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   uploadProfileImage(event) {
     this.loading = true;
     let file = event.target.files[0];
-    let filePath = this.accountService.user.id + '/' + "profile-image";
+    let filePath = `users/${this.accountService.user.id}`;
     let ref = this.storage.ref(filePath);
     let task = this.storage.upload(filePath, file);
     task.snapshotChanges().pipe(

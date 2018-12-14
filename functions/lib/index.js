@@ -293,7 +293,7 @@ exports.createdInjuryReport = functions.firestore.document("team/{teamId}/incide
     let injuryReport = snapshot.data();
     /* total self inspections achievement */
     const achievement = updateCompletedAchievement(context.params.teamId, "injuryReports", 1, true);
-    const event = logAsEvent(EventType.incidentReport, EventAction.created, snapshot.id, injuryReport.userId, "Created a new " + injuryReport.type, context.params.teamId);
+    const event = logAsEvent(EventType.incidentReport, EventAction.created, snapshot.id, injuryReport.submittedBy, "Created a new " + injuryReport.type, context.params.teamId);
     return Promise.all([event, achievement]).then(() => console.log("created injury report complete"));
 });
 /* ----- LIKED TRAINING ----- */

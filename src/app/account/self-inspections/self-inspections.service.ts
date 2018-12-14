@@ -54,7 +54,8 @@ export class SelfInspectionsService {
   }
 
   getInspections(selfInspectionId): Observable<Inspection[]> {
-    let inspectionsCollection = this.accountService.db.collection<Inspection[]>(`team/${this.accountService.aTeam.id}/self-inspection/${selfInspectionId}/inspections`);
+    let inspectionsCollection = this.accountService.db.collection<Inspection[]>(`team/${this.accountService.aTeam.id}/self-inspection/${selfInspectionId}/inspections`, ref =>
+    ref.orderBy("createdAt", "desc"));
     return inspectionsCollection.snapshotChanges().pipe(
       map(actions => {
         return actions.map(a => {

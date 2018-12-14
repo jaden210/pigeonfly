@@ -5,12 +5,12 @@
 export const environment = {
   production: false,
   firebaseConfig: {
-    apiKey: "AIzaSyD_cP3HvB_9y-mNO_L7-bGHrHZMecpSlVE",
-    authDomain: "teamlog-2d74c.firebaseapp.com",
-    databaseURL: "https://teamlog-2d74c.firebaseio.com",
-    projectId: "teamlog-2d74c",
-    storageBucket: "teamlog-2d74c.appspot.com",
-    messagingSenderId: "800172058622"
+    apiKey: "AIzaSyB9gfea4YtAckHj-yljfZVzv-R33A4wEVw",
+    authDomain: "compliancechimp-dev.firebaseapp.com",
+    databaseURL: "https://compliancechimp-dev.firebaseio.com",
+    projectId: "compliancechimp-dev",
+    storageBucket: "compliancechimp-dev.appspot.com",
+    messagingSenderId: "370152164668"
   },
   stripe: {
     publishable: "pk_test_xQTLf7GJIEhTX1tz1AVeJaea",
