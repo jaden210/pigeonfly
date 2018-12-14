@@ -1,13 +1,12 @@
 import { Injectable, Component, Inject } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { map, take, debounceTime } from "rxjs/operators";
+import { map, debounceTime, } from "rxjs/operators";
 import {
   MatDialog,
   MatDialogRef,
   MatSnackBar,
   MAT_DIALOG_DATA,
-  MatSnackBarConfig,
   MatSnackBarRef
 } from "@angular/material";
 import { AngularFireAuth } from "@angular/fire/auth";

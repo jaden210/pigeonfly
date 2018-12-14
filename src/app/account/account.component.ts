@@ -2,10 +2,12 @@ import { Component, Inject } from "@angular/core";
 import { trigger, style, transition, animate } from "@angular/animations";
 import { AccountService, User, Team, InviteToTeam } from "./account.service";
 import { AngularFireAuth } from "@angular/fire/auth";
-import { map } from "rxjs/operators";
+import { map, take } from "rxjs/operators";
 import { Router } from "@angular/router";
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from "@angular/material";
 import { AppService } from "../app.service";
+import { Industry, Topic, Article, MyContent } from "./training/training.service";
+import { forkJoin } from "rxjs";
 declare var gtag: Function;
 
 @Component({
@@ -153,6 +155,7 @@ export class AccountComponent {
         .doc(this.accountService.aTeam.id)
         .update({ ...this.accountService.aTeam });
       this.router.navigate(["/account/achievements"]);
+      this.setDefaultArticles();
       gtag("event", "account_created", {
         event_category: "info added",
         event_label: "info was added to the account"
@@ -193,6 +196,68 @@ export class AccountComponent {
       isAppDownload: null,
       isSelectTrainingContent: null
     });
+  }
+
+  setDefaultArticles(): void { // only run on start of a new team. this won't backtrack anything
+    let indCol = this.accountService.db.collection('industry', ref => ref.where("default", "==", true)).snapshotChanges().pipe(
+      take(1),
+      map(actions =>
+        actions.map(a => {
+          const data = a.payload.doc.data() as Industry;
+          const id = a.payload.doc.id;
+          return { id, ...data };
+        })
+      )
+    );
+    let topCol = this.accountService.db.collection('topic').snapshotChanges().pipe(
+      take(1),
+      map(actions =>
+        actions.map(a => {
+          const data = a.payload.doc.data() as Topic;
+          const id = a.payload.doc.id;
+          return { id, ...data };
+        })
+      )
+    );
+    forkJoin(indCol, topCol).subscribe(([industries, topics]) => {
+      let filterTopics = topics.filter(topic => (topic.industryId == industries[0].id) || (topic.industryId == this.accountService.aTeam.industryId));
+      let topicColl = [];
+      filterTopics.forEach(topic => {
+        topicColl.push(
+          this.accountService.db.collection("article", ref => ref.where("topicId", "==", topic.id).where("isDefault", "==", true)).snapshotChanges().pipe(
+            take(1),
+            map(actions =>
+              actions.map(a => {
+                const data = a.payload.doc.data() as Article;
+                const id = a.payload.doc.id;
+                return { id, ...data };
+              })
+            )
+          )
+        )
+      });
+      forkJoin(topicColl).subscribe(results => {
+        let promises = [];
+        const shouldReceiveTrainingTemplate = new Map();
+        shouldReceiveTrainingTemplate[this.accountService.user.id] = null;
+        results.forEach(articleArray => {
+          articleArray.forEach(article => {
+            const trainingMinutes = Math.ceil(article.content.length / 480 / 5) * 5;
+            const myContent = new MyContent(
+              article.id,
+              shouldReceiveTrainingTemplate,
+              this.accountService.aTeam.id,
+              article.name,
+              article.nameEs,
+              article.topicId,
+              trainingMinutes
+            );
+            promises.push(this.accountService.db.collection(`team/${this.accountService.aTeam.id}/my-training-content`).add({...myContent}));
+          });
+        });
+        Promise.all(promises).then(() => console.log("finished defaulting articles"));
+      })
+    })
   }
 
   closeHelper() {

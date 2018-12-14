@@ -497,6 +497,7 @@ export class Article {
   content: string;
   contentEs: string;
   isGlobal: boolean;
+  isDefault: boolean;
   name: string;
   nameEs: string;
   topicId: string;
