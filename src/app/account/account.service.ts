@@ -135,7 +135,7 @@ export class AccountService {
       this.trialDaysLeft = 30 - moment().diff(this.aTeam.createdAt, "days") < 0 ? 0 : 30 - moment().diff(this.aTeam.createdAt, "days");
       this.isTrialVersion = true;
       let shouldOpen: boolean = false;
-      if (this.trialDaysLeft == 30) shouldOpen = true;
+      if (this.trialDaysLeft == 28) shouldOpen = true;
       if (this.trialDaysLeft == 20) shouldOpen = true;
       if (this.trialDaysLeft == 10) shouldOpen = true;
       if (this.trialDaysLeft <= 5) shouldOpen = true;
