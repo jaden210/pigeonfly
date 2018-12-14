@@ -79,6 +79,22 @@
           <div class="stripe-text">Payments are secured by </div>
           <div class="f-image"><img id="f-img" src="/assets/stripeName.png"></div>
         </div>
+        <div id="bh" class="card">
+          <div class="bh-row">
+            <div id="bh-title">Billing History</div>
+            <div class="flex"></div>
+            <button mat-stroked-button color="accent" (click)="getBillingHistory()">
+              last refreshed: {{accountService.aTeam.stripeInvoicesRetrievedAt || 'never'}}
+              <mat-icon [ngClass]="{spin: loadingBilling}">refresh</mat-icon>
+            </button>
+          </div>
+          <div class="bh-row" *ngFor="let invoice of accountService.aTeam.stripeInvoice?.data">
+            {{invoice.date}}
+          </div>
+          <div id="no-bh" *ngIf="!accountService.aTeam.stripeInvoice?.data?.length">
+            <mat-icon>restore</mat-icon>No billing history
+          </div>
+        </div>
       </div>
     </mat-tab>
   </mat-tab-group>

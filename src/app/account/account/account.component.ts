@@ -22,6 +22,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   showCompany: boolean = false;
   teamTier: number;
   loading: boolean = false;
+  loadingBilling: boolean = false;
 
   constructor(
     public accountService: AccountService,
@@ -58,6 +59,20 @@ export class ProfileComponent implements OnInit, OnDestroy {
     } else {
       this.teamTier = this.accountService.teamUsers.length * 2;
     }
+  }
+
+  async getBillingHistory() {
+    this.loadingBilling = true;
+    const res = await fetch("https://teamlog-2d74c.cloudfunctions.net/getCustomerInvoices", {
+      method: 'POST',
+      body: JSON.stringify({
+        stripeCustomerId: this.accountService.aTeam.stripeCustomerId,
+        teamId: this.accountService.aTeam.id
+      }),
+    });
+    const data = await res.json();
+    data.body = JSON.parse(data.body);
+    return data;
   }
 
   upload(profile): void { // this will call the file input from our custom button
@@ -132,7 +147,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
 
 @Component({
-  selector: "app-map-dialog",
   template: `
   <h2 mat-dialog-title>Are you sure?</h2>
   <mat-dialog-content>By clicking DELETE, you are removing access and making your account inactive.<br>

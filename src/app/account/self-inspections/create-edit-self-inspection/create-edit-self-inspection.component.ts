@@ -46,6 +46,11 @@ export class CreateEditSelfInspectionComponent {
     this.subscription.unsubscribe();
     this.router.navigate([`/account/self-inspections/${this.selfInspection.id || snapshot.id}`]);
   }
+  
+  cancel() {
+    this.subscription.unsubscribe();
+    this.router.navigate([`/account/self-inspections`]);
+  }
 
   saveOrCreate() {
     this.selfInspectionService.saveOrCreateNewSelfInspection(this.selfInspection).then(snapshot => {

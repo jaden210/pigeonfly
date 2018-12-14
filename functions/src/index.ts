@@ -72,6 +72,21 @@ exports.setStripePlan = functions.https.onRequest((req, res) => {
   });
 });
 
+exports.getCustomerInvoices = functions.https.onRequest((req, res) => {
+  const body = req.body;
+  const teamId = body.teamId;
+  const stripeCustomerId = body.stripeCustomerId;
+    stripe.invoices.list({
+      customerId: stripeCustomerId
+    }).then(list => {
+      admin.firestore().doc(`team/${teamId}`).update({stripeInvoices: list, stripeInvoicesRetrievedAt: new Date()}).then(() => {
+        res.status(200).send("Success")
+      });
+    }).catch(err => {
+      res.status(500).send(err)
+    });
+});
+
 exports.inviteNewUser = functions.firestore.document("invitation/{invitationId}").onCreate((snapshot) => {
   let info = snapshot.data();
   const nodemailer = require('nodemailer');

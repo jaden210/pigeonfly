@@ -11,7 +11,7 @@
     >Renew {{ time }}</button>
   </mat-menu>
   <div class="flex"></div>
-  <button mat-button class="ml" color="primary" *ngIf="!selfInspection.id" (click)="leave()">CANCEL</button>
+  <button mat-button class="ml" color="primary" *ngIf="!selfInspection.id" (click)="cancel()">CANCEL</button>
   <button mat-stroked-button class="ml" color="primary" *ngIf="!selfInspection.id" (click)="saveOrCreate()" [disabled]="!selfInspection.title">CREATE</button>
   <button mat-stroked-button class="ml" color="primary" *ngIf="selfInspection.id" (click)="saveOrCreate()">SAVE</button>
 </mat-toolbar>
