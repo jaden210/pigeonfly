@@ -21,6 +21,7 @@ import { SurveysService } from "../../surveys/surveys.service";
 import { Survey } from "../../surveys/survey/survey";
 import { TrainingStatusDialog } from "../shared/training-status.dialog";
 import { Location } from "@angular/common";
+import { combineLatest } from "rxjs";
 
 @Component({
   selector: "app-article",
@@ -153,7 +154,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
         /* Add to srt */
         let t = traineeIds.filter(id => !(id in srt));
         if (t.length) {
-          forkJoin(
+          combineLatest(
             t.map(id =>
               this.service
                 .getMostRecentTrainingForUserByArticle(
