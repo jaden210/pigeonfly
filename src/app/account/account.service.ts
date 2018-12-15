@@ -1,13 +1,12 @@
 import { Injectable, Component, Inject } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { map, take, debounceTime } from "rxjs/operators";
+import { map, debounceTime, } from "rxjs/operators";
 import {
   MatDialog,
   MatDialogRef,
   MatSnackBar,
   MAT_DIALOG_DATA,
-  MatSnackBarConfig,
   MatSnackBarRef
 } from "@angular/material";
 import { AngularFireAuth } from "@angular/fire/auth";
@@ -133,24 +132,24 @@ export class AccountService {
   checkFreeTrial(team): void {
     if (!team.cardToken) {
       this.trialDaysLeft = 30 - moment().diff(this.aTeam.createdAt, "days") < 0 ? 0 : 30 - moment().diff(this.aTeam.createdAt, "days");
-      this.isTrialVersion = true;
       let shouldOpen: boolean = false;
-      if (this.trialDaysLeft == 30) shouldOpen = true;
+      if (this.trialDaysLeft == 28) shouldOpen = true;
       if (this.trialDaysLeft == 20) shouldOpen = true;
       if (this.trialDaysLeft == 10) shouldOpen = true;
       if (this.trialDaysLeft <= 5) shouldOpen = true;
       if (shouldOpen) {
+        this.isTrialVersion = true;
         this.trialSnackbar = this.snackbar.open(
           `${this.trialDaysLeft} days left in your free trial`,
           "enter billing info",
           {
             horizontalPosition: "right"
           }
-        );
-      }
-      this.trialSnackbar.onAction().subscribe(() => {
-        this.router.navigate(["account/account"]);
-      });
+          );
+          this.trialSnackbar.onAction().subscribe(() => {
+            this.router.navigate(["account/account"]);
+          });
+        }
     } else {
       this.isTrialVersion = false;
       this.closeSnackbar();
@@ -258,6 +257,8 @@ export class Team {
   stripeSubscriptionId?: string;
   stripePlanId?: string;
   stripeCustomerId?: string;
+  stripeInvoicesRetrievedAt? : any;
+  stripeInvoices?: any;
 }
 
 export class Log {

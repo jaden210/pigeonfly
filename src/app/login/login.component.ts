@@ -111,58 +111,64 @@ export class LoginComponent implements OnInit {
     if (this.login.password !== this.login.password2) {
       this.loginErrorStr = "passwords do not match";
     } else {
-      let teams;
-      if (!createTeam) {
-        this.login.invites.forEach(invite => {
-          // the team is added here, so we only need to remove the invite in the accService.
-          teams[invite.teamId] = invite.isAdmin ? 1 : 0;
-        });
-      }
-      this.auth.auth
-        .createUserWithEmailAndPassword(this.login.email, this.login.password)
-        .then(
-          data => {
-            // right now anyone can join with any email. we might want to send out a verify link
-            this.user = {
-              id: data.user.uid,
-              email: data.user.email,
-              profileUrl: data.user.photoURL || null,
-              name: data.user.displayName || null,
-              username: null,
-              phone: data.user.phoneNumber || null,
-              accountType: "owner",
-              teams: createTeam ? {} : teams
-            };
-            this.appService.db
-              .collection<User>("user")
-              .doc(data.user.uid)
-              .set({ ...this.user })
-              .then(() => {
-                createTeam ? this.createTeam() : this.sendToAccount(true);
-              });
-          },
-          error => {
-            if (error.code == "auth/email-already-in-use") {
-              this.auth.auth
-                .signInWithEmailAndPassword(
-                  this.login.email,
-                  this.login.password
-                )
-                .then(
-                  data => {
-                    createTeam ? this.createTeam() : this.sendToAccount(false);
-                  },
-                  error => (this.loginErrorStr = error.message)
-                );
-            } else if (error.code == "auth/invalid email") {
-              this.loginErrorStr = "Please enter a valid email address";
-            } else {
-              this.loginErrorStr =
-                "were having trouble creating your account, try again later";
-              // todo: send to google anayltics
-            }
+      this.auth.auth.fetchSignInMethodsForEmail(this.login.email).then(data => { // check that they are new
+        if (data.length > 0) { // not new
+          this.loginErrorStr = "This email is associated with an account. Please sign in or visit the support page.";
+        } else { // new
+          let teams;
+          if (!createTeam) {
+            this.login.invites.forEach(invite => {
+              // the team is added here, so we only need to remove the invite in the accService.
+              teams[invite.teamId] = invite.isAdmin ? 1 : 0;
+            });
           }
-        );
+          this.auth.auth
+            .createUserWithEmailAndPassword(this.login.email, this.login.password)
+            .then(
+              data => {
+                // right now anyone can join with any email. we might want to send out a verify link
+                this.user = {
+                  id: data.user.uid,
+                  email: data.user.email,
+                  profileUrl: data.user.photoURL || null,
+                  name: data.user.displayName || null,
+                  username: null,
+                  phone: data.user.phoneNumber || null,
+                  accountType: "owner",
+                  teams: createTeam ? {} : teams
+                };
+                this.appService.db
+                  .collection<User>("user")
+                  .doc(data.user.uid)
+                  .set({ ...this.user })
+                  .then(() => {
+                    createTeam ? this.createTeam() : this.sendToAccount(true);
+                  });
+              },
+              error => {
+                if (error.code == "auth/email-already-in-use") {
+                  this.auth.auth
+                    .signInWithEmailAndPassword(
+                      this.login.email,
+                      this.login.password
+                    )
+                    .then(
+                      data => {
+                        createTeam ? this.createTeam() : this.sendToAccount(false);
+                      },
+                      error => (this.loginErrorStr = error.message)
+                    );
+                } else if (error.code == "auth/invalid email") {
+                  this.loginErrorStr = "Please enter a valid email address";
+                } else {
+                  this.loginErrorStr =
+                    "were having trouble creating your account, try again later";
+                  // todo: send to google anayltics
+                }
+              }
+            );
+          }
+      });
     }
   }
 

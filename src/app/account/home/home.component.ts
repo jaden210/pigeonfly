@@ -6,13 +6,14 @@ import {
   User,
   InviteToTeam
 } from "../account.service";
-import { map } from "rxjs/operators";
+import { map, finalize } from "rxjs/operators";
 import * as moment from "moment";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatTableDataSource, MatTable } from "@angular/material";
 import { MapDialogComponent } from "../map-dialog/map-dialog.component";
 import { Observable, Subscription } from "rxjs";
 import { HomeService } from "./home.service";
 import { SelfInspection } from "../self-inspections/self-inspections.service";
+import { AngularFireStorage } from "@angular/fire/storage";
 declare var gtag: Function;
 
 @Component({
@@ -24,6 +25,7 @@ export class HomeComponent implements OnDestroy {
   
   private subscription: Subscription;
   invitedUsers: InviteToTeam[];
+  files: Observable<any>;
   users = [];
   activeUsers = []; // really just used for length
   @ViewChild(MatTable) table: MatTable<any>;
@@ -45,6 +47,7 @@ export class HomeComponent implements OnDestroy {
           this.getComplianceLevel();
         });
         this.getSelfInspectionStats();
+        this.files = this.homeService.getFiles();
         this.buildUsers();
       }
     });
@@ -149,6 +152,10 @@ export class HomeComponent implements OnDestroy {
         }
       }
     });
+  }
+
+  openTeamFilesDialog() {
+    this.dialog.open(TeamFilesDialog);
   }
 
   editUser(user) {
@@ -283,4 +290,111 @@ export class EditUserDialog {
   close(): void {
     this.dialogRef.close();
   }
+}
+
+@Component({
+  selector: "team-files-dialog",
+  templateUrl: "team-files-dialog.html",
+  styleUrls: ["./home.component.css"]
+})
+export class TeamFilesDialog {
+
+  files: File[];
+  aFile: File = new File();
+  loading: boolean = false;
+
+  constructor(
+    public dialogRef: MatDialogRef<EditUserDialog>,
+    public accountService: AccountService,
+    private storage: AngularFireStorage,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
+    this.accountService.db.collection(`team/${this.accountService.aTeam.id}/file`).snapshotChanges().pipe(
+      map((actions: any) =>
+          actions.map(a => {
+            const data = a.payload.doc.data() as File;
+            data['createdAt'] = data.createdAt.toDate();
+            const id = a.payload.doc.id;
+            return { id, ...data };
+          })
+        )
+    ).subscribe(files => {
+      this.files = files;
+      if (files.length) this.aFile = files[0];
+    });
+  }
+
+  upload(): void { // this will call the file input from our custom button
+    document.getElementById('upFile').click();
+  }
+
+  uploadFile(event) {
+    this.loading = true;
+    let uFile = event.target.files[0];
+    let filePath = `${this.accountService.aTeam.id}/files/${new Date()}`;
+    let ref = this.storage.ref(filePath);
+    let task = this.storage.upload(filePath, uFile);
+    task.snapshotChanges().pipe(
+      finalize(() => {
+        ref.getDownloadURL().subscribe(url => {
+          let file = new File();
+          file.createdAt = new Date();
+          file.uploadedBy = this.accountService.user.id;
+          file.fileUrl = url;
+          file.name = uFile.name
+          file.type = uFile.type;
+          this.accountService.db.collection(`team/${this.accountService.aTeam.id}/file`).add({...file}).then(snapshot => {
+            this.loading = false;
+            file.id = snapshot.id;
+            this.aFile = file;
+          });
+        });
+      })
+    ).subscribe();
+  }
+
+  save() {
+    this.accountService.db.doc(`team/${this.accountService.aTeam.id}/file/${this.aFile.id}`).update({...this.aFile});
+  }
+  
+  delete() {
+    const index = this.files.indexOf(this.aFile);
+    this.accountService.db.doc(`team/${this.accountService.aTeam.id}/file/${this.aFile.id}`).delete().then(() => this.aFile = this.files[(index -1) < 0 ? 0 : (index -1)]);
+  }
+
+  download() {
+    const xhr = new XMLHttpRequest();
+    xhr.responseType = 'blob';
+    xhr.onload = (event) => {
+      /* Create a new Blob object using the response
+      *  data of the onload object.
+      */
+      const blob = new Blob([xhr.response], { type: this.aFile.type });
+      const a: any = document.createElement('a');
+      a.style = 'display: none';
+      document.body.appendChild(a);
+      const url = window.URL.createObjectURL(blob);
+      a.href = url;
+      a.download = this.aFile.name;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    };
+    xhr.open('GET', this.aFile.fileUrl);
+    xhr.send();
+
+  }
+
+  close(): void {
+    this.dialogRef.close();
+  }
+}
+
+export class File {
+  id?: string;
+  fileUrl: string;
+  name: string;
+  createdAt: any;
+  uploadedBy: string;
+  isPublic: boolean = false;
+  type?: string;
 }

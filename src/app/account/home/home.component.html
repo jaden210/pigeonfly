@@ -77,15 +77,8 @@
         </div>
         <div class="card o">
           <div class="info">
-            <div class="c-title">Total members</div>
-            <div class="c-stat">{{users.length}}</div>
-          </div>
-          <mat-icon class="c-icon">supervisor_account</mat-icon>
-        </div>
-        <div class="card o">
-          <div class="info">
-            <div class="c-title">Active members</div>
-            <div class="c-stat">{{activeUsers.length || 0}}</div>
+            <div class="c-title">Members</div>
+            <div class="c-stat">{{activeUsers.length || 0}} active | {{users.length}} total</div>
           </div>
           <mat-icon class="c-icon">supervisor_account</mat-icon>
         </div>
@@ -95,6 +88,14 @@
             <div class="c-stat">{{invitedUsers?.length || 0}}</div>
           </div>
           <mat-icon class="c-icon">supervisor_account</mat-icon>
+          <mat-icon class="edit pop">open_in_new</mat-icon>
+        </div>
+        <div class="card o" (click)="openTeamFilesDialog()">
+          <div class="info">
+            <div class="c-title">Team Files</div>
+            <div class="c-stat">{{(files | async)?.length || 0}}</div>
+          </div>
+          <mat-icon class="c-icon">attach_files</mat-icon>
           <mat-icon class="edit pop">open_in_new</mat-icon>
         </div>
       </div>

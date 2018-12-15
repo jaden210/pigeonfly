@@ -73,7 +73,7 @@ export class InspectionQuestionsComponent implements OnInit {
 export class collectionSubject {
   id?: string;
   subject: string;
-  questions: any;
+  questions: any = [];
   order: number = 0;
 }
 

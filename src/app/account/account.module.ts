@@ -7,7 +7,8 @@ import {
 import {
   HomeComponent,
   InviteDialog,
-  EditUserDialog
+  EditUserDialog,
+  TeamFilesDialog
 } from "./home/home.component";
 import { SurveysModule } from "./surveys/surveys.module";
 import { AccountRoutingModule } from "./account-routing.module";
@@ -56,6 +57,7 @@ import { EventsFilterDialog } from "./event/filter-dialog/filter.dialog";
     EventComponent,
     InviteDialog,
     EditUserDialog,
+    TeamFilesDialog,
     NoAccessDialog,
     MapDialogComponent,
     IncidentReportsComponent,
@@ -74,6 +76,7 @@ import { EventsFilterDialog } from "./event/filter-dialog/filter.dialog";
     InviteDialog,
     MapDialogComponent,
     EditUserDialog,
+    TeamFilesDialog,
     NoAccessDialog,
     ImagesDialogComponent,
     WelcomeDialog,

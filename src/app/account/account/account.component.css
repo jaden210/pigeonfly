@@ -138,3 +138,46 @@ mat-form-field {
   font-size: 15px;
   opacity: .54;
 }
+
+.bh-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 8px 0;
+}
+
+#bh-title {
+  opacity: .87;
+  font-size: 17px;
+}
+
+#no-bh {
+  margin: 100px 0;
+  display: flex;
+  align-items: center;
+  font-size: 21px;
+  opacity: .54;
+}
+
+.spin {
+  -webkit-animation: rotating 2s linear infinite;
+  animation: rotating 2s linear infinite;
+}
+
+@-webkit-keyframes rotating {
+  from{
+      -webkit-transform: rotate(0deg);
+  }
+  to{
+      -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes rotating {
+  from{
+      -webkit-transform: rotate(0deg);
+  }
+  to{
+      -webkit-transform: rotate(360deg);
+  }
+}

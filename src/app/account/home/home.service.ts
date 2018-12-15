@@ -50,6 +50,10 @@ export class HomeService {
     )
   }
 
+  getFiles() {
+    return this.db.collection(`team/${this.accountService.aTeam.id}/file`).valueChanges();
+  }
+
   getAchievements(): Observable<any> {
     return this.db.collection("completed-achievement", ref => ref.where("teamId", "==", this.accountService.aTeam.id)).valueChanges();
   }
