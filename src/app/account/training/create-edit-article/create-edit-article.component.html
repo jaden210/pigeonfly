@@ -68,9 +68,9 @@
       >
         <mat-icon [class.global]="isGlobalArticle">public</mat-icon>
       </button>
-      <mat-slide-toggle *ngIf="isDev" [(ngModel)]="article.isDefault">Set as default</mat-slide-toggle>
       <button mat-button *ngIf="isDev" (click)="addMetaDescription()">META DESCRIPTION</button>
       <button mat-button *ngIf="isDev" (click)="addPhoto()">ARTICLE PHOTO</button>
+      <mat-slide-toggle *ngIf="isDev" [(ngModel)]="article.isDefault">Set as default</mat-slide-toggle>
       <button
         mat-icon-button
         (click)="deleteArticle()"

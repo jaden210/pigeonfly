@@ -318,7 +318,10 @@ export class TeamFilesDialog {
             return { id, ...data };
           })
         )
-    ).subscribe(files => {this.files = files; this.aFile = files[0]});
+    ).subscribe(files => {
+      this.files = files;
+      if (files.length) this.aFile = files[0];
+    });
   }
 
   upload(): void { // this will call the file input from our custom button
@@ -356,7 +359,7 @@ export class TeamFilesDialog {
   
   delete() {
     const index = this.files.indexOf(this.aFile);
-    this.accountService.db.doc(`team/${this.accountService.aTeam.id}/file/${this.aFile.id}`).delete().then(() => this.aFile = this.files[index]);
+    this.accountService.db.doc(`team/${this.accountService.aTeam.id}/file/${this.aFile.id}`).delete().then(() => this.aFile = this.files[(index -1) < 0 ? 0 : (index -1)]);
   }
 
   download() {
