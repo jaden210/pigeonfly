@@ -249,14 +249,16 @@ export class LogComponent implements OnInit, OnDestroy {
                   }
                   if (params.string) {
                     let filter: string[] = params.string.trim().split(/\s+/);
+                    let passed;
                     for (let f of filter) {
                       if (
                         log.description &&
                         log.description.toLowerCase().includes(f.toLowerCase())
                       )
-                        return true;
+                        passed = true;
+                      else passed = false;
                     }
-                    return false;
+                    return passed;
                   }
                   if (params.imagesOnly) return log.imageUrl ? true : false;
                 })

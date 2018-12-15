@@ -157,8 +157,8 @@ export class DashboardComponent implements AfterViewInit {
         ),
         map(surveys => surveys.filter(s => s.articleId)),
         tap(surveys => {
-          (this.noHistory = surveys.length ? false : true);
-          !surveys.length ? this.accountService.showHelper = true : null;
+          this.noHistory = surveys.length ? false : true;
+          !surveys.length ? (this.accountService.showHelper = true) : null;
         })
       )
       .subscribe(history => {
@@ -183,6 +183,37 @@ export class DashboardComponent implements AfterViewInit {
       data: { people: survey.inAttendance }
     });
   }
+
+  //   mc.filter(c => {
+  //     let passed;
+  //     if (params.employees.length) {
+  //       for (let e of params.employees) {
+  //         if (e.id in c.shouldReceiveTraining) {
+  //           passed = true;
+  //           break;
+  //         }
+  //       }
+  //     }
+  //     if (params.string) {
+  //       let filter: string[] = params.string.trim().split(/\s+/);
+  //       for (let f of filter) {
+  //         if (
+  //           c.articleName &&
+  //           c.articleName.toLowerCase().includes(f.toLowerCase())
+  //         )
+  //           passed = true;
+  //         else passed = false;
+  //       }
+  //     }
+  //     if (params.complianceType != "all") {
+  //       const inCompliance = params.complianceType == "inCompliance";
+  //       passed =
+  //         (c.complianceLevel >= 100 && inCompliance) ||
+  //         (c.complianceLevel < 100 && !inCompliance);
+  //     }
+  //     return passed;
+  //   })
+  // ),
 
   public filter(): void {
     this.dialog
@@ -218,11 +249,16 @@ export class DashboardComponent implements AfterViewInit {
               const searchTerms: string[] = params.articleName
                 ? params.articleName.trim().split(/\s+/)
                 : [];
+              let passed;
               for (let f of searchTerms) {
-                // for value of filter array, built from arguments passed in
-                if (h.articleName.toLowerCase().includes(f.toLowerCase()))
-                  return true;
+                if (
+                  h.articleName &&
+                  h.articleName.toLowerCase().includes(f.toLowerCase())
+                )
+                  passed = true;
+                else passed = false;
               }
+              return passed;
             });
           } else {
             this.dataSource = this.history;

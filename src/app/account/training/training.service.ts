@@ -181,7 +181,8 @@ export class TrainingService {
   }
 
   /* Gets entire collection, stores in local cache */
-  public getMyContent(teamId): Observable<MyContent[]> {
+  public getMyContent(teamId, forceRefresh = false): Observable<MyContent[]> {
+    if (forceRefresh) this.myContent = [];
     return this.myContent.length
       ? of(this.myContent)
       : this.db

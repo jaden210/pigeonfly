@@ -1,10 +1,12 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
-import { ActivatedRoute, Router, ParamMap } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { TrainingService, MyContent } from "../training.service";
 import { Observable, Subscription } from "rxjs";
 import { AccountService } from "../../account.service";
 import { MatDialog } from "@angular/material";
-import { MyContentFiltersDialog } from "./my-content-filters.dialog";
+import { SearchDialog, SearchParams } from "./search-dialog/search.dialog";
+import { map, tap } from "rxjs/operators";
+import { Location } from "@angular/common";
 
 @Component({
   templateUrl: "./my-content.component.html",
@@ -15,31 +17,44 @@ export class MyContentComponent implements OnInit, OnDestroy {
   private teamId: string;
   private industryId: string;
   private topicId: string;
+  private backToHome: number;
   public myContent: Observable<MyContent[]>;
   public title: string;
-  public searchVisible: boolean;
-  public searchTerm: string;
-  public complianceType: string;
+  public searchParams: SearchParams;
+  public isSearch: boolean;
+  public noResults: boolean;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private service: TrainingService,
     private accountService: AccountService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private _location: Location
   ) {}
 
   ngOnInit() {
-    this.subscription = this.accountService.aTeamObservable.subscribe(team => {
-      if (team) {
-        this.route.queryParamMap.subscribe(qpm => {
-          this.complianceType = qpm.get("complianceType");
-          this.teamId = team.id;
-          this.title = "MyContent";
-          this.myContent = this.service.getMyContent(team.id);
-        });
+    this.searchParams = new SearchParams();
+    this.subscription = this.accountService.teamUsersObservable.subscribe(
+      team => {
+        if (team) {
+          this.route.queryParamMap.subscribe(qpm => {
+            this.searchParams.complianceType =
+              qpm.get("complianceType") || "all";
+            const employees = JSON.parse(qpm.get("srt")) || [];
+            this.searchParams.employees = employees.map(id =>
+              this.accountService.teamUsers.find(u => u.id == id)
+            );
+            /* dumb hack to send user back to home page if that's where they came from, so far
+            that's the only place you can set the employees query param */
+            this.backToHome = this.searchParams.employees.length;
+            this.teamId = this.accountService.aTeam.id;
+            this.title = "MyContent";
+            this.getMyContent();
+          });
+        }
       }
-    });
+    );
   }
 
   public routeTo(articleId): void {
@@ -56,15 +71,66 @@ export class MyContentComponent implements OnInit, OnDestroy {
 
   public openFiltersDialog(): void {
     this.dialog
-      .open(MyContentFiltersDialog, {
-        data: { complianceType: this.complianceType }
+      .open(SearchDialog, {
+        data: { searchParams: this.searchParams }
       })
       .afterClosed()
-      .subscribe(data => {
-        this.router.navigate(["account", "training", "my-content"], {
-          queryParams: { complianceType: data.complianceType }
-        });
+      .subscribe((params: SearchParams) => {
+        if (params) {
+          this.searchParams = params;
+          this.getMyContent();
+        }
       });
+  }
+
+  private getMyContent(): void {
+    let params = this.searchParams;
+    if (
+      params.employees.length ||
+      params.string ||
+      params.complianceType != "all"
+    ) {
+      this.isSearch = true;
+      this.myContent = this.service.getMyContent(this.teamId).pipe(
+        map((mc: MyContent[]) =>
+          mc.filter(c => {
+            let passed;
+            if (params.employees.length) {
+              for (let e of params.employees) {
+                if (e.id in c.shouldReceiveTraining) {
+                  passed = true;
+                  break;
+                }
+              }
+            }
+            if (params.string) {
+              let filter: string[] = params.string.trim().split(/\s+/);
+              for (let f of filter) {
+                if (
+                  c.articleName &&
+                  c.articleName.toLowerCase().includes(f.toLowerCase())
+                )
+                  passed = true;
+                else passed = false;
+              }
+            }
+            if (params.complianceType != "all") {
+              const inCompliance = params.complianceType == "inCompliance";
+              passed =
+                (c.complianceLevel >= 100 && inCompliance) ||
+                (c.complianceLevel < 100 && !inCompliance);
+            }
+            return passed;
+          })
+        ),
+        tap(mc => (this.noResults = mc.length ? false : true))
+      );
+    } else {
+      this.isSearch = false;
+      this.myContent = this.service
+        .getMyContent(this.teamId)
+        .pipe(tap(mc => (this.noResults = mc.length ? false : true)));
+    }
   }
 
   public createArticle(): void {
@@ -73,9 +139,12 @@ export class MyContentComponent implements OnInit, OnDestroy {
   }
 
   public goBack(): void {
-    const activeRoute: string = this.router.url;
-    const backRoute = activeRoute.substr(0, activeRoute.lastIndexOf("/"));
-    this.router.navigate([backRoute]);
+    if (this.backToHome) this._location.back();
+    else {
+      const activeRoute: string = this.router.url;
+      const backRoute = activeRoute.substr(0, activeRoute.lastIndexOf("/"));
+      this.router.navigate([backRoute]);
+    }
   }
 
   ngOnDestroy() {

@@ -11,17 +11,18 @@ import { Timeclock } from "../time/time.service";
   providedIn: "root"
 })
 export class HomeService {
-
   constructor(
     public db: AngularFirestore,
     private accountService: AccountService
   ) {}
 
   getInvites(): Observable<InviteToTeam[]> {
-    let invitedCollection = this.accountService.db.collection<InviteToTeam[]>("invitation", ref =>
-    ref
-      .where("status", "==", "invited")
-      .where("teamId", "==", this.accountService.aTeam.id)
+    let invitedCollection = this.accountService.db.collection<InviteToTeam[]>(
+      "invitation",
+      ref =>
+        ref
+          .where("status", "==", "invited")
+          .where("teamId", "==", this.accountService.aTeam.id)
     );
     return invitedCollection.snapshotChanges().pipe(
       map(actions => {
@@ -33,21 +34,26 @@ export class HomeService {
           };
         });
       })
-    )
+    );
   }
 
   getSelfInspections(): Observable<SelfInspection[]> {
-    return this.db.collection(`team/${this.accountService.aTeam.id}/self-inspection`).snapshotChanges().pipe(
-      map(actions => {
-        return actions.map((a) => {
-          let data = a.payload.doc.data() as SelfInspection;
-          data['id'] = a.payload.doc.id;
-          data['createdAt'] = data.createdAt.toDate();
-          data['lastCompletedAt'] = data.lastCompletedAt ? data.lastCompletedAt.toDate() : null;
-          return {...data};
-        });
-      })
-    )
+    return this.db
+      .collection(`team/${this.accountService.aTeam.id}/self-inspection`)
+      .snapshotChanges()
+      .pipe(
+        map(actions => {
+          return actions.map(a => {
+            let data = a.payload.doc.data() as SelfInspection;
+            data["id"] = a.payload.doc.id;
+            data["createdAt"] = data.createdAt.toDate();
+            data["lastCompletedAt"] = data.lastCompletedAt
+              ? data.lastCompletedAt.toDate()
+              : null;
+            return { ...data };
+          });
+        })
+      );
   }
 
   getFiles() {
@@ -55,21 +61,31 @@ export class HomeService {
   }
 
   getAchievements(): Observable<any> {
-    return this.db.collection("completed-achievement", ref => ref.where("teamId", "==", this.accountService.aTeam.id)).valueChanges();
+    return this.db
+      .collection("completed-achievement", ref =>
+        ref.where("teamId", "==", this.accountService.aTeam.id)
+      )
+      .valueChanges();
   }
 
   getSystemAchievements(): Observable<any> {
-    return this.accountService.db.collection("achievement", ref => ref.orderBy("level")).valueChanges();
+    return this.accountService.db
+      .collection("achievement", ref => ref.orderBy("level"))
+      .valueChanges();
   }
 
-  getUserTimeclocks(user) {
-    let userClocks = this.accountService.db.collection(`team/${this.accountService.aTeam.id}/timeclock`, ref =>
+  getUserTimeclocks(userId) {
+    console.log(userId);
+    let userClocks = this.accountService.db.collection(
+      `team/${this.accountService.aTeam.id}/timeclock`,
+      ref =>
         ref
-          .where("userId", "==", user.id)
+          .where("userId", "==", userId)
           .orderBy("shiftStarted", "desc")
           .limit(1)
     );
     return userClocks.snapshotChanges().pipe(
+      take(1),
       map(actions => {
         return actions.map(a => {
           let data: any = a.payload.doc.data();
@@ -84,11 +100,10 @@ export class HomeService {
           };
         });
       })
-    )
+    );
   }
 
   deleteInvite(id): Promise<any> {
     return this.accountService.db.doc(`invitation/${id}`).delete();
   }
-
 }

@@ -19,13 +19,12 @@ import { TrainingHistoryComponent } from "./training-history/training-history.co
 import { TrainingStatusDialog } from "./shared/training-status.dialog";
 import { DashboardComponent } from "./dashboard/dashboard.component";
 import { ReceivedTrainingDialog } from "./training-history/received-training.dialog";
-import { MyContentSearchPipe } from "./my-content/search.pipe";
-import { MyContentFiltersDialog } from "./my-content/my-content-filters.dialog";
 import { HelpDialog } from "./help.dialog";
 import { ArticlesSearchPipe } from "./articles/search.pipe";
 import { FilterDialog } from "./dashboard/filter-dialog/filter.dialog";
 import { ArticleMetaDescriptionDialog } from "./create-edit-article/article-meta-description/article-meta-description.component";
 import { ArticlePhotoDialog } from "./create-edit-article/article-photo-upload/article-photo-upload.component";
+import { SearchDialog } from "./my-content/search-dialog/search.dialog";
 
 const routes: Routes = [
   {
@@ -75,11 +74,10 @@ const routes: Routes = [
     DashboardComponent,
     ReceivedTrainingDialog,
     MyContentComponent,
-    MyContentSearchPipe,
-    MyContentFiltersDialog,
     HelpDialog,
     ArticlesSearchPipe,
-    FilterDialog
+    FilterDialog,
+    SearchDialog
   ],
   entryComponents: [
     AddTraineeDialog,
@@ -87,11 +85,11 @@ const routes: Routes = [
     AttendanceDialog,
     TrainingStatusDialog,
     ReceivedTrainingDialog,
-    MyContentFiltersDialog,
     HelpDialog,
     FilterDialog,
     ArticleMetaDescriptionDialog,
-    ArticlePhotoDialog
+    ArticlePhotoDialog,
+    SearchDialog
   ],
   providers: [TrainingService, PendingChangesGuard]
 })

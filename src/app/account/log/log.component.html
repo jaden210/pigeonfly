@@ -127,12 +127,12 @@
                 : null
             "
           >
-            <p *ngIf="rl?.description">{{ rl?.description }}</p>
             <img
               *ngIf="rl.imageUrl"
               [src]="rl.imageUrl"
               onerror="this.style.display='none'"
             />
+            <p *ngIf="rl?.description">{{ rl?.description }}</p>
           </div>
           <mat-icon *ngIf="errorIcon" id="alert" (click)="resendLog()"
             >alert</mat-icon

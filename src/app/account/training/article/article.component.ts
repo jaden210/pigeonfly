@@ -153,6 +153,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
         });
         /* Add to srt */
         let t = traineeIds.filter(id => !(id in srt));
+        console.log(t);
         if (t.length) {
           combineLatest(
             t.map(id =>
@@ -166,7 +167,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
                   tap(lastTrainedDate => {
                     if (!lastTrainedDate[0] || lastTrainedDate[0] < expDate)
                       this.article.myContent.needsTraining.push(id);
-                    srt[id] = lastTrainedDate[0];
+                    srt[id] = lastTrainedDate[0] || null;
                   })
                 )
             )

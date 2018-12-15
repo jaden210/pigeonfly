@@ -7,7 +7,7 @@
 
 .b-title {
   font-size: 14px;
-  opacity: .76;
+  opacity: 0.76;
   font-weight: 600;
 }
 
@@ -31,7 +31,7 @@ table {
   overflow: hidden;
   width: 48px;
   border-radius: 50%;
-  margin: 8px;
+  margin: 8px auto 8px 0;
 }
 
 img.head-img {
@@ -84,11 +84,6 @@ img.head-img {
   color: #666666;
 }
 
-
-
-
-
-
 .active-dot {
   height: 12px;
   width: 12px;
@@ -129,13 +124,6 @@ img.head-img {
   padding-bottom: 24px;
 }
 
-
-
-
-
-
-
-
 .cols {
   display: flex;
   justify-content: center;
@@ -154,7 +142,7 @@ img.head-img {
 
 .c-icon {
   padding: 24px;
-  background-color: rgba(256,256,256,.2);
+  background-color: rgba(256, 256, 256, 0.2);
 }
 
 .info {
@@ -175,7 +163,7 @@ img.head-img {
   position: absolute;
   top: -4px;
   right: -4px;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .b {
@@ -193,12 +181,6 @@ img.head-img {
 .o {
   background-color: #ff9800;
 }
-
-
-
-
-
-
 
 /* ---- TEAM FILES ---- */
 .d-view {
@@ -220,7 +202,7 @@ img.head-img {
   display: flex;
   align-items: center;
   font-size: 14px;
-  color: rgba(0,0,0,.54);
+  color: rgba(0, 0, 0, 0.54);
   cursor: pointer;
   padding: 8px;
   border-radius: 24px;
@@ -228,15 +210,15 @@ img.head-img {
 }
 
 .file:hover {
-  background-color: rgba(0,0,0,.07);
+  background-color: rgba(0, 0, 0, 0.07);
 }
 
 .f-active {
-  background-color: rgba(0,0,0,.1) !important;
+  background-color: rgba(0, 0, 0, 0.1) !important;
 }
 
 .f-delete {
-  opacity: .54;
+  opacity: 0.54;
   color: #212121;
   transition: opacity 200ms;
   cursor: pointer;
@@ -273,4 +255,12 @@ img.head-img {
   display: flex;
   align-items: center;
   margin: 8px 0;
+}
+a {
+  color: #1976d2;
+  cursor: pointer;
+}
+
+a:hover {
+  text-decoration: underline;
 }

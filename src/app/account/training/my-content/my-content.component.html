@@ -4,13 +4,6 @@
   </button>
   <h1>{{ title }}</h1>
   <div class="flex"></div>
-  <div id="search-box" [class.expand]="searchVisible">
-    <button mat-icon-button (click)="searchVisible = !searchVisible">
-      <mat-icon>search</mat-icon>
-    </button>
-    <input [(ngModel)]="searchTerm" placeholder="Article" />
-  </div>
-
   <button
     mat-icon-button
     style="margin-right: 12px;"
@@ -19,10 +12,10 @@
   >
     <mat-icon
       matBadge="!"
-      [matBadgeHidden]="!complianceType"
+      [matBadgeHidden]="!isSearch"
       matBadgeSize="small"
       matBadgeColor="warn"
-      >filter_list</mat-icon
+      >search</mat-icon
     >
   </button>
   <toolbar-helper></toolbar-helper>
@@ -31,11 +24,7 @@
 <div class="window">
   <mat-nav-list>
     <mat-list-item
-      *ngFor="
-        let content of (myContent
-          | async
-          | myContentSearch: searchTerm:complianceType)
-      "
+      *ngFor="let content of (myContent | async)"
       (click)="routeTo(content.articleId)"
     >
       <progress-indicator
@@ -59,6 +48,14 @@
       <a matLine>{{ content.articleName }}</a>
     </mat-list-item>
   </mat-nav-list>
+  <div id="no-results" *ngIf="noResults">
+    No results
+    {{
+      isSearch
+        ? "for search, click the search icon in the toolbar to modify your search"
+        : ""
+    }}
+  </div>
   <button
     mat-stroked-button
     [disabled]="!myContent"
