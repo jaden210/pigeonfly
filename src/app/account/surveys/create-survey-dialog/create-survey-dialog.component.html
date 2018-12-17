@@ -3,12 +3,12 @@
   <ng-container *ngSwitchCase="1">
     <span class="subtitle"> What is this survey about? </span>
     <mat-form-field appearance="outline">
-      <mat-label>Category</mat-label>
+      <mat-label>category</mat-label>
       <input matInput required [(ngModel)]="survey.category" />
       <mat-hint align="end">ie. Monthly Inspection</mat-hint>
     </mat-form-field>
     <mat-form-field appearance="outline">
-      <mat-label>Survey Question</mat-label>
+      <mat-label>survey question</mat-label>
       <textarea matInput required [(ngModel)]="survey.title"></textarea>
     </mat-form-field>
   </ng-container>
@@ -18,7 +18,7 @@
       <input
         matInput
         [matDatepicker]="picker"
-        placeholder="Choose a date"
+        placeholder="choose a date"
         disabled
         [(ngModel)]="survey.runDate"
       />

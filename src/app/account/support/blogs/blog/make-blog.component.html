@@ -2,10 +2,10 @@
   <div id="editor">
     <div style="display: flex; margin-top: 8px;">
       <mat-form-field appearance="outline" style="flex: 2; margin-right: 24px;">
-        <mat-label>Blog Title</mat-label>
+        <mat-label>blog title</mat-label>
         <input
           matInput
-          placeholder="Enter Blog Name"
+          placeholder="enter Blog Name"
           required
           [(ngModel)]="blog.name"
         />
@@ -16,8 +16,8 @@
         <mat-hint style="color:red">{{slugError}}</mat-hint>
       </mat-form-field>
       <mat-form-field appearance="outline" style="flex: 1">
-        <mat-label>Topic</mat-label>
-        <mat-select placeholder="Topic" required [(ngModel)]="blog.topic">
+        <mat-label>topic</mat-label>
+        <mat-select placeholder="topic" required [(ngModel)]="blog.topic">
           <mat-option
             *ngFor="let topic of (topics | async)"
             [value]="topic?.name"

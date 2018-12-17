@@ -7,10 +7,10 @@
 <mat-dialog-content [ngSwitch]="title">
   <ng-container *ngSwitchCase="title1">
     <mat-form-field appearance="outline" style="margin-top: -4px;">
-      <mat-label>Article Name</mat-label>
+      <mat-label>article name</mat-label>
       <input
         matInput
-        placeholder="Text Contains"
+        placeholder="text contains"
         [(ngModel)]="searchParams.string"
       />
     </mat-form-field>
@@ -22,9 +22,9 @@
     </div>
 
     <mat-form-field appearance="outline">
-      <mat-label>Compliance Type</mat-label>
+      <mat-label>compliance type</mat-label>
       <mat-select
-        placeholder="Compliance Type"
+        placeholder="compliance type"
         [(ngModel)]="searchParams.complianceType"
       >
         <mat-option *ngFor="let type of complianceTypes" [value]="type.key">

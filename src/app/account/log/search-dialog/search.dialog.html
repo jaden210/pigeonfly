@@ -7,7 +7,7 @@
 <mat-dialog-content [ngSwitch]="title">
   <ng-container *ngSwitchCase="title1">
     <mat-form-field appearance="outline">
-      <mat-label>Log Date</mat-label>
+      <mat-label>log date</mat-label>
       <input
         matInput
         [matDatepicker]="picker"
@@ -20,16 +20,16 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline" style="margin-top: -4px;">
-      <mat-label>Log Text</mat-label>
+      <mat-label>log text</mat-label>
       <input
         matInput
-        placeholder="Text Contains"
+        placeholder="text Contains"
         [(ngModel)]="searchParams.string"
       />
     </mat-form-field>
 
     <div class="btn" (click)="selectEmployee()">
-      <span class="placeholder">{{ EmployeesTitle || "All Employees" }}</span>
+      <span class="placeholder">{{ EmployeesTitle || "all Employees" }}</span>
       <span class="label" *ngIf="searchParams.employees.length">Employees</span>
       <mat-icon>chevron_right</mat-icon>
     </div>

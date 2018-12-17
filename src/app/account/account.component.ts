@@ -124,6 +124,7 @@ export class AccountComponent {
     });
     if (this.appService.firstTimeUser) {
       this.appService.firstTimeUser = false;
+      this.createCompletedAchievement(this.accountService.aTeam.id);
       this.welcomeDialog();
     }
     this.accountService.setActiveTeam(
@@ -142,7 +143,6 @@ export class AccountComponent {
       }
     });
     dialog.afterClosed().subscribe(data => {
-      this.createCompletedAchievement(this.accountService.aTeam.id);
       this.accountService.user.name = data.name;
       this.accountService.db
         .collection("user")
@@ -163,7 +163,7 @@ export class AccountComponent {
     });
   }
 
-  createCompletedAchievement(teamId) {
+  createCompletedAchievement(teamId): void {
     // TODO: make this an interface that the cloud function can access
     this.accountService.db.collection("completed-achievement").add({
       teamId: teamId,
@@ -245,7 +245,7 @@ export class AccountComponent {
             const trainingMinutes = Math.ceil(article.content.length / 480 / 5) * 5;
             const myContent = new MyContent(
               article.id,
-              shouldReceiveTrainingTemplate,
+              {...shouldReceiveTrainingTemplate},
               this.accountService.aTeam.id,
               article.name,
               article.nameEs,

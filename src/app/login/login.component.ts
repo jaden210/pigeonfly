@@ -197,7 +197,7 @@ export class LoginComponent implements OnInit {
 
   sendToAccount(removeFromInvite) {
     removeFromInvite ? (this.appService.removeFromInvite = true) : false;
-    this.router.navigate(["account"]);
+      this.router.navigate(["account"]);
   }
 
   isUser() {

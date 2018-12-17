@@ -25,7 +25,7 @@ export class BlogComponent implements OnInit {
     spellcheck: true,
     height: "calc(100vh - 360px)",
     minHeight: "100px",
-    placeholder: "Content *",
+    placeholder: "content *",
     translate: "yes"
   };
 

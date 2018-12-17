@@ -38,10 +38,10 @@
           appearance="outline"
           style="flex: 1; margin-right: 24px;"
         >
-          <mat-label>Article Title</mat-label>
+          <mat-label>article title</mat-label>
           <input
             matInput
-            placeholder="Enter Article Name"
+            placeholder="enter article name"
             required
             [(ngModel)]="activeArticle.name"
           />
@@ -50,8 +50,8 @@
           appearance="outline"
           style="margin-right: 24px; width: 300px;"
         >
-          <mat-label>Topic</mat-label>
-          <mat-select placeholder="Topic" required [(ngModel)]="currentTopicId">
+          <mat-label>topic</mat-label>
+          <mat-select placeholder="topic" required [(ngModel)]="currentTopicId">
             <mat-option
               *ngFor="let topic of (topics | async)"
               [value]="topic?.id"

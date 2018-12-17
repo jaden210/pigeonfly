@@ -6,7 +6,7 @@
     </div>
     <ng-template #create>
       <mat-form-field appearance="standard">
-        <mat-select placeholder="Employee" [(ngModel)]="user">
+        <mat-select placeholder="employee" [(ngModel)]="user">
           <mat-option *ngFor="let user of Users" [value]="user">
             {{ user.name }}
           </mat-option>
@@ -29,7 +29,7 @@
             (click)="startPicker.open()"
             (focus)="startPicker.open()"
             [matDatepicker]="startPicker"
-            placeholder="Choose a date"
+            placeholder="choose a date"
           />
           <mat-datepicker #startPicker></mat-datepicker>
         </mat-form-field>
@@ -111,7 +111,7 @@
                   (click)="eventPicker.open()"
                   (focus)="eventPicker.open()"
                   [matDatepicker]="eventPicker"
-                  placeholder="Choose a date"
+                  placeholder="choose a date"
                 />
                 <mat-datepicker #eventPicker></mat-datepicker>
               </mat-form-field>
@@ -146,7 +146,7 @@
             (click)="endPicker.open()"
             (focus)="endPicker.open()"
             [matDatepicker]="endPicker"
-            placeholder="Choose a date"
+            placeholder="choose a date"
           />
           <mat-datepicker #endPicker></mat-datepicker>
         </mat-form-field>

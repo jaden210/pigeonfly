@@ -12,7 +12,7 @@
     <input
       matInput
       type="text"
-      placeholder="Your name"
+      placeholder="your name"
       [(ngModel)]="data.name"
     />
   </mat-form-field>
@@ -20,13 +20,13 @@
     <input
       matInput
       type="text"
-      placeholder="Business name"
+      placeholder="business name"
       [(ngModel)]="data.businessName"
     />
   </mat-form-field>
   <mat-form-field>
     <mat-select
-      placeholder="Which industry best describes your business?"
+      placeholder="which industry best describes your business?"
       [(ngModel)]="data.industryId"
     >
       <mat-option *ngFor="let industry of industries" [value]="industry.id">

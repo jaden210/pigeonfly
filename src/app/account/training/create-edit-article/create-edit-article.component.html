@@ -11,22 +11,22 @@
   <div id="editor">
     <div style="display: flex; margin-top: 8px;">
       <mat-form-field appearance="outline" style="flex: 2; margin-right: 12px;">
-        <mat-label>Article Title</mat-label>
+        <mat-label>article title</mat-label>
         <input
           matInput
-          placeholder="Enter Article Name"
+          placeholder="enter article name"
           required
           [(ngModel)]="article.name"
         />
       </mat-form-field>
       <mat-form-field appearance="outline" *ngIf="isDev" style="flex: 1; margin-right: 12px;">
-        <mat-label>Slug-Name</mat-label>
+        <mat-label>slug-name</mat-label>
         <input matInput [(ngModel)]="article.slugName">
         <mat-hint style="color:red">{{slugNameError}}</mat-hint>
       </mat-form-field>
       <mat-form-field appearance="outline" style="flex: 1">
-        <mat-label>Topic</mat-label>
-        <mat-select placeholder="Topic" required [(ngModel)]="article.topicId">
+        <mat-label>topic</mat-label>
+        <mat-select placeholder="topic" required [(ngModel)]="article.topicId">
           <mat-option
             *ngFor="let topic of (topics | async)"
             [value]="topic?.id"

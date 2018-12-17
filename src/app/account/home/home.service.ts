@@ -75,7 +75,6 @@ export class HomeService {
   }
 
   getUserTimeclocks(userId) {
-    console.log(userId);
     let userClocks = this.accountService.db.collection(
       `team/${this.accountService.aTeam.id}/timeclock`,
       ref =>

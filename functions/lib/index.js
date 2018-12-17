@@ -69,6 +69,20 @@ exports.setStripePlan = functions.https.onRequest((req, res) => {
         });
     });
 });
+exports.getCustomerInvoices = functions.https.onRequest((req, res) => {
+    const body = req.body;
+    const teamId = body.teamId;
+    const stripeCustomerId = body.stripeCustomerId;
+    stripe.invoices.list({
+        customerId: stripeCustomerId
+    }).then(list => {
+        admin.firestore().doc(`team/${teamId}`).update({ stripeInvoices: list, stripeInvoicesRetrievedAt: new Date() }).then(() => {
+            res.status(200).send("Success");
+        });
+    }).catch(err => {
+        res.status(500).send(err);
+    });
+});
 exports.inviteNewUser = functions.firestore.document("invitation/{invitationId}").onCreate((snapshot) => {
     let info = snapshot.data();
     const nodemailer = require('nodemailer');
@@ -112,7 +126,7 @@ exports.newTeamEmail = functions.firestore.document("team/{teamId}").onUpdate((c
             mailOptions.subject = 'Welcome to your free 30 day trial of Compliancechimp!';
             mailOptions.html = `Hi ${user.name}<br><br>
         Glad to meet you! We want you to get the most out of Compliancechimp during these first 30 days. If you haven't already, visit the Achievements page inside your account, which walks you through the various features of the platform as an owner or administrator. Remember, Compliancechimp is largely driven from our free app which can be found here for Apple users, or here for Android users. Head over and get the app if you haven't already. As you invite your team, they'll do the same. Please take advantage of the many benefits of the platform which enable compliance, including: training your team and getting their survey responses, capturing worksite logs, performing self-inspection, and more.
-        <br><br> <a style="height:30px" href='https://play.google.com/store/apps/details?id=com.betterspace.complianceChimp&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
+        <br><br> <a href='https://play.google.com/store/apps/details?id=com.betterspace.complianceChimp&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img style="height:55px" alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
         <br> <a href="https://inviteme.me/account" target="_blank">LETS GET STARTED</a>
         <br><br>Don't hesitate to contact us with any questions at support@compliancechimp.com, and enjoy!
         <br><br>Sincerely,
@@ -264,7 +278,7 @@ exports.modifiedTimeclock = functions.firestore.document("team/{teamId}/timecloc
 exports.createdInvitation = functions.firestore.document("invitation/{id}").onCreate(snapshot => {
     let invitation = snapshot.data();
     let promises = [];
-    promises.push(logAsEvent(EventType.member, EventAction.created, snapshot.id, invitation.invitedBy, "Was invited to the system", invitation.teamId || null));
+    promises.push(logAsEvent(EventType.member, EventAction.created, snapshot.id, invitation.invitedBy, `${invitation.inviteName} was invited to the Team`, invitation.teamId || null));
     /* total invites achievement */
     promises.push(updateCompletedAchievement(invitation.teamId, "invitedUsers", 1, true));
     return Promise.all(promises).then(() => console.log("created invitation complete"));
@@ -367,7 +381,7 @@ var EventType;
     EventType["surveyResponse"] = "Survey";
     EventType["selfInspection"] = "Self Inspection";
     EventType["training"] = "Training";
-    EventType["member"] = "Member";
+    EventType["member"] = "New Member";
     EventType["customContent"] = "Custom training article";
 })(EventType || (EventType = {}));
 var EventAction;

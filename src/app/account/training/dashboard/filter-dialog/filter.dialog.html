@@ -11,7 +11,7 @@
 <mat-dialog-content [ngSwitch]="title">
   <ng-container *ngSwitchCase="'Filter History Results'">
     <mat-form-field appearance="outline">
-      <mat-label>Training Date</mat-label>
+      <mat-label>training date</mat-label>
       <input
         matInput
         [matDatepicker]="picker"
@@ -23,10 +23,10 @@
       <mat-datepicker #picker disabled="false"></mat-datepicker>
     </mat-form-field>
     <mat-form-field appearance="outline" style="margin-top: -4px;">
-      <mat-label>Article Name</mat-label>
+      <mat-label>article name</mat-label>
       <input
         matInput
-        placeholder="Article Name"
+        placeholder="article name"
         [(ngModel)]="filterParams.articleName"
       />
     </mat-form-field>

@@ -78,7 +78,6 @@ export class HomeComponent implements OnDestroy {
         users.map(user =>
           this.homeService.getUserTimeclocks(user.id).pipe(
             map(tc => {
-              console.log(tc);
               const shift = tc[0] || null;
               return { ...user, shift };
             })
@@ -97,7 +96,14 @@ export class HomeComponent implements OnDestroy {
         let status = "Clocked-Out";
         let location = {};
         if (tm.shift) {
-          if (!tm.shift.shiftEnded) status = "Clocked-In";
+          if (!tm.shift.shiftEnded) {
+            status = "Clocked-In";
+            if (this.activeUsers.findIndex(user => user.id == tm.id) > -1) {
+              delete this.activeUsers[this.activeUsers.findIndex(user => user.id == tm.id)];
+            } else {
+              this.activeUsers.push(tm.id);
+            }
+          };
           let events = tm.shift.events || [];
           for (let e of events) {
             if (!e.in) status = e.type == "lunch" ? "At Lunch" : "On Break";
@@ -143,29 +149,6 @@ export class HomeComponent implements OnDestroy {
 
   public routeToTrainingDashboard(): void {
     this.router.navigate(["account", "training", "dashboard"]);
-  }
-
-  addUserToUsers(addUser, active: boolean): void {
-    let foundUserIndex = this.users.findIndex(
-      user => user.user.id == addUser.user.id
-    );
-    if (foundUserIndex > -1) {
-      this.users[foundUserIndex] = addUser;
-    } else {
-      this.users.push(addUser);
-    }
-    this.table.renderRows();
-    if (active) {
-      // could be better way
-      let foundActiveIndex = this.activeUsers.findIndex(
-        user => user.user.id == addUser.user.id
-      );
-      if (foundActiveIndex > -1) {
-        delete this.activeUsers[foundActiveIndex];
-      } else {
-        this.activeUsers.push(addUser);
-      }
-    }
   }
 
   public showMap(location: { lat: number; long: number }): void {
@@ -230,11 +213,8 @@ export class HomeComponent implements OnDestroy {
   }
 
   editUser(user) {
-    let dUser = user.user;
-    dUser.isAdmin =
-      user.user.teams[this.accountService.aTeam.id] == 1 ? true : false;
     let dialog = this.dialog.open(EditUserDialog, {
-      data: user.user,
+      data: user,
       disableClose: true
     });
     dialog.afterClosed().subscribe((data: any) => {

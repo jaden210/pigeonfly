@@ -46,7 +46,7 @@
               matInput
               type="email"
               required
-              placeholder="Email"
+              placeholder="email"
               [(ngModel)]="login.email"
             />
           </mat-form-field>
@@ -55,7 +55,7 @@
               matInput
               type="password"
               required
-              placeholder="Password"
+              placeholder="password"
               [(ngModel)]="login.password"
             />
           </mat-form-field>
@@ -64,7 +64,7 @@
               matInput
               type="password"
               required
-              placeholder="Verify password"
+              placeholder="verify password"
               [(ngModel)]="login.password2"
             />
           </mat-form-field>
@@ -72,11 +72,9 @@
             <mat-checkbox [(ngModel)]="login.agree"></mat-checkbox>
             <mat-label style="margin-left:12px; opacity:.87;font-size: 14px;"
               >I agree to the
-              <a routerLink="/terms-of-service">Terms of Service</a>,
-              <a routerLink="/privacy-policy">Privacy Policy</a>, and
-              <a routerLink="/customer-agreement">Customer Agreement</a
-              >.</mat-label
-            >
+              <a target="_blank" href="https://compliancechimp.com/terms-of-service">Terms of Service</a>,
+              <a target="_blank" href="https://compliancechimp.com/privacy-policy">Privacy Policy</a>, and
+              <a target="_blank" href="https://compliancechimp.com/customer-agreement">Customer Agreement</a>.</mat-label>
           </div>
         </div>
         <div class="row">
@@ -109,7 +107,7 @@
             <input
               matInput
               type="email"
-              placeholder="Email"
+              placeholder="email"
               [(ngModel)]="login.email"
             />
           </mat-form-field>
@@ -117,7 +115,7 @@
             <input
               matInput
               type="password"
-              placeholder="Password"
+              placeholder="password"
               [(ngModel)]="login.password"
             />
           </mat-form-field>
@@ -125,7 +123,7 @@
             <input
               matInput
               type="password"
-              placeholder="Password"
+              placeholder="password"
               [(ngModel)]="login.password2"
             />
           </mat-form-field>
