@@ -1,5 +1,5 @@
 <h2 mat-dialog-title>Team Files<button mat-button (click)="upFiled.click()" color="primary" class="upload"><mat-icon>cloud_upload</mat-icon>&nbsp;UPLOAD A FILE</button></h2>
-<mat-dialog-content class="d-view">
+<mat-dialog-content class="f-view">
   <mat-progress-bar mode="indeterminate" *ngIf="loading" style="top: -24px;position: absolute"></mat-progress-bar>
   <div style="height: 0px; width: 0px; overflow:hidden"><input type="file" #upFiled id="upFile" accept=".png,.jpg,.mp4,.csv,.pdf,.xls" #upload (change)="uploadFile($event)"></div>
   <div class="file-row">

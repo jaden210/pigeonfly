@@ -325,7 +325,7 @@ exports.createdInvitation = functions.firestore.document("invitation/{id}").onCr
   let invitation = snapshot.data();
   let promises = [];
 
-  promises.push(logAsEvent(EventType.member, EventAction.created, snapshot.id, invitation.invitedBy, "Was invited to the system", invitation.teamId || null));
+  promises.push(logAsEvent(EventType.member, EventAction.created, snapshot.id, invitation.invitedBy, `${invitation.inviteName} was invited to the Team`, invitation.teamId || null));
   
 
   /* total invites achievement */
@@ -467,7 +467,7 @@ enum EventType {
   surveyResponse = "Survey",
   selfInspection = "Self Inspection",
   training = "Training",
-  member = "Member",
+  member = "New Member",
   customContent = "Custom training article"
 }
 

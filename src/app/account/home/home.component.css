@@ -183,7 +183,8 @@ img.head-img {
 }
 
 /* ---- TEAM FILES ---- */
-.d-view {
+.f-view {
+  display: flex;
   flex-direction: row !important;
 }
 
