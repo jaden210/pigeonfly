@@ -223,7 +223,7 @@ export class TrainingService {
   ): number {
     const t = trainees ? Object.keys(trainees).length : 0;
     const nt = needsTraining ? needsTraining.length : 0;
-    return Math.ceil((t - nt) / t) * 100 || 0;
+    return Math.ceil(((t - nt) / t) * 100) || 0;
   }
 
   /* Returns a list of userIds who need a refresh on their training */
@@ -242,8 +242,10 @@ export class TrainingService {
     const trainees = myContent.shouldReceiveTraining || {};
     let expiredTrainees = [];
     Object.keys(trainees).forEach(trainee => {
-      const lastTrainedDate = new Date(trainees[trainee]);
-      if (lastTrainedDate < expirationDate) expiredTrainees.push(trainee);
+      if (trainees[trainee]) {
+        const lastTrainedDate = new Date(trainees[trainee]);
+        if (lastTrainedDate < expirationDate) expiredTrainees.push(trainee);
+      } else expiredTrainees.push(trainee);
     });
     return expiredTrainees;
   }
@@ -395,11 +397,12 @@ export class TrainingService {
   /* Called from local favorite() and after modifying trainees on the 
   article component. */
   public updateMyContent(myContent: MyContent, teamId): Promise<any> {
-    let mc = { ...myContent };
+    let mc = JSON.parse(JSON.stringify(myContent));
     const id = mc.id;
     /* These keys were added on get for convenience, don't persist */
     delete mc.id;
     delete mc.needsTraining;
+    delete mc.complianceLevel;
     return this.db
       .collection(`team/${teamId}/my-training-content`)
       .doc(id)

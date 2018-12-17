@@ -21,9 +21,11 @@ export class TopicsService {
       ? this.db.collection("topic")
       : this.db.collection(`team/${teamId}/topic`);
     const id = isGlobal ? ref.ref.doc().id : `${teamId}_${ref.ref.doc().id}`;
+    let sTopic = { ...topic };
+    delete sTopic.id;
     return ref
       .doc(id)
-      .set({ ...topic })
+      .set(sTopic)
       .then(() => {
         topic.id = id;
         return topic;
