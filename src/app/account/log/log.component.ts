@@ -349,10 +349,10 @@ export class LogComponent implements OnInit, OnDestroy {
   /* Temporary logs shown while sending */
   private buildResponseLogs(): void {
     this.responseLogs = [];
-    if (this.description)
-      this.responseLogs.push({ description: this.description });
     let responseImages = this.images.map(imgObj => imgObj.previewImage);
     responseImages.forEach(imageUrl => this.responseLogs.push({ imageUrl }));
+    if (this.description)
+      this.responseLogs.push({ description: this.description });
     /* Scroll to bottom of page */
     this.scrollPosition = 0;
     this.scrollToPosition();
