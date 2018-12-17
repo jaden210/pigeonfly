@@ -21,9 +21,34 @@
         LOAD MORE
       </button>
     </div>
-    <p *ngIf="!(logsGroup | async)?.length">
-      No results{{ isSearch ? " for search parameters." : "." }}
-    </p>
+
+    <!-- No results log -->
+    <div class="chat-line-wrapper" *ngIf="!(logsGroup | async)?.length">
+      <div class="chat-line">
+        <div class="circle-container">
+          <div class="circle" [ngStyle]="{ background: 'white' }"></div>
+          <span [ngStyle]="{ color: '#424242' }">C</span>
+          <img
+            src="/assets/chimpFace.png"
+            onerror="this.style.display='none'"
+          />
+        </div>
+        <div class="bubbles-container">
+          <span class="name" [ngStyle]="{ color: '#424242' }">The Chimp</span>
+          <div class="bubble-wrapper">
+            <div class="chat-bubble">
+              <p>
+                Welcome to Logs! This is a great place to record events that
+                happen at work. To get started with your first log, enter some
+                text or add an image and hit send. Logs are available to your
+                entire team. Enjoy!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End No results log -->
 
     <ng-container *ngFor="let group of (logsGroup | async)">
       <div id="date">
@@ -132,7 +157,7 @@
               [src]="rl.imageUrl"
               onerror="this.style.display='none'"
             />
-            <p *ngIf="rl?.description">{{ rl?.description }}</p>
+            <p *ngIf="rl.description">{{ rl?.description }}</p>
           </div>
           <mat-icon *ngIf="errorIcon" id="alert" (click)="resendLog()"
             >alert</mat-icon

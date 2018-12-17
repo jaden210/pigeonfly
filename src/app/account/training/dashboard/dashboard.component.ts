@@ -1,8 +1,14 @@
-import { Component, AfterViewInit, ViewChild, ElementRef } from "@angular/core";
+import {
+  Component,
+  AfterViewInit,
+  ViewChild,
+  ElementRef,
+  OnDestroy
+} from "@angular/core";
 import { TrainingService, MyContent } from "../training.service";
 import { AccountService, User } from "../../account.service";
-import { Observable, BehaviorSubject } from "rxjs";
-import { map, tap, publishReplay } from "rxjs/operators";
+import { BehaviorSubject, Subscription } from "rxjs";
+import { map, tap } from "rxjs/operators";
 import { MatDialog } from "@angular/material";
 import { Router } from "@angular/router";
 import { ReceivedTrainingDialog } from "../training-history/received-training.dialog";
@@ -15,7 +21,7 @@ import { DatePipe } from "@angular/common";
   templateUrl: "./dashboard.component.html",
   styleUrls: ["./dashboard.component.css"]
 })
-export class DashboardComponent implements AfterViewInit {
+export class DashboardComponent implements AfterViewInit, OnDestroy {
   teamId: string;
   complianceLevel: number;
   @ViewChild("myCanvas")
@@ -37,6 +43,10 @@ export class DashboardComponent implements AfterViewInit {
   isFiltered: boolean;
   loading: boolean;
 
+  teamSubscription: Subscription;
+  myContentSubscription: Subscription;
+  historySubscription: Subscription;
+
   constructor(
     private trainingService: TrainingService,
     private accountService: AccountService,
@@ -50,31 +60,35 @@ export class DashboardComponent implements AfterViewInit {
     this.context = this.canvas.nativeElement.getContext("2d");
     this.scale = window.devicePixelRatio || 1;
     this.context.scale(2, 2);
-    this.accountService.aTeamObservable.subscribe(team => {
-      if (team) {
-        this.teamId = team.id;
-        this.getMyContent();
-        this.users = this.accountService.teamUsersObservable;
-        setTimeout(() => this.getHistory(), 1);
+    this.teamSubscription = this.accountService.aTeamObservable.subscribe(
+      team => {
+        if (team) {
+          this.teamId = team.id;
+          this.getMyContent();
+          this.users = this.accountService.teamUsersObservable;
+          setTimeout(() => this.getHistory(), 1);
+        }
       }
-    });
+    );
   }
 
   private getMyContent(): void {
-    this.trainingService.getMyContent(this.teamId).subscribe(myContent => {
-      this.myContent = myContent;
-      let totalTrainings = 0;
-      let compliantTrainings = 0;
-      myContent.forEach(mc => {
-        const srt = Object.keys(mc.shouldReceiveTraining).length;
-        const nt = mc.needsTraining.length;
-        totalTrainings += srt;
-        compliantTrainings += srt - nt;
+    this.myContentSubscription = this.trainingService
+      .getMyContent(this.teamId)
+      .subscribe(myContent => {
+        this.myContent = myContent;
+        let totalTrainings = 0;
+        let compliantTrainings = 0;
+        myContent.forEach(mc => {
+          const srt = Object.keys(mc.shouldReceiveTraining).length;
+          const nt = mc.needsTraining.length;
+          totalTrainings += srt;
+          compliantTrainings += srt - nt;
+        });
+        this.totalTrainings = totalTrainings;
+        this.compliantTrainings = compliantTrainings;
+        this.draw(this.context);
       });
-      this.totalTrainings = totalTrainings;
-      this.compliantTrainings = compliantTrainings;
-      this.draw(this.context);
-    });
   }
 
   private draw(context): void {
@@ -131,7 +145,7 @@ export class DashboardComponent implements AfterViewInit {
 
   private getHistory(): void {
     this.loading = true;
-    this.trainingService
+    this.historySubscription = this.trainingService
       .getTrainingHistory(this.teamId)
       .pipe(
         map(surveys =>
@@ -183,37 +197,6 @@ export class DashboardComponent implements AfterViewInit {
       data: { people: survey.inAttendance }
     });
   }
-
-  //   mc.filter(c => {
-  //     let passed;
-  //     if (params.employees.length) {
-  //       for (let e of params.employees) {
-  //         if (e.id in c.shouldReceiveTraining) {
-  //           passed = true;
-  //           break;
-  //         }
-  //       }
-  //     }
-  //     if (params.string) {
-  //       let filter: string[] = params.string.trim().split(/\s+/);
-  //       for (let f of filter) {
-  //         if (
-  //           c.articleName &&
-  //           c.articleName.toLowerCase().includes(f.toLowerCase())
-  //         )
-  //           passed = true;
-  //         else passed = false;
-  //       }
-  //     }
-  //     if (params.complianceType != "all") {
-  //       const inCompliance = params.complianceType == "inCompliance";
-  //       passed =
-  //         (c.complianceLevel >= 100 && inCompliance) ||
-  //         (c.complianceLevel < 100 && !inCompliance);
-  //     }
-  //     return passed;
-  //   })
-  // ),
 
   public filter(): void {
     this.dialog
@@ -344,6 +327,12 @@ export class DashboardComponent implements AfterViewInit {
       });
     });
     return result;
+  }
+
+  ngOnDestroy() {
+    if (this.teamSubscription) this.teamSubscription.unsubscribe();
+    if (this.myContentSubscription) this.myContentSubscription.unsubscribe();
+    if (this.historySubscription) this.historySubscription.unsubscribe();
   }
 }
 

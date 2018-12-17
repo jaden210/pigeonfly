@@ -57,7 +57,9 @@ export class HomeService {
   }
 
   getFiles() {
-    return this.db.collection(`team/${this.accountService.aTeam.id}/file`).valueChanges();
+    return this.db
+      .collection(`team/${this.accountService.aTeam.id}/file`)
+      .valueChanges();
   }
 
   getAchievements(): Observable<any> {
