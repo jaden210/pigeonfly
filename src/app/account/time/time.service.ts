@@ -24,15 +24,18 @@ export class TimeService {
       .pipe(
         map(actions => {
           return actions.map(a => {
-            let data: any = a.payload.doc.data();
+            const data: any = a.payload.doc.data();
+            const events = data.events
+              ? data.events.map(e => {
+                  const inT = e.in ? e.in.toDate() : null;
+                  const out = e.out.toDate();
+                  const type = e.type;
+                  return { in: inT, out, type };
+                })
+              : [];
             return <Timeclock>{
               ...data,
-              events: data.events.map(e => {
-                const inT = e.in ? e.in.toDate() : null;
-                const out = e.out.toDate();
-                const type = e.type;
-                return { in: inT, out, type };
-              }),
+              events,
               id: a.payload.doc.id,
               shiftStarted: data.shiftStarted.toDate(),
               shiftEnded: data.shiftEnded ? data.shiftEnded.toDate() : null,

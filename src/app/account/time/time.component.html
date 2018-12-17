@@ -71,18 +71,26 @@
                     (click)="editShift(shift)"
                   >
                     <span matLine class="flexrow">
-                      <span class="shift-detail">In</span>
-                      <span>{{ shift.shiftStarted | date: "shortTime" }}</span>
+                      <span class="shift-detail">Shift Started</span>
+                      <span>{{
+                        (shift.shiftStarted | date: "shortTime") || "--"
+                      }}</span>
                     </span>
                     <span matLine class="flexrow">
-                      <span class="shift-detail">Out</span>
-                      <span>{{ shift.shiftEnded | date: "shortTime" }}</span>
+                      <span class="shift-detail">Shift Ended</span>
+                      <span>{{
+                        (shift.shiftEnded | date: "shortTime") || "--"
+                      }}</span>
                     </span>
                     <span matLine class="flexrow">
                       <span class="shift-detail">Total</span>
                       <span
-                        >{{ shift.loggedHours }}h
-                        {{ shift.loggedMinutes }}m</span
+                        >{{
+                          shift.loggedHours >= 0 ? shift.loggedHours : "--"
+                        }}h
+                        {{
+                          shift.loggedMinutes >= 0 ? shift.loggedMinutes : "--"
+                        }}m</span
                       >
                     </span>
                     <span class="edited" *ngIf="shift.updatedBy"
