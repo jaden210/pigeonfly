@@ -95,8 +95,8 @@ exports.inviteNewUser = functions.firestore.document("invitation/{invitationId}"
     mailOptions.subject = 'You have been invited to join ' + info.companyName + ' at Compliancechimp';
     mailOptions.html = `Hi ${info.inviteName}<br><br>
     ${info.companyName} is using Compliancechimp to manage safety training, worksite logs, record keeping, and more, as part of an ongoing commitment to safety and compliance. You've been invited to the team using ${info.inviteEmail}. Please visit the App Store or Goolge Play Store to download the free app and join your team today. Feel free to contact us at support@compliancechimp.com with any questions, and welcome!
-    <br><br> <a href='https://play.google.com/store/apps/details?id=com.betterspace.complianceChimp&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img style="height:55px" alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
-    <br> <a href="https://inviteme.me/account" target="_blank">LETS GET STARTED</a>
+    <br><br> <a href='https://play.google.com/store/apps/details?id=com.betterspace.complianceChimp&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img style="height:40px" alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
+    <br> <a href="https://itunes.apple.com/us/app/compliancechimp/id1445077154?mt=8" style="display:inline-block;overflow:hidden;background:url(https://linkmaker.itunes.apple.com/en-us/badge-lrg.svg?releaseDate=2018-12-11&kind=iossoftware&bubble=apple_music) no-repeat;width:135px;height:40px;"></a>
     <br><br>Sincerely,
     <br><br>Alan, Client Success Team
     <br>Compliancechimp
@@ -125,9 +125,9 @@ exports.newTeamEmail = functions.firestore.document("team/{teamId}").onUpdate((c
             };
             mailOptions.subject = 'Welcome to your free 30 day trial of Compliancechimp!';
             mailOptions.html = `Hi ${user.name}<br><br>
-        Glad to meet you! We want you to get the most out of Compliancechimp during these first 30 days. If you haven't already, visit the Achievements page inside your account, which walks you through the various features of the platform as an owner or administrator. Remember, Compliancechimp is largely driven from our free app which can be found here for Apple users, or here for Android users. Head over and get the app if you haven't already. As you invite your team, they'll do the same. Please take advantage of the many benefits of the platform which enable compliance, including: training your team and getting their survey responses, capturing worksite logs, performing self-inspection, and more.
-        <br><br> <a href='https://play.google.com/store/apps/details?id=com.betterspace.complianceChimp&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img style="height:55px" alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
-        <br> <a href="https://inviteme.me/account" target="_blank">LETS GET STARTED</a>
+        Glad to meet you! We want you to get the most out of Compliancechimp during these first 30 days. If you haven't already, visit the Badges page inside your account, which walks you through the various features of the platform as an owner or administrator. Remember, Compliancechimp is largely driven from our free app which can be found below. Head over and get the app if you haven't already. As you invite your team, they'll do the same. Please take advantage of the many benefits of the platform which enable compliance, including: training your team and getting their survey responses, capturing worksite logs, performing self-inspection, and more.
+        <br><br> <a href='https://play.google.com/store/apps/details?id=com.betterspace.complianceChimp&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img style="height:40px" alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
+        <br><a href="https://itunes.apple.com/us/app/compliancechimp/id1445077154?mt=8" style="display:inline-block;overflow:hidden;background:url(https://linkmaker.itunes.apple.com/en-us/badge-lrg.svg?releaseDate=2018-12-11&kind=iossoftware&bubble=apple_music) no-repeat;width:135px;height:40px;"></a>
         <br><br>Don't hesitate to contact us with any questions at support@compliancechimp.com, and enjoy!
         <br><br>Sincerely,
         <br><br>Alan, Client Success Team

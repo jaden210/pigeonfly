@@ -109,6 +109,11 @@ export class AccountComponent {
               .delete();
           });
         }
+        this.accountService.aTeamObservable.subscribe(team => { // helps those who refresh on the welcome dialog
+          if (team) {
+            if (!team.industryId) this.welcomeDialog();
+          }
+        })
       } else this.accountService.logout();
     });
   }
