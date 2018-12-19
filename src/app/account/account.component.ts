@@ -6,7 +6,12 @@ import { map, take } from "rxjs/operators";
 import { Router } from "@angular/router";
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from "@angular/material";
 import { AppService } from "../app.service";
-import { Industry, Topic, Article, MyContent } from "./training/training.service";
+import {
+  Industry,
+  Topic,
+  Article,
+  MyContent
+} from "./training/training.service";
 import { forkJoin } from "rxjs";
 declare var gtag: Function;
 
@@ -120,21 +125,29 @@ export class AccountComponent {
 
   selectTeam() {
     this.accountService.userTeams = [];
-    Object.keys(this.accountService.user.teams).forEach(key => {
-      let teamDoc = this.accountService.db.collection("team").doc(key);
-      teamDoc.valueChanges().subscribe((team: Team) => {
-        team.id = key;
-        this.accountService.userTeams.push(team);
-      });
+    forkJoin(
+      Object.keys(this.accountService.user.teams).map(key => {
+        return this.accountService.db
+          .collection("team")
+          .doc(key)
+          .valueChanges()
+          .pipe(
+            take(1),
+            map((team: Team) => {
+              team.id = key;
+              this.accountService.userTeams.push(team);
+              return team;
+            })
+          );
+      })
+    ).subscribe(teams => {
+      if (this.appService.firstTimeUser) {
+        this.appService.firstTimeUser = false;
+        this.createCompletedAchievement(teams[0].id);
+        this.welcomeDialog();
+      }
+      this.accountService.setActiveTeam(teams[0].id);
     });
-    if (this.appService.firstTimeUser) {
-      this.appService.firstTimeUser = false;
-      this.createCompletedAchievement(this.accountService.aTeam.id);
-      this.welcomeDialog();
-    }
-    this.accountService.setActiveTeam(
-      Object.keys(this.accountService.user.teams)[0]
-    );
   }
 
   welcomeDialog() {
@@ -203,43 +216,61 @@ export class AccountComponent {
     });
   }
 
-  setDefaultArticles(): void { // only run on start of a new team. this won't backtrack anything
-    let indCol = this.accountService.db.collection('industry', ref => ref.where("default", "==", true)).snapshotChanges().pipe(
-      take(1),
-      map(actions =>
-        actions.map(a => {
-          const data = a.payload.doc.data() as Industry;
-          const id = a.payload.doc.id;
-          return { id, ...data };
-        })
-      )
-    );
-    let topCol = this.accountService.db.collection('topic').snapshotChanges().pipe(
-      take(1),
-      map(actions =>
-        actions.map(a => {
-          const data = a.payload.doc.data() as Topic;
-          const id = a.payload.doc.id;
-          return { id, ...data };
-        })
-      )
-    );
+  setDefaultArticles(): void {
+    // only run on start of a new team. this won't backtrack anything
+    let indCol = this.accountService.db
+      .collection("industry", ref => ref.where("default", "==", true))
+      .snapshotChanges()
+      .pipe(
+        take(1),
+        map(actions =>
+          actions.map(a => {
+            const data = a.payload.doc.data() as Industry;
+            const id = a.payload.doc.id;
+            return { id, ...data };
+          })
+        )
+      );
+    let topCol = this.accountService.db
+      .collection("topic")
+      .snapshotChanges()
+      .pipe(
+        take(1),
+        map(actions =>
+          actions.map(a => {
+            const data = a.payload.doc.data() as Topic;
+            const id = a.payload.doc.id;
+            return { id, ...data };
+          })
+        )
+      );
     forkJoin(indCol, topCol).subscribe(([industries, topics]) => {
-      let filterTopics = topics.filter(topic => (topic.industryId == industries[0].id) || (topic.industryId == this.accountService.aTeam.industryId));
+      let filterTopics = topics.filter(
+        topic =>
+          topic.industryId == industries[0].id ||
+          topic.industryId == this.accountService.aTeam.industryId
+      );
       let topicColl = [];
       filterTopics.forEach(topic => {
         topicColl.push(
-          this.accountService.db.collection("article", ref => ref.where("topicId", "==", topic.id).where("isDefault", "==", true)).snapshotChanges().pipe(
-            take(1),
-            map(actions =>
-              actions.map(a => {
-                const data = a.payload.doc.data() as Article;
-                const id = a.payload.doc.id;
-                return { id, ...data };
-              })
+          this.accountService.db
+            .collection("article", ref =>
+              ref
+                .where("topicId", "==", topic.id)
+                .where("isDefault", "==", true)
             )
-          )
-        )
+            .snapshotChanges()
+            .pipe(
+              take(1),
+              map(actions =>
+                actions.map(a => {
+                  const data = a.payload.doc.data() as Article;
+                  const id = a.payload.doc.id;
+                  return { id, ...data };
+                })
+              )
+            )
+        );
       });
       forkJoin(topicColl).subscribe(results => {
         let promises = [];
@@ -247,22 +278,31 @@ export class AccountComponent {
         shouldReceiveTrainingTemplate[this.accountService.user.id] = null;
         results.forEach(articleArray => {
           articleArray.forEach(article => {
-            const trainingMinutes = Math.ceil(article.content.length / 480 / 5) * 5;
+            const trainingMinutes =
+              Math.ceil(article.content.length / 480 / 5) * 5;
             const myContent = new MyContent(
               article.id,
-              {...shouldReceiveTrainingTemplate},
+              { ...shouldReceiveTrainingTemplate },
               this.accountService.aTeam.id,
               article.name,
               article.nameEs,
               article.topicId,
               trainingMinutes
             );
-            promises.push(this.accountService.db.collection(`team/${this.accountService.aTeam.id}/my-training-content`).add({...myContent}));
+            promises.push(
+              this.accountService.db
+                .collection(
+                  `team/${this.accountService.aTeam.id}/my-training-content`
+                )
+                .add({ ...myContent })
+            );
           });
         });
-        Promise.all(promises).then(() => console.log("finished defaulting articles"));
-      })
-    })
+        Promise.all(promises).then(() =>
+          console.log("finished defaulting articles")
+        );
+      });
+    });
   }
 
   closeHelper() {
