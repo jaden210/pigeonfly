@@ -12,11 +12,9 @@
         type="text"
         placeholder="your company name"
       />
-      <mat-error *ngIf="invalid" align="end"></mat-error>
     </mat-form-field>
     <mat-form-field appearance="standard">
       <input matInput [(ngModel)]="name" type="text" placeholder="your name" />
-      <mat-error *ngIf="invalid" align="end"></mat-error>
     </mat-form-field>
     <mat-form-field appearance="standard">
       <input
@@ -25,7 +23,6 @@
         type="text"
         placeholder="your job title (optional)"
       />
-      <mat-error *ngIf="invalid" align="end"></mat-error>
     </mat-form-field>
   </mat-card-content>
   <mat-card-actions align="center">
