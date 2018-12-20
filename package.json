@@ -1,6 +1,6 @@
 {
   "name": "compliance-chimp-web",
-  "version": "1.0.03",
+  "version": "1.0.04",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

@@ -64,6 +64,8 @@ export class GetStartedService {
     let newTeam = new Team();
     newTeam.createdAt = new Date();
     newTeam.ownerId = userId;
+    newTeam.name = this.companyName;
+    newTeam.industryId = this.industryId;
     return this.db
       .collection("team")
       .add({ ...newTeam })
@@ -80,6 +82,7 @@ export class GetStartedService {
     newUser.email = user.user.email;
     newUser.profileUrl = user.user.photoURL || null;
     newUser.name = this.name;
+    newUser.jobTitle = this.jobTitle || null;
     newUser.isDev = false;
     newUser.teams[teamId] = 1;
     return this.db
