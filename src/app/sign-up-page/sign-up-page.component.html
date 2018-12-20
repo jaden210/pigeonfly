@@ -1,0 +1,78 @@
+<div class="window">
+  <div id="layout">
+    <div class="p">
+      <span class="title">Start for Free</span>
+      <div class="info">
+        No credit card required unless you choose to keep Compliancechimp beyond
+        your 30 day free trial.
+      </div>
+      <div class="check">
+        <mat-icon class="cico">check</mat-icon>
+        <div class="ctext">Safety training</div>
+      </div>
+      <div class="check">
+        <mat-icon class="cico">check</mat-icon>
+        <div class="ctext">Self-inspection</div>
+      </div>
+      <div class="check">
+        <mat-icon class="cico">check</mat-icon>
+        <div class="ctext">Injury reporting</div>
+      </div>
+      <div class="check">
+        <mat-icon class="cico">check</mat-icon>
+        <div class="ctext">Worksite logs</div>
+      </div>
+      <div class="check">
+        <mat-icon class="cico">check</mat-icon>
+        <div class="ctext">Time clock</div>
+      </div>
+      <div class="check">
+        <mat-icon class="cico">check</mat-icon>
+        <div class="ctext">Record-keeping and events tracking</div>
+      </div>
+      <div class="check">
+        <mat-icon class="cico">check</mat-icon>
+        <div class="ctext">Stored in one simple place, forever</div>
+      </div>
+    </div>
+    <div id="side">
+      <div class="card">
+        <img id="header" src="/assets/ccLogoDark.png" alt="Compliancechimp" />
+        <div class="error">{{ loginErrorStr }}</div>
+        <div id="form">
+          <mat-form-field>
+            <input
+              matInput
+              (keyup.enter)="createAccount()"
+              type="email"
+              required
+              placeholder="email"
+              [(ngModel)]="email"
+            />
+          </mat-form-field>
+        </div>
+        <div class="row">
+          <span id="account" class="hide"
+            >Already have an account? <a routerLink="/sign-in">Sign in</a></span
+          >
+          <button
+            mat-raised-button
+            color="accent"
+            style="color: white"
+            (click)="createAccount()"
+          >
+            CREATE ACCOUNT
+          </button>
+        </div>
+      </div>
+      <div class="card lock">
+        <mat-icon id="lock">lock</mat-icon>
+        <div id="secure">
+          We secure your login information using
+          <b>Google's highest standard oAuth 2.0</b> and secure your data in the
+          cloud using Google Cloud Firestore
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

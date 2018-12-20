@@ -30,7 +30,8 @@ import {
   MatPaginatorModule,
   MatBadgeModule,
   MatRippleModule,
-  MatSortModule
+  MatSortModule,
+  MatCardModule
 } from "@angular/material";
 
 @NgModule({
@@ -65,7 +66,8 @@ import {
     MatPaginatorModule,
     MatBadgeModule,
     MatRippleModule,
-    MatSortModule
+    MatSortModule,
+    MatCardModule
   ],
   exports: [
     MatButtonModule,
@@ -97,7 +99,8 @@ import {
     MatPaginatorModule,
     MatBadgeModule,
     MatRippleModule,
-    MatSortModule
+    MatSortModule,
+    MatCardModule
   ],
   declarations: []
 })

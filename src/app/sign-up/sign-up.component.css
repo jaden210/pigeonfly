@@ -23,14 +23,14 @@
 
 #su-info {
   flex: 4;
-  opacity: .65;
+  opacity: 0.65;
   font-weight: 100;
 }
 
 #su-hint {
   text-align: center;
   margin-top: 8px;
-  opacity: .54;
+  opacity: 0.54;
   font-style: oblique;
   font-size: 13px;
 }

@@ -14,7 +14,6 @@ import {
   styleUrls: ["./sign-up.component.css"]
 })
 export class SignUpComponent implements OnInit {
-
   routes;
 
   constructor(
@@ -24,5 +23,4 @@ export class SignUpComponent implements OnInit {
   ) {}
 
   ngOnInit() {}
-
 }

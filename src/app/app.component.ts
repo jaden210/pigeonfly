@@ -47,13 +47,13 @@ export class AppComponent {
     window.open("https://blog.compliancechimp.com");
   }
 
-  routeLogin() {
+  routeSignUp() {
     this.open = false;
     this.auth.auth.onAuthStateChanged(user => {
       if (user && user.uid) {
         this.router.navigate(["account"]);
       } else {
-        this.router.navigate(["login"]);
+        this.router.navigate(["/sign-up"]);
       }
     });
   }

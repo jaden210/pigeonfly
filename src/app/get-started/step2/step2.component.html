@@ -1,0 +1,15 @@
+<mat-card>
+  <div class="progress">Step 2 of 3</div>
+  <mat-card-title>Which industry best describes your team?</mat-card-title>
+  <mat-card-content>
+    <mat-nav-list>
+      <mat-list-item
+        *ngFor="let industry of Industries"
+        (click)="setIndustry(industry)"
+      >
+        <img matListAvatar [src]="industry.imageUrl" alt="..." />
+        <h3 matLine>{{ industry.name }}</h3>
+      </mat-list-item>
+    </mat-nav-list>
+  </mat-card-content>
+</mat-card>

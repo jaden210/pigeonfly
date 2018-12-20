@@ -13,7 +13,7 @@ import {
 import { SurveysModule } from "./surveys/surveys.module";
 import { AccountRoutingModule } from "./account-routing.module";
 import { MaterialModule } from "../material/material.module";
-import { AccountComponent, WelcomeDialog } from "./account.component";
+import { AccountComponent } from "./account.component";
 import { FormsModule } from "@angular/forms";
 import { MomentModule } from "ngx-moment";
 import { MapDialogComponent } from "./map-dialog/map-dialog.component";
@@ -63,7 +63,6 @@ import { EventsFilterDialog } from "./event/filter-dialog/filter.dialog";
     IncidentReportsComponent,
     ImagesDialogComponent,
     AchievementsComponent,
-    WelcomeDialog,
     MakePaymentComponent,
     PeopleDialogComponent,
     DeleteAccountDialog,
@@ -79,7 +78,6 @@ import { EventsFilterDialog } from "./event/filter-dialog/filter.dialog";
     TeamFilesDialog,
     NoAccessDialog,
     ImagesDialogComponent,
-    WelcomeDialog,
     MakePaymentComponent,
     PeopleDialogComponent,
     DeleteAccountDialog,

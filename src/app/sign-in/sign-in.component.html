@@ -1,0 +1,61 @@
+<mat-toolbar class="toolbar">
+  <img
+    src="/assets/ccLogoDark.png"
+    class="title"
+    routerLink="/home"
+    alt="Compliancechimp"
+  />
+</mat-toolbar>
+<div id="content-area">
+  <mat-card>
+    <mat-card-title>Sign in to your team</mat-card-title>
+    <mat-card-content>
+      <span class="error">{{ signinError }}</span>
+      <mat-form-field appearance="standard">
+        <mat-label>email</mat-label>
+        <input
+          [formControl]="email"
+          matInput
+          type="email"
+          required
+          placeholder="email"
+        />
+        <mat-error *ngIf="email.invalid" align="end">{{
+          getEmailErrorMessage()
+        }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="standard">
+        <mat-label>password</mat-label>
+        <input
+          [formControl]="password"
+          matInput
+          (keyup.enter)="signIn()"
+          type="password"
+          required
+          placeholder="password"
+        />
+        <mat-error *ngIf="password.invalid" align="end"
+          >password required</mat-error
+        >
+      </mat-form-field>
+    </mat-card-content>
+    <mat-card-actions align="center">
+      <button mat-raised-button color="primary" (click)="signIn()">
+        SIGN IN
+      </button>
+    </mat-card-actions>
+    <mat-card-footer>
+      <p *ngIf="showResetPassword && email.value && email.valid">
+        Forgot your password? <a (click)="resetPassword()">Reset it here</a>
+      </p>
+    </mat-card-footer>
+  </mat-card>
+
+  <div id="get-started">
+    <p>
+      Received an invite to Compliancechimp?
+      <a routerLink="/join-team">Join the team</a>
+    </p>
+  </div>
+</div>

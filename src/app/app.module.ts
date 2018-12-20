@@ -22,18 +22,21 @@ import { SupportComponent } from "./support/support.component";
 import { PricingComponent } from "./pricing/pricing.component";
 import { AboutComponent } from "./about/about.component";
 import { ContactComponent } from "./contact/contact.component";
-import { LoginComponent } from "./login/login.component";
+import { SignUpPageComponent } from "./sign-up-page/sign-up-page.component";
 import { MakeOSHAComponent, Safe } from "./make-osha/make-osha.component";
 import { FooterComponent } from "./footer/footer.component";
 import { PreviewDialogComponent } from "./make-osha/preview-dialog/preview-dialog.component";
 import { TopicDialogComponent } from "./make-osha/topic-dialog/topic-dialog.component";
-import { SignUpComponent } from "./sign-up/sign-up.component";
+import { SignInComponent } from "./sign-in/sign-in.component";
 import { HowComponent } from "./how/how.component";
 import { TermsOfUseComponent } from "./terms-of-use/terms-of-use.component";
 import { PrivacyPolicyComponent } from "./privacy-policy/privacy-policy.component";
 import { CustomerAgreementComponent } from "./customer-agreement/customer-agreement.component";
 import { VideoDialogComponent } from "./video-dialog/video-dialog.component";
 import { TeamDisabledDialog } from "./account/account.service";
+import { SignUpComponent } from "./sign-up/sign-up.component";
+import { GetStartedModule } from "./get-started/get-started.module";
+import { JoinTeamComponent } from "./join-team/join-team.component";
 
 @NgModule({
   declarations: [
@@ -44,18 +47,20 @@ import { TeamDisabledDialog } from "./account/account.service";
     AboutComponent,
     HowComponent,
     ContactComponent,
-    LoginComponent,
+    SignUpPageComponent,
     MakeOSHAComponent,
     Safe,
     FooterComponent,
-    SignUpComponent,
+    SignInComponent,
     PreviewDialogComponent,
     TopicDialogComponent,
     TermsOfUseComponent,
     PrivacyPolicyComponent,
     CustomerAgreementComponent,
     VideoDialogComponent,
-    TeamDisabledDialog
+    TeamDisabledDialog,
+    SignUpComponent,
+    JoinTeamComponent
   ],
   imports: [
     BrowserModule,
@@ -69,6 +74,7 @@ import { TeamDisabledDialog } from "./account/account.service";
     FormsModule,
     AngularEditorModule,
     HttpClientModule,
+    GetStartedModule,
     SharedModule.forRoot()
   ],
   entryComponents: [
