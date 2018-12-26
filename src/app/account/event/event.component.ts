@@ -177,7 +177,7 @@ export class EventComponent implements OnDestroy {
             event.description.toLowerCase().includes(f.toLowerCase()) ? eventFiltersFound ++ : null;
             event.action.toLowerCase().includes(f.toLowerCase()) ? eventFiltersFound ++ : null;
             event.type.toLowerCase().includes(f.toLowerCase()) ? eventFiltersFound ++ : null;
-            event['user'].name.toLowerCase().includes(f.toLowerCase()) ? eventFiltersFound ++ : null;
+            event['user'] ? event['user'].name.toLowerCase().includes(f.toLowerCase()) ? eventFiltersFound ++ : null : null;
           };
           return eventFiltersFound >= filter.length ?  true : false;
         });
