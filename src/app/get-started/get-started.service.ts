@@ -213,7 +213,7 @@ export class GetStartedService {
               this.db
                 .collection(`team/${teamId}/my-training-content`)
                 .doc(article.id)
-                .update({ ...myContent })
+                .set({ ...myContent })
             );
           });
         });
