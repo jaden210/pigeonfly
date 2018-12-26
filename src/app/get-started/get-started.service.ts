@@ -212,7 +212,8 @@ export class GetStartedService {
             promises.push(
               this.db
                 .collection(`team/${teamId}/my-training-content`)
-                .add({ ...myContent })
+                .doc(article.id)
+                .update({ ...myContent })
             );
           });
         });
