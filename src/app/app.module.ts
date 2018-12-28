@@ -37,6 +37,7 @@ import { TeamDisabledDialog } from "./account/account.service";
 import { SignUpComponent } from "./sign-up/sign-up.component";
 import { GetStartedModule } from "./get-started/get-started.module";
 import { JoinTeamComponent } from "./join-team/join-team.component";
+import { CommonQuestionsComponent } from "./common-questions/common-questions.component";
 
 @NgModule({
   declarations: [
@@ -60,7 +61,8 @@ import { JoinTeamComponent } from "./join-team/join-team.component";
     VideoDialogComponent,
     TeamDisabledDialog,
     SignUpComponent,
-    JoinTeamComponent
+    JoinTeamComponent,
+    CommonQuestionsComponent
   ],
   imports: [
     BrowserModule,

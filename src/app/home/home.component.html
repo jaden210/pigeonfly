@@ -1,44 +1,60 @@
 <div class="p h" style="min-height:calc(100vh - 136px)">
-  <div style="flex:1">
-    <div class="pt">OSHA compliance made easy for teams of any size.</div>
+  <div style="flex:2">
+    <div class="pt">The easiest OSHA compliance solution on earth. And the freest! (yes, it's free)</div>
     <div class="info" style="max-width: 600px;">
       A refreshing approach to OSHA compliance that actually works. Safety
       training, self-inspection, injury reporting, worksite logs, time clock,
-      record-keeping and events tracking, all in one simple place, at a simple
-      price, forever.
-    </div>
-    <div id="mobile-img">
-      <img
-        id="mobile-chimp"
-        src="/assets/home/homeChimp.png"
-        alt="Compliancechimp"
-      />
+      record-keeping and events tracking, all in one simple online platform with an accompanying mobile app for every worker on your team,
+      completely free.
     </div>
     <div id="signup">
       <button
         mat-raised-button
         style="background-color:#01ADEE;color: #ffffff;border: 1px solid #054d8a;box-shadow: none;margin-right:12px;margin-bottom: 12px;"
-        (click)="appService.watchVideo()"
-      >
-        WATCH OUR VIDEO
-      </button>
-      <div id="signupcol">
+        (click)="appService.watchVideo()">WATCH OUR VIDEO</button>
+    </div>
+  </div>
+  <div style="flex:1;justify-content: center;display: flex;flex-direction: column;">
+    <div class="card">
+      <img id="header" src="/assets/ccLogoDark.png" alt="Compliancechimp" />
+      <div class="error">{{ loginErrorStr }}</div>
+      <div id="form">
+        <mat-form-field>
+          <input
+            matInput
+            (keyup.enter)="createAccount()"
+            type="email"
+            required
+            placeholder="email"
+            [(ngModel)]="email"
+          />
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <span id="account" class="hide">Already have an account? <a routerLink="/sign-in">Sign in</a></span>
         <button
           mat-raised-button
           color="accent"
-          style="color: #ffffff;border: 1px solid #054d8a;box-shadow: none;"
-          routerLink="/sign-up"
-        >
-          START A FREE 30 DAY TRIAL
+          style="color: white"
+          (click)="createAccount()">CREATE ACCOUNT
         </button>
-        <div id="shhh">We won’t even ask for a credit card :)</div>
       </div>
     </div>
-  </div>
-  <div style="flex:1" class="big-hide">
-    <img id="new-c" src="/assets/home/homeChimp.png" />
+        <div class="card lock">
+          <mat-icon id="lock">lock</mat-icon>
+          <div id="secure">
+            We secure your login information using
+            <b>Google's highest standard oAuth 2.0</b> and secure your data in the
+            cloud using Google Cloud Firestore
+          </div>
+        </div>
   </div>
 </div>
+<div class="border"></div>
+<div class="sub" style="margin: auto; text-align: center;">
+  Common Questions
+</div>
+<common-questions></common-questions>
 <div class="border"></div>
 <div class="p v">
   <div class="sub" style="margin: auto; text-align: center;">
