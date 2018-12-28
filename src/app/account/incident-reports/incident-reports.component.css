@@ -77,29 +77,12 @@
   display: flex;
   align-items: flex-end;
   margin-top: 16px;
+  background: #f3f3f3;
 }
 
 .right {
   align-self: flex-end;
-  margin-top: 16px;
-}
-
-.color {
-  background: #bbdefb !important;
-}
-
-.person {
-  height: 40px;
-  width: 40px;
-  overflow: hidden;
-  margin-right: 8px;
-  border-radius: 50%;
-}
-
-.head {
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
+  background: #f8bbd0;
 }
 
 .bubble {
