@@ -50,7 +50,7 @@ export class AccountComponent {
           .snapshotChanges()
           .pipe(
             map((actions: any) => {
-              let data = actions.payload.data();
+              let data = actions.payload.data() || {};
               data["id"] = actions.payload.id;
               return data;
             })
