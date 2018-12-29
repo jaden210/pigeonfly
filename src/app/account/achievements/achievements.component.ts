@@ -126,14 +126,14 @@ export class AchievementsComponent implements OnInit, OnDestroy {
       ref => ref.orderBy("level")
     );
     return achievementsCollection.snapshotChanges().pipe(
-      map(actions =>
-        actions.map(a => {
+      map(actions => {
+        return actions.map(a => {
           //better way
           const data = a.payload.doc.data() as Achievements;
           const id = a.payload.doc.id;
           return { id, ...data };
-        })
-      )
+        });
+      })
     );
   }
 

@@ -1,21 +1,24 @@
-import { Component, OnInit } from '@angular/core';
-import { AppService } from '../app.service';
-import { Router } from '@angular/router';
+import { Component, OnInit } from "@angular/core";
+import { AppService } from "../app.service";
+import { Router } from "@angular/router";
+import { AngularFireAuth } from "@angular/fire/auth";
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  selector: "app-home",
+  templateUrl: "./home.component.html",
+  styleUrls: ["./home.component.css"]
 })
 export class HomeComponent implements OnInit {
-
   loginErrorStr;
   email;
 
-  constructor(public appService: AppService, private router: Router) { }
+  constructor(
+    public appService: AppService,
+    private router: Router,
+    public auth: AngularFireAuth
+  ) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   createAccount(): void {
     this.loginErrorStr = !this.email ? "email required" : null;
@@ -35,4 +38,13 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  routeSignUp() {
+    this.auth.auth.onAuthStateChanged(user => {
+      if (user && user.uid) {
+        this.router.navigate(["account"]);
+      } else {
+        this.router.navigate(["/sign-up"]);
+      }
+    });
+  }
 }

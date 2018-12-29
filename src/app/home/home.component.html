@@ -1,22 +1,33 @@
 <div class="p h top" style="min-height:calc(100vh - 136px)">
   <div style="flex:2;">
-    <div class="pt">The easiest OSHA compliance solution on earth. And the freest! (yes, it's free)</div>
+    <div class="pt">
+      The easiest OSHA compliance solution on earth. And the freest! (yes, it's
+      free)
+    </div>
     <div class="info" style="max-width: 600px;">
       A refreshing approach to OSHA compliance that actually works. Safety
       training, self-inspection, injury reporting, worksite logs, time clock,
-      record-keeping and events tracking, all in one simple online platform with an accompanying mobile app for every worker on your team,
-      completely free.
+      record-keeping and events tracking, all in one simple online platform with
+      an accompanying mobile app for every worker on your team, completely free.
     </div>
     <div id="signup">
       <button
         mat-raised-button
         style="background-color:#01ADEE;color: #ffffff;border: 1px solid #054d8a;box-shadow: none;margin-right:12px;margin-bottom: 12px;"
-        (click)="appService.watchVideo()">WATCH OUR VIDEO</button>
+        (click)="appService.watchVideo()"
+      >
+        WATCH OUR VIDEO
+      </button>
     </div>
   </div>
-  <div style="justify-content: center; align-items:center; display: flex;flex-direction: column;">
+  <div
+    style="justify-content: center; align-items:center; display: flex;flex-direction: column;"
+  >
     <div class="card">
-      <div id="card-title"><div id="blue">Start today,</div><div id="orange">&nbsp;it's free forever</div></div>
+      <div id="card-title">
+        <div id="blue">Start today,</div>
+        <div id="orange">&nbsp;it's free forever</div>
+      </div>
       <div class="error">{{ loginErrorStr }}</div>
       <div id="form">
         <mat-form-field>
@@ -31,12 +42,19 @@
         </mat-form-field>
       </div>
       <div class="row">
-        <span id="account" class="hide">Already have an account? <a routerLink="/sign-in" style="color: #054d8a !important;">Sign in</a></span>
+        <span id="account" class="hide"
+          >Already have an account?
+          <a routerLink="/sign-in" style="color: #054d8a !important;"
+            >Sign in</a
+          ></span
+        >
         <button
           mat-raised-button
           color="accent"
           style="color: white"
-          (click)="createAccount()">CREATE ACCOUNT
+          (click)="createAccount()"
+        >
+          CREATE ACCOUNT
         </button>
       </div>
     </div>
@@ -50,6 +68,66 @@
     </div>
   </div>
 </div>
+<div class="border"></div>
+
+<!-- here -->
+<div class="sub" style="margin: auto; text-align: center;">
+  Whether your needs are specific or broad, this chimp gets the OSHA monkey off
+  your back. Go from zero to a compliance chimp pro in no time, with our
+  software.
+</div>
+<div id="mokey-check">
+  <div><img src="/assets/chimp.png" /></div>
+  <div
+    style="display: flex; flex-direction: column; justify-content: space-around;"
+  >
+    <div class="check-row info">
+      <mat-icon>check</mat-icon>
+      Safety Training
+    </div>
+    <div class="check-row info">
+      <mat-icon>check</mat-icon>
+      Self-inspection
+    </div>
+    <div class="check-row info">
+      <mat-icon>check</mat-icon>
+      Injury reporting
+    </div>
+    <div class="check-row info">
+      <mat-icon>check</mat-icon>
+      Worksite logs
+    </div>
+    <div class="check-row info">
+      <mat-icon>check</mat-icon>
+      Time clock
+    </div>
+    <div class="check-row info">
+      <mat-icon>check</mat-icon>
+      Record-keeping and events tracking
+    </div>
+    <div class="check-row info">
+      <mat-icon>check</mat-icon>
+      Stored in one simple place, forever
+    </div>
+  </div>
+</div>
+<div id="below-monkey-box" style="margin: auto;">
+  <span
+    ><span style="color: #054d8a">For teams of any size,</span> &nbsp;<span
+      style="color: #ff9200"
+      >including yours</span
+    ></span
+  >
+  <button
+    mat-raised-button
+    color="accent"
+    style="color: white;"
+    (click)="routeSignUp()"
+  >
+    START TODAY - IT'S FREE
+  </button>
+</div>
+
 <div class="border"></div>
 <div class="sub" style="margin: auto; text-align: center;">
   Common Questions
