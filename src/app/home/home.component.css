@@ -35,6 +35,20 @@
   align-items: center;
 }
 
+#card-title {
+  display: -webkit-box;
+  font-size: 24px;
+  font-family: 'co-headline';
+}
+
+#blue {
+  color: #054d8a;
+}
+
+#orange {
+  color: #ff9100;
+}
+
 .lock {
   display: flex;
   flex-direction: row;
@@ -121,7 +135,10 @@ img {
     padding: 8px;
   }
   .p {
-    padding: 0;
+    padding: 8px;
+  }
+  .top {
+    flex-direction: column;
   }
   #spacer {
     height: 8px;

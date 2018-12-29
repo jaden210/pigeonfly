@@ -1,27 +1,11 @@
-<div class="p h" style="min-height:calc(100vh - 136px)">
-<<<<<<< HEAD
-  <div style="flex:2">
+<div class="p h top" style="min-height:calc(100vh - 136px)">
+  <div style="flex:2;">
     <div class="pt">The easiest OSHA compliance solution on earth. And the freest! (yes, it's free)</div>
     <div class="info" style="max-width: 600px;">
       A refreshing approach to OSHA compliance that actually works. Safety
       training, self-inspection, injury reporting, worksite logs, time clock,
       record-keeping and events tracking, all in one simple online platform with an accompanying mobile app for every worker on your team,
       completely free.
-=======
-  <div style="flex:1">
-    <div class="pt">Easy OSHA compliance for teams of any size.</div>
-    <div class="info" style="max-width: 600px;">
-      A refreshing approach to OSHA compliance that actually works. Safety
-      training, self-inspection, injury reporting, worksite logs, time clock,
-      record-keeping and events tracking, all in one simple online platform.
-    </div>
-    <div id="mobile-img">
-      <img
-        id="mobile-chimp"
-        src="/assets/home/homeChimp.png"
-        alt="Compliancechimp"
-      />
->>>>>>> 5af85eca058ecf28de78746eb62269e74b2737cf
     </div>
     <div id="signup">
       <button
@@ -30,9 +14,9 @@
         (click)="appService.watchVideo()">WATCH OUR VIDEO</button>
     </div>
   </div>
-  <div style="flex:1;justify-content: center;display: flex;flex-direction: column;">
+  <div style="justify-content: center; align-items:center; display: flex;flex-direction: column;">
     <div class="card">
-      <img id="header" src="/assets/ccLogoDark.png" alt="Compliancechimp" />
+      <div id="card-title"><div id="blue">Start today,</div><div id="orange">&nbsp;it's free forever</div></div>
       <div class="error">{{ loginErrorStr }}</div>
       <div id="form">
         <mat-form-field>
@@ -47,7 +31,7 @@
         </mat-form-field>
       </div>
       <div class="row">
-        <span id="account" class="hide">Already have an account? <a routerLink="/sign-in">Sign in</a></span>
+        <span id="account" class="hide">Already have an account? <a routerLink="/sign-in" style="color: #054d8a !important;">Sign in</a></span>
         <button
           mat-raised-button
           color="accent"
@@ -56,14 +40,14 @@
         </button>
       </div>
     </div>
-        <div class="card lock">
-          <mat-icon id="lock">lock</mat-icon>
-          <div id="secure">
-            We secure your login information using
-            <b>Google's highest standard oAuth 2.0</b> and secure your data in the
-            cloud using Google Cloud Firestore
-          </div>
-        </div>
+    <div class="card lock">
+      <mat-icon id="lock">lock</mat-icon>
+      <div id="secure">
+        We secure your login information using
+        <b>Google's highest standard oAuth 2.0</b> and secure your data in the
+        cloud using Google Cloud Firestore
+      </div>
+    </div>
   </div>
 </div>
 <div class="border"></div>
