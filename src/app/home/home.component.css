@@ -172,7 +172,7 @@ img {
   font-size: 42px;
   padding-top: 100px;
   margin-bottom: 24px;
-  max-width: 740px;
+  max-width: 650px;
   font-weight: 600;
 }
 
@@ -190,7 +190,7 @@ img {
   color: #ffffff;
   display: flex;
   align-items: flex-start;
-  margin: 32px auto;
+  margin: 24px auto 0 -12px;
   max-width: 500px;
 }
 
@@ -276,6 +276,7 @@ img {
   object-fit: contain;
   width: 100%;
   object-position: bottom;
+  margin-left: 0;
 }
 
 .c-point {
@@ -508,4 +509,21 @@ a {
   margin-bottom: 16px;
   font-size: 20px;
   font-weight: bold;
+}
+
+.images {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-right: 16px;
+}
+
+.mobile-link {
+  height: 45px;
+  margin: 0 6px;
+}
+
+#pstore-link {
+  height: 60px;
+  margin: 0 6px;
 }
