@@ -160,8 +160,9 @@ img {
     font-size: 15px;
   }
   .card {
-    width: auto;
-  }
+    width: 500px;
+    max-width: calc(100vw - 64px);
+}
   .hide {
     display: none;
   }
