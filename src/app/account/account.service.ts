@@ -7,7 +7,8 @@ import {
   MatDialogRef,
   MatSnackBar,
   MAT_DIALOG_DATA,
-  MatSnackBarRef
+  MatSnackBarRef,
+  MatSidenav
 } from "@angular/material";
 import { AngularFireAuth } from "@angular/fire/auth";
 import { Router } from "@angular/router";
@@ -19,6 +20,7 @@ import { HelperService, Helper } from "./helper.service";
   providedIn: "root"
 })
 export class AccountService {
+  private sidenav: MatSidenav;
   userObservable: BehaviorSubject<any> = new BehaviorSubject(null);
   user: User = new User();
   aTeamObservable: BehaviorSubject<any> = new BehaviorSubject(null);
@@ -202,6 +204,15 @@ export class AccountService {
       window.location.reload();
     });
   }
+
+  public setSidenav(sidenav: MatSidenav) {
+    this.sidenav = sidenav;
+  }
+
+  public toggle(): void {
+    this.sidenav.toggle();
+  }
+
 }
 
 @Component({

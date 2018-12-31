@@ -265,3 +265,17 @@ a {
 a:hover {
   text-decoration: underline;
 }
+
+@media screen and (max-width: 785px) {
+  .cols {
+    padding: 8px;
+    flex-wrap: wrap;
+  }
+  .col {
+    display: -webkit-box;
+    overflow-x: scroll;
+  }
+  .card {
+    width: 85vw !important;
+  }
+}

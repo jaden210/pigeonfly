@@ -1,10 +1,10 @@
-import { Component, Inject } from "@angular/core";
+import { Component, Inject, ViewChild, AfterViewInit } from "@angular/core";
 import { trigger, style, transition, animate } from "@angular/animations";
 import { AccountService, User, Team, InviteToTeam } from "./account.service";
 import { AngularFireAuth } from "@angular/fire/auth";
 import { map, take } from "rxjs/operators";
 import { Router } from "@angular/router";
-import { MatDialog } from "@angular/material";
+import { MatDialog, MatSidenav } from "@angular/material";
 import { AppService } from "../app.service";
 import { forkJoin } from "rxjs";
 
@@ -31,7 +31,8 @@ import { forkJoin } from "rxjs";
     ])
   ]
 })
-export class AccountComponent {
+export class AccountComponent implements AfterViewInit {
+  @ViewChild('sidenav') public sidenav: MatSidenav;
   bShowAccountInfo: boolean = false; // template var
   helperContrast: boolean = false; // template var
 
@@ -109,6 +110,10 @@ export class AccountComponent {
         }
       } else this.accountService.logout();
     });
+  }
+
+  ngAfterViewInit() {
+    this.accountService.setSidenav(this.sidenav);
   }
 
   selectTeam() {

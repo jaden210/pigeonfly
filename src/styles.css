@@ -30,6 +30,10 @@
     height: 46px;
 }
 
+.toolbar-expand-mobile {
+    display: none;
+}
+
 .toolbar-title {
     font-family: 'co-headline';
     color: #757575;
@@ -84,8 +88,10 @@ mat-toolbar {
     box-sizing: border-box;
     box-shadow: 0 2px 2px 0 rgba(0,0,0,0.36), 0 0 0 1px rgba(0,0,0,0.08);
     transition: all 500ms;
+    max-width: calc(100vw - 24px);
+    max-height: calc(100vh - 360px);
+    overflow: hidden;
 }
-
 
 
 .helper-close {
@@ -107,6 +113,8 @@ mat-toolbar {
     font-weight: 300;
     color: #212121;
     max-width: 500px;
+    max-height: calc(100vh - 360px);
+    overflow: scroll;
 }
 
 .helper-input {
@@ -157,5 +165,18 @@ agm-map {
 @media screen and (max-width: 785px) {
     .hwindow {
         height: calc(100vh - 56px);
+    }
+    .helper {
+        left: 12px !important;
+    }
+    .toolbar-logo {
+        display: none;
+    }
+    .toolbar-expand-mobile {
+        display: block;
+    }
+    .fab {
+        bottom: 12px !important;
+        right: 12px !important;
     }
 }

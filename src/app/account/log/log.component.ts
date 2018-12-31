@@ -73,7 +73,7 @@ export class LogComponent implements OnInit, OnDestroy {
 
   constructor(
     private service: LogService,
-    private accountService: AccountService,
+    public accountService: AccountService,
     private datePipe: DatePipe,
     private dialog: MatDialog,
     private snackBar: MatSnackBar

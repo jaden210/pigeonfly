@@ -298,3 +298,14 @@ a:hover {
   padding: 24px;
   max-width: 470px;
 }
+
+
+@media screen and (max-width: 1000px) {
+ #left {
+   display: none;
+ }
+ #body {
+   width: 100vw;
+ }
+
+}

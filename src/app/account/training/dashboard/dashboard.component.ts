@@ -49,7 +49,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     private trainingService: TrainingService,
-    private accountService: AccountService,
+    public accountService: AccountService,
     private dialog: MatDialog,
     private router: Router,
     private date: DatePipe

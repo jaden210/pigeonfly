@@ -329,3 +329,15 @@ mat-progress-bar {
   position: fixed;
   bottom: 0;
 }
+
+
+@media screen and (max-width: 785px) {
+  #logs {
+    padding: 16px 8px 0 8px;
+  }
+  #actions {
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+  }
+}

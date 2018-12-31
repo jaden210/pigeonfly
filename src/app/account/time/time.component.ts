@@ -39,7 +39,7 @@ export class TimeComponent implements OnInit, OnDestroy {
   public now: string = moment().format("MMM");
 
   constructor(
-    private accountService: AccountService,
+    public accountService: AccountService,
     private datePipe: DatePipe,
     private timeService: TimeService,
     private dialog: MatDialog
