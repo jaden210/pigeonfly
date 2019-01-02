@@ -40,6 +40,9 @@ export class AchievementsComponent implements OnInit, OnDestroy {
             results[0].forEach(level => {
               level.completedAchievementsCount = 0;
               level.possibleAchievementsCount = 0;
+              level.checkpoints = level.checkpoints.sort(function(a, b) {
+                return a.level - b.level;
+              });
               level.checkpoints.forEach(checkpoint => {
                 checkpoint.progress = 0;
                 checkpoint.achievements.forEach(achievement => {

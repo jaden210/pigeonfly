@@ -1,4 +1,4 @@
-<div class="scroll">hi
+<div class="scroll">
   <div class="feeback-items" *ngFor="let item of feedbackItems | async" [ngClass]="{'closed':item.isClosed}">
     <div class="row" style="margin:0">
         <div class="f-name">{{item.userName}}</div>

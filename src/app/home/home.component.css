@@ -151,8 +151,14 @@ img {
     width: 500px;
     max-width: calc(100vw - 64px);
   }
+  #card-title {
+    font-size: 21px;
+  }
   .hide {
     display: none;
+  }
+  #below-monkey-box {
+    margin: 8px !important;
   }
 }
 

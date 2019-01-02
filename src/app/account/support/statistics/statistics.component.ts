@@ -26,7 +26,7 @@ export class StatisticsComponent implements OnInit {
   }
 
   getStatsFromCompletedAchievements() {
-    this.supportService.db.collection("team").snapshotChanges().pipe(
+    this.supportService.db.collection("team", ref => ref.orderBy("createdAt", "desc")).snapshotChanges().pipe(
       map(actions =>
         actions.map(a => {
           //better way
@@ -57,7 +57,6 @@ export class StatisticsComponent implements OnInit {
               )
               .subscribe(users => {
                 team.users = users;
-                console.log(users);
               });
             }
       })

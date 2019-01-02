@@ -31,7 +31,8 @@
 }
 
 .toolbar-expand-mobile {
-    display: none;
+    display: none !important;
+    color: #666666;
 }
 
 .toolbar-title {
@@ -113,8 +114,9 @@ mat-toolbar {
     font-weight: 300;
     color: #212121;
     max-width: 500px;
-    max-height: calc(100vh - 360px);
+    max-height: calc(100vh - 450px);
     overflow: scroll;
+    padding-right: 9px;
 }
 
 .helper-input {
@@ -173,7 +175,7 @@ agm-map {
         display: none;
     }
     .toolbar-expand-mobile {
-        display: block;
+        display: block !important;
     }
     .fab {
         bottom: 12px !important;
