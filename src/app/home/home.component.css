@@ -160,6 +160,9 @@ img {
   #below-monkey-box {
     margin: 8px !important;
   }
+  #signups {
+    font-size: 18px !important;
+  }
 }
 
 .big-hide {
@@ -515,6 +518,15 @@ a {
   margin-bottom: 16px;
   font-size: 20px;
   font-weight: bold;
+}
+
+#signups {
+  color: #ffffff;
+  font-size: 27px;
+  margin: 32px auto 8px auto;
+  font-weight: 600;
+  text-align: center;
+  max-width: 760px;
 }
 
 .images {
