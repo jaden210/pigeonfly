@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { GetStartedService } from "../get-started.service";
 import { Industry } from "src/app/account/training/training.service";
+declare var gtag: Function;
 
 @Component({
   selector: "step2",
@@ -30,6 +31,10 @@ export class Step2Component implements OnInit {
 
   setIndustry(industry: Industry): void {
     this.getStartedService.industryId = industry.id;
+    gtag("event", "click", {
+      event_category: "sign up funnel",
+      event_label: "step 2"
+    });
     this.router.navigate(["/get-started/step3"]);
   }
 

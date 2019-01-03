@@ -7,6 +7,7 @@ import { Router } from "@angular/router";
 import { MatDialog, MatSidenav } from "@angular/material";
 import { AppService } from "../app.service";
 import { forkJoin } from "rxjs";
+declare var drift: any;
 
 @Component({
   selector: "app-account",
@@ -43,6 +44,9 @@ export class AccountComponent implements AfterViewInit {
     public router: Router,
     public dialog: MatDialog
   ) {
+    drift.on('ready', function(api, payoad) { // hide the chat back here
+      api.widget.hide();
+    })
     this.auth.auth.onAuthStateChanged(user => {
       let invitations;
       if (user && user.uid) {
@@ -168,4 +172,12 @@ export class AccountComponent implements AfterViewInit {
         });
     }, 2000);
   }
+
+  chat() {
+    this.accountService.showHelper = false;
+    drift.on('ready', function(api, payoad) { // hide the chat back here
+      drift.api.startInteraction({interactionId: 655302, goToConversation: true})
+    })
+  }
+
 }

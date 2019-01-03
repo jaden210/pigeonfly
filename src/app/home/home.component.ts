@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { AppService } from "../app.service";
 import { Router } from "@angular/router";
 import { AngularFireAuth } from "@angular/fire/auth";
+declare var gtag: Function;
 
 @Component({
   selector: "app-home",
@@ -31,7 +32,14 @@ export class HomeComponent implements OnInit {
               if (invites.length > 0) this.router.navigate(["/join-team"]);
               else this.router.navigate(["/get-started"]);
             });
-          else this.router.navigate(["/sign-in"]);
+          else {
+            gtag("event", "click", {
+              event_category: "sign up funnel",
+              event_label: "create account"
+            });
+            this.router.navigate(["/sign-in"]);
+            return false;
+          }
         },
         error => (this.loginErrorStr = error)
       );
@@ -43,6 +51,10 @@ export class HomeComponent implements OnInit {
       if (user && user.uid) {
         this.router.navigate(["account"]);
       } else {
+        gtag("event", "click", {
+          event_category: "sign up funnel",
+          event_label: "start today its free"
+        });
         this.router.navigate(["/sign-up"]);
       }
     });

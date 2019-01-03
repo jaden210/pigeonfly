@@ -53,6 +53,10 @@ export class AppComponent {
       if (user && user.uid) {
         this.router.navigate(["account"]);
       } else {
+        gtag("event", "click", {
+          event_category: "sign up funnel",
+          event_label: "toolbar button"
+        });
         this.router.navigate(["/sign-up"]);
       }
     });

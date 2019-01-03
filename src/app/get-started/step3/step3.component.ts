@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { GetStartedService } from "../get-started.service";
+declare var gtag: Function;
 
 @Component({
   selector: "step2",
@@ -54,6 +55,10 @@ export class Step3Component implements OnInit {
                   );
                   this.getStartedService.createCompletedAchievement(teamId);
                   this.loading = false;
+                  gtag("event", "click", {
+                    event_category: "sign up funnel",
+                    event_label: "account created"
+                  });
                   this.router.navigate(["/account/achievements"]);
                 },
                 error => {

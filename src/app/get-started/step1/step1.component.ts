@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { GetStartedService } from "../get-started.service";
+declare var gtag: Function;
 
 @Component({
   selector: "step1",
@@ -29,6 +30,10 @@ export class Step1Component implements OnInit {
     this.error =
       !this.companyName || !this.name ? "Please enter the required items" : "";
     if (!this.error) {
+      gtag("event", "click", {
+        event_category: "sign up funnel",
+        event_label: "step 1"
+      });
       this.getStartedService.companyName = this.companyName;
       this.getStartedService.name = this.name;
       this.getStartedService.jobTitle = this.jobTitle;
