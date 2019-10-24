@@ -21,13 +21,13 @@
 }
 
 #header-text {
-  font-size: 32px;
+  font-size: 2.4rem;
   padding-bottom: 12px;
 }
 
 #header-info {
   opacity: .54;
-  font-size: 16px;
+  font-size: 1.2rem;
 }
 
 .images {
@@ -52,7 +52,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 24px;
+  font-size: 2.4rem;
+  margin: 12px 24px;
 }
 
 #app-banner {
@@ -132,7 +133,9 @@
 }
 
 .b-header {
-  font-size: 32px;
+  font-size: 3.12rem;
+  font-weight: 700;
+  letter-spacing: -.8px;
 }
 
 .b-info {
@@ -147,16 +150,40 @@ img.b-img {
   object-fit: cover;
 }
 
-#price-block {
-  font-size: 42px;
-  border: 5px solid #f1f1f1;
-  border-radius: 12px;
-  background-color: #f7f7f7;
+#p-block {
+  border-top: 5px solid #f44336;
+  background-color: #ffffff;
   padding: 12px;
-  height: 250px;
+  min-height: 350px;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  align-items: flex-start;
   max-width: 55%;
-  margin: auto;
+  margin: 20px auto;
+  box-shadow: 3px 2px 2rem rgba(0,0,0,0.1);
+}
+
+#get-started {
+  align-self: normal;
+}
+
+.p-title {
+  font-size: 18px;
+  font-weight: 900;
+}
+
+#p-price {
+  font-size: 32px;
+  margin: 24px 0;
+}
+
+.p-info {
+  font-size: 14px;
+  display: flex;
+  margin-top: 24px;
+  text-align: start;
+}
+
+.dark {
+  background-color: #f5f5f5;
 }

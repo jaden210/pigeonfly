@@ -1,23 +1,11 @@
 <div id="header-img">
   <img id="h-img" src="/assets/gymarrow.png">
   <div id="header-box">
-    <div id="header-text">A workout membership as motivated as you are</div>
+    <div id="header-text">A workout membership<br> as motivated as you are</div>
     <div id="header-info">A refreshing approach to those nasty gym memberships. One simple pass that will get you into multiple gyms in your community.
       No more having to choose one gym and being trapped in contracts. This is the last gym membership you will ever want, guaranteed.</div>
     </div>
   </div>
-  <div id="app-banner" class="banner">
-    <a target="_blank" style="margin-right: 10%;" href=""><img
-      alt="Get it on Google Play"
-      id="pstore-link"
-      src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png"
-  /></a>
-  <a
-    target="_blank"
-    href=""
-    style="display:inline-block;overflow:hidden;background:url(https://linkmaker.itunes.apple.com/en-us/badge-lrg.svg?releaseDate=2018-12-11&kind=iossoftware&bubble=apple_music) no-repeat;width:135px;height:47px;"
-  ></a>
-</div>
 <div class="banner">Jump into any of these locations</div>
 <div class="slider">
   <div class="slide-track">
@@ -30,21 +18,24 @@
   </div>
 </div>
 <div class="banner" style="margin-bottom: 48px;">
-  <button mat-stroked-button>FIND A GYM NEAR ME</button>
+  <button mat-raised-button [routerLink]="'/find-a-gym'" color="accent">FIND A GYM NEAR ME</button>
+</div>
+<div class="block dark">
+  <div class="side">
+    <div class="b-header">Small but Mighty</div>
+    <div class="b-info">Your membership comes with a tag that gives you access to any of our partnering gyms. Throw it on your keys or keep it in your wallet, your tag is the key.</div>
+  </div>
+  <div class="side">
+    <img class="b-img" src="/assets/tileClear.png">
+  </div>
 </div>
 <div class="block">
   <div class="side">
-    <div class="b-header">Your phone is the pass</div>
-    <div class="b-info">Use the app to find near-by gyms, gain access, track your history and more.</div>
-  </div>
-  <div class="side">
-    <img class="b-img" src="/assets/flag.png">
-  </div>
-</div>
-<div class="block">
-  <div class="side">
-    <div id="price-block">
-      $99/mo
+    <div id="p-block">
+      <div class="p-title">Premier Pass</div>
+      <div id="p-price">$99/mo</div>
+      <button mat-raised-button id="get-started" [routerLink]="'/sign-up'" color="primary">GET STARTED</button>
+      <div class="p-info"><mat-icon>check</mat-icon>No fine print here. This is the best gym pass there is. Some gyms may have time or visit restrictions where applicable.</div>
     </div>
   </div>
   <div class="side">
