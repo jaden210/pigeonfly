@@ -9,6 +9,7 @@
 #box {
   margin: auto;
   background-color: #ffffff;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
   padding: 24px;
   box-sizing: border-box;
   display: flex;
@@ -44,7 +45,7 @@
 
 #title {
   font-size: 32px;
-  color: #ffffff;
+  color: #212121;
   font-weight: 500;
 }
 

@@ -19,12 +19,9 @@ export class SignUpPageComponent {
       this.appService.email = this.email;
       this.appService.checkForExistingUser(this.email).then(
         isExistingUser => {
-          if (!isExistingUser)
-            this.appService.getInvites(this.email).subscribe(invites => {
-              if (invites.length > 0) this.router.navigate(["/join-team"]);
-              else this.router.navigate(["/get-started"]);
-            });
-          else this.router.navigate(["/sign-in"]);
+          if (!isExistingUser) {
+            this.router.navigate(["/get-started"]);
+          } else this.router.navigate(["/sign-in"]);
         },
         error => (this.loginErrorStr = error)
       );

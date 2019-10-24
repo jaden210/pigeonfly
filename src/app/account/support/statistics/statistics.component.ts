@@ -3,7 +3,7 @@ import { map } from 'rxjs/operators';
 import { User } from '../../../app.service';
 import { MatSort, MatTableDataSource } from '@angular/material';
 import { SupportService } from '../support.service';
-import { Team } from '../../account.service';
+import { Gym } from '../../account.service';
 
 @Component({
   selector: 'statistics',
@@ -14,19 +14,19 @@ export class StatisticsComponent implements OnInit {
 
   @ViewChild(MatSort) sort: MatSort;
   aItem: Support; // temp var
-  teams = [];
-  displayedColumns: string[] = ["name", "created","users", "logs"];
-  datasource = new MatTableDataSource(this.teams)
+  gyms = [];
+  displayedColumns: string[] = ["name", "created","users"];
+  datasource = new MatTableDataSource(this.gyms)
 
   constructor(public supportService: SupportService) { }
 
   ngOnInit() {
     this.datasource.sort = this.sort;
-    this.getStatsFromCompletedAchievements();
+    this.getGyms();
   }
 
-  getStatsFromCompletedAchievements() {
-    this.supportService.db.collection("team", ref => ref.orderBy("createdAt", "desc")).snapshotChanges().pipe(
+  getGyms() {
+    this.supportService.db.collection("gyms", ref => ref.orderBy("createdAt", "desc")).snapshotChanges().pipe(
       map(actions =>
         actions.map(a => {
           //better way
@@ -36,29 +36,14 @@ export class StatisticsComponent implements OnInit {
           return { id, ...data };
         })
         )
-    ).subscribe(teams => {
-      this.teams = teams;
-      teams.forEach((team: any) => {
-        if (team.id) {
-          this.supportService.db.collection("completed-achievement", ref => ref.where("teamId", "==", team.id)).valueChanges().subscribe(achievements => {
-            team.achievements = achievements[0];
-          });
-          this.supportService.db.collection("user", ref => ref.where(`teams.${team.id}`, ">=", 0))
-          .snapshotChanges()
-          .pipe(
-            map(actions =>
-              actions.map(a => {
-                //better way
-                const data = a.payload.doc.data() as User;
-                const id = a.payload.doc.id;
-                return { id, ...data };
-              })
-              )
-              )
-              .subscribe(users => {
-                team.users = users;
-              });
-            }
+    ).subscribe(gyms => {
+      this.gyms = gyms;
+      gyms.forEach((gym: any) => {
+        if (gym.id) {
+          this.supportService.db.collection("activity", ref => ref.where("gymId", "==", gym.id)).valueChanges().subscribe(activity => {
+            gym.activity = activity;
+          });  
+        }
       })
     });
   }

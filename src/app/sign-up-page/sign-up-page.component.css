@@ -12,7 +12,7 @@
 }
 
 .title {
-  color: #ffffff;
+  color: #212121;
   font-size: 62px;
   padding-top: 100px;
   margin-bottom: 24px;
@@ -22,7 +22,7 @@
 }
 
 .info {
-  color: #ffffff;
+  color: #212121;
   max-width: 450px;
   font-size: 20px;
   margin-top: 24px;
@@ -49,7 +49,7 @@
 .check {
   margin: 12px 0;
   font-size: 18px;
-  color: #ffffff;
+  color: #212121;
   display: flex;
   align-items: center;
 }
@@ -165,7 +165,7 @@ img {
 #sign-in {
   cursor: pointer;
   font-size: 14px;
-  color: #ff9100;
+  color: #ff5252;
   margin: 0 24px 0 4px;
 }
 

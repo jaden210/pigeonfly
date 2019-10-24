@@ -1,14 +1,13 @@
 {
   "projects": {
-    "default": "teamlog-2d74c",
-    "dev": "compliancechimp-dev",
-    "prod": "teamlog-2d74c"
+    "default": "gym-jumper",
+    "prod": "gym-jumper"
   },
   "targets": {
-    "teamlog-2d74c": {
+    "gym-jumper": {
       "hosting": {
         "main": [
-          "teamlog-2d74c"
+          "gym-jumper"
         ]
       }
     }

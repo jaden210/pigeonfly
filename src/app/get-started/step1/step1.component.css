@@ -32,7 +32,7 @@ mat-card-footer {
   position: absolute;
   top: -14px;
   width: 130px;
-  background: #009688;
+  background: #01ADEE;
   color: white;
   border-radius: 16px;
   height: 32px;
@@ -45,4 +45,23 @@ mat-card-footer {
 .error {
   color: red;
   margin: 12px 0;
+}
+
+#overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: white;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#overlay img {
+  height: 100px;
+  margin-top: 24px;
 }

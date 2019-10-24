@@ -2,15 +2,9 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import {
   ProfileComponent,
-  DeleteAccountDialog
+  DeleteAccountDialog,
+  PrintDialog
 } from "./account/account.component";
-import {
-  HomeComponent,
-  InviteDialog,
-  EditUserDialog,
-  TeamFilesDialog
-} from "./home/home.component";
-import { SurveysModule } from "./surveys/surveys.module";
 import { AccountRoutingModule } from "./account-routing.module";
 import { MaterialModule } from "../material/material.module";
 import { AccountComponent } from "./account.component";
@@ -18,22 +12,12 @@ import { FormsModule } from "@angular/forms";
 import { MomentModule } from "ngx-moment";
 import { MapDialogComponent } from "./map-dialog/map-dialog.component";
 import { DatePipe } from "@angular/common";
-import { IncidentReportsComponent } from "./incident-reports/incident-reports.component";
-import { EventComponent } from "./event/event.component";
-import { NoAccessDialog } from "./account.service";
-import { ImagesDialogComponent } from "./images-dialog/images-dialog.component";
-import { TrainingModule } from "./training/training.module";
 import { SharedModule } from "../shared-module";
-import {
-  AchievementsComponent,
-  ConfirmCompleteDialog
-} from "./achievements/achievements.component";
 import { AngularEditorModule } from "@kolkov/angular-editor";
-import { MakePaymentComponent } from "./account/payments/make-payment/make-payment.component";
-import { PeopleDialogComponent } from "./people-dialog.component";
-import { DeleteInspectionDialog } from "./self-inspections/self-inspections.service";
 import { AgmCoreModule } from "@agm/core";
-import { EventsFilterDialog } from "./event/filter-dialog/filter.dialog";
+import { QRCodeModule } from 'angular2-qrcode';
+import { PrintComponent } from "./print/print.component";
+import { ScanDialog } from "./scan-dialog/scan-dialog.component";
 
 @NgModule({
   imports: [
@@ -42,48 +26,28 @@ import { EventsFilterDialog } from "./event/filter-dialog/filter.dialog";
     MaterialModule,
     FormsModule,
     MomentModule,
-    TrainingModule,
-    SurveysModule,
     SharedModule,
     AngularEditorModule,
     AgmCoreModule.forRoot({
       apiKey: "AIzaSyAsIwXbCi4l__VoFLdru1EC3bLxmcZQOZI"
-    })
+    }),
+    QRCodeModule
   ],
   declarations: [
     AccountComponent,
     ProfileComponent,
-    HomeComponent,
-    EventComponent,
-    InviteDialog,
-    EditUserDialog,
-    TeamFilesDialog,
-    NoAccessDialog,
     MapDialogComponent,
-    IncidentReportsComponent,
-    ImagesDialogComponent,
-    AchievementsComponent,
-    MakePaymentComponent,
-    PeopleDialogComponent,
     DeleteAccountDialog,
-    ConfirmCompleteDialog,
-    DeleteInspectionDialog,
-    EventsFilterDialog
+    PrintComponent,
+    PrintDialog,
+    ScanDialog
   ],
-  exports: [MaterialModule, TrainingModule, SurveysModule],
+  exports: [MaterialModule],
   entryComponents: [
-    InviteDialog,
     MapDialogComponent,
-    EditUserDialog,
-    TeamFilesDialog,
-    NoAccessDialog,
-    ImagesDialogComponent,
-    MakePaymentComponent,
-    PeopleDialogComponent,
     DeleteAccountDialog,
-    ConfirmCompleteDialog,
-    DeleteInspectionDialog,
-    EventsFilterDialog
+    PrintDialog,
+    ScanDialog
   ],
   providers: [DatePipe]
 })

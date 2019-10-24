@@ -1,31 +1,49 @@
 <mat-card>
-  <div class="progress">Step 1 of 3</div>
-  <mat-card-title
-    >First, tell us a bit about yourself and your team.</mat-card-title
-  >
   <mat-card-content>
     <span class="error">{{ error }}</span>
-    <mat-form-field appearance="standard">
-      <input
-        matInput
-        [(ngModel)]="companyName"
-        type="text"
-        placeholder="your company name"
-      />
-    </mat-form-field>
     <mat-form-field appearance="standard">
       <input matInput [(ngModel)]="name" type="text" placeholder="your name" />
     </mat-form-field>
     <mat-form-field appearance="standard">
       <input
+        [(ngModel)]="password"
         matInput
-        [(ngModel)]="jobTitle"
-        type="text"
-        placeholder="your job title (optional)"
+        type="password"
+        required
+        placeholder="password"
       />
     </mat-form-field>
+    <mat-form-field appearance="standard">
+      <input
+        [(ngModel)]="confirmPassword"
+        matInput
+        type="password"
+        required
+        placeholder="confirm password"
+      />
+    </mat-form-field>
+    <div style="display: flex; margin: 12px 0;">
+      <mat-checkbox [(ngModel)]="agree"></mat-checkbox>
+      <mat-label style="margin-left:12px; opacity:.87;font-size: 14px;"
+        >I agree to the
+        <a target="_blank" href="https://Gym Jumper.com/terms-of-service"
+          >Terms of Service</a
+        >,
+        <a target="_blank" href="https://Gym Jumper.com/privacy-policy"
+          >Privacy Policy</a
+        >
+        and
+        <a target="_blank" href="https://Gym Jumper.com/customer-agreement"
+          >Customer Agreement</a
+        >.</mat-label
+      >
+    </div>
   </mat-card-content>
   <mat-card-actions align="center">
-    <button mat-raised-button color="primary" (click)="next()">Next</button>
+    <button mat-raised-button color="primary" (click)="createAccount()">GO TO MY ACOUNT</button>
   </mat-card-actions>
 </mat-card>
+<div id="overlay" *ngIf="loading">
+  <h2>Creating your account...</h2>
+  <img src="/assets/gymJumperLogo.png"/>
+</div>

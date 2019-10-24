@@ -151,6 +151,16 @@ mat-form-field {
   font-size: 17px;
 }
 
+#register {
+  padding-bottom: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 24px;
+  max-width: 750px;
+  margin: auto;
+}
+
 #no-bh {
   margin: 100px 0;
   display: flex;

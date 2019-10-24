@@ -7,7 +7,6 @@ import {
   ActivatedRoute,
   ParamMap
 } from "@angular/router";
-declare var gtag: Function;
 
 @Component({
   selector: "sign-up",
@@ -27,9 +26,5 @@ export class SignUpComponent implements OnInit {
 
   signUp() {
     this.router.navigate(['/sign-up']);
-    gtag("event", "click", {
-      event_category: "sign up funnel",
-      event_label: "start today guarantee"
-    });
   }
 }

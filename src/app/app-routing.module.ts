@@ -12,7 +12,7 @@ import { TermsOfUseComponent } from "./terms-of-use/terms-of-use.component";
 import { PrivacyPolicyComponent } from "./privacy-policy/privacy-policy.component";
 import { CustomerAgreementComponent } from "./customer-agreement/customer-agreement.component";
 import { AuthGuard } from "./auth.gaurd";
-import { JoinTeamComponent } from "./join-team/join-team.component";
+import { FindAGymComponent } from "./find-a-gym/find-a-gym.component";
 
 const routes: Routes = [
   { path: "", redirectTo: "home", pathMatch: "full" },
@@ -24,6 +24,7 @@ const routes: Routes = [
   { path: "how-it-works", component: HowComponent },
   { path: "sign-up", component: SignUpPageComponent },
   { path: "sign-in", component: SignInComponent },
+  { path: "find-a-gym", component: FindAGymComponent },
   {
     path: "get-started",
     loadChildren: "./get-started/get-started.module#GetStartedModule"
@@ -31,7 +32,6 @@ const routes: Routes = [
   { path: "terms-of-service", component: TermsOfUseComponent },
   { path: "privacy-policy", component: PrivacyPolicyComponent },
   { path: "customer-agreement", component: CustomerAgreementComponent },
-  { path: "join-team", component: JoinTeamComponent },
   {
     path: "account",
     loadChildren: "./account/account.module#AccountModule",
@@ -40,7 +40,9 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {
+    anchorScrolling: 'enabled'
+  })],
   exports: [RouterModule]
 })
 export class AppRoutingModule {}

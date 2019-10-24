@@ -1,16 +1,13 @@
-import { Component, OnInit , OnDestroy} from '@angular/core';
-import { AccountService, User, Team } from '../account.service';
+import { Component, OnInit , OnDestroy, ViewChild} from '@angular/core';
+import { AccountService, User, Gym } from '../account.service';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { map, finalize } from 'rxjs/operators';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { Router } from '@angular/router';
-import * as moment from 'moment';
-import { environment } from 'src/environments/environment';
-import { MatDialog, MatSnackBar, MatDialogRef } from '@angular/material';
-import { MakePaymentComponent } from './payments/make-payment/make-payment.component';
+import { Router, ActivatedRoute } from '@angular/router';
+import { MatDialog, MatDialogRef } from '@angular/material';
 import { Subscription } from 'rxjs';
-declare var Stripe: Function;
-declare var elements: any;
+import { AppService } from 'src/app/app.service';
+import { ScanDialog } from '../scan-dialog/scan-dialog.component';
 
 @Component({
   selector: 'app-account',
@@ -19,60 +16,30 @@ declare var elements: any;
 })
 export class ProfileComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
-  showCompany: boolean = false;
-  teamTier: number;
+  showGym: boolean = false;
   loading: boolean = false;
   loadingBilling: boolean = false;
+  selectedTab;
 
   constructor(
+    private appService: AppService,
     public accountService: AccountService,
     private storage: AngularFireStorage,
     public auth: AngularFireAuth,
     public router: Router,
+    public route: ActivatedRoute,
     public dialog: MatDialog
   ) { }
 
 
   ngOnInit() {
-    this.subscription = this.accountService.teamUsersObservable.subscribe(team => {
-      if (team) {
-        this.getTierInfo();
-        this.accountService.helper = this.accountService.helperProfiles.account;
-        if (this.accountService.aTeam.ownerId == this.accountService.user.id) {
-          this.showCompany = true;
+    this.subscription = this.accountService.userObservable.subscribe(user => {
+      if (user) {
+        if (this.accountService.user.gymId) {
+          this.showGym = true;
         }
       }
     })
-  }
-
-  enterCardInfo() {
-    let dialog = this.dialog.open(MakePaymentComponent, {
-      disableClose: true
-    });
-  }
-
-  getTierInfo() {
-    if (this.accountService.teamUsers.length <=10) {
-      this.teamTier = 39;
-    } else if (11 < this.accountService.teamUsers.length && this.accountService.teamUsers.length <= 100) {
-      this.teamTier = 99;
-    } else {
-      this.teamTier = this.accountService.teamUsers.length * 2;
-    }
-  }
-
-  async getBillingHistory() {
-    this.loadingBilling = true;
-    const res = await fetch("https://teamlog-2d74c.cloudfunctions.net/getCustomerInvoices", {
-      method: 'POST',
-      body: JSON.stringify({
-        stripeCustomerId: this.accountService.aTeam.stripeCustomerId,
-        teamId: this.accountService.aTeam.id
-      }),
-    });
-    const data = await res.json();
-    data.body = JSON.parse(data.body);
-    return data;
   }
 
   upload(profile): void { // this will call the file input from our custom button
@@ -96,16 +63,16 @@ export class ProfileComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
 
-  uploadLogoImage(event) {
+  uploadGymLogo(event) {
     this.loading = true;
     let file = event.target.files[0];
-    let filePath = this.accountService.aTeam.id + '/' + "logo-image";
+    let filePath = this.accountService.aGym.id + '/' + "logo-image";
     let ref = this.storage.ref(filePath);
     let task = this.storage.upload(filePath, file);
     task.snapshotChanges().pipe(
       finalize(() => {
         ref.getDownloadURL().subscribe(url => {
-          this.accountService.db.collection("team").doc<Team>(this.accountService.aTeam.id).update({logoUrl: url}).then(() => this.loading = false);
+          this.accountService.db.collection("gyms").doc<Gym>(this.accountService.aGym.id).update({logoUrl: url}).then(() => this.loading = false);
         });
       })
     ).subscribe();
@@ -115,22 +82,22 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.accountService.db.collection("user").doc(this.accountService.user.id).update({...this.accountService.user});
   }
 
-  saveTeam() {
-    this.accountService.db.collection("team").doc(this.accountService.aTeam.id).update({...this.accountService.aTeam});
+  saveGym() {
+    this.accountService.db.collection("gyms").doc(this.accountService.aGym.id).update({...this.accountService.aGym});
   }
 
   deleteAccount() {
     let dialog = this.dialog.open(DeleteAccountDialog);
     dialog.afterClosed().subscribe(shouldDelete => {
-      if (shouldDelete) { // disable the team
+      if (shouldDelete) { // disable the user
         let date = new Date();
         this.accountService.db.collection("support").add({
           createdAt: date,
           email: "internal",
-          body: `${this.accountService.aTeam.name} has been deleted on ${date}. ${this.accountService.user.name} can be reached at ${this.accountService.user.phone} 
-          or ${this.accountService.user.email}. Pause the Stripe account for teamId ${this.accountService.aTeam.id}.`
+          body: `${this.accountService.user.name} has been deleted on ${date}. ${this.accountService.user.name} can be reached at ${this.accountService.user.phone} 
+          or ${this.accountService.user.email}. Pause the Stripe account for userId ${this.accountService.user.id}.`
         });
-        this.accountService.db.collection("team").doc(this.accountService.aTeam.id).update({
+        this.accountService.db.collection("user").doc(this.accountService.user.id).update({
           disabled: true,
           disabledAt: date
         }).then(() => {
@@ -140,17 +107,82 @@ export class ProfileComponent implements OnInit, OnDestroy {
     });
   }
 
+  printDialog() {
+    let dialog = this.dialog.open(PrintDialog, {
+      disableClose: true,
+      height: "100vh", // ??
+    });
+    dialog.afterClosed().subscribe(print => {
+      if (print) {
+        this.router.navigate(['account/account/print']);
+      }
+    });
+  }
+
+  tabChanged(event) {
+    if (event.index == 4) { // be careful
+      let dialog = this.openScanningDialog();
+      dialog.afterClosed().subscribe(dialog => { // fix
+        this.selectedTab = 3;
+      });
+    }
+    
+  }
+
+  openScanningDialog(): any {
+    let dialog = this.dialog.open(ScanDialog, {
+      data: {gym: this.accountService.aGym},
+      disableClose: true
+    });
+    return dialog;
+  }
+
+  async getBillingHistory() {
+    this.loadingBilling = true;
+    const res = await fetch("", {
+      method: 'POST',
+      body: JSON.stringify({
+        stripeCustomerId: this.accountService.user.stripeCustomerId,
+      }),
+    });
+    const data = await res.json();
+    data.body = JSON.parse(data.body);
+    return data;
+  }
+
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
+
 }
 
 
 @Component({
   template: `
+  <h2 mat-dialog-title>Print your Gym Code</h2>
+  <mat-dialog-content>
+  This code will be used to verify that GYMjumper users have access to your location. Simply place this code at your front desk, and users will scan it from the GYMjumper app. The app will verify with you that they have access to your gym.
+  </mat-dialog-content>
+  <mat-dialog-actions style="margin-top:12px" align="end"><button mat-button color="primary" style="margin-right:8px" (click)="close(false)">CANCEL</button>
+  <button mat-raised-button color="warn" (click)="close(true)">PRINT</button>
+  </mat-dialog-actions>
+  `
+})
+export class PrintDialog {
+  constructor(
+    public dialogRef: MatDialogRef<DeleteAccountDialog>
+  ) {}
+
+  close(submit) {
+    this.dialogRef.close(submit);
+  }
+}
+
+@Component({
+  template: `
   <h2 mat-dialog-title>Are you sure?</h2>
   <mat-dialog-content>By clicking DELETE, you are removing access and making your account inactive.<br>
-  We'll hold your data for 30 days, and then it will be purged from our system.</mat-dialog-content>
+  We'll hold your data for 30 days, and then it will be removed from our system.</mat-dialog-content>
   <mat-dialog-actions style="margin-top:12px" align="end"><button mat-button color="primary" style="margin-right:8px" (click)="close(false)">CANCEL</button>
   <button mat-raised-button color="warn" (click)="close(true)">DELETE</button>
   </mat-dialog-actions>

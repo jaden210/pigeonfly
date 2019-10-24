@@ -8,10 +8,10 @@
   >
     <mat-toolbar class="toolbar">
       <img
-        src="/assets/ccLogo.png"
+        src="/assets/gymJumperLogo.png"
         class="title"
         (click)="navRoute('home')"
-        alt="Compliancechimp"
+        alt="Gym Jumper"
       />
       <div class="flex"></div>
       <button mat-icon-button (click)="sidenav.close()">
@@ -23,10 +23,10 @@
         <button
           mat-button
           class="link"
-          (click)="navRoute('how-it-works')"
+          (click)="navRoute('find-a-gym')"
           routerLinkActive="tactive"
         >
-          How it Works
+          Gyms near you
         </button>
         <button
           mat-button
@@ -34,39 +34,23 @@
           (click)="navRoute('pricing')"
           routerLinkActive="tactive"
         >
-          Common Questions
-        </button>
-        <button
-          mat-button
-          class="link"
-          (click)="navRoute('support')"
-          routerLinkActive="tactive"
-        >
-          Support
-        </button>
-        <button
-          mat-button
-          class="link"
-          (click)="navRoute('about')"
-          routerLinkActive="tactive"
-        >
-          About us
+          Common questions
         </button>
         <button mat-button class="link" (click)="goToBlog()">Blog</button>
         <button
           mat-button
           class="link"
-          (click)="navRoute('sign-in')"
+          (click)="routeSignUp('sign-in')"
           routerLinkActive="tactive"
         >
-          Sign in
+          {{appService.loggedInStatus}}
         </button>
         <button
           mat-stroked-button
-          style="margin: 24px 0;color:#ffffff;border-color:#ffffff !important"
-          (click)="routeSignUp()"
+          style="margin: 24px 0;"
+          (click)="routeSignUp('sign-up')"
         >
-          START FOR FREE
+          SIGN UP
         </button>
         <div class="border"></div>
         <sign-up></sign-up>
@@ -77,17 +61,16 @@
     <mat-toolbar
       class="toolbar"
       *ngIf="
-        !router.isActive('/account', false) &&
         !router.isActive('/signin', false) &&
         !router.isActive('/get-started', false)
       "
       [class.shadow]="appService.toolbarShadow"
     >
       <img
-        src="/assets/ccLogo.png"
+        src="/assets/gymJumperLogo.png"
         class="title"
         routerLink="home"
-        alt="Compliancechimp"
+        alt="Gym Jumper"
       />
       <div style="width: 50px"></div>
       <div class="flex"></div>
@@ -95,10 +78,10 @@
         <button
           mat-button
           class="link"
-          routerLink="how-it-works"
+          routerLink="find-a-gym"
           routerLinkActive="tactive"
         >
-          How it Works
+          Gyms near you
         </button>
         <button
           mat-button
@@ -106,15 +89,7 @@
           routerLink="pricing"
           routerLinkActive="tactive"
         >
-          Common Questions
-        </button>
-        <button
-          mat-button
-          class="link"
-          routerLink="support"
-          routerLinkActive="tactive"
-        >
-          Support
+          Pricing
         </button>
         <button
           mat-button
@@ -122,21 +97,20 @@
           routerLink="about"
           routerLinkActive="tactive"
         >
-          About us
+          About
         </button>
         <button mat-button class="link" (click)="goToBlog()">Blog</button>
-        <button mat-button class="link" routerLink="sign-in">Sign in</button>
+        <button mat-button class="link" (click)="routeSignUp('sign-in')">{{appService.loggedInStatus}}</button>
         <button
           mat-stroked-button
-          style="color: #ffffff;border-color:#ffffff !important"
-          (click)="routeSignUp()"
+          (click)="routeSignUp('sign-up')"
         >
-          START FOR FREE
+          SIGN UP
         </button>
       </div>
       <div class="mobile">
         <button mat-icon-button (click)="open = true">
-          <mat-icon style="color:#ffffff">menu</mat-icon>
+          <mat-icon>menu</mat-icon>
         </button>
       </div>
     </mat-toolbar>
@@ -148,14 +122,10 @@
         *ngIf="
           !router.isActive('/account', false) &&
           !router.isActive('/signin', false) &&
+          !router.isActive('/find-a-gym', false) &&
           !router.isActive('/get-started', false)
         "
       ></footer>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
-<div class="loading" *ngIf="appService.firstTimeUser">
-  <img id="loading-chimp" src="/assets/chimp.png" />
-  <div id="loading-text">Hold tight while we finish setting things up.</div>
-  <mat-progress-bar id="loading-bar" mode="indeterminate"></mat-progress-bar>
-</div>

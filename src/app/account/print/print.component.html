@@ -1,0 +1,9 @@
+<div id="page">
+  <div id="col">
+    <img id="img" src="/assets/gymJumperLogo.png">
+    <div id="info">Scan the code from the GYMjumper app and show the employee to enter</div>
+  </div>
+  <div id="col">
+    <qr-code [value] = "'https://gymjumper.com/'+ gym?.id" [size] = "200"></qr-code>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+<h2 mat-dialog-title>Scan Users into your Gym</h2>
+  <mat-dialog-content>
+    <input id="input" #url [(ngModel)]="searchString" (keyup.enter)="getUser(); url.select()" onblur="this.focus()" autofocus autocomplete="off">
+    <div id="card">
+      <div class="left">
+        <div id="name">{{user?.name || 'name'}}</div>
+        <div class="text">{{user?.email || 'email'}}</div>
+        <div class="text">{{user?.id || 'member id'}}</div>
+        <div class="text">last visit: {{user?.lastVisit || 'never'}}</div>
+        <img class="logo" src="/assets/gymJumperLogo.png">
+      </div>
+      <div class="right">
+        <img id="userImg" src={{user?.profileUrl}} onerror="src = '/assets/blindfold.png'">
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions style="margin-top:12px" align="end">
+    <button mat-raised-button color="warn" [disabled]="!user" style="margin-right:8px" (click)="admitUserToGym()">GOOD TO GO</button>
+    <button mat-button color="warn" [disabled]="!user" style="margin-right:8px" (click)="viewUserAccount()">VIEW ACCOUNT</button>
+    <button mat-button color="warn" style="margin-right:8px" (click)="clearUser()">CANCEL</button>
+    <button mat-button color="primary" (click)="close(false)">CLOSE</button>
+  </mat-dialog-actions>
+  <mat-spinner *ngIf="loading" id="loader"></mat-spinner>

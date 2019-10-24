@@ -1,14 +1,14 @@
 <mat-toolbar class="toolbar">
   <img
-    src="/assets/ccLogoDark.png"
+    src="/assets/gymJumperLogo.png"
     class="title"
     routerLink="/home"
-    alt="Compliancechimp"
+    alt="Gym Jumper"
   />
 </mat-toolbar>
 <div id="content-area">
   <mat-card>
-    <mat-card-title>Sign in to your team</mat-card-title>
+    <mat-card-title>Sign in</mat-card-title>
     <mat-card-content>
       <span class="error">{{ signinError }}</span>
       <mat-form-field appearance="standard">
@@ -51,11 +51,7 @@
       </p>
     </mat-card-footer>
   </mat-card>
-
   <div id="get-started">
-    <p>
-      Received an invite to Compliancechimp?
-      <a routerLink="/join-team">Join the team</a>
-    </p>
+    <p>New here? <a routerLink="/sign-up">Create an Account</a></p>
   </div>
 </div>

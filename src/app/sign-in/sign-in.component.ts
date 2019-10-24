@@ -4,7 +4,6 @@ import { FormControl, Validators } from "@angular/forms";
 import { AngularFireAuth } from "@angular/fire/auth";
 import { AppService } from "../app.service";
 import { MatSnackBar } from "@angular/material";
-declare var gtag: Function;
 
 @Component({
   selector: "sign-in",
@@ -54,7 +53,7 @@ export class SignInComponent {
               if (invites.length > 0) this.router.navigate(["/join-team"]);
               else
                 this.signinError =
-                  "No users found matching this email address, create a team or ask your employer to add you to their team";
+                  "No users found matching this email address, create a new account";
             });
           } else if (error.code == "auth/wrong-password") {
             this.showResetPassword = true;
@@ -75,10 +74,6 @@ export class SignInComponent {
         });
         this.password.setValue(null);
         this.password.markAsPristine();
-        gtag("event", "password_reset", {
-          event_category: "password",
-          event_label: `${this.email.value} reset a password`
-        });
         console.log("sent Password Reset Email!");
       })
       .catch(error => console.log(error));

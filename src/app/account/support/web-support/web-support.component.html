@@ -10,13 +10,13 @@
     <div class="expanded" *ngIf="aItem?.id == item.id">
       <div class="body">{{item.body}}</div>
       <div class="user-info" *ngIf="item.isUser">
-        <img class="user-img" src={{item.user?.profileUrl}} onerror="src = '/assets/face.png'" alt="Compliancechimp">
+        <img class="user-img" src={{item.user?.profileUrl}} onerror="src = '/assets/face.png'" alt="Gym Jumper">
         <div class="user-data">{{item.user?.name}}</div>
         <div class="user-data">phone:{{item.user?.phone}}</div>
         <div class="user-data">account type: {{item.user?.accountType}}</div>
       </div>
       <div class="user-info" *ngIf="!item.isUser">
-        <img class="user-img" src={{item.user?.profileUrl}} onerror="src = '/assets/face.png'" alt="Compliancechimp">
+        <img class="user-img" src={{item.user?.profileUrl}} onerror="src = '/assets/face.png'" alt="Gym Jumper">
         <div class="user-data">New Visitor</div>
       </div>
       <div class="action-row">

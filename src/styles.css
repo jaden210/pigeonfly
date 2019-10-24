@@ -63,39 +63,19 @@ mat-toolbar {
 .hwindow {
     height: calc(100vh - 64px);
     overflow: scroll;
-    background-color: #054d8a;
+    background-color: #FFFFFF;
 }
 
 .active {
     transition: all 250ms;
-    /*border-bottom: 2px solid #ff9100 !important;*/
-    color: #ff9100 !important;
+    /*border-bottom: 2px solid #ff5252 !important;*/
+    color: #ff5252 !important;
     background-color: rgba(0,0,0,.17) !important;
 }
 
 .bactive {
     transition: all 250ms;
-    color: #ff9100 !important;
-}
-
-.helper {
-    position: fixed;
-    z-index: 1000;
-    bottom: 12px;
-    left: 112px;
-    transition: all 500ms;
-    max-width: calc(100vw - 24px);
-}
-
-.helper-box {
-    background-color: #FFFFFF;
-    border-radius: 24px;
-    padding: 12px;
-    box-sizing: border-box;
-    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.36), 0 0 0 1px rgba(0,0,0,0.08);
-    max-height: calc(100vh - 360px);
-    overflow: hidden;
-    position: relative;
+    color: #ff5252 !important;
 }
 
 .general {
@@ -117,38 +97,6 @@ mat-toolbar {
     flex: 1;
 }
 
-
-.helper-close {
-    position: absolute !important;
-    right: 8px;
-    top: 8px;
-    color: #666666 !important;
-}
-
-.helper-name {
-    font-size: 27px;
-    color: #ff9100;
-    margin-bottom: 12px;
-    margin-right: 36px;
-}
-
-.helper-description {
-    font-size: 15px;
-    font-weight: 300;
-    color: #212121;
-    max-width: 500px;
-    max-height: calc(100vh - 450px);
-    overflow: scroll;
-    padding-right: 9px;
-}
-
-.helper-input {
-    width: 250px;
-}
-
-.helper-button {
-    margin: 12px 12px 0 24px !important;
-}
 
 agm-map {
     height: 40vh;
@@ -181,10 +129,6 @@ agm-map {
 
 .toolbar-button {
     margin: 0 4px !important;
-}
-
-.mat-progress-spinner circle, .mat-spinner circle { /* for progress bar in badges. will change all spiiner color */
-    stroke: #ffd740 !important;
 }
 
 @media screen and (max-width: 785px) {

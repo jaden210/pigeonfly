@@ -1,7 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { GetStartedService } from "../get-started.service";
-declare var gtag: Function;
 
 @Component({
   selector: "step1",
@@ -11,8 +10,10 @@ declare var gtag: Function;
 export class Step1Component implements OnInit {
   error: string;
   name: string;
-  companyName: string;
-  jobTitle: string;
+  password: string;
+  confirmPassword: string;
+  loading: boolean = false;
+  agree: boolean;
 
   constructor(
     private router: Router,
@@ -21,23 +22,46 @@ export class Step1Component implements OnInit {
 
   ngOnInit() {
     if (!this.getStartedService.Email) this.router.navigate(["/sign-up"]);
-    this.companyName = this.getStartedService.companyName;
-    this.name = this.getStartedService.name;
-    this.jobTitle = this.getStartedService.jobTitle;
   }
 
-  next(): void {
-    this.error =
-      !this.companyName || !this.name ? "Please enter the required items" : "";
-    if (!this.error) {
-      gtag("event", "click", {
-        event_category: "sign up funnel",
-        event_label: "step 1"
-      });
-      this.getStartedService.companyName = this.companyName;
+  createAccount(): void {
+    this.error = 
+      !this.name ? "Please enter your name" :
+      !this.password || !this.confirmPassword
+        ? "Please enter the required items"
+        : this.password.length < 6
+        ? "Password must be at least 6 characters"
+        : this.password !== this.confirmPassword
+        ? "Passwords do not match"
+        : !this.agree
+        ? "Please agree to the terms of service, privacy policy and customer agreement"
+        : null;
+    if (!this.error && !this.loading) {
+      this.loading = true;
       this.getStartedService.name = this.name;
-      this.getStartedService.jobTitle = this.jobTitle;
-      this.router.navigate(["/get-started/step2"]);
+      this.getStartedService.createAuthUser(this.password).then(
+        (authUser: firebase.auth.UserCredential) => {
+          this.getStartedService.createUser(authUser).then(
+            () => {
+              this.router.navigate(["/account/home"]);
+              this.loading = false; 
+            },
+            error => {
+              this.error = "Error creating user, please contact support";
+              this.loading = false;
+            }
+          );
+        },
+        error => {
+          this.loading = false;
+          this.error =
+            error.code == "auth/email-already-in-use"
+              ? ""
+              : error.code == "auth/invalid email"
+              ? "Please enter a valid email address"
+              : "We're having trouble creating your account, try again later";
+        }
+      );
     }
   }
 }

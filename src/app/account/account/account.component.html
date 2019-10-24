@@ -1,18 +1,13 @@
-<mat-toolbar>
-    <img class="toolbar-logo" src="/assets/ccLogoDark.png">
-    <button mat-icon-button class="toolbar-expand-mobile" (click)="accountService.toggle()"><mat-icon>menu</mat-icon></button>
-    <div class="toolbar-title">Account</div>
-  <div class="flex"></div>
-  <toolbar-helper></toolbar-helper>
-</mat-toolbar>
-<mat-tab-group color="accent" id="tabs">
+<mat-tab-group color="accent" id="tabs" [selectedIndex]="selectedTab" (selectedTabChange)="tabChanged($event)">
   <mat-tab label="Personal"> 
     <div class="column">
       <div class="image-cont">
-        <div class="image-circle"><mat-progress-bar style="position: absolute;bottom: 0px;" *ngIf="loading" mode="indeterminate"></mat-progress-bar><img class="img" src={{accountService.user?.profileUrl}} onerror="src = '/assets/face.png'" alt="Compliancechimp"></div>
+        <div class="image-circle"><mat-progress-bar style="position: absolute;bottom: 0px;" *ngIf="loading" mode="indeterminate"></mat-progress-bar><img class="img" src={{accountService.user?.profileUrl}} onerror="src = '/assets/face.png'" alt="Gym Jumper"></div>
         <div style="height: 0px; width: 0px; overflow:hidden"><input type="file" id="upProfileUrl" accept=".png,.jpg,.mp4" #uploadT (change)="uploadProfileImage($event)"></div>
         <button mat-stroked-button class="image-button" color="primary" (click)="upload(true)">CHANGE PICTURE</button>
       </div>
+      <button mat-stroked-button class="image-button" color="primary" (click)="accountService.logout()">LOGOUT</button>
+      <button mat-stroked-button class="image-button" color="primary" *ngIf="accountService.user.isDev" routerLink="/account/support">SUPPORT</button>
       <mat-form-field>
         <input matInput color="primary" placeholder="profile name" [(ngModel)]="accountService.user.name" (change)="saveProfile()">
       </mat-form-field>
@@ -22,80 +17,75 @@
       <mat-form-field>
         <input matInput color="primary" placeholder="phone" type="tel" [(ngModel)]="accountService.user.phone" (change)="saveProfile()">
       </mat-form-field>
-      <mat-form-field>
-        <input matInput color="primary" placeholder="job title" type="text" [(ngModel)]="accountService.user.jobTitle" (change)="saveProfile()">
-      </mat-form-field>
+      <button mat-button id="delete-account" color="warn" (click)="deleteAccount()"><mat-icon>delete</mat-icon> DELETE ACCOUNT</button>
     </div>
   </mat-tab>
-  <mat-tab label="Company" *ngIf="showCompany">
-  <div class="column">
-    <div class="image-cont">
-      <div class="image"><mat-progress-bar style="position: absolute;bottom: 0px;" *ngIf="loading" mode="indeterminate"></mat-progress-bar><img class="img" src={{accountService.aTeam?.logoUrl}} style="object-fit: contain !important;" onerror="src = '/assets/lost.png'" alt="Compliancechimp"></div>
-      <div style="height: 0px; width: 0px; overflow:hidden"><input type="file" id="upLogoUrl" accept=".png,.jpg,.mp4" #uploadT (change)="uploadLogoImage($event)"></div>
-      <button mat-stroked-button class="image-button" color="primary" (click)="upload(false)">CHANGE COMPANY LOGO</button>
-    </div>
-    <mat-form-field>
-      <input matInput color="primary" placeholder="company name" type="text" [(ngModel)]="accountService.aTeam.name" (change)="saveTeam()">
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput color="primary" placeholder="company phone" type="tel" [(ngModel)]="accountService.aTeam.phone" (change)="saveTeam()">
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput color="primary" placeholder="address" type="text" [(ngModel)]="accountService.aTeam.street" (change)="saveTeam()">
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput color="primary" placeholder="address 2" type="text" [(ngModel)]="accountService.aTeam.street2" (change)="saveTeam()">
-    </mat-form-field>
-    <div class="row">
-
-      <mat-form-field>
-        <input matInput color="primary" placeholder="city" type="text" [(ngModel)]="accountService.aTeam.city" (change)="saveTeam()">
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput color="primary" placeholder="state" type="text" [(ngModel)]="accountService.aTeam.state" (change)="saveTeam()">
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput color="primary" placeholder="zip" type="text" [(ngModel)]="accountService.aTeam.zip" (change)="saveTeam()">
-      </mat-form-field>
-    </div>
-    <button mat-button id="delete-account" color="warn" (click)="deleteAccount()"><mat-icon>delete</mat-icon> DELETE ACCOUNT</button>
-    </div>
-    </mat-tab>
-    <mat-tab label="Billing" *ngIf="false">
-      <div id="billing">
-        <ng-container *ngIf="!accountService.aTeam.cardToken">
-          <div class="card">
-            <div class="free" *ngIf="accountService.trialDaysLeft > 0">You’re in a free trial period for {{accountService.trialDaysLeft}} more days. Payment can be entered any time, but is not required until your free trial is up. You’ll be charged based on your team size, on the one month anniversary of your account creation date according to our Customer Agreement which you agreed to when setting up your account. Feel free to review the <a routerLink="/customer-agreement">Customer Agreement</a> again. Based on your current team size, you will be charged ${{teamTier}} per month, and can cancel at any time. All payments are handled securely through Stripe.</div>
-            <div class="free" *ngIf="accountService.trialDaysLeft <= 0">You’re free trial has expired. Please enter payment information to access your account. You’ll be charged based on your team size, on the one month anniversary of your account creation date according to our Customer Agreement which you agreed to when setting up your account. Feel free to review the <a routerLink="/customer-agreement">Customer Agreement</a> again. Based on your current team size, you will be charged ${{teamTier}} per month, and can cancel at any time. All payments are handled securely through Stripe.</div>
-            <button mat-raised-button color="accent" style="color:#ffffff;align-self: flex-end" (click)="enterCardInfo()">ENTER PAYMENT</button>
-          </div>
-        </ng-container>
-        <ng-container *ngIf="accountService.aTeam.cardToken">
-          <div class="card">
-            <div class="free">Thank you! Your card is on file and securely stored with Stripe for monthly billing. Click below to update or change your payment information, anytime.</div>
-            <button mat-raised-button color="accent" style="color:#ffffff;align-self: flex-end;" (click)="enterCardInfo()">UPDATE PAYMENT</button>
-          </div>
-        </ng-container>
-        <div class="s-row">
-          <div class="stripe-text">Payments are secured by </div>
-          <div class="f-image"><img id="f-img" src="/assets/stripeName.png"></div>
+  <mat-tab label="History"> 
+    <mat-list>
+      <mat-list-item *ngFor="let visit of accountService?.visits | keyvalue">
+        <img matListAvatar src={{accountService?.visitedGyms[visit?.value.gymId]?.logoUrl}}>
+        <h3 matLine>{{accountService?.visitedGyms[visit?.value.gymId]?.name}}</h3>
+        <p matLine>
+          <span> {{visit?.value.createdAt}} </span>
+        </p>
+      </mat-list-item>
+    </mat-list>
+  </mat-tab>
+  <mat-tab label="Billing">
+    <div id="billing">
+      <ng-container *ngIf="!accountService.user.cardToken">
+        <div class="card">
+          <div class="free" *ngIf="accountService.trialDaysLeft > 0">You’re in a free trial period for {{accountService.trialDaysLeft}} more days. Payment can be entered any time, but is not required until your free trial is up. You’ll be charged based on your team size, on the one month anniversary of your account creation date according to our Customer Agreement which you agreed to when setting up your account. Feel free to review the <a routerLink="/customer-agreement">Customer Agreement</a> again. Based on your current team size, you will be charged ${{teamTier}} per month, and can cancel at any time. All payments are handled securely through Stripe.</div>
+          <div class="free" *ngIf="accountService.trialDaysLeft <= 0">You’re free trial has expired. Please enter payment information to access your account. You’ll be charged based on your team size, on the one month anniversary of your account creation date according to our Customer Agreement which you agreed to when setting up your account. Feel free to review the <a routerLink="/customer-agreement">Customer Agreement</a> again. Based on your current team size, you will be charged ${{teamTier}} per month, and can cancel at any time. All payments are handled securely through Stripe.</div>
+          <button mat-raised-button color="accent" style="color:#ffffff;align-self: flex-end" (click)="enterCardInfo()">ENTER PAYMENT</button>
         </div>
-        <div id="bh" class="card">
-          <div class="bh-row">
-            <div id="bh-title">Billing History</div>
-            <div class="flex"></div>
-            <button mat-stroked-button color="accent" (click)="getBillingHistory()">
-              last refreshed: {{accountService.aTeam.stripeInvoicesRetrievedAt || 'never'}}
-              <mat-icon [ngClass]="{spin: loadingBilling}">refresh</mat-icon>
-            </button>
-          </div>
-          <div class="bh-row" *ngFor="let invoice of accountService.aTeam.stripeInvoice?.data">
-            {{invoice.date}}
-          </div>
-          <div id="no-bh" *ngIf="!accountService.aTeam.stripeInvoice?.data?.length">
-            <mat-icon>restore</mat-icon>No billing history
-          </div>
+      </ng-container>
+      <ng-container *ngIf="accountService.user.cardToken">
+        <div class="card">
+          <div class="free">Thank you! Your card is on file and securely stored with Stripe for monthly billing. Click below to update or change your payment information, anytime.</div>
+          <button mat-raised-button color="accent" style="color:#ffffff;align-self: flex-end;" (click)="enterCardInfo()">UPDATE PAYMENT</button>
+        </div>
+      </ng-container>
+      <div class="s-row">
+        <div class="stripe-text">Payments are secured by </div>
+        <div class="f-image"><img id="f-img" src="/assets/stripeName.png"></div>
+      </div>
+      <div id="bh" class="card">
+        <div class="bh-row">
+          <div id="bh-title">Billing History</div>
+          <div class="flex"></div>
+          <button mat-stroked-button color="accent" (click)="getBillingHistory()">
+            last refreshed: {{accountService.user.stripeInvoicesRetrievedAt || 'never'}}
+            <mat-icon [ngClass]="{spin: loadingBilling}">refresh</mat-icon>
+          </button>
+        </div>
+        <div class="bh-row" *ngFor="let invoice of accountService.user.stripeInvoice?.data">
+          {{invoice.date}}
+        </div>
+        <div id="no-bh" *ngIf="!accountService.user.stripeInvoice?.data?.length">
+          <mat-icon>restore</mat-icon>No billing history
         </div>
       </div>
-    </mat-tab>
+    </div>
+  </mat-tab>
+  <mat-tab label="My Gym" *ngIf="showGym">
+      <div class="column">
+          <div class="image-cont">
+            <div class="image-circle"><mat-progress-bar style="position: absolute;bottom: 0px;" *ngIf="loading" mode="indeterminate"></mat-progress-bar><img class="img" src={{accountService.aGym?.logoUrl}} onerror="src = '/assets/face.png'" alt="Gym Jumper"></div>
+            <div style="height: 0px; width: 0px; overflow:hidden"><input type="file" id="upLogoUrl" accept=".png,.jpg,.mp4" #uploadT (change)="uploadGymLogo($event)"></div>
+            <button mat-stroked-button [disabled]="accountServive?.aGym?.ownerId == accountService?.user?.id" class="image-button" color="primary" (click)="upload(false)">CHANGE LOGO</button>
+          </div>
+          <mat-form-field>
+            <input matInput color="primary" placeholder="gym name" [disabled]="accountServive?.aGym?.ownerId == accountService?.user?.id" [(ngModel)]="accountService.aGym.name" (change)="saveGym()">
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput color="primary" placeholder="email" [disabled]="accountServive?.aGym?.ownerId == accountService?.user?.id" [(ngModel)]="accountService.aGym.email" (change)="saveGym()">
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput color="primary" placeholder="phone" type="tel" [disabled]="accountServive?.aGym?.ownerId == accountService?.user?.id" [(ngModel)]="accountService.aGym.phone" (change)="saveGym()">
+          </mat-form-field>
+        </div>
+  </mat-tab>
+  <mat-tab label="Scanning Station" *ngIf="showGym">
+  </mat-tab>
   </mat-tab-group>

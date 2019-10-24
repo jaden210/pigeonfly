@@ -5,12 +5,12 @@
 export const environment = {
   production: false,
   firebaseConfig: {
-    apiKey: "AIzaSyB9gfea4YtAckHj-yljfZVzv-R33A4wEVw",
-    authDomain: "compliancechimp-dev.firebaseapp.com",
-    databaseURL: "https://compliancechimp-dev.firebaseio.com",
-    projectId: "compliancechimp-dev",
-    storageBucket: "compliancechimp-dev.appspot.com",
-    messagingSenderId: "370152164668"
+    apiKey: "AIzaSyAqPjAkJcXT-jKqDFBTOhSPZhwqU2XCfO0",
+    authDomain: "gym-jumper.firebaseapp.com",
+    databaseURL: "https://gym-jumper.firebaseio.com",
+    projectId: "gym-jumper",
+    storageBucket: "gym-jumper.appspot.com",
+    messagingSenderId: "988712624451"
   },
   stripe: {
     publishable: "pk_test_xQTLf7GJIEhTX1tz1AVeJaea",

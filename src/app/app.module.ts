@@ -23,21 +23,18 @@ import { PricingComponent } from "./pricing/pricing.component";
 import { AboutComponent } from "./about/about.component";
 import { ContactComponent } from "./contact/contact.component";
 import { SignUpPageComponent } from "./sign-up-page/sign-up-page.component";
-import { MakeOSHAComponent, Safe } from "./make-osha/make-osha.component";
 import { FooterComponent } from "./footer/footer.component";
-import { PreviewDialogComponent } from "./make-osha/preview-dialog/preview-dialog.component";
-import { TopicDialogComponent } from "./make-osha/topic-dialog/topic-dialog.component";
 import { SignInComponent } from "./sign-in/sign-in.component";
 import { HowComponent } from "./how/how.component";
 import { TermsOfUseComponent } from "./terms-of-use/terms-of-use.component";
 import { PrivacyPolicyComponent } from "./privacy-policy/privacy-policy.component";
 import { CustomerAgreementComponent } from "./customer-agreement/customer-agreement.component";
 import { VideoDialogComponent } from "./video-dialog/video-dialog.component";
-import { TeamDisabledDialog } from "./account/account.service";
 import { SignUpComponent } from "./sign-up/sign-up.component";
 import { GetStartedModule } from "./get-started/get-started.module";
-import { JoinTeamComponent } from "./join-team/join-team.component";
 import { CommonQuestionsComponent } from "./common-questions/common-questions.component";
+import { FindAGymComponent } from "./find-a-gym/find-a-gym.component";
+import { AgmCoreModule } from "@agm/core";
 
 @NgModule({
   declarations: [
@@ -49,20 +46,15 @@ import { CommonQuestionsComponent } from "./common-questions/common-questions.co
     HowComponent,
     ContactComponent,
     SignUpPageComponent,
-    MakeOSHAComponent,
-    Safe,
     FooterComponent,
     SignInComponent,
-    PreviewDialogComponent,
-    TopicDialogComponent,
     TermsOfUseComponent,
     PrivacyPolicyComponent,
     CustomerAgreementComponent,
     VideoDialogComponent,
-    TeamDisabledDialog,
     SignUpComponent,
-    JoinTeamComponent,
-    CommonQuestionsComponent
+    CommonQuestionsComponent,
+    FindAGymComponent
   ],
   imports: [
     BrowserModule,
@@ -77,13 +69,13 @@ import { CommonQuestionsComponent } from "./common-questions/common-questions.co
     AngularEditorModule,
     HttpClientModule,
     GetStartedModule,
-    SharedModule.forRoot()
+    SharedModule.forRoot(),
+    AgmCoreModule.forRoot({
+      apiKey: "AIzaSyAqPjAkJcXT-jKqDFBTOhSPZhwqU2XCfO0"
+    })
   ],
   entryComponents: [
-    PreviewDialogComponent,
-    TopicDialogComponent,
-    VideoDialogComponent,
-    TeamDisabledDialog
+    VideoDialogComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

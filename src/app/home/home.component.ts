@@ -2,7 +2,6 @@ import { Component, OnInit } from "@angular/core";
 import { AppService } from "../app.service";
 import { Router } from "@angular/router";
 import { AngularFireAuth } from "@angular/fire/auth";
-declare var gtag: Function;
 
 @Component({
   selector: "app-home",
@@ -12,6 +11,7 @@ declare var gtag: Function;
 export class HomeComponent implements OnInit {
   loginErrorStr;
   email;
+  gyms;
 
   constructor(
     public appService: AppService,
@@ -19,7 +19,16 @@ export class HomeComponent implements OnInit {
     public auth: AngularFireAuth
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.getGyms();
+  }
+
+  getGyms() {
+    this.appService.getGymLocations().subscribe(gyms => {
+      gyms.slice(1,7);
+      this.gyms = gyms;
+    });
+  }
 
   createAccount(): void {
     this.loginErrorStr = !this.email ? "email required" : null;
@@ -27,19 +36,7 @@ export class HomeComponent implements OnInit {
       this.appService.email = this.email;
       this.appService.checkForExistingUser(this.email).then(
         isExistingUser => {
-          if (!isExistingUser)
-            this.appService.getInvites(this.email).subscribe(invites => {
-              if (invites.length > 0) this.router.navigate(["/join-team"]);
-              else this.router.navigate(["/get-started"]);
-            });
-          else {
-            gtag("event", "click", {
-              event_category: "sign up funnel",
-              event_label: "create account"
-            });
-            this.router.navigate(["/sign-in"]);
-            return false;
-          }
+          !isExistingUser ? this.router.navigate(["/get-started"]) : this.router.navigate(["/sign-in"]);
         },
         error => (this.loginErrorStr = error)
       );
@@ -51,10 +48,6 @@ export class HomeComponent implements OnInit {
       if (user && user.uid) {
         this.router.navigate(["account"]);
       } else {
-        gtag("event", "click", {
-          event_category: "sign up funnel",
-          event_label: "start today its free"
-        });
         this.router.navigate(["/sign-up"]);
       }
     });

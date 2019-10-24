@@ -1,5 +1,4 @@
 import { Component, OnInit } from "@angular/core";
-import { GetStartedService } from "./get-started.service";
 
 @Component({
   selector: "get-started",
@@ -7,9 +6,8 @@ import { GetStartedService } from "./get-started.service";
   styleUrls: ["./get-started.component.css"]
 })
 export class GetStartedComponent implements OnInit {
-  constructor(private getStartedService: GetStartedService) {}
+  constructor() {}
 
   ngOnInit() {
-    this.getStartedService.setIndustries();
   }
 }

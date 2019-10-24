@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { Router } from "@angular/router";
 import { AngularFireStorage } from "@angular/fire/storage";
-import { AccountService, User } from "../account.service";
+import { AccountService, User, Gym } from "../account.service";
 import { map } from "rxjs/operators";
 import { Observable } from "rxjs";
 
@@ -11,6 +11,8 @@ export class SupportService {
 
   makeBlog: boolean = false;
   blog;
+  makeGym: boolean = false;
+  gym: Gym = new Gym();
 
   constructor(
     public db: AngularFirestore,
@@ -96,6 +98,20 @@ export class SupportService {
           return { id, ...data };
         })
       )
+    )
+  }
+
+  getGyms() {
+    return this.db.collection("gyms", ref => ref.orderBy("createdAt", "desc")).snapshotChanges().pipe(
+      map(actions =>
+        actions.map(a => {
+          //better way
+          const data = a.payload.doc.data() as any;
+          const id = a.payload.doc.id;
+          data.createdAt = data.createdAt.toDate();
+          return { id, ...data };
+        })
+        )
     )
   }
 }

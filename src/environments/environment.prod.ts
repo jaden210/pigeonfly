@@ -1,12 +1,12 @@
 export const environment = {
   production: true,
   firebaseConfig: {
-    apiKey: "AIzaSyD_cP3HvB_9y-mNO_L7-bGHrHZMecpSlVE",
-    authDomain: "teamlog-2d74c.firebaseapp.com",
-    databaseURL: "https://teamlog-2d74c.firebaseio.com",
-    projectId: "teamlog-2d74c",
-    storageBucket: "teamlog-2d74c.appspot.com",
-    messagingSenderId: "800172058622"
+    apiKey: "AIzaSyAqPjAkJcXT-jKqDFBTOhSPZhwqU2XCfO0",
+    authDomain: "gym-jumper.firebaseapp.com",
+    databaseURL: "https://gym-jumper.firebaseio.com",
+    projectId: "gym-jumper",
+    storageBucket: "gym-jumper.appspot.com",
+    messagingSenderId: "988712624451"
   },
   stripe: {
     publishable: "pk_live_r9CMgitgEmMOHbkAqL5QblcT",

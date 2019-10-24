@@ -1,0 +1,94 @@
+agm-map {
+  height: calc(100vh - 64px);
+}
+
+#search {
+  position: fixed;
+  top: 76px;
+  left: 12px;
+  background: #ffffff;
+  height: 48px;
+  width: 300px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  box-sizing: border-box;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+input {
+  flex: 1;
+  height: 80%;
+  outline: none;
+  border: none;
+  font-size: 17px;
+  padding-left: 8px;
+}
+
+#gym {
+  position: fixed;
+  top: 150px;
+  left: 12px;
+  background: #ffffff;
+  height: 350px;
+  width: 300px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+#close {
+  position: fixed;
+  top: 150px;
+  left: 324px;
+}
+
+#gym-img {
+  max-height: 150px;
+  object-fit: contain;
+  padding: 12px;
+}
+
+#banner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 56px;
+  background-color: #4285F4;
+  color: #FFFFFF;
+  width: 100%;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+#directions {
+  position: absolute;
+  right: 12px;
+  top: -20px;
+}
+
+#gym-card {
+  padding: 12px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+}
+
+.gym-info {
+  opacity: .87;
+  font-size: 15px;
+}
+
+.loading {
+  position: fixed;
+  top: 45vh;
+  width: 100vw;
+  text-align: -webkit-center;
+}

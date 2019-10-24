@@ -3,32 +3,11 @@ service cloud.firestore {
     match /{document=**} {
       allow read, write: if request.auth.uid != null;
     }
-    match /invitation/{inviteEmail} {
-      allow read;
-    }
     match /support/{supportId} {
       allow write;
     }
-    match /team/{teamId} {
-      allow write: if resource.data.ownerId == request.auth.uid;
-    }
-    match /topic/{topicId} {
+    match /gyms/{gymId} {
       allow read;
-    }
-    match /industry/{industryId} {
-      allow read;
-    }
-    match /article/{articleId} {
-      allow read;
-    }
-    match /blog/{blogId} {
-      allow read;
-    }
-    match /blog-topic/{blogId} {
-      allow read;
-    }
-    match /blog-response/{blogId} {
-      allow read, write;
     }
     }
 }

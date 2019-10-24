@@ -1,0 +1,25 @@
+<agm-map [latitude]="searchParams.lat" [longitude]="searchParams.long" [zoom]="searchParams.zoom" [usePanning]="true">
+  <agm-marker *ngFor="let gym of gyms" (markerClick)="aGym = gym" [latitude]="gym.latitude" [longitude]="gym.longitude"></agm-marker>
+</agm-map>
+<div id="search">
+  <mat-icon>search</mat-icon>
+  <input #search placeholder="search by zipcode" (keyup.enter)="searchByZip(search.value)">
+</div>
+<button id="close" *ngIf="aGym" (click)="aGym = null" mat-mini-fab color="white"><mat-icon>close</mat-icon></button>
+<div id="gym" *ngIf="aGym">
+  <img id="gym-img" [src]="aGym.logoUrl" onerror="src = '/assets/lost.png'">
+  <div id="banner">
+    <button id="directions" mat-mini-fab (click)="getDirections()"><mat-icon>directions</mat-icon></button>
+    <div id="gym-name">{{aGym.name}}</div>
+  </div>
+  <div id="gym-card">
+    <div class="gym-info">{{aGym.street1}}</div>
+    <div class="gym-info">{{aGym.street2}}</div>
+    <div class="row">
+      <div class="gym-info">{{aGym.city}},</div>
+      <div class="gym-info">{{aGym.state}}</div>
+      <div class="gym-info">{{aGym.zip}}</div>
+    </div>
+  </div>
+</div>
+<div class="loading" *ngIf="loading"><mat-spinner></mat-spinner>Try searching</div>

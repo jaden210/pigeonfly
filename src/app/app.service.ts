@@ -6,7 +6,9 @@ import { AngularFireAuth } from "@angular/fire/auth";
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
 import { map, tap } from "rxjs/operators";
-declare var gtag: Function;
+import { MapsAPILoader } from "@agm/core";
+
+declare var google: any;
 
 @Injectable({
   providedIn: "root"
@@ -18,25 +20,29 @@ export class AppService {
   invites: any[];
 
   isUser: boolean = false; // decides if a user has logged in before
-  isLoggedIn: boolean = false; // decides if a user is logged in
+  loggedInStatus: string = "Sign in"; // decides if a user is logged in
   firstTimeUser: boolean = false; // lets the system show new member dialog
 
   removeFromInvite: boolean = false;
   toolbarShadow: boolean = true;
 
+
+  geoCoder;
+
   constructor(
     public db: AngularFirestore,
     public dialog: MatDialog,
     private auth: AngularFireAuth,
-    private router: Router
-  ) {}
+    private router: Router,
+    private map: MapsAPILoader
+  ) {
+    this.map.load().then(() => {
+      this.geoCoder = new google.maps.Geocoder();
+    })
+  }
 
   watchVideo() {
     let dialog = this.dialog.open(VideoDialogComponent);
-    gtag("event", "video_watched", {
-      event_category: "video",
-      event_label: "video"
-    });
   }
 
   /* When they put in their email address check it first */
@@ -73,6 +79,34 @@ export class AppService {
         ),
         tap(invites => (this.invites = invites))
       );
+  }
+
+  getGymLocations(): Observable<any> {
+    return this.db.collection('gyms').snapshotChanges().pipe(
+      map(actions =>
+        actions.map(a => {
+          const data = a.payload.doc.data() as any;
+          data['createdAt'] = data.createdAt.toDate();
+          const id = a.payload.doc.id;
+          return { ...data, id };
+        })
+      )
+    );
+  }
+
+  geocodeLocation(location: string): Observable<any> {
+    if (!this.geoCoder) this.geoCoder = new google.maps.Geocoder();
+    return new Observable((observer) => {
+      this.geoCoder.geocode({address: location}, (result, status) => {
+        if (status === 'OK') {
+          const geometry = result[0].geometry.location;
+          const coordinates = {latitude: geometry.lat(), longitude: geometry.lng()};  
+          observer.next(coordinates);
+        } else {
+          observer.error('Location could not be geocoded');
+        }
+      });
+    });
   }
 }
 

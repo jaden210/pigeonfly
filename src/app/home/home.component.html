@@ -1,457 +1,56 @@
-<div class="p h top" style="min-height:calc(100vh - 136px)">
-  <div style="flex:2;">
-    <div class="pt">
-      The easiest OSHA compliance solution on earth. And the freest! (yes, it's
-      free)
-    </div>
-    <div class="info" style="max-width: 600px;">
-      A refreshing approach to OSHA compliance that actually works. Safety
-      training, self-inspection, injury reporting, worksite logs, time clock,
-      record-keeping and events tracking, all in one simple online platform with
-      an accompanying mobile app for every worker on your team, completely free.
-    </div>
-    <div id="signup">
-      <button
-        mat-raised-button
-        style="background-color:#01ADEE;color: #ffffff;border: 1px solid #054d8a;box-shadow: none;margin-right:12px;margin-bottom: 12px;"
-        (click)="appService.watchVideo()"
-      >
-        WATCH OUR VIDEO
-      </button>
+<div id="header-img">
+  <img id="h-img" src="/assets/gymarrow.png">
+  <div id="header-box">
+    <div id="header-text">A workout membership as motivated as you are</div>
+    <div id="header-info">A refreshing approach to those nasty gym memberships. One simple pass that will get you into multiple gyms in your community.
+      No more having to choose one gym and being trapped in contracts. This is the last gym membership you will ever want, guaranteed.</div>
     </div>
   </div>
-  <div
-    style="justify-content: center; align-items:center; display: flex;flex-direction: column; margin-top: 48px;"
-  >
-    <div class="card">
-      <div id="card-title">
-        <div id="blue">Start today,</div>
-        <div id="orange">&nbsp;it's free forever</div>
-      </div>
-      <div class="error">{{ loginErrorStr }}</div>
-      <div id="form">
-        <mat-form-field>
-          <input
-            matInput
-            (keyup.enter)="createAccount()"
-            type="email"
-            required
-            placeholder="email"
-            [(ngModel)]="email"
-          />
-        </mat-form-field>
-      </div>
-      <div class="row">
-        <span id="account" class="hide"
-          >Already have an account?
-          <a routerLink="/sign-in" style="color: #054d8a !important;"
-            >Sign in</a
-          ></span
-        >
-        <button
-          mat-raised-button
-          color="accent"
-          style="color: white"
-          (click)="createAccount()"
-        >
-          CREATE ACCOUNT
-        </button>
-      </div>
+  <div id="app-banner" class="banner">
+    <a target="_blank" style="margin-right: 10%;" href=""><img
+      alt="Get it on Google Play"
+      id="pstore-link"
+      src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png"
+  /></a>
+  <a
+    target="_blank"
+    href=""
+    style="display:inline-block;overflow:hidden;background:url(https://linkmaker.itunes.apple.com/en-us/badge-lrg.svg?releaseDate=2018-12-11&kind=iossoftware&bubble=apple_music) no-repeat;width:135px;height:47px;"
+  ></a>
+</div>
+<div class="banner">Jump into any of these locations</div>
+<div class="slider">
+  <div class="slide-track">
+    <div class="slide" *ngFor="let gym of gyms">
+      <img src={{gym.logoUrl}} height="100" width="250" style="object-fit:contain" alt="" />
     </div>
-    <div class="card lock">
-      <mat-icon id="lock">lock</mat-icon>
-      <div id="secure">
-        We secure your login information using
-        <b>Google's highest standard oAuth 2.0</b> and secure your data in the
-        cloud using Google Cloud Firestore
-      </div>
-    </div>
-
-    <span
-      style="font-size: 12px; color: white; text-align: center; margin-top: 12px;"
-      >Looking for the app to join your team?</span
-    >
-    <div class="images">
-      <a
-        target="_blank"
-        href="https://play.google.com/store/apps/details?id=com.betterspace.complianceChimp&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"
-        ><img
-          alt="Get it on Google Play"
-          id="pstore-link"
-          src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png"
-      /></a>
-      <a
-        target="_blank"
-        href="https://itunes.apple.com/us/app/compliancechimp/id1445077154?mt=8"
-        style="display:inline-block;overflow:hidden;background:url(https://linkmaker.itunes.apple.com/en-us/badge-lrg.svg?releaseDate=2018-12-11&kind=iossoftware&bubble=apple_music) no-repeat;width:135px;height:47px;"
-      ></a>
+    <div class="slide">
+      <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/557257/2.png" height="100" width="250" alt="" />
     </div>
   </div>
 </div>
-<div class="border"></div>
-
-<!-- START MONKEY -->
-<div class="sub" style="margin: auto; text-align: center; max-width: 760px;">
-  Whether your needs are specific or broad, this chimp gets the OSHA monkey off
-  your back, fast. Go from zero to a compliance hero, with our software.
+<div class="banner" style="margin-bottom: 48px;">
+  <button mat-stroked-button>FIND A GYM NEAR ME</button>
 </div>
-<div id="mokey-check">
-  <div><img src="/assets/chimp.png" /></div>
-  <div
-    style="display: flex; flex-direction: column; justify-content: space-around;"
-  >
-    <div class="check-row info">
-      <mat-icon>check</mat-icon>
-      Safety Training
+<div class="block">
+  <div class="side">
+    <div class="b-header">Your phone is the pass</div>
+    <div class="b-info">Use the app to find near-by gyms, gain access, track your history and more.</div>
+  </div>
+  <div class="side">
+    <img class="b-img" src="/assets/flag.png">
+  </div>
+</div>
+<div class="block">
+  <div class="side">
+    <div id="price-block">
+      $99/mo
     </div>
-    <div class="check-row info">
-      <mat-icon>check</mat-icon>
-      Self-inspection
-    </div>
-    <div class="check-row info">
-      <mat-icon>check</mat-icon>
-      Injury reporting
-    </div>
-    <div class="check-row info">
-      <mat-icon>check</mat-icon>
-      Worksite logs
-    </div>
-    <div class="check-row info">
-      <mat-icon>check</mat-icon>
-      Time clock
-    </div>
-    <div class="check-row info">
-      <mat-icon>check</mat-icon>
-      Record-keeping and events tracking
-    </div>
-    <div class="check-row info">
-      <mat-icon>check</mat-icon>
-      Stored in one simple place, forever
+  </div>
+  <div class="side">
+    <div class="b-header">Straightforward pricing</div>
+    <div class="b-info">We hated getting locked into memberships. Even worse, writing letters and paying fees just to leave. 
+      Just pay one monthly flat rate. Free cancelations. No questions asked. 
     </div>
   </div>
 </div>
-<div id="below-monkey-box" style="margin: auto;">
-  <span
-    ><span style="color: #054d8a">For teams of any size,</span> &nbsp;<span
-      style="color: #ff9200"
-      >including yours</span
-    ></span
-  >
-  <button
-    mat-raised-button
-    color="accent"
-    style="color: white;"
-    (click)="routeSignUp()"
-  >
-    START TODAY - IT'S FREE
-  </button>
-</div>
-<div id="signups">Dozens of companies of all sizes sign up for Compliancechimp every week. 
-  Why? Because it actually works. It delivers the promise of safety to every worker and confidence of compliance to every business.
-</div>
-<!-- END MONKEY -->
-
-<div class="border"></div>
-<div class="sub" style="margin: auto; text-align: center;">
-  Common Questions
-</div>
-<common-questions></common-questions>
-<div class="border"></div>
-<div class="p v">
-  <div class="sub" style="margin: auto; text-align: center;">
-    We take the pain out of safety, compliance, and record keeping for
-    organizations of every size, across any sector.
-  </div>
-  <div id="box">
-    <div class="industry-card">
-      <div class="c-title" style="color: #18887E">
-        Perfect for teams in construction
-      </div>
-      <div class="c-side">
-        <img src="/assets/industry/construction.png" alt="construction" />
-      </div>
-      <div class="c-side" style="background-color: #18887E">
-        <ul>
-          <li class="c-point">637 pre-curated OSHA training articles</li>
-          <li class="c-point">Unlimited custom safety training articles</li>
-          <li class="c-point">Worksite logs with pictures and text</li>
-          <li class="c-point">Injury and near miss reporting</li>
-          <li class="c-point">
-            Self-inspection across any number of locations
-          </li>
-          <li class="c-point">
-            First-person surveys, time clock, and full events tracking
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="industry-card">
-      <div class="c-title" style="color: #30355D">
-        Perfect for teams in oil and gas
-      </div>
-      <div class="c-side"><img src="/assets/industry/oil.png" alt="oil" /></div>
-      <div class="c-side" style="background-color: #30355D">
-        <ul>
-          <li class="c-point">480 pre-curated OSHA training articles</li>
-          <li class="c-point">Unlimited custom safety training articles</li>
-          <li class="c-point">Worksite logs with pictures and text</li>
-          <li class="c-point">Injury and near miss reporting</li>
-          <li class="c-point">
-            Self-inspection across any number of locations
-          </li>
-          <li class="c-point">
-            First-person surveys, time clock, and full events tracking
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="industry-card">
-      <div class="c-title" style="color: #A8C424">
-        Perfect for teams in agriculture
-      </div>
-      <div class="c-side">
-        <img src="/assets/industry/agriculture.png" alt="agriculture" />
-      </div>
-      <div class="c-side" style="background-color: #A8C424">
-        <ul>
-          <li class="c-point">366 pre-curated OSHA training articles</li>
-          <li class="c-point">Unlimited custom safety training articles</li>
-          <li class="c-point">Worksite logs with pictures and text</li>
-          <li class="c-point">Injury and near miss reporting</li>
-          <li class="c-point">
-            Self-inspection across any number of locations
-          </li>
-          <li class="c-point">
-            First-person surveys, time clock, and full events tracking
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="industry-card">
-      <div class="c-title" style="color: #37484A">
-        Perfect for teams in manufacturing
-      </div>
-      <div class="c-side">
-        <img src="/assets/industry/manufacturing.png" alt="manufacturing" />
-      </div>
-      <div class="c-side" style="background-color: #37484A">
-        <ul>
-          <li class="c-point">399 pre-curated OSHA training articles</li>
-          <li class="c-point">Unlimited custom safety training articles</li>
-          <li class="c-point">Worksite logs with pictures and text</li>
-          <li class="c-point">Injury and near miss reporting</li>
-          <li class="c-point">
-            Self-inspection across any number of locations
-          </li>
-          <li class="c-point">
-            First-person surveys, time clock, and full events tracking
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="industry-card">
-      <div class="c-title" style="color: #30C7DD">
-        Perfect for teams in healthcare
-      </div>
-      <div class="c-side">
-        <img src="/assets/industry/healthcare.png" alt="healthcare" />
-      </div>
-      <div class="c-side" style="background-color: #30C7DD">
-        <ul>
-          <li class="c-point">331 pre-curated OSHA training articles</li>
-          <li class="c-point">Unlimited custom safety training articles</li>
-          <li class="c-point">Worksite logs with pictures and text</li>
-          <li class="c-point">Injury and near miss reporting</li>
-          <li class="c-point">
-            Self-inspection across any number of locations
-          </li>
-          <li class="c-point">
-            First-person surveys, time clock, and full events tracking
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="industry-card">
-      <div class="c-title" style="color: #cd3f27">
-        Perfect for teams in the maritime industry
-      </div>
-      <div class="c-side">
-        <img src="/assets/industry/maritime.png" alt="maritime" />
-      </div>
-      <div class="c-side" style="background-color: #cd3f27">
-        <ul>
-          <li class="c-point">593 pre-curated OSHA training articles</li>
-          <li class="c-point">Unlimited custom safety training articles</li>
-          <li class="c-point">Worksite logs with pictures and text</li>
-          <li class="c-point">Injury and near miss reporting</li>
-          <li class="c-point">
-            Self-inspection across any number of locations
-          </li>
-          <li class="c-point">
-            First-person surveys, time clock, and full events tracking
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="industry-card">
-      <div class="c-title" style="color: #FFB500">
-        Perfect for teams in any industry
-      </div>
-      <div class="c-side">
-        <img src="/assets/industry/general.png" alt="general" />
-      </div>
-      <div class="c-side" style="background-color: #FFB500">
-        <ul>
-          <li class="c-point">292 pre-curated OSHA training articles</li>
-          <li class="c-point">Unlimited custom safety training articles</li>
-          <li class="c-point">Worksite logs with pictures and text</li>
-          <li class="c-point">Injury and near miss reporting</li>
-          <li class="c-point">
-            Self-inspection across any number of locations
-          </li>
-          <li class="c-point">
-            First-person surveys, time clock, and full events tracking
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="border"></div>
-<div class="p v" style="align-items: center;">
-  <div class="sub" style="text-align: center;">
-    The role of safety and compliance in your success: a message to teams in the
-    construction industry, with applicability to every employer.
-  </div>
-  <div class="quote">
-    “All employers in the construction industry must have injury and illness
-    prevention programs. Contractors and employers who do construction work must
-    comply with standards in 29 CFR 1926. Subpart C, General Safety and Health
-    Provisions, as well as other specific sections of these standards, include
-    the responsibilities for each contractor/employer to initiate and maintain
-    injury and illness prevention programs, provide for a competent person to
-    conduct frequent and regular inspections, and instruct each employee to
-    recognize and avoid unsafe conditions and know what regulations are
-    applicable to the work environment.”
-  </div>
-  <div class="sig">- Construction Industry Digest, OSHA</div>
-</div>
-<div class="border"></div>
-<div class="p v">
-  <div class="sub" style="margin: auto; text-align: center;">
-    The human and financial risks of non-compliance are real
-  </div>
-  <div class="stats">
-    <div class="stat-card">
-      <div class="stat-title">$60 Billion+</div>
-      <div class="stat-info">
-        Annual cost to employers in workers' compensation alone due to injury
-        and illness in the workplace.
-      </div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-title">5,190</div>
-      <div class="stat-info">
-        The number of employees killed on the job in 2016.
-      </div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-title">$70,438,635</div>
-      <div class="stat-info">
-        Fines in excess of $40,000 issued by OSHA for violations and
-        non-compliance in 2017. (yes, that’s only the aggregate of initial fines
-        that were greater than 40K each.)
-      </div>
-    </div>
-  </div>
-  <div class="stat-card-last">
-    <img id="stat-img" src="/assets/chimpTop.png" alt="chimp" />
-    <div class="stat-info" style="text-align: left;padding: 24px;">
-      For small businesses, a workplace injury or non-compliance violation can
-      be devastating. Compliancechimp reduces the risk for your business, with a
-      goal to eliminate it.
-    </div>
-  </div>
-</div>
-<div class="border"></div>
-<div
-  class="p"
-  style="display: flex;flex-direction: column;align-items: center;"
->
-  <div class="sub" style="margin-bottom: 20px;">
-    Compliancechimp fulfills OSHA’s prescription for compliance, which is that
-    every employer must:
-  </div>
-  <div class="left info" style="line-height: 20px;">
-    <ul>
-      <li>
-        Provide workers with a workplace that does not have serious hazards.
-      </li>
-      <li>Follow all OSHA safety and health standards.</li>
-      <li>Find and correct all safety and health problems.</li>
-      <li>
-        Reduce risks first by making changes in working conditions rather than
-        relying on personal protective equipment (PPE).
-      </li>
-      <li>
-        Prominently display the official OSHA job safety and health - it's the
-        law poster.
-      </li>
-      <li>
-        Inform workers about chemical hazards through training, labels, alarms,
-        etc.
-      </li>
-      <li>
-        Provide safety training to workers in a language and vocabulary they can
-        understand.
-      </li>
-      <li>Keep accurate records of work-related injuries and illnesses.</li>
-      <li>
-        Perform tests in the workplace (such as air sampling), required by some
-        OSHA standards.
-      </li>
-      <li>Provide required PPE to employees.</li>
-      <li>Provide hearing exams or other tests required by OSHA standards.</li>
-      <li>
-        Post OSHA citations and injury and illness data where workers can see
-        them.
-      </li>
-      <li>
-        Notify OSHA within 8 hours of a workplace fatality, or 24 hours of any
-        work-related inpatient hospitalization, amputation, or loss of an eye.
-      </li>
-      <li>
-        Not retaliate against workers for using their rights under this law.
-      </li>
-    </ul>
-    <div class="tcard">
-      <img id="trophy" src="/assets/trophy.png" alt="trophy" />
-      <div class="info" style="color: #000000;">
-        Our platform enables compliance with the points above, and records each
-        compliance event, forever.
-      </div>
-    </div>
-  </div>
-</div>
-<div class="border"></div>
-<div class="p h">
-  <div class="col">
-    <div class="sub">
-      How does it work? Thanks to mobile devices and a heck of a lot of product
-      design;
-    </div>
-    <div class="info">
-      Compliancechimp puts training content and a rock solid training method,
-      verification surveys, worksite logs, injury reporting, and even a time
-      clock, right in the hands of every member of your team. It takes the
-      guesswork out of it, so you can focus on growing your business with a
-      safer, better trained, and more compliant work force.
-      <a routerLink="" (click)="appService.watchVideo()">Watch the video here</a
-      >, and visit our <a routerLink="/how-it-works">How it Works page</a> to
-      see every feature.
-    </div>
-  </div>
-  <img id="lady" class="hide" src="/assets/screens.png" alt="lady" />
-</div>
-<div class="border"></div>
-<sign-up></sign-up>
