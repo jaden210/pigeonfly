@@ -15,6 +15,9 @@ export class ScanDialog {
   user;
   loading : boolean = false;
   searchString: string;
+  errorMsg: string;
+  useCamera: boolean = false;
+  showCamera: boolean = false;
 
   constructor(public dialogRef: MatDialogRef<ScanDialog>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -24,17 +27,23 @@ export class ScanDialog {
 
     getUser() {
       this.loading = true;
+      this.errorMsg = '';
       let parts = this.searchString.split('/');
       let id = parts.pop();
       this.db.doc(`user/${id}`).snapshotChanges().pipe(
         map((actions: any) => {
-          let data = actions.payload.data();
+          let data = actions.payload.data() || {};
           data["id"] = actions.payload.id;
           return data;
         })
       ).subscribe(user => {
-        this.user = user;
-        this.checkLastVisit(user.id);
+        if (!user.email) {
+          this.errorMsg = "- no user found!";
+        } else {
+          this.user = user;
+          this.checkLastVisit(user.id);
+          this.showCamera = false;
+        }
         this.loading = false;
       });
     }
@@ -60,6 +69,8 @@ export class ScanDialog {
       this.db.collection(`visits`).add({
         createdAt: new Date(),
         userId: this.user.id,
+        userName: this.user.name,
+        gymName : this.data.gym.name,
         gymId: this.data.gym.id //other stuff??
       }).then(() => {
         this.clearUser();
@@ -73,10 +84,26 @@ export class ScanDialog {
     clearUser() {
       this.user = null;
       this.searchString = '';
+      this.useCamera ? this.showCamera = true : null;
     }
 
     close(submit) {
       this.dialogRef.close(submit);
+    }
+
+    toggleCamera() { // yeah yeah
+      if (!this.useCamera) {
+        this.useCamera = true;
+        this.showCamera = true;
+      } else {
+        this.useCamera = false;
+        this.showCamera = false;
+      }
+    }
+
+    onCodeResult(event) {
+      this.searchString = event;
+      this.getUser();
     }
 
 }

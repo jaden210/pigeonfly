@@ -18,6 +18,7 @@ import { AgmCoreModule } from "@agm/core";
 import { QRCodeModule } from 'angular2-qrcode';
 import { PrintComponent } from "./print/print.component";
 import { ScanDialog } from "./scan-dialog/scan-dialog.component";
+import { ZXingScannerModule } from '@zxing/ngx-scanner';
 
 @NgModule({
   imports: [
@@ -31,7 +32,8 @@ import { ScanDialog } from "./scan-dialog/scan-dialog.component";
     AgmCoreModule.forRoot({
       apiKey: "AIzaSyAsIwXbCi4l__VoFLdru1EC3bLxmcZQOZI"
     }),
-    QRCodeModule
+    QRCodeModule,
+    ZXingScannerModule
   ],
   declarations: [
     AccountComponent,

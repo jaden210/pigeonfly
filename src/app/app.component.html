@@ -15,7 +15,7 @@
       />
       <div class="flex"></div>
       <button mat-icon-button (click)="sidenav.close()">
-        <mat-icon style="color:#ffffff">close</mat-icon>
+        <mat-icon>close</mat-icon>
       </button>
     </mat-toolbar>
     <div class="cwindow">
@@ -34,7 +34,15 @@
           (click)="navRoute('pricing')"
           routerLinkActive="tactive"
         >
-          Common questions
+          Pricing
+        </button>
+        <button
+          mat-button
+          class="link"
+          (click)="navRoute('about')"
+          routerLinkActive="tactive"
+        >
+          About
         </button>
         <button mat-button class="link" (click)="goToBlog()">Blog</button>
         <button
@@ -52,8 +60,6 @@
         >
           SIGN UP
         </button>
-        <div class="border"></div>
-        <sign-up></sign-up>
       </div>
     </div>
   </mat-sidenav>

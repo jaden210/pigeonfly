@@ -120,7 +120,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   tabChanged(event) {
-    if (event.index == 4) { // be careful
+    if (event.index == 5) { // be careful
       let dialog = this.openScanningDialog();
       dialog.afterClosed().subscribe(dialog => { // fix
         this.selectedTab = 3;
@@ -132,7 +132,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   openScanningDialog(): any {
     let dialog = this.dialog.open(ScanDialog, {
       data: {gym: this.accountService.aGym},
-      disableClose: true
+      disableClose: true,
+      panelClass: 'full-screen'
     });
     return dialog;
   }

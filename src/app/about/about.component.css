@@ -19,3 +19,19 @@
   width: 100%;
   object-position: center;
 }
+
+.banner {
+  font-weight: 700;
+  line-height: 1.1875;
+  letter-spacing: -.8px;
+  font-size: 2rem;
+  margin: 1rem 8px;
+  text-align: center;
+}
+
+@media screen and (max-width: 785px) {
+  .banner {
+    text-align: left;
+    font-size: 1.725rem;
+  }
+}

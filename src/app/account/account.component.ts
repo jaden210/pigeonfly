@@ -48,6 +48,10 @@ export class AccountComponent implements AfterViewInit {
                   this.accountService.aGym = gym;
                   this.accountService.aGym.id = this.accountService.user.gymId;
                   this.accountService.gymObservable.next(gym);
+                  if (gym.ownerId == user.id) {
+                    this.accountService.isGymOwner = true;
+                    this.getGymVisits(gym);
+                  }
                 });
               }
             }
@@ -71,9 +75,6 @@ export class AccountComponent implements AfterViewInit {
         })
       )
     ).subscribe(visits => {
-      
-      
-      let result = {};
       this.accountService.visits = visits;
         combineLatest(
           visits.map(visit => {
@@ -90,26 +91,41 @@ export class AccountComponent implements AfterViewInit {
           })
         ).subscribe((gyms: Gym[]) => {
           console.log(this.accountService.visitedGyms);
-          
         });
-/*       visits.forEach(visit => {
-        let gymObs = this.accountService.db.doc(`gyms/${visit.gymId}`);
-        this.accountService.visitedGyms.findIndex(gym => gym.id == visit.gymId) == -1 ?
-        gymObs.snapshotChanges()
-        .pipe(
-          map((actions: any) => {
-            let data = actions.payload.data() || {};
-            data["id"] = actions.payload.id;
-            return data;
-          })
-        )
-        .subscribe((gym: Gym) => {
-          this.accountService.visitedGyms.push(gym);
-          console.log(this.accountService.visitedGyms);
-          
-        }) : null;
-      });
- */    });
+    });
+  }
 
+  getGymVisits(gym) { // TODO: Limit to one monthish
+    this.accountService.db.collection("visits", ref => ref.where("gymId", "==", gym.id)).snapshotChanges().pipe(
+      map(actions =>
+        actions.map(a => {
+          const data = a.payload.doc.data() as any;
+          data['createdAt'] = moment(data.createdAt.toDate(), "YYYYMMDD").fromNow();
+          const id = a.payload.doc.id;
+          return { ...data, id };
+        })
+      )
+    ).subscribe(gymVisits => {
+      gymVisits.forEach(visit => { //visitCount
+        visit.visitCount = gymVisits.reduce((acc, cur) => cur.userId === visit.userId ? ++acc : acc, 0);
+      });
+      this.accountService.gymVisits = gymVisits;
+      combineLatest(
+        gymVisits.map(visit => {
+          return  !this.accountService.visitedUsers[visit.userId]
+          ? this.accountService.db
+          .doc(`user/${visit.userId}`)
+          .snapshotChanges()
+          .pipe(map(result => {
+            const data = result.payload.data() || {};
+            const id = result.payload.id;
+            this.accountService.visitedUsers[id] = {...data, id};
+          }))
+          : of(null)
+        })
+      ).subscribe((users: Gym[]) => {
+        console.log(this.accountService.visitedUsers);
+      });
+    });
   }
 }
