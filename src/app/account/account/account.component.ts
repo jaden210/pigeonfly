@@ -120,7 +120,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   tabChanged(event) {
-    if (event.index == 5) { // be careful
+    if (event.tab.textLabel == 'Scanning Station') { // be careful
       let dialog = this.openScanningDialog();
       dialog.afterClosed().subscribe(dialog => { // fix
         this.selectedTab = 3;

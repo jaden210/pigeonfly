@@ -29,6 +29,7 @@
           <span> {{visit?.value.createdAt}} </span>
         </p>
       </mat-list-item>
+      <div *ngIf="!accountService?.visits">No history yet... Visit a gym!</div>
     </mat-list>
   </mat-tab>
   <mat-tab label="Billing">
