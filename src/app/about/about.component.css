@@ -4,6 +4,7 @@
 
 .drawer {
   width: 250px;
+  padding: 8px;
 }
 
 button.fabb {
@@ -46,4 +47,14 @@ mat-drawer-content {
   position: absolute;
   right: 24px;
   bottom: 12px;
+}
+
+.preview-img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.p-img {
+  height: 200px;
 }

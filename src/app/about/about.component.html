@@ -1,8 +1,26 @@
 <mat-drawer-container class="container">
     <mat-drawer class="drawer" mode="side" opened>
+        <mat-form-field>
+          <mat-label>order name</mat-label>
+          <input matInput [(ngModel)]="order.name">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [matDatepicker]="picker" placeholder="shipdate" [value]="order.shipDate">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>contact name</mat-label>
+          <input matInput [(ngModel)]="order.contactName">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>contact phone</mat-label>
+          <input matInput type="tel" [(ngModel)]="order.contactPhone">
+        </mat-form-field>
       <mat-list role="list">
-          <mat-list-item role="listitem" *ngFor="let room of rooms; let i = index" (click)="selectRoom(room)">{{room.name || 'Room ' + (i + 1)}}</mat-list-item>
-          <button mat-raised-button color="primary" style="margin-left:12px; margin-top: 48px" (click)="submit()">SUBMIT DESIGN</button>
+          <mat-list-item role="listitem" *ngFor="let room of order.rooms; let i = index" (click)="selectRoom(room)">{{room.name || 'Room ' + (i + 1)}}</mat-list-item>
+          <button mat-raised-button color="accent" style="margin-top: 48px; margin-bottom: 12px;" (click)="addRoom()">ADD ROOM</button>
+          <button mat-raised-button color="primary" (click)="submit()">SUBMIT DESIGN</button>
         </mat-list>
     </mat-drawer>
     <mat-drawer-content>
@@ -46,13 +64,18 @@
           <mat-label>component</mat-label>
           <mat-select [(value)]="wall.component">
             <mat-option *ngFor="let component of components" [value]="component">
-              {{component}}
+              {{component.name}}
             </mat-option>
           </mat-select>
+        </mat-form-field>
+        <div class="preview-img">
+          <img class="p-img" src={{wall?.component?.asset}}>
+        </div>
+        <mat-form-field class="full">
+          <textarea matInput [(ngModel)]="wall.notes" placeholder="any special notes or changes to this wall/component"></textarea>
         </mat-form-field>
       </div>
       <button color="primary" id="add-wall-button" mat-raised-button (click)="addWall()">ADD A WALL</button>
       
     </mat-drawer-content>
   </mat-drawer-container>
-  <button mat-fab class="fabb" (click)="addRoom()"><mat-icon>add</mat-icon></button>

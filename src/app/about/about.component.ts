@@ -7,13 +7,22 @@ import { AppService } from '../app.service';
 })
 export class AboutComponent implements OnInit {
   
-  rooms: Room[] = [];
+  order: Order = new Order();
   room: Room = new Room();
   roomTypes = [
     "test","test2"
   ];
   components = [
-    "high", "high-low", "high/organizer/high"
+    {name: "coat", asset: "/assets/components/coat.png"},
+    {name: "linen", asset: "/assets/components/linen.png"},
+    {name: "high-low/organizer", asset: "/assets/components/hlo.png"},
+    {name: "high-low/organizer/high", asset: "/assets/components/hloh.png"},
+    {name: "high-low/organizer/high-low", asset: "/assets/components/hlohl.png"},
+    {name: "high/organizer", asset: "/assets/components/ho.png"},
+    {name: "high/organizer/high", asset: "/assets/components/hoh.png"},
+    {name: "high/organizer/high-low", asset: "/assets/components/hohl.png"},
+    {name: "organizer/high", asset: "/assets/components/oh.png"},
+    {name: "organizer/high-low", asset: "/assets/components/ohl.png"}
   ]
 
   colors = ["white", "textured gray"];
@@ -26,7 +35,7 @@ export class AboutComponent implements OnInit {
     let room = new Room();
     let newWall = new Wall();
     room.walls.push(newWall);
-    this.rooms.push(room);
+    this.order.rooms.push(room);
     this.room = room;
   }
 
@@ -40,7 +49,8 @@ export class AboutComponent implements OnInit {
   }
 
   reset() {
-    this.rooms = [];
+    this.order = new Order();
+    this.order.rooms = [];
     this.room = new Room();
     this.addRoom();
   }
@@ -50,14 +60,22 @@ export class AboutComponent implements OnInit {
   }
 
   submit() {
-    this.appService.db.collection("closets").add({...this.rooms}).then(() => {
+    console.log(Object.assign({}, this.order));
+    this.appService.db.collection("closets").add(Object.assign({},this.order)).then(() => {
       this.reset();
     })
   }
 
 }
 
-
+export class Order {
+  name: any;
+  createdAt: any;
+  shipDate: any;
+  rooms: Room[] = [];
+  contactName: any;
+  contactPhone: any;
+}
 
 export class Room {
   name: any;
