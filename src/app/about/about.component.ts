@@ -1,35 +1,35 @@
-import { Component, OnInit } from '@angular/core';
-import { AppService } from '../app.service';
+import { Component, OnInit } from "@angular/core";
+import { AppService } from "../app.service";
 
 @Component({
-  templateUrl: './about.component.html',
-  styleUrls: ['./about.component.css']
+  templateUrl: "./about.component.html",
+  styleUrls: ["./about.component.css"]
 })
 export class AboutComponent implements OnInit {
-  
   order: Order = new Order();
   room: Room = new Room();
-  roomTypes = [
-    "test","test2"
-  ];
+  roomTypes = ["test", "test2"];
   components = [
-    {name: "coat", asset: "/assets/components/coat.png"},
-    {name: "linen", asset: "/assets/components/linen.png"},
-    {name: "high-low/organizer", asset: "/assets/components/hlo.png"},
-    {name: "high-low/organizer/high", asset: "/assets/components/hloh.png"},
-    {name: "high-low/organizer/high-low", asset: "/assets/components/hlohl.png"},
-    {name: "high/organizer", asset: "/assets/components/ho.png"},
-    {name: "high/organizer/high", asset: "/assets/components/hoh.png"},
-    {name: "high/organizer/high-low", asset: "/assets/components/hohl.png"},
-    {name: "organizer/high", asset: "/assets/components/oh.png"},
-    {name: "organizer/high-low", asset: "/assets/components/ohl.png"}
-  ]
+    { name: "coat", asset: "/assets/components/coat.png" },
+    { name: "linen", asset: "/assets/components/linen.png" },
+    { name: "high-low/organizer", asset: "/assets/components/hlo.png" },
+    { name: "high-low/organizer/high", asset: "/assets/components/hloh.png" },
+    {
+      name: "high-low/organizer/high-low",
+      asset: "/assets/components/hlohl.png"
+    },
+    { name: "high/organizer", asset: "/assets/components/ho.png" },
+    { name: "high/organizer/high", asset: "/assets/components/hoh.png" },
+    { name: "high/organizer/high-low", asset: "/assets/components/hohl.png" },
+    { name: "organizer/high", asset: "/assets/components/oh.png" },
+    { name: "organizer/high-low", asset: "/assets/components/ohl.png" }
+  ];
 
   colors = ["white", "textured gray"];
 
-  depths = [12,14,16];
+  depths = [12, 14, 16];
 
-  constructor(public appService: AppService){}
+  constructor(public appService: AppService) {}
 
   addRoom() {
     let room = new Room();
@@ -60,12 +60,17 @@ export class AboutComponent implements OnInit {
   }
 
   submit() {
-    console.log(Object.assign({}, this.order));
-    this.appService.db.collection("closets").add(Object.assign({},this.order)).then(() => {
-      this.reset();
-    })
+    const rooms = this.order.rooms.map(room => {
+      const walls = room.walls.map(wall => ({ ...wall }));
+      return { ...room, walls };
+    });
+    this.appService.db
+      .collection("closets")
+      .add({ ...this.order, rooms })
+      .then(() => {
+        this.reset();
+      });
   }
-
 }
 
 export class Order {
